@@ -43,7 +43,110 @@
 		</effect_group>
 	</append>
 
+	<!-- ===== Elemental reactions: every element buff asks buffAposElementCheck to look for a combo ===== -->
+	<append xpath="/buffs/buff[@name='buffBurningElement' or @name='buffBurningFlamingArrow' or @name='buffBurningMolotov' or @name='buffShocked']">
+		<effect_group name="AposMod element check">
+			<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposElementCheck"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffAposElementCheck"/>
+		</effect_group>
+	</append>
+
 	<append xpath="/buffs">
+		<!-- ===== Elemental reactions (Gunfire Reborn style) =====
+		     fire + acid  = Explosion: 60 to the target and every zombie within 4 m
+		     fire + shock = Confusion: 5 s, -60% speed, -30 physical resist, 1.5 s stun
+		     shock + acid = Miasma:    6 s, -20% max health (current health drops with it), bleeding
+		     3 s cooldown per target. buffAposReactionHit (short) lets the damage numbers colour reaction damage. -->
+		<buff name="buffAposElementCheck" hidden="true">
+			<stack_type value="replace"/>
+			<duration value=".1"/>
+			<effect_group>
+				<requirement name="!HasBuff" buff="buffAposReactionCD"/>
+				<!-- Explosion -->
+				<triggered_effect trigger="onSelfBuffStart" action="Explode" blast_power="0" block_damage="0" block_radius="0" entity_damage="0" entity_radius="0" damage_type="Heat">
+					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
+					<requirement name="HasBuff" buff="buffAposCorroded"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" target="otherAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-60">
+					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
+					<requirement name="HasBuff" buff="buffAposCorroded"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" target="otherAOE" range="4" target_tags="zombie,animal" buff="buffAposReactionHit">
+					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
+					<requirement name="HasBuff" buff="buffAposCorroded"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" target="otherAOE" range="4" target_tags="zombie,animal" buff="buffAposSplash">
+					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
+					<requirement name="HasBuff" buff="buffAposCorroded"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposReactionHit">
+					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
+					<requirement name="HasBuff" buff="buffAposCorroded"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-60">
+					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
+					<requirement name="HasBuff" buff="buffAposCorroded"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposReactionCD">
+					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
+					<requirement name="HasBuff" buff="buffAposCorroded"/>
+				</triggered_effect>
+				<!-- Confusion -->
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposConfused">
+					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
+					<requirement name="HasBuff" buff="buffShocked"/>
+					<requirement name="!HasBuff" buff="buffAposReactionCD"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposReactionCD">
+					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
+					<requirement name="HasBuff" buff="buffShocked"/>
+				</triggered_effect>
+				<!-- Miasma -->
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposMiasma">
+					<requirement name="HasBuff" buff="buffShocked"/>
+					<requirement name="HasBuff" buff="buffAposCorroded"/>
+					<requirement name="!HasBuff" buff="buffAposReactionCD"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposReactionCD">
+					<requirement name="HasBuff" buff="buffShocked"/>
+					<requirement name="HasBuff" buff="buffAposCorroded"/>
+				</triggered_effect>
+			</effect_group>
+		</buff>
+
+		<buff name="buffAposReactionCD" hidden="true">
+			<stack_type value="ignore"/>
+			<duration value="3"/>
+		</buff>
+
+		<!-- marks reaction damage for the damage numbers (Source/AposMod.cs) -->
+		<buff name="buffAposReactionHit" hidden="true">
+			<stack_type value="replace"/>
+			<duration value=".6"/>
+		</buff>
+
+		<buff name="buffAposConfused" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="5"/>
+			<effect_group>
+				<passive_effect name="WalkSpeed" operation="perc_add" value="-.6"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value="-.6"/>
+				<passive_effect name="PhysicalDamageResist" operation="base_add" value="-30"/>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffInjuryStunned01" duration="1.5"/>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposReactionHit"/>
+			</effect_group>
+		</buff>
+
+		<buff name="buffAposMiasma" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="6"/>
+			<effect_group>
+				<passive_effect name="HealthMax" operation="perc_add" value="-.2"/>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffInjuryBleeding"/>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposReactionHit"/>
+			</effect_group>
+		</buff>
+
 		<!-- Knife: regenerates aposKnifeStacks HP/s; every knife hit resets aposKnifeTime to 5 s
 		     (same timer pattern as vanilla bleeding, so re-adding never resets the stacks) -->
 		<buff name="buffAposKnifeRegen" name_key="buffAposKnifeRegenName" description_key="buffAposKnifeRegenDesc" icon="ui_game_symbol_laceration" icon_color="200,30,30">
@@ -217,6 +320,8 @@
 			<effect_group>
 				<passive_effect name="PhysicalDamageResist" operation="base_add" value="-25"/>
 				<passive_effect name="HealthChangeOT" operation="base_add" value="-3"/>
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposElementCheck"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffAposElementCheck"/>
 				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposCorrodeTime" operation="add" value="-1"/>
 				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposCorroded">
 					<requirement name="CVarCompare" cvar="aposCorrodeTime" operation="LTE" value="0"/>

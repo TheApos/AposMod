@@ -27,7 +27,8 @@ public class AposModInit : IModApi
 // player every frame and shows each drop as a number rising above the head.
 // Headshots (yellow) are read from EntityAlive.RecordedDamage when it changed this frame.
 // A killing blow adds a red "Kill!" label (text from Localization.csv, key aposKillText).
-// Hits boosted by an AposMod buff are cyan.
+// Hits boosted by an AposMod buff are cyan. Damage over time and elemental reactions (health drops without a fresh
+// hit record) take the colour of the element on the target: reaction, acid, fire, shock, bleeding.
 public class AposDamageNumbers : MonoBehaviour
 {
     const float Range = 60f;
@@ -37,6 +38,13 @@ public class AposDamageNumbers : MonoBehaviour
     static readonly Color HeadshotColor = new Color(1f, 0.85f, 0.1f);
     static readonly Color BuffedColor = new Color(0.3f, 0.85f, 1f);
     static readonly Color KillColor = new Color(1f, 0.15f, 0.1f);
+    static readonly Color ReactionColor = new Color(1f, 0.24f, 0.95f);  // magenta
+    static readonly Color AcidColor = new Color(0.55f, 1f, 0.18f);      // toxic green
+    static readonly Color FireColor = new Color(1f, 0.55f, 0.1f);       // orange
+    static readonly Color ShockColor = new Color(0.7f, 0.55f, 1f);      // violet
+    static readonly Color BleedColor = new Color(1f, 0.45f, 0.5f);      // pink
+
+    static readonly string[] FireBuffs = { "buffBurningElement", "buffBurningFlamingArrow", "buffBurningMolotov", "buffBurningZombie" };
 
     // Player buffs that raise the damage of your hits, and target markers that do the same
     static readonly string[] PlayerDamageBuffs = { "buffAposHeadhunter", "buffAposRage", "buffAposCounter" };
@@ -104,7 +112,8 @@ public class AposDamageNumbers : MonoBehaviour
                 bool headshot = freshRecord && (rec.HitBodyPart & EnumBodyPartHit.Head) != 0;
                 bool buffed = AposSettings.BuffColor && (HasAnyBuff(player, PlayerDamageBuffs)
                     || HasAnyBuff(e, TargetDamageBuffs) || e.Buffs.GetCustomVar(SuppressedFullVar) > 0f);
-                if (AposSettings.Enabled) AddPopup(e, prevHp - hp, headshot, buffed, hp <= 0);
+                Color? element = freshRecord ? (Color?)null : ElementColor(e);
+                if (AposSettings.Enabled) AddPopup(e, prevHp - hp, headshot, buffed, element, hp <= 0);
             }
             lastHealth[id] = hp;
             lastHitRandom[id] = rec.Random;
@@ -139,7 +148,18 @@ public class AposDamageNumbers : MonoBehaviour
         return false;
     }
 
-    void AddPopup(EntityAlive e, int damage, bool headshot, bool buffed, bool kill)
+    // Colour of damage that came without a hit (ticks, reactions), by what is on the target; null = plain hit
+    static Color? ElementColor(EntityAlive e)
+    {
+        if (e.Buffs.HasBuff("buffAposReactionHit")) return ReactionColor;
+        if (e.Buffs.HasBuff("buffAposCorroded")) return AcidColor;
+        if (HasAnyBuff(e, FireBuffs)) return FireColor;
+        if (e.Buffs.HasBuff("buffShocked")) return ShockColor;
+        if (e.Buffs.HasBuff("buffInjuryBleeding")) return BleedColor;
+        return null;
+    }
+
+    void AddPopup(EntityAlive e, int damage, bool headshot, bool buffed, Color? element, bool kill)
     {
         // The game shifts the render origin around the player (floating origin): Entity.position is the
         // logical world position, the camera works in scene space, so take the scene transform.
@@ -150,8 +170,8 @@ public class AposDamageNumbers : MonoBehaviour
         p.Pos = pos;
         p.Text = headshot ? damage + "!" : damage.ToString();
         // A buffed hit shows the buff colour; "!" still marks a headshot
-        p.Color = buffed ? BuffedColor : (headshot ? HeadshotColor : NormalColor);
-        p.Size = headshot ? 40 : 30;
+        p.Color = element ?? (buffed ? BuffedColor : (headshot ? HeadshotColor : NormalColor));
+        p.Size = headshot ? 40 : (element.HasValue ? 26 : 30);
         p.Start = Time.time;
         popups.Add(p);
 
