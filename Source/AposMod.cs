@@ -20,6 +20,8 @@ public class AposModInit : IModApi
         Object.DontDestroyOnLoad(go);
         go.AddComponent<AposDamageNumbers>();
         go.AddComponent<AposPin>();
+        go.AddComponent<AposSplinter>();
+        go.AddComponent<AposAmmo>();
     }
 }
 

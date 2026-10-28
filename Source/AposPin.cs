@@ -1,5 +1,5 @@
 // Crossbow "Pin": a bolt hit sets the cvar aposPinCheck on the zombie (items.xml). Here we look for a wall
-// up to 2 m behind it (along the line from the player through the zombie). With a wall the zombie gets
+// up to 3 m behind it (along the line from the player through the zombie). With a wall the zombie gets
 // buffAposPinned (cannot move until it dies) or, for elites, buffAposPinnedElite (10 s).
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +7,7 @@ using UnityEngine;
 public class AposPin : MonoBehaviour
 {
     const float Range = 80f;
-    const float WallDistance = 2f;
+    const float WallDistance = 3f;
     const string CheckVar = "aposPinCheck";
     static readonly FastTags<TagGroup.Global> EliteTags =
         FastTags<TagGroup.Global>.Parse("feral,radiated,infernal,charged,special,boss");
