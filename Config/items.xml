@@ -760,10 +760,15 @@
 			</effect_group>
 			<effect_group name="AposMod legendary" tiered="false">
 			<passive_effect name="EntityDamage" operation="perc_add" value=".4" />
+			<!-- +50% more against a target that is already bleeding -->
+			<passive_effect name="EntityDamage" operation="perc_add" value=".5">
+				<requirement name="HasBuff" target="other" buff="buffInjuryBleeding" />
+			</passive_effect>
 			<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffInjuryBleeding">
 				<requirement name="IsAlive" target="other" />
 				<requirement name="!EntityTagCompare" target="other" tags="trader" />
 			</triggered_effect>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyStats" stat="Health" operation="add" value="20" />
 		</effect_group>
 		</item>
 		<item name="aposLegendThunderclap">
@@ -923,6 +928,787 @@
 			<effect_group name="AposMod legendary" tiered="false">
 			<passive_effect name="EntityDamage" operation="perc_add" value=".25" />
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="4" buff="buffShocked" duration="2" target_tags="zombie,animal" />
+			<!-- Storm charges: every kill +1 (max 3); at 3 the next power hit calls lightning: 150 to all within 6 m + 3 s shock -->
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposThunder" operation="add" value="1">
+				<requirement name="CVarCompare" cvar="aposThunder" operation="LT" value="3" />
+			</triggered_effect>
+			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposThunderCharge" />
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="otherAOE" range="6" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-150">
+				<requirement name="CVarCompare" cvar="aposThunder" operation="GTE" value="3" />
+			</triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="6" target_tags="zombie,animal" buff="buffAposSplash">
+				<requirement name="CVarCompare" cvar="aposThunder" operation="GTE" value="3" />
+			</triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="6" target_tags="zombie,animal" buff="buffShocked" duration="3">
+				<requirement name="CVarCompare" cvar="aposThunder" operation="GTE" value="3" />
+			</triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" cvar="aposThunder" operation="set" value="0">
+				<requirement name="CVarCompare" cvar="aposThunder" operation="GTE" value="3" />
+			</triggered_effect>
+		</effect_group>
+		</item>
+		<item name="aposLegendHornet">
+			<property name="DescriptionKey" value="aposLegendHornetDesc" />
+			<property name="CustomIconTint" value="255,180,0" />
+			<property name="CustomIcon" value="gunHandgunT3SMG5" />
+			<property name="Tags" value="T3,weapon,ranged,holdBreathAiming,reloadPenalty,gun,shortRange,barrelAttachments,sideAttachments,smallTopAttachments,magazine,drumMagazine,firingMode,bottomAttachments,attAgility,perkGunslinger,9mmGun,attachmentsIncluded,canHaveCosmetic,handgunSkill" />
+			<property name="PreviousTechItem" value="gunHandgunT1Pistol" />
+			<property name="DisplayType" value="rangedGun" />
+			<property name="HoldType" value="6" />
+			<property name="Meshfile" value="@:Other/Items/Weapons/Ranged/SMG/smgPrefab.prefab" />
+			<property name="Material" value="MHandGunParts" />
+			<property name="TintColor" value="80, 80, 80" />
+			<property name="Weight" value="7" />
+			<property name="ScrapTimeOverride" value="10.0" />
+			<property name="RepairTools" value="resourceRepairKit" />
+			<property name="DegradationBreaksAfter" value="false" />
+			<property name="SoundJammed" value="weapon_jam" />
+			<property name="Attachments" value="meleeToolFlashlight02" />
+			<property name="CrosshairOnAim" value="true" />
+			<!-- aimTest -->
+			<property name="CrosshairUpAfterShot" value="true" />
+			<!-- aimTest -->
+			<property name="Sound_Sight_In" value="smg_sight_in" />
+			<property name="Sound_Sight_Out" value="smg_sight_out" />
+			<property name="Group" value="Ammo/Weapons,Ranged Weapons" />
+			<property name="RepairExpMultiplier" value="10.8" />
+			<property name="LightValue" value=".45" />
+			<property name="EconomicValue" value="5000" />
+			<!-- gunHandgunT3SMG5 -->
+			<!-- gunHandgunT3SMG5Schematic -->
+			<property name="ShowQuality" value="true" />
+			<property name="SoundUnholster" value="weapon_unholster" />
+			<property name="SoundHolster" value="weapon_holster" />
+			<property name="SoundPickup" value="rifle_polymer_grab" />
+			<property name="SoundPlace" value="rifle_polymer_place" />
+			<property class="Action0">
+				<property name="Class" value="Ranged" />
+				<property name="Delay" value=".150" />
+				<!-- obsolete if rounds per minute exists -->
+				<property name="Magazine_items" value="ammo9mmBulletBall,ammo9mmBulletHP,ammo9mmBulletAP" />
+				<property name="Reload_time" value="4.1" />
+				<property name="Sound_start" value="smg_fire" />
+				<property name="Sound_loop" value="smg_fire" />
+				<property name="Sound_end" value="smg_fire_end" />
+				<property name="Sound_empty" value="dryfire" />
+				<property name="Sound_reload" value="" />
+				<property name="AutoReload" value="false" />
+				<property name="Particles_muzzle_fire" value="gunfire_MG_SMG" />
+				<property name="ScopeOffset" value="-.000525,.1449,-.2" />
+				<property name="SideOffset" value="0,0,0" />
+				<property name="BarrelOffset" value="-.062,.062,.16" />
+				<property name="triggerEffectTriggerPullDualsense" value="PistolTrigger" />
+				<property name="triggerEffectTriggerPullXbox" value="PistolTrigger" />
+				<property name="triggerEffectShootDualsense" value="PistolShoot" />
+				<property name="triggerEffectShootXbox" value="PistolShoot" />
+			</property>
+			<property class="Action1">
+				<property name="Class" value="Zoom" />
+				<property name="Zoom_max_out" value="55" />
+				<property name="Zoom_max_in" value="55" />
+				<property name="SightsCameraOffset" value="-.0003,0,-.01" />
+				<property name="zoomTriggerEffectPullDualsense" value="PistolZoom" />
+				<property name="zoomTriggerEffectPullXb" value="PistolZoom" />
+			</property>
+			<stats>
+				<!-- Base_Random_Roll -->
+				<stat name="EntityDamage" value="0,0,1,0,.1" />
+				<stat name="MagazineSize" value="0,0,1,0,.1" />
+				<stat name="RoundsPerMinute" value="0,0,1,0,.02" />
+				<stat name="DamageFalloffRange" value="0,0,1,0,.1" />
+				<stat name="DegradationMax" value="0,0,1,0,.1" />
+				<!-- Q1_Boosted_Rolls -->
+				<stat name="EntityDamage" value="1,0,.3,.1,.5" />
+				<stat name="MagazineSize" value="1,0,.3,.1,.5" />
+				<stat name="RoundsPerMinute" value="1,0,.3,.02,.1" />
+				<stat name="DamageFalloffRange" value="1,0,.3,.1,.5" />
+				<stat name="DegradationMax" value="1,0,.3,.1,.5" />
+				<!-- Q2_Boosted_Rolls -->
+				<stat name="EntityDamage" value="2,10,.3,.1,.5" />
+				<stat name="MagazineSize" value="2,10,.3,.1,.5" />
+				<stat name="RoundsPerMinute" value="2,10,.3,.02,.1" />
+				<stat name="DamageFalloffRange" value="2,10,.3,.1,.5" />
+				<stat name="DegradationMax" value="2,10,.3,.1,.5" />
+				<!-- Q3_Boosted_Rolls -->
+				<stat name="EntityDamage" value="3,11,.3,.1,.5" />
+				<stat name="MagazineSize" value="3,11,.3,.1,.5" />
+				<stat name="RoundsPerMinute" value="3,11,.3,.02,.1" />
+				<stat name="DamageFalloffRange" value="3,11,.3,.1,.5" />
+				<stat name="DegradationMax" value="3,11,.3,.1,.5" />
+				<!-- Q4_Boosted_Rolls -->
+				<stat name="EntityDamage" value="4,12,.3,.1,.5" />
+				<stat name="MagazineSize" value="4,12,.3,.1,.5" />
+				<stat name="RoundsPerMinute" value="4,12,.3,.02,.1" />
+				<stat name="DamageFalloffRange" value="4,12,.3,.1,.5" />
+				<stat name="DegradationMax" value="4,12,.3,.1,.5" />
+				<!-- Q5_Boosted_Rolls -->
+				<stat name="EntityDamage" value="5,14,.3,.1,.5" />
+				<stat name="MagazineSize" value="5,14,.3,.1,.5" />
+				<stat name="RoundsPerMinute" value="5,14,.3,.02,.1" />
+				<stat name="DamageFalloffRange" value="5,14,.3,.1,.5" />
+				<stat name="DegradationMax" value="5,14,.3,.1,.5" />
+				<!-- Q6_Boosted_Rolls -->
+				<stat name="EntityDamage" value="6,16,.3,.1,.5" />
+				<stat name="MagazineSize" value="6,16,.3,.1,.5" />
+				<stat name="RoundsPerMinute" value="6,16,.3,.02,.1" />
+				<stat name="DamageFalloffRange" value="6,16,.3,.1,.5" />
+				<stat name="DegradationMax" value="6,16,.3,.1,.5" />
+				<!-- Q6_Boosted_Rolls -->
+				<stat name="EntityDamage" value="6,20,.3,.5,.7" />
+				<stat name="MagazineSize" value="6,20,.3,.5,1" />
+				<stat name="RoundsPerMinute" value="6,20,.3,.1,.3" />
+				<stat name="DamageFalloffRange" value="6,20,.3,.5,.7" />
+				<stat name="DegradationMax" value="6,20,.3,.5,.7" />
+			</stats>
+			<effect_group name="gunHandgunT3SMG5">
+				<passive_effect name="MaxRange" operation="base_set" value="65" tags="perkGunslinger,9mmGun" />
+				<passive_effect name="DamageFalloffRange" operation="base_set" value="30" tags="perkGunslinger,9mmGun" />
+				<passive_effect name="DamageFalloffRange" operation="perc_add" value="-.2,.2" tier="1,6" tags="perkGunslinger,9mmGun" />
+				<!-- random effective rng -->
+				<passive_effect name="RoundsPerMinute" operation="base_set" value="480" tags="perkGunslinger" />
+				<passive_effect name="BurstRoundCount" operation="base_set" value="0" tags="perkGunslinger" />
+				<passive_effect name="MagazineSize" operation="base_set" value="30" tags="perkGunslinger" />
+				<passive_effect name="ReloadSpeedMultiplier" operation="base_set" value="1" tags="perkGunslinger" />
+				<!-- 4s -->
+				<passive_effect name="ModSlots" operation="base_set" value="3,3,3,4,4,4" tier="1,2,3,4,5,6" />
+				<passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage" />
+				<passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue" />
+				<passive_effect name="EntityDamage" operation="base_add" value="18" tags="perkGunslinger" />
+				<!-- damage offset -->
+				<passive_effect name="EntityDamage" operation="perc_add" value=".05,.25" tier="2,6" tags="perkGunslinger" />
+				<!-- tier bonus -->
+				<passive_effect name="BlockDamage" operation="perc_add" value="-.08,.08" tags="perkGunslinger" />
+				<!-- random BlockDmg -->
+				<passive_effect name="BlockDamage" operation="perc_add" value=".15,.75" tier="2,6" tags="perkGunslinger" />
+				<!-- tier bonus -->
+				<passive_effect name="WeaponHandling" operation="perc_add" value="-.08,.08" tags="perkGunslinger" />
+				<!-- random WeaponHandling -->
+				<passive_effect name="SpreadDegreesVertical" operation="base_set" value="1.35" tags="perkGunslinger" />
+				<passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="1.35" tags="perkGunslinger" />
+				<passive_effect name="SpreadMultiplierAiming" operation="base_set" value=".35" tags="perkGunslinger" />
+				<passive_effect name="SpreadMultiplierCrouching" operation="base_set" value=".8" tags="perkGunslinger" />
+				<passive_effect name="SpreadMultiplierWalking" operation="base_set" value="1.5" tags="perkGunslinger" />
+				<passive_effect name="SpreadMultiplierRunning" operation="base_set" value="2.2" tags="perkGunslinger" />
+				<passive_effect name="KickDegreesVerticalMin" operation="base_set" value=".5" tags="perkGunslinger" />
+				<passive_effect name="KickDegreesVerticalMax" operation="base_set" value="1" tags="perkGunslinger" />
+				<passive_effect name="KickDegreesHorizontalMin" operation="base_set" value="-.3" tags="perkGunslinger" />
+				<passive_effect name="KickDegreesHorizontalMax" operation="base_set" value=".3" tags="perkGunslinger" />
+				<passive_effect name="IncrementalSpreadMultiplier" operation="base_set" value="1.6" tags="perkGunslinger,9mmGun" />
+				<passive_effect name="WeaponHandling" operation="base_set" value=".8" tags="perkGunslinger" />
+				<passive_effect name="DegradationMax" operation="base_set" value="500,700" tier="1,6" tags="perkGunslinger,9mmGun" />
+				<passive_effect name="DegradationPerUse" operation="base_set" value="1" tags="perkGunslinger,9mmGun" />
+			</effect_group>
+			<effect_group name="AposMod legendary" tiered="false">
+			<passive_effect name="EntityDamage" operation="perc_add" value=".15" />
+			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar="aposCorrodeTime" operation="set" value="6">
+				<requirement name="IsAlive" target="other" />
+				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="30" />
+			</triggered_effect>
+			<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffAposCorroded">
+				<requirement name="IsAlive" target="other" />
+				<requirement name="CVarCompare" target="other" cvar="aposCorrodeTime" operation="GT" value="0" />
+			</triggered_effect>
+		</effect_group>
+		</item>
+		<item name="aposLegendStormFist">
+			<property name="DescriptionKey" value="aposLegendStormFistDesc" />
+			<property name="CustomIconTint" value="255,180,0" />
+			<property name="CustomIcon" value="meleeWpnKnucklesT3SteelKnuckles" />
+			<property name="Tags" value="T3,blunt,melee,grunting,light,perkFlurryOfFortitude,weapon,attFortitude,perkBrawler,canHaveCosmetic,knuckleSkill,corpseRemoval" />
+			<property name="PreviousTechItem" value="meleeWpnKnucklesT1IronKnuckles" />
+			<property name="Material" value="MmeleeWpnKnucklesParts" />
+			<property name="TintColor" value="191, 172, 95" />
+			<property name="Meshfile" value="@:Other/Items/Weapons/Melee/Knuckles/knucklesSpikedRight_Prefab.prefab" />
+			<property name="HoldType" value="79" />
+			<property name="ScrapTimeOverride" value="10.0" />
+			<!-- meleeWpnKnucklesT3SteelKnuckles -->
+			<property name="EconomicValue" value="1100" />
+			<!-- meleeWpnKnucklesT3SteelKnucklesSchematic, -->
+			<property name="SoundUnholster" value="weapon_unholster" />
+			<property name="SoundHolster" value="weapon_holster" />
+			<property name="SoundPickup" value="machete_grab" />
+			<property name="SoundPlace" value="machete_place" />
+			<property class="Action0">
+				<property class="ToolCategory">
+					<property name="Butcher" value="5" param1="1.5" />
+				</property>
+				<property name="Sound_start" value="knuckles_steel_swinglight" />
+				<property class="HitSounds">
+					<property name="Override0" value="organic" param1="metalstaborganic" />
+				</property>
+				<property class="GrazeSounds">
+					<property name="Override0" value="organic" param1="metalgrazeorganic" />
+				</property>
+			</property>
+			<property class="Action1">
+				<property class="ToolCategory">
+					<property name="Butcher" value="0" param1="1.5" />
+				</property>
+				<property name="Sound_start" value="knuckles_steel_swingheavy" />
+				<property class="HitSounds">
+					<property name="Override0" value="organic" param1="metalstaborganic" />
+				</property>
+				<property class="GrazeSounds">
+					<property name="Override0" value="organic" param1="metalgrazeorganic" />
+				</property>
+			</property>
+			<stats>
+				<!-- Base_Random_Roll -->
+				<stat name="EntityDamage" value="0,0,1,0,.1" />
+				<stat name="BlockDamage" value="0,0,1,0,.1" />
+				<stat name="AttacksPerMinute" value="0,0,1,0,.02" />
+				<stat name="StaminaLoss" value="0,0,1,-.01,0" />
+				<stat name="DegradationMax" value="0,0,1,0,.1" />
+				<!-- Q1_Boosted_Rolls -->
+				<stat name="EntityDamage" value="1,0,.3,.1,.5" />
+				<stat name="BlockDamage" value="1,0,.3,.1,.5" />
+				<stat name="AttacksPerMinute" value="1,0,.3,.02,.1" />
+				<stat name="StaminaLoss" value="1,0,.3,-.5,-.1" />
+				<stat name="DegradationMax" value="1,0,.3,.1,.5" />
+				<!-- Q2_Boosted_Rolls -->
+				<stat name="EntityDamage" value="2,10,.3,.1,.5" />
+				<stat name="BlockDamage" value="2,10,.3,.1,.5" />
+				<stat name="AttacksPerMinute" value="2,10,.3,.02,.1" />
+				<stat name="StaminaLoss" value="2,10,.3,-.5,-.1" />
+				<stat name="DegradationMax" value="2,10,.3,.1,.5" />
+				<!-- Q3_Boosted_Rolls -->
+				<stat name="EntityDamage" value="3,11,.3,.1,.5" />
+				<stat name="BlockDamage" value="3,11,.3,.1,.5" />
+				<stat name="AttacksPerMinute" value="3,11,.3,.02,.1" />
+				<stat name="StaminaLoss" value="3,11,.3,-.5,-.1" />
+				<stat name="DegradationMax" value="3,11,.3,.1,.5" />
+				<!-- Q4_Boosted_Rolls -->
+				<stat name="EntityDamage" value="4,12,.3,.1,.5" />
+				<stat name="BlockDamage" value="4,12,.3,.1,.5" />
+				<stat name="AttacksPerMinute" value="4,12,.3,.02,.1" />
+				<stat name="StaminaLoss" value="4,12,.3,-.5,-.1" />
+				<stat name="DegradationMax" value="4,12,.3,.1,.5" />
+				<!-- Q5_Boosted_Rolls -->
+				<stat name="EntityDamage" value="5,14,.3,.1,.5" />
+				<stat name="BlockDamage" value="5,14,.3,.1,.5" />
+				<stat name="AttacksPerMinute" value="5,14,.3,.02,.1" />
+				<stat name="StaminaLoss" value="5,14,.3,-.5,-.1" />
+				<stat name="DegradationMax" value="5,14,.3,.1,.5" />
+				<!-- Q6_Boosted_Rolls -->
+				<stat name="EntityDamage" value="6,16,.3,.1,.5" />
+				<stat name="BlockDamage" value="6,16,.3,.1,.5" />
+				<stat name="AttacksPerMinute" value="6,16,.3,.02,.1" />
+				<stat name="StaminaLoss" value="6,16,.3,-.5,-.1" />
+				<stat name="DegradationMax" value="6,16,.3,.1,.5" />
+				<!-- Q6_Boosted_Rolls -->
+				<stat name="EntityDamage" value="6,20,.3,.5,.7" />
+				<stat name="BlockDamage" value="6,20,.3,.5,.7" />
+				<stat name="AttacksPerMinute" value="6,20,.3,.1,.2" />
+				<stat name="StaminaLoss" value="6,20,.3,-.1,-.05" />
+				<stat name="DegradationMax" value="6,20,.3,.5,.7" />
+			</stats>
+			<effect_group name="meleeWpnKnucklesT3SteelKnuckles">
+				<passive_effect name="AttacksPerMinute" operation="base_set" value="100" tags="perkBrawler,perkFlurryOfFortitude" />
+				<passive_effect name="StaminaLoss" operation="base_set" value="10.2" tags="primary" />
+				<passive_effect name="DegradationMax" operation="base_set" value="700,1400" tier="1,6" tags="perkBrawler" />
+				<passive_effect name="DegradationPerUse" operation="base_set" value="1" tags="perkBrawler" />
+				<passive_effect name="MaxRange" operation="base_set" value="2.0" tags="perkBrawler" />
+				<passive_effect name="BlockRange" operation="base_set" value="3" tags="perkBrawler" />
+				<passive_effect name="ModSlots" operation="base_set" value="3,3,3,4,4,4" tier="1,2,3,4,5,6" />
+				<passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage" />
+				<passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue" />
+				<passive_effect name="EntityDamage" operation="base_set" value="19" tags="perkBrawler" />
+				<passive_effect name="EntityDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkBrawler" />
+				<!-- tier bonus -->
+				<passive_effect name="BlockDamage" operation="base_set" value="6" tags="perkBrawler" />
+				<passive_effect name="BlockDamage" operation="perc_add" value=".1,.5" tier="2,6" tags="perkBrawler" />
+				<!-- tier bonus -->
+				<passive_effect name="DamageModifier" operation="perc_add" value="-.5" tags="earth" />
+				<passive_effect name="DamageModifier" operation="perc_add" value="-.5" tags="stone" />
+				<passive_effect name="DamageModifier" operation="perc_add" value="-.5" tags="metal" />
+				<passive_effect name="DamageModifier" operation="perc_add" value="1.7" tags="organic" />
+				<passive_effect name="HarvestCount" operation="base_set" value="1" tags="butcherHarvest" />
+				<triggered_effect trigger="onSelfEquipStart" action="AddPart" part="LeftKnuckles" prefab="@:Other/Items/Weapons/Melee/Knuckles/knucklesSpikedLeft_Prefab.prefab" parentTransform="LeftWeapon" localPos="0,0,0" localRot="0,0,0" colorTint="true" />
+				<triggered_effect trigger="onSelfEquipStop" action="RemovePart" part="LeftKnuckles" />
+				<triggered_effect trigger="onSelfChangedView" action="RemovePart" part="LeftKnuckles" />
+				<triggered_effect trigger="onSelfChangedView" action="AddPart" part="LeftKnuckles" prefab="@:Other/Items/Weapons/Melee/Knuckles/knucklesSpikedLeft_Prefab.prefab" parentTransform="LeftWeapon" localPos="0,0,0" localRot="0,0,0" colorTint="true" />
+			</effect_group>
+			<effect_group name="Power Attack">
+				<passive_effect name="EntityDamage" operation="perc_add" value="1" tags="secondary" />
+				<passive_effect name="BlockDamage" operation="perc_add" value="1" tags="secondary" />
+				<passive_effect name="StaminaLoss" operation="base_set" value="17.3" tags="secondary" />
+			</effect_group>
+			<effect_group name="AposMod legendary" tiered="false">
+			<passive_effect name="EntityDamage" operation="perc_add" value=".2" />
+			<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffBurningElement">
+				<requirement name="IsAlive" target="other" />
+				<requirement name="CVarCompare" target="other" cvar="_underwater" operation="LT" value="0.3" />
+				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25" />
+			</triggered_effect>
+			<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffShocked" duration="1.5">
+				<requirement name="IsAlive" target="other" />
+				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25" />
+			</triggered_effect>
+		</effect_group>
+		</item>
+		<item name="aposLegendArtemis">
+			<property name="DescriptionKey" value="aposLegendArtemisDesc" />
+			<property name="CustomIconTint" value="255,180,0" />
+			<property name="CustomIcon" value="gunBowT3CompoundBow" />
+			<property name="Tags" value="T3,weapon,ranged,bowDrawPenalty,archery,bow,attAgility,perkArchery,canHaveCosmetic,bowSkill" />
+			<property name="PreviousTechItem" value="gunBowT1WoodenBow" />
+			<property name="DisplayType" value="rangedBow" />
+			<property name="HoldType" value="53" />
+			<property name="Meshfile" value="@:Other/Items/Weapons/Ranged/Bows/advancedBow/advancedCompoundBow/advancedCompoundBowPrefab.prefab" />
+			<property name="Material" value="MBowCrossbowParts" />
+			<property name="TintColor" value="80, 80, 80" />
+			<property name="Weight" value="7" />
+			<property name="ScrapTimeOverride" value="10.0" />
+			<property name="RepairTools" value="resourceRepairKit" />
+			<property name="DegradationBreaksAfter" value="false" />
+			<property name="SoundJammed" value="ItemNeedsRepair" />
+			<property name="SoundDestroy" value="wooddestroy1" />
+			<property name="CrosshairOnAim" value="true" />
+			<!-- aimTest -->
+			<property name="CrosshairUpAfterShot" value="false" />
+			<property name="EconomicBundleSize" value="1" />
+			<property name="EconomicValue" value="5000" />
+			<!-- gunBowT3CompoundBow -->
+			<property name="Group" value="Ammo/Weapons,Ranged Weapons" />
+			<property name="RepairExpMultiplier" value="5.5" />
+			<!-- gunBowT3CompoundBowSchematic, -->
+			<property name="ShowQuality" value="true" />
+			<property name="SoundUnholster" value="weapon_unholster" />
+			<property name="SoundHolster" value="weapon_holster" />
+			<property name="SoundPickup" value="bow_wooden_grab" />
+			<property name="SoundPlace" value="bow_wooden_place" />
+			<property class="Action0">
+				<property name="Class" value="Catapult" />
+				<!-- Catapult might not be the best name for it but it can also be used for a slingshot -->
+				<property name="Hitmask_override" value="Arrow" />
+				<property name="Delay" value="1" />
+				<!-- obsolete if rounds per minute exists -->
+				<property name="Magazine_items" value="ammoArrowStone,ammoArrowIron,ammoArrowSteelAP,ammoArrowFlaming,ammoArrowExploding" />
+				<!-- <property name="Reload_time" value=".9"/> -->
+				<property name="Sound_start" value="bow3_fire" />
+				<property name="Sound_repeat" value="" />
+				<property name="Sound_end" value="" />
+				<property name="Sound_empty" value="dryfire" />
+				<property name="Sound_reload" value="bow_unquiver" />
+				<property name="Sound_draw" value="bow3_draw" />
+				<property name="Sound_cancel" value="bow_fire_cancel" />
+				<property name="Max_strain_time" value=".43" />
+				<property name="triggerEffectTriggerPullDualsense" value="PistolTrigger" />
+				<property name="triggerEffectTriggerPullXbox" value="PistolTrigger" />
+				<property name="triggerEffectShootDualsense" value="PistolShoot" />
+				<property name="triggerEffectShootXbox" value="PistolShoot" />
+			</property>
+			<property class="Action1">
+				<property name="Class" value="Zoom" />
+				<property name="Zoom_max_out" value="40" />
+				<property name="Zoom_max_in" value="40" />
+				<property name="triggerEffectTriggerPullDualsense" value="PistolZoom" />
+			</property>
+			<stats>
+				<!-- Base_Random_Roll -->
+				<stat name="EntityDamage" value="0,0,1,0,.1" />
+				<stat name="ProjectileVelocity" value="0,0,1,0,.1" />
+				<stat name="DamageFalloffRange" value="0,0,1,0,.1" />
+				<stat name="DegradationMax" value="0,0,1,0,.1" />
+				<!-- Q1_Boosted_Rolls -->
+				<stat name="EntityDamage" value="1,0,.3,.1,.5" />
+				<stat name="ProjectileVelocity" value="1,0,.3,.1,.5" />
+				<stat name="DamageFalloffRange" value="1,0,.3,.1,.5" />
+				<stat name="DegradationMax" value="1,0,.3,.1,.5" />
+				<!-- Q2_Boosted_Rolls -->
+				<stat name="EntityDamage" value="2,10,.3,.1,.5" />
+				<stat name="ProjectileVelocity" value="2,10,.3,.1,.5" />
+				<stat name="DamageFalloffRange" value="2,10,.3,.1,.5" />
+				<stat name="DegradationMax" value="2,10,.3,.1,.5" />
+				<!-- Q3_Boosted_Rolls -->
+				<stat name="EntityDamage" value="3,11,.3,.1,.5" />
+				<stat name="ProjectileVelocity" value="3,11,.3,.1,.5" />
+				<stat name="DamageFalloffRange" value="3,11,.3,.1,.5" />
+				<stat name="DegradationMax" value="3,11,.3,.1,.5" />
+				<!-- Q4_Boosted_Rolls -->
+				<stat name="EntityDamage" value="4,12,.3,.1,.5" />
+				<stat name="ProjectileVelocity" value="4,12,.3,.1,.5" />
+				<stat name="DamageFalloffRange" value="4,12,.3,.1,.5" />
+				<stat name="DegradationMax" value="4,12,.3,.1,.5" />
+				<!-- Q5_Boosted_Rolls -->
+				<stat name="EntityDamage" value="5,14,.3,.1,.5" />
+				<stat name="ProjectileVelocity" value="5,14,.3,.1,.5" />
+				<stat name="DamageFalloffRange" value="5,14,.3,.1,.5" />
+				<stat name="DegradationMax" value="5,14,.3,.1,.5" />
+				<!-- Q6_Boosted_Rolls -->
+				<stat name="EntityDamage" value="6,16,.3,.1,.5" />
+				<stat name="ProjectileVelocity" value="6,16,.3,.1,.5" />
+				<stat name="DamageFalloffRange" value="6,16,.3,.1,.5" />
+				<stat name="DegradationMax" value="6,16,.3,.1,.5" />
+				<!-- Q6_Boosted_Rolls -->
+				<stat name="EntityDamage" value="6,20,.3,.5,.7" />
+				<stat name="ProjectileVelocity" value="6,20,.3,.5,1" />
+				<stat name="DamageFalloffRange" value="6,20,.3,.5,.7" />
+				<stat name="DegradationMax" value="6,20,.3,.5,.7" />
+			</stats>
+			<effect_group name="gunBowT3CompoundBow">
+				<passive_effect name="ProjectileVelocity" operation="perc_add" value=".2" tags="perkArchery" />
+				<passive_effect name="DamageFalloffRange" operation="base_set" value="34" tags="perkArchery" />
+				<passive_effect name="DamageFalloffRange" operation="perc_add" value="-.1,.08" tier="1,6" tags="perkArchery" />
+				<!-- random effective rng -->
+				<passive_effect name="MaxRange" operation="base_set" value="100" tags="perkArchery" />
+				<passive_effect name="MagazineSize" operation="base_set" value="1" tags="perkArchery" />
+				<passive_effect name="EntityDamage" operation="base_add" value="29" tags="perkArchery" />
+				<!-- damage offset -->
+				<passive_effect name="EntityDamage" operation="perc_add" value=".07,.35" tier="2,6" tags="perkArchery" />
+				<!-- tier bonus -->
+				<passive_effect name="BlockDamage" operation="perc_add" value="-.08,.08" tags="perkArchery" />
+				<!-- random BlockDmg -->
+				<passive_effect name="BlockDamage" operation="perc_add" value=".15,.75" tier="2,6" tags="perkArchery" />
+				<!-- tier bonus -->
+				<passive_effect name="ProjectileVelocity" operation="perc_add" value="-.08,.08" tags="perkArchery" />
+				<!-- random Veloc -->
+				<passive_effect name="WeaponHandling" operation="perc_add" value="-.08,.08" tags="perkArchery" />
+				<!-- random WeaponHandling -->
+				<passive_effect name="SpreadDegreesVertical" operation="base_set" value="2.67" tags="perkArchery" />
+				<passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="2.67" tags="perkArchery" />
+				<passive_effect name="SpreadMultiplierAiming" operation="base_set" value=".06" tags="perkArchery" />
+				<passive_effect name="SpreadMultiplierCrouching" operation="base_set" value=".5" tags="perkArchery" />
+				<passive_effect name="SpreadMultiplierWalking" operation="base_set" value="1.2" tags="perkArchery" />
+				<passive_effect name="SpreadMultiplierRunning" operation="base_set" value="2.0" tags="perkArchery" />
+				<passive_effect name="ReloadSpeedMultiplier" operation="base_set" value=".9" tags="perkArchery" />
+				<passive_effect name="IncrementalSpreadMultiplier" operation="base_set" value="2" tags="perkArchery" />
+				<passive_effect name="WeaponHandling" operation="base_set" value=".9" tags="perkArchery" />
+				<!-- crosshair reset speed -->
+				<passive_effect name="RoundsPerMinute" operation="base_set" value="75" tags="perkArchery,bowDrawPenalty" />
+				<passive_effect name="BurstRoundCount" operation="base_set" value="1" tags="perkArchery" />
+				<passive_effect name="KickDegreesVerticalMin" operation="base_set" value=".5" tags="perkArchery" />
+				<passive_effect name="KickDegreesVerticalMax" operation="base_set" value=".5" tags="perkArchery" />
+				<passive_effect name="KickDegreesHorizontalMin" operation="base_set" value="-.2" tags="perkArchery" />
+				<passive_effect name="KickDegreesHorizontalMax" operation="base_set" value=".2" tags="perkArchery" />
+				<passive_effect name="DegradationMax" operation="base_set" value="350,600" tier="1,6" tags="perkArchery" />
+				<passive_effect name="DegradationPerUse" operation="base_set" value="1" tags="perkArchery" />
+				<passive_effect name="ModSlots" operation="base_set" value="3,3,3,4,4,4" tier="1,2,3,4,5,6" />
+				<passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage" />
+				<passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue" />
+			</effect_group>
+			<effect_group name="sneak damage bonus">
+				<requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1" />
+				<requirement name="CVarCompare" cvar="_notAlerted" operation="GT" value="0" target="other" />
+				<passive_effect name="DamageBonus" operation="base_add" value="2" />
+				<passive_effect name="EntityDamage" operation="perc_add" value="2" tags="perkArchery" />
+				<display_value name="dEntityDamageSneak" value="2" />
+			</effect_group>
+			<effect_group name="AposMod legendary" tiered="false">
+			<!-- every arrow: 8 fragments of 50 (as Archery 5) and fire -->
+			<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar="aposSplinterN" operation="set" value="8" />
+			<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar="aposSplinterDmg" operation="set" value="-50" />
+			<triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffBurningFlamingArrow">
+				<requirement name="CVarCompare" target="other" cvar="_underwater" operation="LT" value="0.3" />
+			</triggered_effect>
+		</effect_group>
+		</item>
+		<item name="aposLegendBigBoom">
+			<property name="DescriptionKey" value="aposLegendBigBoomDesc" />
+			<property name="CustomIconTint" value="255,180,0" />
+			<property name="CustomIcon" value="gunExplosivesT3RocketLauncher" />
+			<property name="Tags" value="T3,weapon,ranged,holdBreathAiming,reloadPenalty,launcher,attPerception,perkDemolitionsExpert,canHaveCosmetic,barrelAttachments,noSilencer,sideAttachments,explosivesSkill" />
+			<property name="PreviousTechItem" value="thrownGrenadeContact,thrownDynamite" />
+			<property name="DisplayType" value="rangedLauncher" />
+			<property name="HoldType" value="10" />
+			<property name="Meshfile" value="@:Other/Items/Weapons/Ranged/RocketLauncher/rocketlauncherPrefab.prefab" />
+			<property name="Material" value="MRocketLauncherParts" />
+			<property name="TintColor" value="77, 77, 51" />
+			<property name="Weight" value="1" />
+			<property name="ScrapTimeOverride" value="10.0" />
+			<property name="RepairTools" value="resourceRepairKit" />
+			<property name="DegradationBreaksAfter" value="false" />
+			<property name="SoundJammed" value="weapon_jam" />
+			<property name="CrosshairOnAim" value="true" />
+			<!-- aimTest -->
+			<property name="CrosshairUpAfterShot" value="true" />
+			<!-- aimTest -->
+			<property name="Sound_Sight_In" value="launcher_sight_in" />
+			<property name="Sound_Sight_Out" value="launcher_sight_out" />
+			<property name="Group" value="Ammo/Weapons,Ranged Weapons" />
+			<property name="RepairExpMultiplier" value="10.8" />
+			<property name="EconomicValue" value="2000" />
+			<!-- gunExplosivesT3RocketLauncher -->
+			<!-- gunExplosivesT3RocketLauncherSchematic, -->
+			<property name="ShowQuality" value="true" />
+			<property name="SoundUnholster" value="weapon_unholster" />
+			<property name="SoundHolster" value="weapon_holster" />
+			<property name="SoundPickup" value="rpg_grab" />
+			<property name="SoundPlace" value="rpg_place" />
+			<property class="Action0">
+				<property name="Class" value="Launcher" />
+				<property name="Delay" value=".8" />
+				<!-- obsolete if rounds per minute exists -->
+				<!-- <property name="Range" value="200"/> -->
+				<property name="Magazine_items" value="ammoRocketHE,ammoRocketFrag" />
+				<!-- <property name="Reload_time" value="2"/> -->
+				<property name="Sound_start" value="m136_fire" />
+				<property name="Sound_repeat" value="" />
+				<property name="Sound_end" value="" />
+				<property name="Sound_empty" value="dryfire" />
+				<property name="Sound_reload" value="m136_reload" />
+				<property name="AutoReload" value="false" />
+				<property name="Particles_muzzle_fire" value="rocketLauncherFire" />
+				<property name="Particles_muzzle_smoke" value="nozzlesmoke_m136" />
+				<property name="ScopeOffset" value="-.00062,.088,.065" />
+				<property name="SideOffset" value="0,0,0" />
+				<property name="BarrelOffset" value="0,0,0" />
+				<property name="triggerEffectTriggerShootDualsense" value="PistolShoot" />
+			</property>
+			<property class="Action1">
+				<property name="Class" value="Zoom" />
+				<property name="Zoom_max_out" value="55" />
+				<property name="Zoom_max_in" value="55" />
+				<property name="triggerEffectTriggerPullDualsense" value="PistolZoom" />
+			</property>
+			<stats>
+				<!-- Base_Random_Roll -->
+				<stat name="DamageFalloffRange" value="0,0,1,0,.1" />
+				<stat name="DegradationMax" value="0,0,1,0,.1" />
+				<!-- Q1_Boosted_Rolls -->
+				<stat name="DamageFalloffRange" value="1,0,.3,.1,.5" />
+				<stat name="DegradationMax" value="1,0,.3,.1,.5" />
+				<!-- Q2_Boosted_Rolls -->
+				<stat name="DamageFalloffRange" value="2,10,.3,.1,.5" />
+				<stat name="DegradationMax" value="2,10,.3,.1,.5" />
+				<!-- Q3_Boosted_Rolls -->
+				<stat name="DamageFalloffRange" value="3,11,.3,.1,.5" />
+				<stat name="DegradationMax" value="3,11,.3,.1,.5" />
+				<!-- Q4_Boosted_Rolls -->
+				<stat name="DamageFalloffRange" value="4,12,.3,.1,.5" />
+				<stat name="DegradationMax" value="4,12,.3,.1,.5" />
+				<!-- Q5_Boosted_Rolls -->
+				<stat name="DamageFalloffRange" value="5,14,.3,.1,.5" />
+				<stat name="DegradationMax" value="5,14,.3,.1,.5" />
+				<!-- Q6_Boosted_Rolls -->
+				<stat name="DamageFalloffRange" value="6,16,.3,.1,.5" />
+				<stat name="DegradationMax" value="6,16,.3,.1,.5" />
+				<!-- Q6_Boosted_Rolls -->
+				<stat name="DamageFalloffRange" value="6,20,.3,.5,.7" />
+				<stat name="DegradationMax" value="6,20,.3,.5,.7" />
+			</stats>
+			<effect_group name="gunExplosivesT3RocketLauncher">
+				<passive_effect name="MaxRange" operation="base_set" value="100" tags="perkDemolitionsExpert" />
+				<passive_effect name="DamageFalloffRange" operation="base_set" value="70" tags="perkDemolitionsExpert" />
+				<passive_effect name="DamageFalloffRange" operation="perc_add" value="-.2,.2" tier="1,6" tags="perkDemolitionsExpert" />
+				<!-- random effective rng -->
+				<passive_effect name="EntityDamage" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert" />
+				<!-- random EntityDmg -->
+				<passive_effect name="EntityDamage" operation="perc_add" value=".15,.75" tier="2,6" tags="perkDemolitionsExpert" />
+				<!-- tier bonus -->
+				<passive_effect name="ExplosionEntityDamage" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert" />
+				<!-- random EntityDmg -->
+				<passive_effect name="ExplosionEntityDamage" operation="perc_add" value=".15,.75" tier="2,6" tags="perkDemolitionsExpert" />
+				<!-- tier bonus -->
+				<passive_effect name="BlockDamage" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert" />
+				<!-- random BlockDmg -->
+				<passive_effect name="BlockDamage" operation="perc_add" value=".15,.75" tier="2,6" tags="perkDemolitionsExpert" />
+				<!-- tier bonus -->
+				<passive_effect name="ExplosionBlockDamage" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert" />
+				<!-- random BlockDmg -->
+				<passive_effect name="ExplosionBlockDamage" operation="perc_add" value=".15,.75" tier="2,6" tags="perkDemolitionsExpert" />
+				<!-- tier bonus -->
+				<passive_effect name="ProjectileVelocity" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert" />
+				<!-- random Veloc -->
+				<passive_effect name="WeaponHandling" operation="perc_add" value="-.08,.08" tags="perkDemolitionsExpert" />
+				<!-- random WeaponHandling -->
+				<passive_effect name="RoundsPerMinute" operation="base_set" value="75" tags="perkDemolitionsExpert" />
+				<passive_effect name="BurstRoundCount" operation="base_set" value="1" tags="perkDemolitionsExpert" />
+				<passive_effect name="MagazineSize" operation="base_set" value="1" tags="perkDemolitionsExpert" />
+				<passive_effect name="ReloadSpeedMultiplier" operation="base_set" value=".7" tags="perkDemolitionsExpert" />
+				<!-- 2.7s -->
+				<passive_effect name="ModSlots" operation="base_set" value="1,1,2,2,3,4" tier="1,2,3,4,5,6" />
+				<passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage" />
+				<passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue" />
+				<passive_effect name="SpreadDegreesVertical" operation="base_set" value="7" tags="perkDemolitionsExpert" />
+				<passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="7" tags="perkDemolitionsExpert" />
+				<passive_effect name="SpreadMultiplierAiming" operation="base_set" value=".15" tags="perkDemolitionsExpert" />
+				<passive_effect name="SpreadMultiplierCrouching" operation="base_set" value=".8" tags="perkDemolitionsExpert" />
+				<passive_effect name="SpreadMultiplierWalking" operation="base_set" value="1.5" tags="perkDemolitionsExpert" />
+				<passive_effect name="SpreadMultiplierRunning" operation="base_set" value="2" tags="perkDemolitionsExpert" />
+				<passive_effect name="KickDegreesVerticalMin" operation="base_set" value="10" tags="perkDemolitionsExpert" />
+				<passive_effect name="KickDegreesVerticalMax" operation="base_set" value="10" tags="perkDemolitionsExpert" />
+				<passive_effect name="KickDegreesHorizontalMin" operation="base_set" value="-.5" tags="perkDemolitionsExpert" />
+				<passive_effect name="KickDegreesHorizontalMax" operation="base_set" value=".5" tags="perkDemolitionsExpert" />
+				<passive_effect name="IncrementalSpreadMultiplier" operation="base_set" value="2.2" tags="perkDemolitionsExpert" />
+				<passive_effect name="WeaponHandling" operation="base_set" value=".4" tags="perkDemolitionsExpert" />
+				<passive_effect name="DegradationMax" operation="base_set" value="100,200" tier="1,6" tags="perkDemolitionsExpert" />
+				<passive_effect name="DegradationPerUse" operation="base_set" value="1" tags="perkDemolitionsExpert" />
+			</effect_group>
+			<effect_group name="AposMod legendary" tiered="false">
+			<!-- 50% chance that the next rocket costs nothing (the free shot ends the buff, then rolls again) -->
+			<triggered_effect trigger="onSelfRangedBurstShotEnd" action="RemoveBuff" buff="buffAposFreeRocket" />
+			<triggered_effect trigger="onSelfRangedBurstShotEnd" action="AddBuff" buff="buffAposFreeRocket">
+				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50" />
+			</triggered_effect>
+		</effect_group>
+		</item>
+		<item name="aposLegendPredator">
+			<property name="DescriptionKey" value="aposLegendPredatorDesc" />
+			<property name="CustomIconTint" value="255,180,0" />
+			<property name="CustomIcon" value="gunRifleT3SniperRifle" />
+			<property name="Tags" value="T3,weapon,ranged,holdBreathAiming,reloadPenalty,gun,barrelAttachments,sideAttachments,smallTopAttachments,mediumTopAttachments,largeTopAttachments,stock,magazine,firingMode,bottomAttachments,attPerception,perkDeadEye,attachmentsIncluded,canHaveCosmetic,rifleSkill" />
+			<property name="PreviousTechItem" value="gunRifleT2LeverActionRifle" />
+			<property name="DisplayType" value="rangedGun" />
+			<property name="HoldType" value="11" />
+			<property name="Meshfile" value="@:Other/Items/Weapons/Ranged/Sharp Shooter/sharpShooterGunPrefab.prefab" />
+			<property name="Material" value="MRifleParts" />
+			<property name="TintColor" value="126, 135, 145" />
+			<property name="Weight" value="7" />
+			<property name="ScrapTimeOverride" value="10.0" />
+			<property name="RepairTools" value="resourceRepairKit" />
+			<property name="DegradationBreaksAfter" value="false" />
+			<property name="SoundJammed" value="weapon_jam" />
+			<property name="Attachments" value="meleeToolFlashlight02" />
+			<property name="CrosshairOnAim" value="true" />
+			<!-- aimTest -->
+			<property name="CrosshairUpAfterShot" value="true" />
+			<!-- aimTest -->
+			<property name="Sound_Sight_In" value="rifle_sight_in" />
+			<property name="Sound_Sight_Out" value="rifle_sight_out" />
+			<property name="LightSource" value="lightSource" />
+			<!-- Start: Needed for the attachment flashlight -->
+			<property name="ActivateObject" value="Attachments/flashlight/lightSource" />
+			<property name="AttachmentFlashlight" value="meleeToolFlashlight02" />
+			<!-- End: Needed for the attachment flashlight -->
+			<property name="Group" value="Ammo/Weapons,Ranged Weapons" />
+			<property name="RepairExpMultiplier" value="10.8" />
+			<property name="LightValue" value=".45" />
+			<property name="EconomicValue" value="5000" />
+			<!-- gunRifleT3SniperRifle -->
+			<!-- gunRifleT3SniperRifleSchematic, -->
+			<property name="ShowQuality" value="true" />
+			<property name="SoundUnholster" value="weapon_unholster" />
+			<property name="SoundHolster" value="weapon_holster" />
+			<property name="SoundPickup" value="rifle_polymer_grab" />
+			<property name="SoundPlace" value="rifle_polymer_place" />
+			<property class="Action0">
+				<property name="Class" value="Ranged" />
+				<property name="Delay" value=".5" />
+				<!-- obsolete if rounds per minute exists -->
+				<property name="Magazine_items" value="ammo762mmBulletBall,ammo762mmBulletHP,ammo762mmBulletAP" />
+				<property name="Reload_time" value="2.5" />
+				<property name="Sound_start" value="sharpshooter_fire" />
+				<property name="Sound_loop" value="sharpshooter_fire" />
+				<property name="Sound_repeat" value="" />
+				<property name="Sound_end" value="" />
+				<property name="Sound_empty" value="dryfire" />
+				<property name="AutoReload" value="false" />
+				<property name="Particles_muzzle_fire" value="gunfire_rifle_sniper" />
+				<property name="triggerEffectTriggerPullDualsense" value="RifleTrigger" />
+				<property name="triggerEffectTriggerPullXbox" value="PistolTrigger" />
+				<property name="triggerEffectTriggerShootDualsense" value="RifleShoot" />
+				<property name="triggerEffectTriggerShootXbox" value="PistolShoot" />
+			</property>
+			<property class="Action1">
+				<property name="Class" value="Zoom" />
+				<property name="Zoom_max_out" value="55" />
+				<property name="Zoom_max_in" value="55" />
+				<property name="SightsCameraOffset" value="0,0,0" />
+				<property name="ScopeCameraOffset" value="0,0,0" />
+				<property name="triggerEffectTriggerPullDualsense" value="PistolZoom" />
+			</property>
+			<stats>
+				<!-- Base_Random_Roll -->
+				<stat name="EntityDamage" value="0,0,1,0,.1" />
+				<stat name="MagazineSize" value="0,0,1,0,.1" />
+				<stat name="RoundsPerMinute" value="0,0,1,0,.02" />
+				<stat name="DamageFalloffRange" value="0,0,1,0,.1" />
+				<stat name="DegradationMax" value="0,0,1,0,.1" />
+				<!-- Q1_Boosted_Rolls -->
+				<stat name="EntityDamage" value="1,0,.3,.1,.5" />
+				<stat name="MagazineSize" value="1,0,.3,.1,.5" />
+				<stat name="RoundsPerMinute" value="1,0,.3,.02,.1" />
+				<stat name="DamageFalloffRange" value="1,0,.3,.1,.5" />
+				<stat name="DegradationMax" value="1,0,.3,.1,.5" />
+				<!-- Q2_Boosted_Rolls -->
+				<stat name="EntityDamage" value="2,10,.3,.1,.5" />
+				<stat name="MagazineSize" value="2,10,.3,.1,.5" />
+				<stat name="RoundsPerMinute" value="2,10,.3,.02,.1" />
+				<stat name="DamageFalloffRange" value="2,10,.3,.1,.5" />
+				<stat name="DegradationMax" value="2,10,.3,.1,.5" />
+				<!-- Q3_Boosted_Rolls -->
+				<stat name="EntityDamage" value="3,11,.3,.1,.5" />
+				<stat name="MagazineSize" value="3,11,.3,.1,.5" />
+				<stat name="RoundsPerMinute" value="3,11,.3,.02,.1" />
+				<stat name="DamageFalloffRange" value="3,11,.3,.1,.5" />
+				<stat name="DegradationMax" value="3,11,.3,.1,.5" />
+				<!-- Q4_Boosted_Rolls -->
+				<stat name="EntityDamage" value="4,12,.3,.1,.5" />
+				<stat name="MagazineSize" value="4,12,.3,.1,.5" />
+				<stat name="RoundsPerMinute" value="4,12,.3,.02,.1" />
+				<stat name="DamageFalloffRange" value="4,12,.3,.1,.5" />
+				<stat name="DegradationMax" value="4,12,.3,.1,.5" />
+				<!-- Q5_Boosted_Rolls -->
+				<stat name="EntityDamage" value="5,14,.3,.1,.5" />
+				<stat name="MagazineSize" value="5,14,.3,.1,.5" />
+				<stat name="RoundsPerMinute" value="5,14,.3,.02,.1" />
+				<stat name="DamageFalloffRange" value="5,14,.3,.1,.5" />
+				<stat name="DegradationMax" value="5,14,.3,.1,.5" />
+				<!-- Q6_Boosted_Rolls -->
+				<stat name="EntityDamage" value="6,16,.3,.1,.5" />
+				<stat name="MagazineSize" value="6,16,.3,.1,.5" />
+				<stat name="RoundsPerMinute" value="6,16,.3,.02,.1" />
+				<stat name="DamageFalloffRange" value="6,16,.3,.1,.5" />
+				<stat name="DegradationMax" value="6,16,.3,.1,.5" />
+				<!-- Q6_Boosted_Rolls -->
+				<stat name="EntityDamage" value="6,20,.3,.5,.7" />
+				<stat name="MagazineSize" value="6,20,.3,.5,1" />
+				<stat name="RoundsPerMinute" value="6,20,.3,.2,.3" />
+				<stat name="DamageFalloffRange" value="6,20,.3,.5,.7" />
+				<stat name="DegradationMax" value="6,20,.3,.5,.7" />
+			</stats>
+			<effect_group name="gunRifleT3SniperRifle">
+				<passive_effect name="MaxRange" operation="base_set" value="150" tags="perkDeadEye" />
+				<passive_effect name="DamageFalloffRange" operation="base_set" value="80" tags="perkDeadEye" />
+				<passive_effect name="DamageFalloffRange" operation="perc_add" value="-.1,.05" tier="1,6" tags="perkDeadEye" />
+				<!-- random effective rng -->
+				<passive_effect name="RoundsPerMinute" operation="base_set" value="140" tags="perkDeadEye" />
+				<passive_effect name="BurstRoundCount" operation="base_set" value="1" tags="perkDeadEye" />
+				<passive_effect name="MagazineSize" operation="base_set" value="12" tags="perkDeadEye" />
+				<passive_effect name="ReloadSpeedMultiplier" operation="base_set" value="1" tags="perkDeadEye" />
+				<!-- 2.7s -->
+				<passive_effect name="ModSlots" operation="base_set" value="4,4,4,4,4,4" tier="1,2,3,4,5,6" />
+				<passive_effect name="ModPowerBonus" operation="perc_add" value=".10" tags="EntityDamage,BlockDamage" />
+				<passive_effect name="ModPowerBonus" operation="base_add" value="300" tags="EconomicValue" />
+				<passive_effect name="EntityDamage" operation="base_add" value="53" tags="perkDeadEye" />
+				<!-- damage offset -->
+				<passive_effect name="EntityDamage" operation="perc_add" value=".05,.25" tier="2,6" tags="perkDeadEye" />
+				<!-- tier bonus -->
+				<passive_effect name="BlockDamage" operation="perc_add" value="-.08,.08" tags="perkDeadEye" />
+				<!-- random BlockDmg -->
+				<passive_effect name="BlockDamage" operation="perc_add" value=".15,.75" tier="2,6" tags="perkDeadEye" />
+				<!-- tier bonus -->
+				<passive_effect name="WeaponHandling" operation="perc_add" value="-.08,.08" tags="perkDeadEye" />
+				<!-- random WeaponHandling -->
+				<passive_effect name="SpreadDegreesVertical" operation="base_set" value="6" tags="perkDeadEye" />
+				<passive_effect name="SpreadDegreesHorizontal" operation="base_set" value="6" tags="perkDeadEye" />
+				<passive_effect name="SpreadMultiplierAiming" operation="base_set" value=".06" tags="perkDeadEye" />
+				<passive_effect name="SpreadMultiplierCrouching" operation="base_set" value=".8" tags="perkDeadEye" />
+				<passive_effect name="SpreadMultiplierWalking" operation="base_set" value="1.5" tags="perkDeadEye" />
+				<passive_effect name="SpreadMultiplierRunning" operation="base_set" value="2" tags="perkDeadEye" />
+				<passive_effect name="KickDegreesVerticalMin" operation="base_set" value="1.5" tags="perkDeadEye" />
+				<passive_effect name="KickDegreesVerticalMax" operation="base_set" value="3.0" tags="perkDeadEye" />
+				<passive_effect name="KickDegreesHorizontalMin" operation="base_set" value="-.2" tags="perkDeadEye" />
+				<passive_effect name="KickDegreesHorizontalMax" operation="base_set" value=".2" tags="perkDeadEye" />
+				<passive_effect name="IncrementalSpreadMultiplier" operation="base_set" value="11" tags="perkDeadEye" />
+				<passive_effect name="WeaponHandling" operation="base_set" value=".75" tags="perkDeadEye" />
+				<passive_effect name="DegradationMax" operation="base_set" value="700,1100" tier="1,6" tags="perkDeadEye" />
+				<passive_effect name="DegradationPerUse" operation="base_set" value="1" tags="perkDeadEye" />
+				<passive_effect name="DamageModifier" operation="base_add" value="200" tags="head" />
+			</effect_group>
+			<effect_group name="AposMod legendary" tiered="false">
+			<passive_effect name="EntityDamage" operation="perc_add" value=".25" />
+			<!-- every headshot ricochets: 100 to all within 15 m of the hit, 2 s stun -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="15" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-100">
+				<requirement name="HitLocation" body_parts="Head" />
+			</triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="15" target_tags="zombie,animal" buff="buffAposSplash">
+				<requirement name="HitLocation" body_parts="Head" />
+			</triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="15" target_tags="zombie,animal" buff="buffInjuryStunned01" duration="2">
+				<requirement name="HitLocation" body_parts="Head" />
+			</triggered_effect>
 		</effect_group>
 		</item>
 	</append>

@@ -36,16 +36,99 @@ $legends = [ordered]@{
   aposLegendRipper = @{ Base = 'meleeWpnBladeT3Machete'; Effect = @'
 <effect_group name="AposMod legendary" tiered="false">
 	<passive_effect name="EntityDamage" operation="perc_add" value=".4"/>
+	<!-- +50% more against a target that is already bleeding -->
+	<passive_effect name="EntityDamage" operation="perc_add" value=".5">
+		<requirement name="HasBuff" target="other" buff="buffInjuryBleeding"/>
+	</passive_effect>
 	<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffInjuryBleeding">
 		<requirement name="IsAlive" target="other"/>
 		<requirement name="!EntityTagCompare" target="other" tags="trader"/>
 	</triggered_effect>
+	<triggered_effect trigger="onSelfKilledOther" action="ModifyStats" stat="Health" operation="add" value="20"/>
 </effect_group>
 '@ }
   aposLegendThunderclap = @{ Base = 'meleeWpnSledgeT3SteelSledgehammer'; Effect = @'
 <effect_group name="AposMod legendary" tiered="false">
 	<passive_effect name="EntityDamage" operation="perc_add" value=".25"/>
 	<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="4" buff="buffShocked" duration="2" target_tags="zombie,animal"/>
+	<!-- Storm charges: every kill +1 (max 3); at 3 the next power hit calls lightning: 150 to all within 6 m + 3 s shock -->
+	<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposThunder" operation="add" value="1">
+		<requirement name="CVarCompare" cvar="aposThunder" operation="LT" value="3"/>
+	</triggered_effect>
+	<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposThunderCharge"/>
+	<triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="otherAOE" range="6" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-150">
+		<requirement name="CVarCompare" cvar="aposThunder" operation="GTE" value="3"/>
+	</triggered_effect>
+	<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="6" target_tags="zombie,animal" buff="buffAposSplash">
+		<requirement name="CVarCompare" cvar="aposThunder" operation="GTE" value="3"/>
+	</triggered_effect>
+	<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="6" target_tags="zombie,animal" buff="buffShocked" duration="3">
+		<requirement name="CVarCompare" cvar="aposThunder" operation="GTE" value="3"/>
+	</triggered_effect>
+	<triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" cvar="aposThunder" operation="set" value="0">
+		<requirement name="CVarCompare" cvar="aposThunder" operation="GTE" value="3"/>
+	</triggered_effect>
+</effect_group>
+'@ }
+  aposLegendHornet = @{ Base = 'gunHandgunT3SMG5'; Effect = @'
+<effect_group name="AposMod legendary" tiered="false">
+	<passive_effect name="EntityDamage" operation="perc_add" value=".15"/>
+	<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar="aposCorrodeTime" operation="set" value="6">
+		<requirement name="IsAlive" target="other"/>
+		<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="30"/>
+	</triggered_effect>
+	<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffAposCorroded">
+		<requirement name="IsAlive" target="other"/>
+		<requirement name="CVarCompare" target="other" cvar="aposCorrodeTime" operation="GT" value="0"/>
+	</triggered_effect>
+</effect_group>
+'@ }
+  aposLegendStormFist = @{ Base = 'meleeWpnKnucklesT3SteelKnuckles'; Effect = @'
+<effect_group name="AposMod legendary" tiered="false">
+	<passive_effect name="EntityDamage" operation="perc_add" value=".2"/>
+	<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffBurningElement">
+		<requirement name="IsAlive" target="other"/>
+		<requirement name="CVarCompare" target="other" cvar="_underwater" operation="LT" value="0.3"/>
+		<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
+	</triggered_effect>
+	<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffShocked" duration="1.5">
+		<requirement name="IsAlive" target="other"/>
+		<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
+	</triggered_effect>
+</effect_group>
+'@ }
+  aposLegendArtemis = @{ Base = 'gunBowT3CompoundBow'; Effect = @'
+<effect_group name="AposMod legendary" tiered="false">
+	<!-- every arrow: 8 fragments of 50 (as Archery 5) and fire -->
+	<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar="aposSplinterN" operation="set" value="8"/>
+	<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar="aposSplinterDmg" operation="set" value="-50"/>
+	<triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffBurningFlamingArrow">
+		<requirement name="CVarCompare" target="other" cvar="_underwater" operation="LT" value="0.3"/>
+	</triggered_effect>
+</effect_group>
+'@ }
+  aposLegendBigBoom = @{ Base = 'gunExplosivesT3RocketLauncher'; Effect = @'
+<effect_group name="AposMod legendary" tiered="false">
+	<!-- 50% chance that the next rocket costs nothing (the free shot ends the buff, then rolls again) -->
+	<triggered_effect trigger="onSelfRangedBurstShotEnd" action="RemoveBuff" buff="buffAposFreeRocket"/>
+	<triggered_effect trigger="onSelfRangedBurstShotEnd" action="AddBuff" buff="buffAposFreeRocket">
+		<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
+	</triggered_effect>
+</effect_group>
+'@ }
+  aposLegendPredator = @{ Base = 'gunRifleT3SniperRifle'; Effect = @'
+<effect_group name="AposMod legendary" tiered="false">
+	<passive_effect name="EntityDamage" operation="perc_add" value=".25"/>
+	<!-- every headshot ricochets: 100 to all within 15 m of the hit, 2 s stun -->
+	<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="15" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-100">
+		<requirement name="HitLocation" body_parts="Head"/>
+	</triggered_effect>
+	<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="15" target_tags="zombie,animal" buff="buffAposSplash">
+		<requirement name="HitLocation" body_parts="Head"/>
+	</triggered_effect>
+	<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="15" target_tags="zombie,animal" buff="buffInjuryStunned01" duration="2">
+		<requirement name="HitLocation" body_parts="Head"/>
+	</triggered_effect>
 </effect_group>
 '@ }
 }

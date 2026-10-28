@@ -24,6 +24,11 @@
 			<item name="aposLegendDragonBreath"/>
 			<item name="aposLegendRipper"/>
 			<item name="aposLegendThunderclap"/>
+			<item name="aposLegendHornet"/>
+			<item name="aposLegendStormFist"/>
+			<item name="aposLegendArtemis"/>
+			<item name="aposLegendBigBoom"/>
+			<item name="aposLegendPredator"/>
 		</lootgroup>
 	</insertBefore>
 	<append xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT4']">

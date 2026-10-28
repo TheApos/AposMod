@@ -114,6 +114,25 @@
 			</effect_group>
 		</buff>
 
+		<!-- Legendary Thunderclap: storm charges (number), full at 3 -->
+		<buff name="buffAposThunderCharge" name_key="buffAposThunderChargeName" description_key="buffAposThunderChargeDesc" icon="ui_game_symbol_electric_power" icon_color="255,180,0">
+			<stack_type value="ignore"/>
+			<display_value value="aposThunder"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposThunderCharge">
+					<requirement name="CVarCompare" cvar="aposThunder" operation="LTE" value="0"/>
+				</triggered_effect>
+			</effect_group>
+		</buff>
+
+		<!-- Legendary Big Boom: the next rocket costs no ammo -->
+		<buff name="buffAposFreeRocket" name_key="buffAposFreeRocketName" description_key="buffAposFreeRocketDesc" icon="ui_game_symbol_destruction2" icon_color="255,180,0">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<passive_effect name="InfiniteAmmo" operation="base_set" value="1"/>
+			</effect_group>
+		</buff>
+
 		<buff name="buffAposReactionCD" hidden="true">
 			<stack_type value="ignore"/>
 			<duration value="3"/>
