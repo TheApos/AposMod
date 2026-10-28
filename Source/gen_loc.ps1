@@ -11,10 +11,10 @@ Import-Csv (Join-Path $cfg 'Localization.csv') -Encoding UTF8 | ForEach-Object {
 function T($title, $body) { "[FFB400]AposMod: $title[-]\n$body" }
 $traits = @{
   knife  = T 'Bloodsucker' 'Every hit adds a regeneration stack (power attack: +2): +1 HP/s per stack, refreshed to 5 s by each hit.\nMax stacks: 2 + Deep Cuts level (like bleeding wounds).\nPower attack: the target bleeds.'
-  club   = T 'Home Run' 'Normal hit: 15% chance to stun for 1 s (+5% per Pummel Pete level).\nPower attack to the head: launches the zombie and knocks it down (further with Pummel Pete; any body part at Pummel Pete 5).'
-  sledge = T 'Earthquake' 'Normal hit: 20% chance to knock the target down (+5% per Skull Crusher level).\nPower attack: knocks down every zombie within 3 m (+0.5 m and +10 damage to them per Skull Crusher level).'
-  baton  = T 'Chain Lightning' 'Normal hit: short shock (longer with Calculated Attack).\nPower attack: shocks every zombie within 3 m for 2 s (+0.5 m and +0.4 s per Calculated Attack level).'
-  spear  = T 'Battering Ram' 'Normal hit: pushes the target back (harder with Spear Master).\nPower attack: pierces 1 zombie behind the target, +1 per Spear Master level (up to 6), and throws each of them back.'
+  club   = T 'Home Run' 'Normal hit: 15% chance to stun for 1 s (+5% per Pummel Pete level).\nPower attack to the head: launches the zombie and knocks it down (further with Pummel Pete; any body part at Pummel Pete 5).\nPower attacks cost 30% more stamina.'
+  sledge = T 'Earthquake' 'Normal hit: 20% chance to knock the target down (+5% per Skull Crusher level).\nPower attack: knocks down every zombie within 3 m (+0.5 m and +10 damage to them per Skull Crusher level).\nEarthquake has a 4 s cooldown; power attacks cost 50% more stamina.'
+  baton  = T 'Chain Lightning' 'Normal hit: short shock (longer with Calculated Attack).\nPower attack: shocks every zombie within 3 m for 2 s (+0.5 m and +0.4 s per Calculated Attack level).\nChain Lightning has a 3 s cooldown; power attacks cost 50% more stamina.'
+  spear  = T 'Battering Ram' 'Normal hit: pushes the target back (harder with Spear Master).\nPower attack: pierces 1 zombie behind the target, +1 per Spear Master level (up to 6), and throws each of them back.\nNormal attacks cost 25% more stamina.'
   knuck  = T 'Counter Punch' 'Taking damage fills Counter Punch charges (2 + The Brawler level), no time limit:\n- normal punch: +25% damage, spends 1 charge (The Brawler: chance to gain a charge);\n- power attack: spends all charges, +50% damage per charge, knocks down.'
   pipe   = T 'Veteran Junk' 'Every kill with a pipe weapon: +2% damage for all pipe weapons (max +1000%).\nRepair with Scrap Iron.'
   slug   = T 'Slug Knockback' 'Slug and Breaching Slug rounds throw zombies back and knock them down. Buckshot is unchanged.'
@@ -29,10 +29,10 @@ $traits = @{
 }
 $traitsRu = @{
   knife  = T 'Кровопийца' 'Каждый удар добавляет стак регенерации (силовая атака: +2): +1 HP/с за стак, каждый удар продлевает до 5 с.\nМаксимум стаков: 2 + уровень «Глубоких ран» (как кровоточащие раны).\nСиловая атака: цель кровоточит.'
-  club   = T 'Хоумран' 'Обычный удар: 15% шанс оглушить на 1 с (+5% за уровень «Громилы Пита»).\nСиловая атака в голову: отправляет зомби в полёт и сбивает с ног (дальше с «Громилой Питом»; на 5 уровне — в любую часть тела).'
-  sledge = T 'Землетрясение' 'Обычный удар: 20% шанс сбить цель с ног (+5% за уровень «Дробителя черепов»).\nСиловая атака: сбивает с ног всех зомби в радиусе 3 м (+0.5 м и +10 урона им за уровень «Дробителя черепов»).'
-  baton  = T 'Цепная молния' 'Обычный удар: короткий шок (дольше с «Просчитанной атакой»).\nСиловая атака: шок всем зомби в радиусе 3 м на 2 с (+0.5 м и +0.4 с за уровень «Просчитанной атаки»).'
-  spear  = T 'Таран' 'Обычный удар: отталкивает цель (сильнее с «Мастером копья»).\nСиловая атака: пробивает 1 зомби за целью, +1 за каждый уровень «Мастера копья» (до 6), и отбрасывает каждого.'
+  club   = T 'Хоумран' 'Обычный удар: 15% шанс оглушить на 1 с (+5% за уровень «Громилы Пита»).\nСиловая атака в голову: отправляет зомби в полёт и сбивает с ног (дальше с «Громилой Питом»; на 5 уровне — в любую часть тела).\nСиловые атаки тратят на 30% больше выносливости.'
+  sledge = T 'Землетрясение' 'Обычный удар: 20% шанс сбить цель с ног (+5% за уровень «Дробителя черепов»).\nСиловая атака: сбивает с ног всех зомби в радиусе 3 м (+0.5 м и +10 урона им за уровень «Дробителя черепов»).\nУ Землетрясения перезарядка 4 с; силовые атаки тратят на 50% больше выносливости.'
+  baton  = T 'Цепная молния' 'Обычный удар: короткий шок (дольше с «Просчитанной атакой»).\nСиловая атака: шок всем зомби в радиусе 3 м на 2 с (+0.5 м и +0.4 с за уровень «Просчитанной атаки»).\nУ Цепной молнии перезарядка 3 с; силовые атаки тратят на 50% больше выносливости.'
+  spear  = T 'Таран' 'Обычный удар: отталкивает цель (сильнее с «Мастером копья»).\nСиловая атака: пробивает 1 зомби за целью, +1 за каждый уровень «Мастера копья» (до 6), и отбрасывает каждого.\nОбычные атаки тратят на 25% больше выносливости.'
   knuck  = T 'Контрудар' 'Получая урон, вы набираете заряды Контрудара (2 + уровень «Драчуна»), без ограничения по времени:\n- обычный удар: +25% урона, тратит 1 заряд («Драчун»: шанс получить заряд);\n- силовая атака: тратит все заряды, +50% урона за заряд, сбивает с ног.'
   pipe   = T 'Ветеран-самоделка' 'Каждое убийство самодельным оружием: +2% урона всему самодельному оружию (максимум +1000%).\nЧинится металлоломом.'
   slug   = T 'Отбрасывание пулей' 'Пули (Slug и Breaching Slug) отбрасывают зомби и сбивают с ног. Дробь без изменений.'
@@ -76,7 +76,11 @@ $extra = [ordered]@{
   buffAposHeadhunterName  = 'Headhunter', 'Охотник за головами'
   buffAposHeadhunterDesc  = 'Empowered shots left (number): more damage, almost no spread.', 'Осталось усиленных выстрелов (число): больше урона, почти без разброса.'
   buffAposRageName        = 'Rage', 'Ярость'
-  buffAposRageDesc        = 'Rage stacks (number): +6% damage and +4% attack speed per stack with clubs and sledgehammers. Every kill refreshes it for 8 s.', 'Стаки ярости (число): +6% урона и +4% скорости атаки за стак с дубинками, битами и кувалдами. Каждое убийство продлевает на 8 с.'
+  buffAposRageDesc        = 'Rage stacks (number): +10% damage and +5% attack speed per stack with clubs and sledgehammers. Every kill refreshes it for 8 s.', 'Стаки ярости (число): +10% урона и +5% скорости атаки за стак с дубинками, битами и кувалдами. Каждое убийство продлевает на 8 с.'
+  buffAposQuakeCDName     = 'Earthquake: cooldown', 'Землетрясение: перезарядка'
+  buffAposQuakeCDDesc     = 'Earthquake is recharging.', 'Землетрясение перезаряжается.'
+  buffAposChainCDName     = 'Chain Lightning: cooldown', 'Цепная молния: перезарядка'
+  buffAposChainCDDesc     = 'Chain Lightning is recharging.', 'Цепная молния перезаряжается.'
   # Grand Slam is replaced by Rage (full texts)
   perkGrandSlamName       = 'Rage', 'Ярость'
   perkGrandSlamDesc       = 'Every kill with a club, bat or sledgehammer fuels your rage: more damage and faster attacks for a short time.', 'Каждое убийство дубинкой, битой или кувалдой разжигает ярость: больше урона и быстрее атаки на короткое время.'
@@ -88,9 +92,9 @@ $extra = [ordered]@{
 }
 for ($L = 1; $L -le 5; $L++) {
   $extra["perkGrandSlamRank${L}Desc"] = "Rage $L", "Ярость $L"
-  $extra["perkGrandSlamRank${L}LongDesc"] = "Kills with clubs, bats or sledgehammers give a Rage stack for 8 s (max $L): +6% damage and +4% attack speed per stack with these weapons.", "Убийства дубинкой, битой или кувалдой дают стак Ярости на 8 с (максимум $L): +6% урона и +4% скорости атаки за стак с этим оружием."
+  $extra["perkGrandSlamRank${L}LongDesc"] = "Kills with clubs, bats or sledgehammers give a Rage stack for 8 s (max $L): +10% damage and +5% attack speed per stack with these weapons.", "Убийства дубинкой, битой или кувалдой дают стак Ярости на 8 с (максимум $L): +10% урона и +5% скорости атаки за стак с этим оружием."
 }
-$extra['perkGrandSlamRank5LongDesc'] = ($extra['perkGrandSlamRank5LongDesc'][0] + '\n[FFB400]Rampage:[-] at 5 stacks club and sledgehammer attacks cost no stamina.'), ($extra['perkGrandSlamRank5LongDesc'][1] + '\n[FFB400]Буйство:[-] на 5 стаках атаки дубинками и кувалдами не тратят выносливость.')
+$extra['perkGrandSlamRank5LongDesc'] = ($extra['perkGrandSlamRank5LongDesc'][0] + '\n[FFB400]Rampage:[-] at 5 stacks club and sledgehammer attacks cost no stamina and you cannot be stunned or knocked down.'), ($extra['perkGrandSlamRank5LongDesc'][1] + '\n[FFB400]Буйство:[-] на 5 стаках атаки дубинками и кувалдами не тратят выносливость, а вас нельзя оглушить или сбить с ног.')
 
 # AposMod line appended to the vanilla text of every rank of the perks that scale our traits ($L = rank).
 # "Replaces ..." notes tell the player which vanilla knockdown above no longer works (removed in progression.xml).

@@ -62,11 +62,12 @@
 				<passive_effect name="EntityDamage" operation="perc_add" value="@aposRageDamage"/>
 				<passive_effect name="AttacksPerMinute" operation="perc_add" value="@aposRageSpeed"/>
 			</effect_group>
-			<!-- Rage 5 "Rampage": at 5 stacks club/sledge attacks cost no stamina -->
+			<!-- Rage 5 "Rampage": at 5 stacks club/sledge attacks cost no stamina and you cannot be stunned or knocked down -->
 			<effect_group>
 				<requirement name="HoldingItemHasTags" tags="perkPummelPete,perkSkullCrusher"/>
 				<requirement name="CVarCompare" cvar="aposRageStacks" operation="GTE" value="5"/>
 				<passive_effect name="StaminaLoss" operation="perc_add" value="-1"/>
+				<passive_effect name="BuffResistance" operation="base_set" value="100" tags="buffInjuryStunned01,buffInjuryStunned02,buffInjuryStunned03,buffInjuryKnockdown01,buffInjuryKnockdown02"/>
 			</effect_group>
 		</buff>
 
@@ -153,6 +154,16 @@
 			<effect_group>
 				<triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="@aposSplashDmg"/>
 			</effect_group>
+		</buff>
+
+		<!-- Anti-spam cooldowns for crowd control (visible, with timer) -->
+		<buff name="buffAposQuakeCD" name_key="buffAposQuakeCDName" description_key="buffAposQuakeCDDesc" icon="ui_game_symbol_sledge" icon_color="150,150,150">
+			<stack_type value="ignore"/>
+			<duration value="4"/>
+		</buff>
+		<buff name="buffAposChainCD" name_key="buffAposChainCDName" description_key="buffAposChainCDDesc" icon="ui_game_symbol_electric_power" icon_color="150,150,150">
+			<stack_type value="ignore"/>
+			<duration value="3"/>
 		</buff>
 
 		<!-- Pipe weapons: marks that the "max bonus" message was shown once -->

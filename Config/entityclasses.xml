@@ -91,6 +91,8 @@
 			<passive_effect name="EntityDamage" operation="perc_add" value=".3"><requirement name="IsSecondaryAttack"/><requirement name="CVarCompare" cvar="_stunned" operation="Equals" value="1" target="other"/><requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="3"/></passive_effect>
 			<passive_effect name="EntityDamage" operation="perc_add" value=".4"><requirement name="IsSecondaryAttack"/><requirement name="CVarCompare" cvar="_stunned" operation="Equals" value="1" target="other"/><requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="4"/></passive_effect>
 			<passive_effect name="EntityDamage" operation="perc_add" value=".5"><requirement name="IsSecondaryAttack"/><requirement name="CVarCompare" cvar="_stunned" operation="Equals" value="1" target="other"/><requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="5"/></passive_effect>
+			<!-- anti-spam: club power attacks (Home Run) cost 30% more stamina -->
+			<passive_effect name="StaminaLoss" operation="perc_add" value=".3" tags="secondary"/>
 		</effect_group>
 
 		<!-- ===== Sledgehammers: "Earthquake" — scales with Skull Crusher ===== -->
@@ -108,6 +110,14 @@
 				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
 				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="@aposSledgeKd"/>
 			</triggered_effect>
+			<!-- anti-spam: sledge power attacks cost 50% more stamina -->
+			<passive_effect name="StaminaLoss" operation="perc_add" value=".5" tags="secondary"/>
+		</effect_group>
+
+		<!-- Earthquake (sledge power attack): 4 s cooldown (visible buffAposQuakeCD) so it cannot be spammed -->
+		<effect_group name="AposMod sledge earthquake">
+			<requirement name="HoldingItemHasTags" tags="sledgeSkill"/>
+			<requirement name="!HasBuff" buff="buffAposQuakeCD"/>
 			<!-- power: knock down everything around, radius 3 m + 0.5 m per level (up to 5.5 m) -->
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="3" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="0"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="3.5" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="1"/></triggered_effect>
@@ -129,6 +139,7 @@
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5.5" target_tags="zombie,animal" buff="buffAposQuakeHit"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="5"/></triggered_effect>
 			<!-- Skull Crusher 5 "Aftershock": stunned for 3 s after getting up (2.5 s ragdoll + 3 s) -->
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5.5" target_tags="zombie,animal" buff="buffInjuryStunned01" duration="5.5"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="5"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" buff="buffAposQuakeCD"/>
 		</effect_group>
 
 		<!-- ===== Batons: "Chain Lightning" — scales with Calculated Attack (perkFlurryOfIntellect) ===== -->
@@ -145,6 +156,19 @@
 				<requirement name="IsAlive" target="other"/>
 				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
 			</triggered_effect>
+			<!-- Calculated Attack 5: every 4th normal hit also fires Chain Lightning -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposBatonCount" operation="add" value="1">
+				<requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="5"/>
+				<requirement name="IsAlive" target="other"/>
+			</triggered_effect>
+			<!-- anti-spam: baton power attacks cost 50% more stamina -->
+			<passive_effect name="StaminaLoss" operation="perc_add" value=".5" tags="secondary"/>
+		</effect_group>
+
+		<!-- Chain Lightning (baton power attack, and every 4th normal hit at Calculated Attack 5): 3 s cooldown (buffAposChainCD) -->
+		<effect_group name="AposMod baton chain lightning">
+			<requirement name="HoldingItemHasTags" tags="batonJunkie"/>
+			<requirement name="!HasBuff" buff="buffAposChainCD"/>
 			<!-- power: shock everything around, radius 3 m + 0.5 m and 2 s + 0.4 s per level -->
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="3" buff="buffShocked" duration="2" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="0"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="3.5" buff="buffShocked" duration="2.4" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="1"/></triggered_effect>
@@ -152,13 +176,12 @@
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="4.5" buff="buffShocked" duration="3.2" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="3"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5" buff="buffShocked" duration="3.6" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="4"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5.5" buff="buffShocked" duration="4" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="5"/></triggered_effect>
-			<!-- Calculated Attack 5: every 4th normal hit also fires Chain Lightning -->
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposBatonCount" operation="add" value="1">
-				<requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="5"/>
-				<requirement name="IsAlive" target="other"/>
-			</triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" buff="buffAposChainCD"/>
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="otherAOE" range="5.5" buff="buffShocked" duration="4" target_tags="zombie,animal">
 				<requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="5"/>
+				<requirement name="CVarCompare" cvar="aposBatonCount" operation="GTE" value="4"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" buff="buffAposChainCD">
 				<requirement name="CVarCompare" cvar="aposBatonCount" operation="GTE" value="4"/>
 			</triggered_effect>
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposBatonCount" operation="set" value="0">
@@ -193,6 +216,8 @@
 				<requirement name="IsAlive" target="other"/>
 				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
 			</triggered_effect>
+			<!-- anti-spam: the push on every normal hit costs 25% more stamina -->
+			<passive_effect name="StaminaLoss" operation="perc_add" value=".25" tags="primary"/>
 		</effect_group>
 
 		<!-- ===== Knuckles: "Counter Punch" — charges scale with The Brawler, no timer ===== -->

@@ -17,11 +17,11 @@
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageStacks" operation="set" value="@aposRageCap">
 				<requirement name="CVarCompare" cvar="aposRageStacks" operation="GT" value="@aposRageCap"/>
 			</triggered_effect>
-			<!-- bonuses as fractions for perc_add: +6% damage and +4% attack speed per stack -->
+			<!-- bonuses as fractions for perc_add: +10% damage and +5% attack speed per stack -->
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageDamage" operation="set" value="@aposRageStacks"/>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageDamage" operation="multiply" value=".06"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageDamage" operation="multiply" value=".1"/>
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageSpeed" operation="set" value="@aposRageStacks"/>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageSpeed" operation="multiply" value=".04"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageSpeed" operation="multiply" value=".05"/>
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageTime" operation="set" value="8"/>
 			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposRage"/>
 		</effect_group>
