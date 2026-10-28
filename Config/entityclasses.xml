@@ -36,6 +36,11 @@
 				<requirement name="IsAlive" target="other"/>
 				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
 			</triggered_effect>
+			<!-- Deep Cuts 5 "Blood Feast": a knife kill at max stacks heals 25 HP at once -->
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyStats" stat="Health" operation="add" value="25">
+				<requirement name="ProgressionLevel" progression_name="perkDeepCuts" operation="Equals" value="5"/>
+				<requirement name="CVarCompare" cvar="aposKnifeStacks" operation="GTE" value="@aposKnifeCap"/>
+			</triggered_effect>
 		</effect_group>
 
 		<!-- ===== Clubs / bats: "Home Run" — scales with Pummel Pete ===== -->
@@ -74,10 +79,18 @@
 				<requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="HitLocation" body_parts="Head"/>
 				<requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="4"/>
 			</triggered_effect>
+			<!-- Pummel Pete 5: Home Run works on a power hit to any body part -->
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="other" duration="3" force="1550">
-				<requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="HitLocation" body_parts="Head"/>
+				<requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/>
 				<requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="5"/>
 			</triggered_effect>
+			<!-- replaces Pummel Pete's vanilla "power attack knocks a stunned foe down":
+			     power attacks deal +10% per level more damage to stunned enemies -->
+			<passive_effect name="EntityDamage" operation="perc_add" value=".1"><requirement name="IsSecondaryAttack"/><requirement name="CVarCompare" cvar="_stunned" operation="Equals" value="1" target="other"/><requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="1"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".2"><requirement name="IsSecondaryAttack"/><requirement name="CVarCompare" cvar="_stunned" operation="Equals" value="1" target="other"/><requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="2"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".3"><requirement name="IsSecondaryAttack"/><requirement name="CVarCompare" cvar="_stunned" operation="Equals" value="1" target="other"/><requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="3"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".4"><requirement name="IsSecondaryAttack"/><requirement name="CVarCompare" cvar="_stunned" operation="Equals" value="1" target="other"/><requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="4"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".5"><requirement name="IsSecondaryAttack"/><requirement name="CVarCompare" cvar="_stunned" operation="Equals" value="1" target="other"/><requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="5"/></passive_effect>
 		</effect_group>
 
 		<!-- ===== Sledgehammers: "Earthquake" — scales with Skull Crusher ===== -->
@@ -102,6 +115,20 @@
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="4.5" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="3"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="5" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="4"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="5.5" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="5"/></triggered_effect>
+			<!-- replaces Skull Crusher's vanilla power knockdown chances: Earthquake also deals 10 HP per level
+			     to everything it knocks down (the value is written into each target's cvar, buffAposQuakeHit applies it) -->
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="otherAOE" range="3.5" target_tags="zombie,animal" cvar="aposQuakeDmg" operation="set" value="-10"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="otherAOE" range="4" target_tags="zombie,animal" cvar="aposQuakeDmg" operation="set" value="-20"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="otherAOE" range="4.5" target_tags="zombie,animal" cvar="aposQuakeDmg" operation="set" value="-30"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="otherAOE" range="5" target_tags="zombie,animal" cvar="aposQuakeDmg" operation="set" value="-40"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="otherAOE" range="5.5" target_tags="zombie,animal" cvar="aposQuakeDmg" operation="set" value="-50"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="5"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="3.5" target_tags="zombie,animal" buff="buffAposQuakeHit"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="4" target_tags="zombie,animal" buff="buffAposQuakeHit"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="4.5" target_tags="zombie,animal" buff="buffAposQuakeHit"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5" target_tags="zombie,animal" buff="buffAposQuakeHit"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5.5" target_tags="zombie,animal" buff="buffAposQuakeHit"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="5"/></triggered_effect>
+			<!-- Skull Crusher 5 "Aftershock": stunned for 3 s after getting up (2.5 s ragdoll + 3 s) -->
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5.5" target_tags="zombie,animal" buff="buffInjuryStunned01" duration="5.5"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="5"/></triggered_effect>
 		</effect_group>
 
 		<!-- ===== Batons: "Chain Lightning" — scales with Calculated Attack (perkFlurryOfIntellect) ===== -->
@@ -125,23 +152,44 @@
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="4.5" buff="buffShocked" duration="3.2" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="3"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5" buff="buffShocked" duration="3.6" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="4"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5.5" buff="buffShocked" duration="4" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="5"/></triggered_effect>
+			<!-- Calculated Attack 5: every 4th normal hit also fires Chain Lightning -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposBatonCount" operation="add" value="1">
+				<requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="5"/>
+				<requirement name="IsAlive" target="other"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="otherAOE" range="5.5" buff="buffShocked" duration="4" target_tags="zombie,animal">
+				<requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="5"/>
+				<requirement name="CVarCompare" cvar="aposBatonCount" operation="GTE" value="4"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposBatonCount" operation="set" value="0">
+				<requirement name="CVarCompare" cvar="aposBatonCount" operation="GTE" value="4"/>
+			</triggered_effect>
 		</effect_group>
 
-		<!-- ===== Spears: "Battering Ram" — power attack pierces Spear Master level zombies ===== -->
+		<!-- ===== Spears: "Battering Ram" — pierce 1 + Spear Master level, push grows with the perk ===== -->
 		<effect_group name="AposMod spear">
 			<requirement name="HoldingItemHasTags" tags="spearSkill"/>
-			<!-- normal: small push back -->
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration=".2" force="120">
+			<!-- normal: push back, force 120 + 40 per level -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration=".2" force="120"><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="0"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration=".2" force="160"><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration=".2" force="200"><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration=".2" force="240"><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration=".2" force="280"><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration=".2" force="320"><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="5"/></triggered_effect>
+			<!-- power: pierces 1 + level zombies (1..6), every hit one is thrown back -->
+			<passive_effect name="EntityPenetrationCount" operation="base_add" value="1" tags="perkJavelinMaster"><requirement name="IsSecondaryAttack"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="0"/></passive_effect>
+			<passive_effect name="EntityPenetrationCount" operation="base_add" value="2" tags="perkJavelinMaster"><requirement name="IsSecondaryAttack"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="1"/></passive_effect>
+			<passive_effect name="EntityPenetrationCount" operation="base_add" value="3" tags="perkJavelinMaster"><requirement name="IsSecondaryAttack"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="2"/></passive_effect>
+			<passive_effect name="EntityPenetrationCount" operation="base_add" value="4" tags="perkJavelinMaster"><requirement name="IsSecondaryAttack"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="3"/></passive_effect>
+			<passive_effect name="EntityPenetrationCount" operation="base_add" value="5" tags="perkJavelinMaster"><requirement name="IsSecondaryAttack"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="4"/></passive_effect>
+			<passive_effect name="EntityPenetrationCount" operation="base_add" value="6" tags="perkJavelinMaster"><requirement name="IsSecondaryAttack"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="5"/></passive_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="other" duration="1.5" force="400">
 				<requirement name="IsAlive" target="other"/>
 				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
 			</triggered_effect>
-			<!-- power: +1 pierced zombie per Spear Master level (1..5), every hit one is thrown back -->
-			<passive_effect name="EntityPenetrationCount" operation="base_add" value="1" tags="perkJavelinMaster"><requirement name="IsSecondaryAttack"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="1"/></passive_effect>
-			<passive_effect name="EntityPenetrationCount" operation="base_add" value="2" tags="perkJavelinMaster"><requirement name="IsSecondaryAttack"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="2"/></passive_effect>
-			<passive_effect name="EntityPenetrationCount" operation="base_add" value="3" tags="perkJavelinMaster"><requirement name="IsSecondaryAttack"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="3"/></passive_effect>
-			<passive_effect name="EntityPenetrationCount" operation="base_add" value="4" tags="perkJavelinMaster"><requirement name="IsSecondaryAttack"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="4"/></passive_effect>
-			<passive_effect name="EntityPenetrationCount" operation="base_add" value="5" tags="perkJavelinMaster"><requirement name="IsSecondaryAttack"/><requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="5"/></passive_effect>
-			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="other" duration="1.5" force="400">
+			<!-- Spear Master 5 "Skewer": every zombie hit by the power attack stays down for ~3 s -->
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="other" buff="buffInjuryKnockdown01">
+				<requirement name="ProgressionLevel" progression_name="perkJavelinMaster" operation="Equals" value="5"/>
 				<requirement name="IsAlive" target="other"/>
 				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
 			</triggered_effect>
@@ -151,13 +199,20 @@
 		<!-- aposCounterHits = charges (max 2 + Brawler level), aposCounterPower = power bonus (+50% per charge) -->
 		<effect_group name="AposMod knuckles">
 			<requirement name="HoldingItemHasTags" tags="knuckleSkill"/>
-			<!-- getting hit refills the charges -->
-			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterHits" operation="set" value="2"/>
-			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterHits" operation="set" value="3"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="1"/></triggered_effect>
-			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterHits" operation="set" value="4"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="2"/></triggered_effect>
-			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterHits" operation="set" value="5"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="3"/></triggered_effect>
-			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterHits" operation="set" value="6"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="4"/></triggered_effect>
-			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterHits" operation="set" value="7"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="5"/></triggered_effect>
+			<!-- aposCounterCap = 2 + Brawler level; getting hit refills the charges to it -->
+			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="2"/>
+			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="2"/>
+			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="3"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="3"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="4"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="4"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="5"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="5"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="6"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="6"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="7"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="5"/></triggered_effect>
+			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="7"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="5"/></triggered_effect>
+			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterHits" operation="set" value="@aposCounterCap"/>
 			<triggered_effect trigger="onOtherDamagedSelf" action="AddBuff" buff="buffAposCounter"/>
 
 			<!-- normal punch: +25% and spends 1 charge -->
@@ -168,11 +223,31 @@
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposCounterHits" operation="add" value="-1">
 				<requirement name="CVarCompare" cvar="aposCounterHits" operation="GT" value="0"/>
 			</triggered_effect>
+			<!-- replaces The Brawler's vanilla power stagger / head knockdown:
+			     a normal punch has a 10% per level chance to give +1 charge (up to the cap) -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposCounterHits" operation="add" value="1"><requirement name="IsAlive" target="other"/><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="1"/><requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposCounterHits" operation="add" value="1"><requirement name="IsAlive" target="other"/><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="2"/><requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="20"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposCounterHits" operation="add" value="1"><requirement name="IsAlive" target="other"/><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="3"/><requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="30"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposCounterHits" operation="add" value="1"><requirement name="IsAlive" target="other"/><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="4"/><requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="40"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposCounterHits" operation="add" value="1"><requirement name="IsAlive" target="other"/><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="5"/><requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposCounterHits" operation="set" value="@aposCounterCap">
+				<requirement name="CVarCompare" cvar="aposCounterHits" operation="GT" value="@aposCounterCap"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" buff="buffAposCounter">
+				<requirement name="CVarCompare" cvar="aposCounterHits" operation="GT" value="0"/>
+			</triggered_effect>
 
 			<!-- power punch: spends ALL charges, +50% damage per charge, knocks down -->
 			<passive_effect name="EntityDamage" operation="perc_add" value="@aposCounterPower">
 				<requirement name="IsSecondaryAttack"/>
 				<requirement name="CVarCompare" cvar="aposCounterHits" operation="GT" value="0"/>
+			</passive_effect>
+			<!-- The Brawler 5 "Knockout": a power punch on full charges kills any non-elite zombie (+1000%) -->
+			<passive_effect name="EntityDamage" operation="perc_add" value="10">
+				<requirement name="IsSecondaryAttack"/>
+				<requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="5"/>
+				<requirement name="CVarCompare" cvar="aposCounterHits" operation="GTE" value="@aposCounterCap"/>
+				<requirement name="!EntityTagCompare" target="other" tags="feral,radiated,infernal,charged,special,boss"/>
 			</passive_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="other" buff="buffInjuryKnockdown01">
 				<requirement name="CVarCompare" cvar="aposCounterHits" operation="GT" value="0"/>

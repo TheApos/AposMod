@@ -15,6 +15,7 @@ public class AposModInit : IModApi
 // Floating damage numbers. Watches the health of living non-player entities near the local
 // player every frame and shows each drop as a number rising above the head.
 // Headshots (yellow) are read from EntityAlive.RecordedDamage when it changed this frame.
+// A killing blow adds a red "Kill!" label (text from Localization.csv, key aposKillText).
 public class AposDamageNumbers : MonoBehaviour
 {
     const float Range = 60f;
@@ -23,7 +24,7 @@ public class AposDamageNumbers : MonoBehaviour
 
     static readonly Color NormalColor = Color.white;
     static readonly Color HeadshotColor = new Color(1f, 0.85f, 0.1f);
-    static readonly Color KillColor = new Color(1f, 0.3f, 0.2f);
+    static readonly Color KillColor = new Color(1f, 0.15f, 0.1f);
 
     class Popup
     {
@@ -42,17 +43,7 @@ public class AposDamageNumbers : MonoBehaviour
     readonly List<Popup> popups = new List<Popup>();
     Camera cam;
     GUIStyle style;
-
-    // TEMP diagnostics (remove once damage numbers are confirmed in game)
-    bool loggedCamera;
-    bool loggedDraw;
-    int debugHitsLogged;
-
-    static string Describe(Camera c)
-    {
-        if (c == null) return "null";
-        return c.name + "(enabled=" + c.enabled + ", rect=" + c.pixelRect + ", rt=" + (c.targetTexture != null) + ")";
-    }
+    string killText;
 
     void Awake()
     {
@@ -70,16 +61,10 @@ public class AposDamageNumbers : MonoBehaviour
             lastHitRandom.Clear();
             popups.Clear();
             cam = null;
+            killText = null; // re-read after a language change in the menu
             return;
         }
         cam = player.playerCamera;
-        if (!loggedCamera)
-        {
-            loggedCamera = true;
-            Camera main = Camera.main;
-            Debug.Log("[AposMod] DamageNumbers: playerCamera=" + Describe(cam) + " Camera.main=" + Describe(main)
-                + " screen=" + Screen.width + "x" + Screen.height);
-        }
 
         seen.Clear();
         List<Entity> list = gm.World.Entities.list;
@@ -128,36 +113,45 @@ public class AposDamageNumbers : MonoBehaviour
 
     void AddPopup(EntityAlive e, int damage, bool headshot, bool kill)
     {
-        Popup p = new Popup();
         // The game shifts the render origin around the player (floating origin): Entity.position is the
         // logical world position, the camera works in scene space, so take the scene transform.
         // Small sideways jitter so fast hits do not stack on one spot.
-        p.Pos = e.transform.position + new Vector3(Random.Range(-0.3f, 0.3f), e.height + 0.3f, Random.Range(-0.3f, 0.3f));
+        Vector3 pos = e.transform.position + new Vector3(Random.Range(-0.3f, 0.3f), e.height + 0.3f, Random.Range(-0.3f, 0.3f));
+
+        Popup p = new Popup();
+        p.Pos = pos;
         p.Text = headshot ? damage + "!" : damage.ToString();
-        p.Color = kill ? KillColor : (headshot ? HeadshotColor : NormalColor);
-        p.Size = (headshot || kill) ? 40 : 30;
+        p.Color = headshot ? HeadshotColor : NormalColor;
+        p.Size = headshot ? 40 : 30;
         p.Start = Time.time;
         popups.Add(p);
 
-        // TEMP diagnostics: where the first hits would be drawn
-        if (debugHitsLogged < 10 && cam != null)
+        if (kill)
         {
-            debugHitsLogged++;
-            Camera main = Camera.main;
-            Debug.Log("[AposMod] DamageNumbers hit: " + damage + " on " + e.EntityName + " pos=" + p.Pos
-                + " vp(player)=" + cam.WorldToViewportPoint(p.Pos)
-                + " vp(main)=" + (main != null ? main.WorldToViewportPoint(p.Pos).ToString() : "null"));
+            Popup k = new Popup();
+            k.Pos = pos + Vector3.up * 0.45f;
+            k.Text = KillText();
+            k.Color = KillColor;
+            k.Size = 34;
+            k.Start = p.Start;
+            popups.Add(k);
         }
+    }
+
+    string KillText()
+    {
+        if (killText == null)
+        {
+            killText = Localization.Get("aposKillText");
+            // Localization returns the key itself when it is missing
+            if (string.IsNullOrEmpty(killText) || killText == "aposKillText") killText = "Kill!";
+        }
+        return killText;
     }
 
     void OnGUI()
     {
         if (popups.Count == 0 || cam == null || Event.current.type != EventType.Repaint) return;
-        if (!loggedDraw)
-        {
-            loggedDraw = true;
-            Debug.Log("[AposMod] DamageNumbers: OnGUI drawing " + popups.Count + " popup(s)");
-        }
         if (style == null)
         {
             style = new GUIStyle(GUI.skin.label);

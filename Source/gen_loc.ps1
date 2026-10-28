@@ -10,11 +10,11 @@ Import-Csv (Join-Path $cfg 'Localization.csv') -Encoding UTF8 | ForEach-Object {
 function T($title, $body) { "[FFB400]AposMod: $title[-]\n$body" }
 $traits = @{
   knife  = T 'Bloodsucker' 'Every hit adds a regeneration stack (power attack: +2): +1 HP/s per stack, refreshed to 5 s by each hit.\nMax stacks: 2 + Deep Cuts level (like bleeding wounds).\nPower attack: the target bleeds.'
-  club   = T 'Home Run' 'Normal hit: 15% chance to stun for 1 s (+5% per Pummel Pete level).\nPower attack to the head: launches the zombie and knocks it down (further with Pummel Pete).'
-  sledge = T 'Earthquake' 'Normal hit: 20% chance to knock the target down (+5% per Skull Crusher level).\nPower attack: knocks down every zombie within 3 m (+0.5 m per Skull Crusher level).'
+  club   = T 'Home Run' 'Normal hit: 15% chance to stun for 1 s (+5% per Pummel Pete level).\nPower attack to the head: launches the zombie and knocks it down (further with Pummel Pete; any body part at Pummel Pete 5).'
+  sledge = T 'Earthquake' 'Normal hit: 20% chance to knock the target down (+5% per Skull Crusher level).\nPower attack: knocks down every zombie within 3 m (+0.5 m and +10 damage to them per Skull Crusher level).'
   baton  = T 'Chain Lightning' 'Normal hit: short shock (longer with Calculated Attack).\nPower attack: shocks every zombie within 3 m for 2 s (+0.5 m and +0.4 s per Calculated Attack level).'
-  spear  = T 'Battering Ram' 'Normal hit: pushes the target back a little.\nPower attack: pierces 1 extra zombie per Spear Master level (up to 5) and throws each of them back.'
-  knuck  = T 'Counter Punch' 'Taking damage fills Counter Punch charges (2 + The Brawler level), no time limit:\n- normal punch: +25% damage, spends 1 charge;\n- power attack: spends all charges, +50% damage per charge, knocks down.'
+  spear  = T 'Battering Ram' 'Normal hit: pushes the target back (harder with Spear Master).\nPower attack: pierces 1 zombie behind the target, +1 per Spear Master level (up to 6), and throws each of them back.'
+  knuck  = T 'Counter Punch' 'Taking damage fills Counter Punch charges (2 + The Brawler level), no time limit:\n- normal punch: +25% damage, spends 1 charge (The Brawler: chance to gain a charge);\n- power attack: spends all charges, +50% damage per charge, knocks down.'
   pipe   = T 'Veteran Junk' 'Every kill with a pipe weapon: +2% damage for all pipe weapons (max +1000%).\nRepair with Scrap Iron.'
   slug   = T 'Slug Knockback' 'Slug and Breaching Slug rounds throw zombies back and knock them down. Buckshot is unchanged.'
   nade   = T 'Wide Blast' 'Blast radius against zombies x3. Block damage radius is unchanged.'
@@ -23,11 +23,11 @@ $traits = @{
 }
 $traitsRu = @{
   knife  = T 'Кровопийца' 'Каждый удар добавляет стак регенерации (силовая атака: +2): +1 HP/с за стак, каждый удар продлевает до 5 с.\nМаксимум стаков: 2 + уровень «Глубоких ран» (как кровоточащие раны).\nСиловая атака: цель кровоточит.'
-  club   = T 'Хоумран' 'Обычный удар: 15% шанс оглушить на 1 с (+5% за уровень «Громилы Пита»).\nСиловая атака в голову: отправляет зомби в полёт и сбивает с ног (дальше с «Громилой Питом»).'
-  sledge = T 'Землетрясение' 'Обычный удар: 20% шанс сбить цель с ног (+5% за уровень «Дробителя черепов»).\nСиловая атака: сбивает с ног всех зомби в радиусе 3 м (+0.5 м за уровень «Дробителя черепов»).'
+  club   = T 'Хоумран' 'Обычный удар: 15% шанс оглушить на 1 с (+5% за уровень «Громилы Пита»).\nСиловая атака в голову: отправляет зомби в полёт и сбивает с ног (дальше с «Громилой Питом»; на 5 уровне — в любую часть тела).'
+  sledge = T 'Землетрясение' 'Обычный удар: 20% шанс сбить цель с ног (+5% за уровень «Дробителя черепов»).\nСиловая атака: сбивает с ног всех зомби в радиусе 3 м (+0.5 м и +10 урона им за уровень «Дробителя черепов»).'
   baton  = T 'Цепная молния' 'Обычный удар: короткий шок (дольше с «Просчитанной атакой»).\nСиловая атака: шок всем зомби в радиусе 3 м на 2 с (+0.5 м и +0.4 с за уровень «Просчитанной атаки»).'
-  spear  = T 'Таран' 'Обычный удар: немного отталкивает цель.\nСиловая атака: пробивает на 1 зомби больше за каждый уровень «Мастера копья» (до 5) и отбрасывает каждого.'
-  knuck  = T 'Контрудар' 'Получая урон, вы набираете заряды Контрудара (2 + уровень «Драчуна»), без ограничения по времени:\n- обычный удар: +25% урона, тратит 1 заряд;\n- силовая атака: тратит все заряды, +50% урона за заряд, сбивает с ног.'
+  spear  = T 'Таран' 'Обычный удар: отталкивает цель (сильнее с «Мастером копья»).\nСиловая атака: пробивает 1 зомби за целью, +1 за каждый уровень «Мастера копья» (до 6), и отбрасывает каждого.'
+  knuck  = T 'Контрудар' 'Получая урон, вы набираете заряды Контрудара (2 + уровень «Драчуна»), без ограничения по времени:\n- обычный удар: +25% урона, тратит 1 заряд («Драчун»: шанс получить заряд);\n- силовая атака: тратит все заряды, +50% урона за заряд, сбивает с ног.'
   pipe   = T 'Ветеран-самоделка' 'Каждое убийство самодельным оружием: +2% урона всему самодельному оружию (максимум +1000%).\nЧинится металлоломом.'
   slug   = T 'Отбрасывание пулей' 'Пули (Slug и Breaching Slug) отбрасывают зомби и сбивают с ног. Дробь без изменений.'
   nade   = T 'Широкий взрыв' 'Радиус поражения зомби x3. Радиус разрушения блоков без изменений.'
@@ -56,6 +56,7 @@ $extra = [ordered]@{
   buffAposPipeVeteranName = 'Veteran Junk', 'Ветеран-самоделка'
   buffAposPipeVeteranDesc = 'Pipe weapon damage bonus in % (number). +2% per kill with pipe weapons, max +1000%.', 'Бонус урона самодельного оружия в % (число). +2% за каждое убийство самодельным оружием, максимум +1000%.'
   aposPipeMaxed           = 'Veteran Junk: maximum bonus reached (+1000%)!', 'Ветеран-самоделка: достигнут максимальный бонус (+1000%)!'
+  aposKillText            = 'Kill!', 'Труп!'
   buffAposRageName        = 'Rage', 'Ярость'
   buffAposRageDesc        = 'Rage stacks (number): +6% damage and +4% attack speed per stack with clubs and sledgehammers. Every kill refreshes it for 8 s.', 'Стаки ярости (число): +6% урона и +4% скорости атаки за стак с дубинками, битами и кувалдами. Каждое убийство продлевает на 8 с.'
   # Grand Slam is replaced by Rage (full texts)
@@ -71,22 +72,36 @@ for ($L = 1; $L -le 5; $L++) {
   $extra["perkGrandSlamRank${L}Desc"] = "Rage $L", "Ярость $L"
   $extra["perkGrandSlamRank${L}LongDesc"] = "Kills with clubs, bats or sledgehammers give a Rage stack for 8 s (max $L): +6% damage and +4% attack speed per stack with these weapons.", "Убийства дубинкой, битой или кувалдой дают стак Ярости на 8 с (максимум $L): +6% урона и +4% скорости атаки за стак с этим оружием."
 }
+$extra['perkGrandSlamRank5LongDesc'] = ($extra['perkGrandSlamRank5LongDesc'][0] + '\n[FFB400]Rampage:[-] at 5 stacks club and sledgehammer attacks cost no stamina.'), ($extra['perkGrandSlamRank5LongDesc'][1] + '\n[FFB400]Буйство:[-] на 5 стаках атаки дубинками и кувалдами не тратят выносливость.')
 
-# AposMod line appended to the vanilla text of every rank of the perks that scale our traits ($L = rank)
+# AposMod line appended to the vanilla text of every rank of the perks that scale our traits ($L = rank).
+# "Replaces ..." notes tell the player which vanilla knockdown above no longer works (removed in progression.xml).
 $perkLines = [ordered]@{
   perkDeepCuts          = { param($L) "Bloodsucker (knives): up to $(2 + $L) regeneration stacks (+1 HP/s each).", "Кровопийца (ножи): до $(2 + $L) стаков регенерации (+1 HP/с каждый)." }
-  perkPummelPete        = { param($L) "Home Run (clubs): $(15 + 5 * $L)% stun chance on normal hits, head power attack launches $([int](150 * $L / 8))% further.", "Хоумран (дубинки и биты): $(15 + 5 * $L)% шанс оглушить обычным ударом, силовая в голову отбрасывает на $([int](150 * $L / 8))% дальше." }
-  perkSkullCrusher      = { param($L) "Earthquake (sledgehammers): $(20 + 5 * $L)% knockdown chance on normal hits, power attack radius $(3 + 0.5 * $L) m.", "Землетрясение (кувалды): $(20 + 5 * $L)% шанс сбить с ног обычным ударом, радиус силовой атаки $(3 + 0.5 * $L) м." }
+  perkPummelPete        = { param($L) "Home Run (clubs and bats): $(15 + 5 * $L)% stun chance on normal hits, head power attack launches $([int](150 * $L / 8))% further. Replaces the power-attack knockdown above: power attacks deal +$(10 * $L)% damage to stunned enemies.", "Хоумран (дубинки и биты): $(15 + 5 * $L)% шанс оглушить обычным ударом, силовая в голову отбрасывает на $([int](150 * $L / 8))% дальше. Заменяет сбивание с ног силовой атакой выше: силовые атаки наносят +$(10 * $L)% урона оглушённым." }
+  perkSkullCrusher      = { param($L) "Earthquake (sledgehammers): $(20 + 5 * $L)% knockdown chance on normal hits, power attack radius $(3 + 0.5 * $L) m. Replaces the power-attack knockdown chances above: Earthquake deals $(10 * $L) damage to every zombie it knocks down.", "Землетрясение (кувалды): $(20 + 5 * $L)% шанс сбить с ног обычным ударом, радиус силовой атаки $(3 + 0.5 * $L) м. Заменяет шансы сбить с ног силовой атакой выше: Землетрясение наносит $(10 * $L) урона каждому сбитому зомби." }
   perkFlurryOfIntellect = { param($L) "Chain Lightning (batons): power attack shocks zombies within $(3 + 0.5 * $L) m for $([math]::Round(2 + 0.4 * $L, 1)) s.", "Цепная молния (жезлы и дубинка из трубы): силовая атака шокирует зомби в радиусе $(3 + 0.5 * $L) м на $([math]::Round(2 + 0.4 * $L, 1)) с." }
-  perkJavelinMaster     = { param($L) "Battering Ram (spears): power attack pierces $L zombie(s) behind the target.", "Таран (копья): силовая атака пробивает $L зомби за целью." }
-  perkBrawler           = { param($L) "Counter Punch (knuckles): up to $(2 + $L) counter charges.", "Контрудар (кастеты): до $(2 + $L) зарядов контрудара." }
+  perkJavelinMaster     = { param($L) "Battering Ram (spears): power attack pierces $(1 + $L) zombies behind the target, normal hits push $([int](40 * $L / 1.2))% harder.", "Таран (копья): силовая атака пробивает $(1 + $L) зомби за целью, обычный удар отталкивает на $([int](40 * $L / 1.2))% сильнее." }
+  perkBrawler           = { param($L) "Counter Punch (knuckles): up to $(2 + $L) counter charges. Replaces the power stagger / knockdown above: normal punches have a $(10 * $L)% chance to give +1 charge.", "Контрудар (кастеты): до $(2 + $L) зарядов. Заменяет оглушение / сбивание с ног силовой атакой выше: обычный удар с шансом $(10 * $L)% даёт +1 заряд." }
+}
+# Rank 5 highlights, appended after the scaling line
+$perkFinale = @{
+  perkDeepCuts          = 'Blood Feast: a knife kill at max stacks heals 25 HP at once.', 'Пир крови: убийство ножом на максимуме стаков сразу лечит 25 HP.'
+  perkPummelPete        = 'Home Run works on a power hit to any body part, not only the head.', 'Хоумран срабатывает от силовой атаки в любую часть тела, не только в голову.'
+  perkSkullCrusher      = 'Aftershock: zombies knocked down by Earthquake stay stunned for 3 s after getting up.', 'Афтершок: сбитые Землетрясением зомби ещё 3 с оглушены после подъёма.'
+  perkFlurryOfIntellect = 'Every 4th normal baton hit also fires Chain Lightning.', 'Каждый 4-й обычный удар жезлом тоже запускает Цепную молнию.'
+  perkJavelinMaster     = 'Skewer: every zombie hit by a spear power attack is knocked down.', 'Насадить: каждый зомби, задетый силовой атакой копья, сбит с ног.'
+  perkBrawler           = 'Knockout: a power punch on full charges kills any non-elite zombie.', 'Нокаут: силовой удар на полных зарядах убивает любого не-элитного зомби.'
 }
 foreach ($p in $perkLines.Keys) {
   for ($L = 1; $L -le 5; $L++) {
     $key = "${p}Rank${L}LongDesc"
     if (-not $loc[$key]) { throw "No vanilla text for $key" }
     $line = & $perkLines[$p] $L
-    $extra[$key] = ($loc[$key] + '\n\n[FFB400]AposMod:[-] ' + $line[0]), ($locRu[$key] + '\n\n[FFB400]AposMod:[-] ' + $line[1])
+    $en = $loc[$key] + '\n\n[FFB400]AposMod:[-] ' + $line[0]
+    $ru = $locRu[$key] + '\n\n[FFB400]AposMod:[-] ' + $line[1]
+    if ($L -eq 5) { $en += '\n[FFB400]Level 5:[-] ' + $perkFinale[$p][0]; $ru += '\n[FFB400]Уровень 5:[-] ' + $perkFinale[$p][1] }
+    $extra[$key] = $en, $ru
   }
 }
 

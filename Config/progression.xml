@@ -27,6 +27,14 @@
 		</effect_group>
 	</append>
 
+	<!-- ===== Vanilla knockdowns that duplicated mod traits (replacements live in entityclasses.xml) ===== -->
+	<!-- Pummel Pete: power attack knocks a stunned foe down (60-100%) -> duplicated Home Run -->
+	<remove xpath="/progression/perks/perk[@name='perkPummelPete']//triggered_effect[@buff='buffStayDownKO']"/>
+	<!-- Skull Crusher: power attack knockdown of target / nearby (15-75% / 20-50%) -> duplicated Earthquake -->
+	<remove xpath="/progression/perks/perk[@name='perkSkullCrusher']//triggered_effect[starts-with(@buff,'buffInjuryKnockdown')]"/>
+	<!-- The Brawler: power stagger (rank 2+) and head knockdown (rank 3+) -> duplicated Counter Punch -->
+	<remove xpath="/progression/perks/perk[@name='perkBrawler']//triggered_effect[@buff='buffInjuryKnockdown01' or @buff='buffInjuryStunned01']"/>
+
 	<!-- ===== Intellect Mastery 4-5: baton bonuses duplicated Chain Lightning ===== -->
 	<!-- The vanilla level 4/5 baton triggers are removed in items.xml -->
 	<append xpath="/progression/perks/perk[@name='perkIntellectMastery']">

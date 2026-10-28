@@ -8,7 +8,7 @@
 
 ## Layout
 - `ModInfo.xml` — mod name/version (bump on releases).
-- `Config/*.xml` — XPath patches (`set`, `append`, `insertBefore`, `remove`, `csv`) over vanilla configs. `progression.xml` replaces Grand Slam with Rage and Intellect Mastery 4-5 with Field Repair / Inventor.
+- `Config/*.xml` — XPath patches (`set`, `append`, `insertBefore`, `remove`, `csv`) over vanilla configs. `progression.xml` replaces Grand Slam with Rage, Intellect Mastery 4-5 with Field Repair / Inventor, and removes vanilla knockdowns of Pummel Pete / Skull Crusher / The Brawler that duplicated mod traits (replacements in entityclasses.xml).
 - `Config/Localization.csv` — must be **.csv** (game 3.x ignores Localization.txt). Columns `english` and `russian`; **fill both** (the game client runs in Russian; an empty column shows a blank text).
 - `Source/AposMod.cs` — C# part (floating damage numbers, no Harmony). Build: `& Source/build.ps1` → `AposMod.dll` (gitignored).
 - `Source/gen_loc.ps1` — regenerates `Config/Localization.csv` (vanilla text + trait, EN/RU). Edit trait texts there, not in the CSV. Keep it UTF-8 **with BOM**.

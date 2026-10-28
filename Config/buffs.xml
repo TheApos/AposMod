@@ -62,6 +62,21 @@
 				<passive_effect name="EntityDamage" operation="perc_add" value="@aposRageDamage"/>
 				<passive_effect name="AttacksPerMinute" operation="perc_add" value="@aposRageSpeed"/>
 			</effect_group>
+			<!-- Rage 5 "Rampage": at 5 stacks club/sledge attacks cost no stamina -->
+			<effect_group>
+				<requirement name="HoldingItemHasTags" tags="perkPummelPete,perkSkullCrusher"/>
+				<requirement name="CVarCompare" cvar="aposRageStacks" operation="GTE" value="5"/>
+				<passive_effect name="StaminaLoss" operation="perc_add" value="-1"/>
+			</effect_group>
+		</buff>
+
+		<!-- Earthquake damage (Skull Crusher): each knocked-down target loses its own aposQuakeDmg (negative) HP -->
+		<buff name="buffAposQuakeHit" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="1"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="@aposQuakeDmg"/>
+			</effect_group>
 		</buff>
 
 		<!-- Pipe weapons: marks that the "max bonus" message was shown once -->
