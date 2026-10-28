@@ -26,7 +26,7 @@ $traits = @{
   mg     = T 'Suppression' 'Every hit slows the target by 5% for 8 s (max 20%, +6% per Machine Gunner level).\nEvery 4th hit: the next shot costs no ammo.'
   bow    = T 'Splinter' 'Every arrow hurts zombies within 3 m of the impact for 25 HP (+15 HP and +0.4 m per Archery level).'
   xbow   = T 'Mark' 'A bolt marks the zombie for 10 s: all your damage to it +30% (+14% per Archery level, +100% at level 5).'
-}
+  robot  = T 'Guardian Protocol' 'While your health is below 30%, your turrets and robotic sledges attack 30% faster and deal 10% more damage (+10% speed and +5% damage per Robotics Inventor level; at level 5 below 50% health: +80% / +35%).'}
 $traitsRu = @{
   knife  = T 'Кровопийца' 'Каждый удар добавляет стак регенерации (силовая атака: +2): +1 HP/с за стак, каждый удар продлевает до 5 с.\nМаксимум стаков: 2 + уровень «Глубоких ран» (как кровоточащие раны).\nСиловая атака: цель кровоточит.'
   club   = T 'Хоумран' 'Обычный удар: 15% шанс оглушить на 1 с (+5% за уровень «Громилы Пита»).\nСиловая атака в голову: отправляет зомби в полёт и сбивает с ног (дальше с «Громилой Питом»; на 5 уровне — в любую часть тела).\nСиловые атаки тратят на 30% больше выносливости.'
@@ -44,7 +44,7 @@ $traitsRu = @{
   mg     = T 'Подавление' 'Каждое попадание замедляет цель на 5% на 8 с (максимум 20%, +6% за уровень «Пулеметчика»).\nКаждое 4-е попадание: следующий выстрел не тратит патрон.'
   bow    = T 'Расщепление' 'Каждая стрела ранит зомби в радиусе 3 м от попадания на 25 HP (+15 HP и +0.4 м за уровень «Стрельбы из лука»).'
   xbow   = T 'Метка' 'Болт помечает зомби на 10 с: весь ваш урон по нему +30% (+14% за уровень «Стрельбы из лука», +100% на 5 уровне).'
-}
+  robot  = T 'Протокол защиты' 'Пока ваше здоровье ниже 30%, ваши турели и робо-кувалды атакуют на 30% быстрее и наносят на 10% больше урона (+10% скорости и +5% урона за уровень «Изобретателя роботов»; на 5 уровне при здоровье ниже 50%: +80% / +35%).'}
 $map = [ordered]@{
   meleeWpnBladeT0BoneKnife = 'knife'; meleeWpnBladeT1HuntingKnife = 'knife'; meleeWpnBladeT1CandyKnife = 'knife'; meleeWpnBladeT3Machete = 'knife'
   meleeWpnClubT0WoodenClub = 'club'; meleeWpnClubT1BaseballBat = 'club'; meleeWpnClubT1CandyClub = 'club'; meleeWpnClubT3SteelClub = 'club'
@@ -58,6 +58,7 @@ $map = [ordered]@{
   gunMGT1AK47 = 'mg'; gunMGT2TacticalAR = 'mg'; gunMGT3M60 = 'mg'
   gunBowT0PrimitiveBow = 'bow'; gunBowT1WoodenBow = 'bow'; gunBowT3CompoundBow = 'bow'
   gunBowT1IronCrossbow = 'xbow'; gunBowT3CompoundCrossbow = 'xbow'
+  gunBotT1JunkSledge = 'robot'; gunBotT2JunkTurret = 'robot'
   gunShotgunT0PipeShotgun = 'slug,pipe'; gunShotgunT1DoubleBarrel = 'slug'; gunShotgunT2PumpShotgun = 'slug'; gunShotgunT3AutoShotgun = 'slug'
   ammoShotgunSlug = 'slug'; ammoShotgunBreachingSlug = 'slug'
   thrownGrenade = 'nade'; thrownGrenadeContact = 'nade'; thrownAmmoPipeBomb = 'nade'
@@ -81,6 +82,8 @@ $extra = [ordered]@{
   buffAposQuakeCDDesc     = 'Earthquake is recharging.', 'Землетрясение перезаряжается.'
   buffAposChainCDName     = 'Chain Lightning: cooldown', 'Цепная молния: перезарядка'
   buffAposChainCDDesc     = 'Chain Lightning is recharging.', 'Цепная молния перезаряжается.'
+  buffAposGuardianName    = 'Guardian Protocol', 'Протокол защиты'
+  buffAposGuardianDesc    = 'Your health is low: your robots attack faster and harder.', 'Ваше здоровье низкое: ваши роботы атакуют быстрее и сильнее.'
   # Grand Slam is replaced by Rage (full texts)
   perkGrandSlamName       = 'Rage', 'Ярость'
   perkGrandSlamDesc       = 'Every kill with a club, bat or sledgehammer fuels your rage: more damage and faster attacks for a short time.', 'Каждое убийство дубинкой, битой или кувалдой разжигает ярость: больше урона и быстрее атаки на короткое время.'
@@ -109,7 +112,7 @@ $perkLines = [ordered]@{
   perkDeadEye           = { param($L) "Ricochet (rifles): a headshot hurts zombies within $(@(4,5,7,9,12,15)[$L]) m for $(20 + 10 * $L) HP.", "Рикошет (винтовки): хедшот ранит зомби в радиусе $(@(4,5,7,9,12,15)[$L]) м на $(20 + 10 * $L) HP." }
   perkMachineGunner     = { param($L) "Suppression (machine guns): hits slow targets up to $(20 + 6 * $L)%; every 4th hit makes the next shot free.", "Подавление (автоматы): попадания замедляют цель до $(20 + 6 * $L)%; каждое 4-е попадание делает следующий выстрел бесплатным." }
   perkArchery           = { param($L) "Splinter (bows): arrows hurt zombies within $([math]::Round(3 + 0.4 * $L, 1)) m for $(25 + 15 * $L) HP. Mark (crossbows): your damage to marked zombies +$(30 + 14 * $L)%.", "Расщепление (луки): стрелы ранят зомби в радиусе $([math]::Round(3 + 0.4 * $L, 1)) м на $(25 + 15 * $L) HP. Метка (арбалеты): ваш урон по помеченным зомби +$(30 + 14 * $L)%." }
-}
+  perkTurrets           = { param($L) "Guardian Protocol (robots): below 30% health your robots attack $(30 + 10 * $L)% faster and deal $(10 + 5 * $L)% more damage.", "Протокол защиты (роботы): при здоровье ниже 30% ваши роботы атакуют на $(30 + 10 * $L)% быстрее и наносят на $(10 + 5 * $L)% больше урона." }}
 # Rank 5 highlights, appended after the scaling line
 $perkFinale = @{
   perkDeepCuts          = 'Blood Feast: a knife kill at max stacks heals 25 HP at once.', 'Пир крови: убийство ножом на максимуме стаков сразу лечит 25 HP.'
@@ -122,7 +125,7 @@ $perkFinale = @{
   perkDeadEye           = 'Ricochet also stuns every zombie it hits for 2 s.', 'Рикошет также оглушает всех задетых зомби на 2 с.'
   perkMachineGunner     = 'Fully suppressed targets take +25% damage from you.', 'Полностью подавленные цели получают от вас +25% урона.'
   perkArchery           = 'A headshot arrow sets the target on fire; Mark gives +100% damage.', 'Стрела в голову поджигает цель; Метка даёт +100% урона.'
-}
+  perkTurrets           = 'Guardian Protocol starts below 50% health (instead of 30%).', 'Протокол защиты включается при здоровье ниже 50% (вместо 30%).'}
 foreach ($p in $perkLines.Keys) {
   for ($L = 1; $L -le 5; $L++) {
     $key = "${p}Rank${L}LongDesc"

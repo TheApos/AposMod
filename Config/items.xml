@@ -117,5 +117,7 @@
 	<append xpath="/items/item[@name='gunBowT3CompoundBow']"><property name="DescriptionKey" value="aposDesc_gunBowT3CompoundBow"/></append>
 	<append xpath="/items/item[@name='gunBowT1IronCrossbow']"><property name="DescriptionKey" value="aposDesc_gunBowT1IronCrossbow"/></append>
 	<append xpath="/items/item[@name='gunBowT3CompoundCrossbow']"><property name="DescriptionKey" value="aposDesc_gunBowT3CompoundCrossbow"/></append>
+	<append xpath="/items/item[@name='gunBotT1JunkSledge']"><property name="DescriptionKey" value="aposDesc_gunBotT1JunkSledge"/></append>
+	<append xpath="/items/item[@name='gunBotT2JunkTurret']"><property name="DescriptionKey" value="aposDesc_gunBotT2JunkTurret"/></append>
 	<append xpath="/items/item[@name='gunExplosivesT3RocketLauncher']"><property name="DescriptionKey" value="aposDesc_gunExplosivesT3RocketLauncher"/></append>
 </configs>

@@ -403,6 +403,32 @@
 			<passive_effect name="EntityDamage" operation="perc_add" value="1"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="5"/></passive_effect>
 		</effect_group>
 
+		<!-- ===== Robots: "Guardian Protocol" — scales with Robotics Inventor (perkTurrets) ===== -->
+		<!-- While your health is below 30% (50% at level 5) your deployed turrets and robotic sledges attack
+		     30% faster + 10% per level and deal 10% + 5% per level more damage. Turret attacks read the owner's
+		     passives by item tags (vanilla perkTurrets works the same way). -->
+		<effect_group name="AposMod robots guardian">
+			<requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".3"/>
+			<requirement name="ProgressionLevel" progression_name="perkTurrets" operation="LT" value="5"/>
+			<passive_effect name="RoundsPerMinute" operation="perc_add" value=".3" tags="turretRanged,turretMelee"><requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="0"/></passive_effect>
+			<passive_effect name="RoundsPerMinute" operation="perc_add" value=".4" tags="turretRanged,turretMelee"><requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="1"/></passive_effect>
+			<passive_effect name="RoundsPerMinute" operation="perc_add" value=".5" tags="turretRanged,turretMelee"><requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="2"/></passive_effect>
+			<passive_effect name="RoundsPerMinute" operation="perc_add" value=".6" tags="turretRanged,turretMelee"><requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="3"/></passive_effect>
+			<passive_effect name="RoundsPerMinute" operation="perc_add" value=".7" tags="turretRanged,turretMelee"><requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="4"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".1" tags="perkTurrets"><requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="0"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".15" tags="perkTurrets"><requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="1"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".2" tags="perkTurrets"><requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="2"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".25" tags="perkTurrets"><requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="3"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".3" tags="perkTurrets"><requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="4"/></passive_effect>
+		</effect_group>
+		<!-- Robotics Inventor 5: kicks in below 50% health, +80% speed and +35% damage -->
+		<effect_group name="AposMod robots guardian 5">
+			<requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".5"/>
+			<requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="5"/>
+			<passive_effect name="RoundsPerMinute" operation="perc_add" value=".8" tags="turretRanged,turretMelee"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".35" tags="perkTurrets"/>
+		</effect_group>
+
 		<!-- ===== Pipe weapons (T0): "Veteran Junk" — +2% damage per kill, max +1000% ===== -->
 		<!-- aposPipeBonus = shown bonus in % (0..1000), aposPipeMult = the same as a fraction for perc_add -->
 		<effect_group name="AposMod pipe veteran">

@@ -11,6 +11,19 @@
 	<!-- ===== Veteran Junk indicator: shown while a pipe weapon is in hand ===== -->
 	<!-- buffStatusCheck01 is always on the player and updates every 2 s -->
 	<append xpath="/buffs/buff[@name='buffStatusCheck01']">
+		<!-- Guardian Protocol indicator: shown to robot users (Robotics Inventor 1+) while their health is low -->
+		<effect_group name="AposMod robots guardian indicator">
+			<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffAposGuardian">
+				<requirement name="ProgressionLevel" progression_name="perkTurrets" operation="GTE" value="1"/>
+				<requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".3"/>
+				<requirement name="!HasBuff" buff="buffAposGuardian"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffAposGuardian">
+				<requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="5"/>
+				<requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".5"/>
+				<requirement name="!HasBuff" buff="buffAposGuardian"/>
+			</triggered_effect>
+		</effect_group>
 		<effect_group name="AposMod pipe veteran indicator">
 			<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffAposPipeVeteran">
 				<requirement name="HoldingItemHasTags" tags="aposPipe"/>
@@ -153,6 +166,20 @@
 			<duration value=".3"/>
 			<effect_group>
 				<triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="@aposSplashDmg"/>
+			</effect_group>
+		</buff>
+
+		<!-- Robots "Guardian Protocol": display only; the bonus itself lives in entityclasses.xml -->
+		<buff name="buffAposGuardian" name_key="buffAposGuardianName" description_key="buffAposGuardianDesc" icon="ui_game_symbol_electric_turret" icon_color="0,220,255">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposGuardian">
+					<requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value=".3"/>
+					<requirement name="ProgressionLevel" progression_name="perkTurrets" operation="LT" value="5"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposGuardian">
+					<requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value=".5"/>
+				</triggered_effect>
 			</effect_group>
 		</buff>
 
