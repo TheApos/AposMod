@@ -194,6 +194,20 @@
 			</effect_group>
 		</buff>
 
+		<!-- Acid mod (on the zombie): -25% physical resistance and 3 HP/s for 6 s (aposCorrodeTime, refreshed by acid hits) -->
+		<buff name="buffAposCorroded" hidden="true">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<passive_effect name="PhysicalDamageResist" operation="base_add" value="-25"/>
+				<passive_effect name="HealthChangeOT" operation="base_add" value="-3"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposCorrodeTime" operation="add" value="-1"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposCorroded">
+					<requirement name="CVarCompare" cvar="aposCorrodeTime" operation="LTE" value="0"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffRemove" action="RemoveCVar" cvar="aposCorrodeTime"/>
+			</effect_group>
+		</buff>
+
 		<!-- Energy Shield charged: ranged attacks deal no damage -->
 		<buff name="buffAposShieldUp" name_key="buffAposShieldUpName" description_key="buffAposShieldUpDesc" icon="ui_game_symbol_defense" icon_color="0,200,255">
 			<stack_type value="ignore"/>

@@ -21,5 +21,57 @@
 				<triggered_effect trigger="onOtherDamagedSelf" action="RemoveBuff" buff="buffAposShieldUp"/>
 			</effect_group>
 		</item_modifier>
+
+		<!-- ===== Elemental weapon mods (one per weapon: shared modifier_tags "aposElement") ===== -->
+		<!-- onSelfAttackedOther = every hit with this weapon, the same trigger vanilla fire weapons use -->
+		<item_modifier name="modWeaponAposFire" installable_tags="weapon" modifier_tags="aposElement" blocked_tags="noMods,turretRanged,turretMelee" type="attachment">
+			<property name="Extends" value="modGeneralMaster" param1="CustomIcon"/>
+			<property name="CustomIcon" value="modMeleeClubBurningShaft"/>
+			<property name="CustomIconTint" value="255,110,0"/>
+			<property name="TraderStageTemplate" value="modsTier2"/>
+			<property name="DescriptionKey" value="modWeaponAposFireDesc"/>
+			<effect_group tiered="false">
+				<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffBurningElement">
+					<requirement name="IsAlive" target="other"/>
+					<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+					<requirement name="CVarCompare" target="other" cvar="_underwater" operation="LT" value="0.3"/>
+					<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="20"/>
+				</triggered_effect>
+			</effect_group>
+		</item_modifier>
+
+		<item_modifier name="modWeaponAposShock" installable_tags="weapon" modifier_tags="aposElement" blocked_tags="noMods,turretRanged,turretMelee" type="attachment">
+			<property name="Extends" value="modGeneralMaster" param1="CustomIcon"/>
+			<property name="CustomIcon" value="modMeleeStunBatonRepulsor"/>
+			<property name="CustomIconTint" value="80,170,255"/>
+			<property name="TraderStageTemplate" value="modsTier2"/>
+			<property name="DescriptionKey" value="modWeaponAposShockDesc"/>
+			<effect_group tiered="false">
+				<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffShocked" duration="1.5">
+					<requirement name="IsAlive" target="other"/>
+					<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+					<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="20"/>
+				</triggered_effect>
+			</effect_group>
+		</item_modifier>
+
+		<item_modifier name="modWeaponAposAcid" installable_tags="weapon" modifier_tags="aposElement" blocked_tags="noMods,turretRanged,turretMelee" type="attachment">
+			<property name="Extends" value="modGeneralMaster" param1="CustomIcon"/>
+			<property name="CustomIcon" value="modGunCrippleEm"/>
+			<property name="CustomIconTint" value="120,255,60"/>
+			<property name="TraderStageTemplate" value="modsTier2"/>
+			<property name="DescriptionKey" value="modWeaponAposAcidDesc"/>
+			<effect_group tiered="false">
+				<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar="aposCorrodeTime" operation="set" value="6">
+					<requirement name="IsAlive" target="other"/>
+					<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="25"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffAposCorroded">
+					<requirement name="IsAlive" target="other"/>
+					<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+					<requirement name="CVarCompare" target="other" cvar="aposCorrodeTime" operation="GT" value="0"/>
+				</triggered_effect>
+			</effect_group>
+		</item_modifier>
 	</append>
 </configs>

@@ -88,6 +88,12 @@ $extra = [ordered]@{
   modArmorAposEnergyShieldDesc = '[FFB400]AposMod: Energy Shield[-]\nChest armor mod. While charged, ranged attacks (bullets, arrows, spit) deal no damage to you.\nAny hit drains the shield; it recharges after 5 s without taking damage.\nCraft at a workbench or find in loot.', '[FFB400]AposMod: Энергощит[-]\nМод для нагрудника. Пока заряжен, дальние атаки (пули, стрелы, плевки) не наносят вам урона.\nЛюбое попадание разряжает щит; он заряжается через 5 с без получения урона.\nСоздаётся на верстаке или находится в луте.'
   buffAposShieldUpName    = 'Energy Shield', 'Энергощит'
   buffAposShieldUpDesc    = 'Charged: ranged attacks deal no damage. Any hit drains it.', 'Заряжен: дальние атаки не наносят урона. Любое попадание разряжает его.'
+  modWeaponAposFire       = 'Incendiary Mod', 'Мод: зажигательный'
+  modWeaponAposFireDesc   = '[FFB400]AposMod: Fire[-]\nAny weapon. Hits have a 20% chance to set the target on fire.\nOnly one elemental mod per weapon.', '[FFB400]AposMod: Огонь[-]\nЛюбое оружие. Попадания с шансом 20% поджигают цель.\nНа оружие — только один стихийный мод.'
+  modWeaponAposShock      = 'Tesla Mod', 'Мод: тесла'
+  modWeaponAposShockDesc  = '[FFB400]AposMod: Shock[-]\nAny weapon. Hits have a 20% chance to shock the target for 1.5 s.\nOnly one elemental mod per weapon.', '[FFB400]AposMod: Ток[-]\nЛюбое оружие. Попадания с шансом 20% шокируют цель на 1.5 с.\nНа оружие — только один стихийный мод.'
+  modWeaponAposAcid       = 'Corrosive Mod', 'Мод: кислотный'
+  modWeaponAposAcidDesc   = '[FFB400]AposMod: Acid[-]\nAny weapon. Hits have a 25% chance to corrode the target for 6 s: it takes more physical damage and loses 3 HP per second.\nOnly one elemental mod per weapon.', '[FFB400]AposMod: Кислота[-]\nЛюбое оружие. Попадания с шансом 25% разъедают цель на 6 с: она получает больше физического урона и теряет 3 HP в секунду.\nНа оружие — только один стихийный мод.'
   # Grand Slam is replaced by Rage (full texts)
   perkGrandSlamName       = 'Rage', 'Ярость'
   perkGrandSlamDesc       = 'Every kill with a club, bat or sledgehammer fuels your rage: more damage and faster attacks for a short time.', 'Каждое убийство дубинкой, битой или кувалдой разжигает ярость: больше урона и быстрее атаки на короткое время.'
