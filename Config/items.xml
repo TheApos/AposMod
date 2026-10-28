@@ -16,7 +16,7 @@
 	<!-- ===== Shotgun slugs: knock the target back and down ===== -->
 	<!-- Ammo effects fire together with the weapon's, so buckshot is not affected -->
 	<append xpath="/items/item[@name='ammoShotgunSlug' or @name='ammoShotgunBreachingSlug']/effect_group[1]">
-		<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration="2" force="600">
+		<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration="2.5" force="1000">
 			<requirement name="IsAlive" target="other"/>
 			<requirement name="!EntityTagCompare" target="other" tags="trader"/>
 		</triggered_effect>

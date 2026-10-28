@@ -20,23 +20,35 @@
 	</append>
 
 	<append xpath="/buffs">
-		<!-- Knife power attack: heal 1 HP per second for 5 seconds -->
+		<!-- Knife: regenerates aposKnifeStacks HP/s; every knife hit resets aposKnifeTime to 5 s
+		     (same timer pattern as vanilla bleeding, so re-adding never resets the stacks) -->
 		<buff name="buffAposKnifeRegen" name_key="buffAposKnifeRegenName" description_key="buffAposKnifeRegenDesc" icon="ui_game_symbol_laceration" icon_color="200,30,30">
-			<stack_type value="replace"/>
-			<duration value="5"/>
+			<stack_type value="ignore"/>
+			<display_value value="aposKnifeStacks"/>
 			<effect_group>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="1"/>
+				<passive_effect name="HealthChangeOT" operation="base_add" value="@aposKnifeStacks"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposKnifeTime" operation="add" value="-1"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposKnifeRegen">
+					<requirement name="CVarCompare" cvar="aposKnifeTime" operation="LTE" value="0"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="aposKnifeStacks" operation="set" value="0"/>
 			</effect_group>
 		</buff>
 
-		<!-- Knuckles: counter punch window; the number shows boosted normal punches left -->
+		<!-- Knuckles: shown while there are counter charges; the number = charges left -->
 		<buff name="buffAposCounter" name_key="buffAposCounterName" description_key="buffAposCounterDesc" icon="ui_game_symbol_boxer" icon_color="255,180,0">
-			<stack_type value="replace"/>
-			<duration value="5"/>
+			<stack_type value="ignore"/>
 			<display_value value="aposCounterHits"/>
 			<effect_group>
-				<triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="aposCounterHits" operation="set" value="0"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposCounter">
+					<requirement name="CVarCompare" cvar="aposCounterHits" operation="LTE" value="0"/>
+				</triggered_effect>
 			</effect_group>
+		</buff>
+
+		<!-- Pipe weapons: marks that the "max bonus" message was shown once -->
+		<buff name="buffAposPipeMaxShown" hidden="true" remove_on_death="false">
+			<stack_type value="ignore"/>
 		</buff>
 
 		<!-- Pipe weapons: the number shows the current damage bonus in % -->

@@ -18,7 +18,7 @@ public class AposModInit : IModApi
 public class AposDamageNumbers : MonoBehaviour
 {
     const float Range = 60f;
-    const float Lifetime = 1.2f;
+    const float Lifetime = 1.5f;
     const float RiseHeight = 1.2f;
 
     static readonly Color NormalColor = Color.white;
@@ -129,12 +129,13 @@ public class AposDamageNumbers : MonoBehaviour
     void AddPopup(EntityAlive e, int damage, bool headshot, bool kill)
     {
         Popup p = new Popup();
-        // Small sideways jitter so fast hits do not stack on one spot
-        // Feet position + body height: plain world space, does not depend on the model's head bone
-        p.Pos = e.position + new Vector3(Random.Range(-0.3f, 0.3f), e.height + 0.3f, Random.Range(-0.3f, 0.3f));
+        // The game shifts the render origin around the player (floating origin): Entity.position is the
+        // logical world position, the camera works in scene space, so take the scene transform.
+        // Small sideways jitter so fast hits do not stack on one spot.
+        p.Pos = e.transform.position + new Vector3(Random.Range(-0.3f, 0.3f), e.height + 0.3f, Random.Range(-0.3f, 0.3f));
         p.Text = headshot ? damage + "!" : damage.ToString();
         p.Color = kill ? KillColor : (headshot ? HeadshotColor : NormalColor);
-        p.Size = (headshot || kill) ? 30 : 22;
+        p.Size = (headshot || kill) ? 40 : 30;
         p.Start = Time.time;
         popups.Add(p);
 
