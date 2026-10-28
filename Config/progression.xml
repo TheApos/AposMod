@@ -1,0 +1,44 @@
+<configs>
+	<!-- ===== Grand Slam -> "Rage": the vanilla sprint knockdown duplicated Home Run / Earthquake ===== -->
+	<!-- Remove the 5 vanilla ragdoll groups (the effect_description group has no requirement and stays) -->
+	<remove xpath="/progression/perks/perk[@name='perkGrandSlam']/effect_group[requirement]"/>
+	<set xpath="/progression/perks/perk[@name='perkGrandSlam']/@icon">ui_game_symbol_berserker</set>
+	<append xpath="/progression/perks/perk[@name='perkGrandSlam']">
+		<!-- Kills with clubs/sledges: +1 Rage stack (max = perk level), every kill refreshes 8 s -->
+		<effect_group name="AposMod rage">
+			<requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="GTE" value="1"/>
+			<requirement name="ItemHasTags" tags="perkPummelPete,perkSkullCrusher"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="1"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="2"><requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="3"><requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="4"><requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="5"><requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="Equals" value="5"/></triggered_effect>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageStacks" operation="add" value="1"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageStacks" operation="set" value="@aposRageCap">
+				<requirement name="CVarCompare" cvar="aposRageStacks" operation="GT" value="@aposRageCap"/>
+			</triggered_effect>
+			<!-- bonuses as fractions for perc_add: +6% damage and +4% attack speed per stack -->
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageDamage" operation="set" value="@aposRageStacks"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageDamage" operation="multiply" value=".06"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageSpeed" operation="set" value="@aposRageStacks"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageSpeed" operation="multiply" value=".04"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageTime" operation="set" value="8"/>
+			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposRage"/>
+		</effect_group>
+	</append>
+
+	<!-- ===== Intellect Mastery 4-5: baton bonuses duplicated Chain Lightning ===== -->
+	<!-- The vanilla level 4/5 baton triggers are removed in items.xml -->
+	<append xpath="/progression/perks/perk[@name='perkIntellectMastery']">
+		<!-- Level 4 "Field Repair": everything you use wears 30% slower -->
+		<effect_group name="AposMod field repair">
+			<requirement name="ProgressionLevel" progression_name="perkIntellectMastery" operation="GTE" value="4"/>
+			<passive_effect name="DegradationPerUse" operation="perc_add" value="-.3"/>
+		</effect_group>
+		<!-- Level 5 "Inventor": crafted items come out one quality level higher -->
+		<effect_group name="AposMod inventor">
+			<requirement name="ProgressionLevel" progression_name="perkIntellectMastery" operation="GTE" value="5"/>
+			<passive_effect name="CraftingTier" operation="base_add" value="1"/>
+		</effect_group>
+	</append>
+</configs>

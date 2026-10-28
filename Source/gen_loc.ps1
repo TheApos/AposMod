@@ -56,6 +56,38 @@ $extra = [ordered]@{
   buffAposPipeVeteranName = 'Veteran Junk', 'Ветеран-самоделка'
   buffAposPipeVeteranDesc = 'Pipe weapon damage bonus in % (number). +2% per kill with pipe weapons, max +1000%.', 'Бонус урона самодельного оружия в % (число). +2% за каждое убийство самодельным оружием, максимум +1000%.'
   aposPipeMaxed           = 'Veteran Junk: maximum bonus reached (+1000%)!', 'Ветеран-самоделка: достигнут максимальный бонус (+1000%)!'
+  buffAposRageName        = 'Rage', 'Ярость'
+  buffAposRageDesc        = 'Rage stacks (number): +6% damage and +4% attack speed per stack with clubs and sledgehammers. Every kill refreshes it for 8 s.', 'Стаки ярости (число): +6% урона и +4% скорости атаки за стак с дубинками, битами и кувалдами. Каждое убийство продлевает на 8 с.'
+  # Grand Slam is replaced by Rage (full texts)
+  perkGrandSlamName       = 'Rage', 'Ярость'
+  perkGrandSlamDesc       = 'Every kill with a club, bat or sledgehammer fuels your rage: more damage and faster attacks for a short time.', 'Каждое убийство дубинкой, битой или кувалдой разжигает ярость: больше урона и быстрее атаки на короткое время.'
+  # Intellect Mastery 4-5 are replaced (full texts)
+  perkIntellectMasteryRank4Desc     = 'Field Repair', 'Полевой ремонт'
+  perkIntellectMasteryRank4LongDesc = 'Field Repair: all your weapons, tools and armor wear 30% slower.', 'Полевой ремонт: всё ваше оружие, инструменты и броня изнашиваются на 30% медленнее.'
+  perkIntellectMasteryRank5Desc     = 'Inventor', 'Изобретатель'
+  perkIntellectMasteryRank5LongDesc = 'Inventor: everything you craft comes out one quality level higher.', 'Изобретатель: всё, что вы создаёте, получается на один уровень качества выше.'
+}
+for ($L = 1; $L -le 5; $L++) {
+  $extra["perkGrandSlamRank${L}Desc"] = "Rage $L", "Ярость $L"
+  $extra["perkGrandSlamRank${L}LongDesc"] = "Kills with clubs, bats or sledgehammers give a Rage stack for 8 s (max $L): +6% damage and +4% attack speed per stack with these weapons.", "Убийства дубинкой, битой или кувалдой дают стак Ярости на 8 с (максимум $L): +6% урона и +4% скорости атаки за стак с этим оружием."
+}
+
+# AposMod line appended to the vanilla text of every rank of the perks that scale our traits ($L = rank)
+$perkLines = [ordered]@{
+  perkDeepCuts          = { param($L) "Bloodsucker (knives): up to $(2 + $L) regeneration stacks (+1 HP/s each).", "Кровопийца (ножи): до $(2 + $L) стаков регенерации (+1 HP/с каждый)." }
+  perkPummelPete        = { param($L) "Home Run (clubs): $(15 + 5 * $L)% stun chance on normal hits, head power attack launches $([int](150 * $L / 8))% further.", "Хоумран (дубинки и биты): $(15 + 5 * $L)% шанс оглушить обычным ударом, силовая в голову отбрасывает на $([int](150 * $L / 8))% дальше." }
+  perkSkullCrusher      = { param($L) "Earthquake (sledgehammers): $(20 + 5 * $L)% knockdown chance on normal hits, power attack radius $(3 + 0.5 * $L) m.", "Землетрясение (кувалды): $(20 + 5 * $L)% шанс сбить с ног обычным ударом, радиус силовой атаки $(3 + 0.5 * $L) м." }
+  perkFlurryOfIntellect = { param($L) "Chain Lightning (batons): power attack shocks zombies within $(3 + 0.5 * $L) m for $([math]::Round(2 + 0.4 * $L, 1)) s.", "Цепная молния (жезлы и дубинка из трубы): силовая атака шокирует зомби в радиусе $(3 + 0.5 * $L) м на $([math]::Round(2 + 0.4 * $L, 1)) с." }
+  perkJavelinMaster     = { param($L) "Battering Ram (spears): power attack pierces $L zombie(s) behind the target.", "Таран (копья): силовая атака пробивает $L зомби за целью." }
+  perkBrawler           = { param($L) "Counter Punch (knuckles): up to $(2 + $L) counter charges.", "Контрудар (кастеты): до $(2 + $L) зарядов контрудара." }
+}
+foreach ($p in $perkLines.Keys) {
+  for ($L = 1; $L -le 5; $L++) {
+    $key = "${p}Rank${L}LongDesc"
+    if (-not $loc[$key]) { throw "No vanilla text for $key" }
+    $line = & $perkLines[$p] $L
+    $extra[$key] = ($loc[$key] + '\n\n[FFB400]AposMod:[-] ' + $line[0]), ($locRu[$key] + '\n\n[FFB400]AposMod:[-] ' + $line[1])
+  }
 }
 
 function Csv($s) { '"' + $s.Replace('"', '""') + '"' }
@@ -67,6 +99,6 @@ foreach ($item in $map.Keys) {
   $ru = $vanillaRu + '\n\n' + (($map[$item] -split ',' | ForEach-Object { $traitsRu[$_] }) -join '\n\n')
   $rows += "aposDesc_$item,items,Item,,,$(Csv $en),$(Csv $ru)"
 }
-foreach ($k in $extra.Keys) { $rows += "$k,buffs,Buff,,,$(Csv $extra[$k][0]),$(Csv $extra[$k][1])" }
+foreach ($k in $extra.Keys) { $file = if ($k -like 'perk*') { 'progression,Perk' } else { 'buffs,Buff' }; $rows += "$k,$file,,,$(Csv $extra[$k][0]),$(Csv $extra[$k][1])" }
 [IO.File]::WriteAllLines($out, $rows, [Text.UTF8Encoding]::new($false))
 "Localization.csv: $($rows.Count - 1) keys"

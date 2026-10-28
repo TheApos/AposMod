@@ -26,6 +26,10 @@
 	<csv xpath="/items/item[@name='gunHandgunT0PipePistol' or @name='gunShotgunT0PipeShotgun' or @name='gunRifleT0PipeRifle' or @name='gunMGT0PipeMachineGun' or @name='meleeWpnBatonT0PipeBaton']/property[@name='Tags']/@value" delim="," op="add">aposPipe</csv>
 	<set xpath="/items/item[@name='gunHandgunT0PipePistol' or @name='gunShotgunT0PipeShotgun' or @name='gunRifleT0PipeRifle' or @name='gunMGT0PipeMachineGun' or @name='meleeWpnBatonT0PipeBaton']/property[@name='RepairTools']/@value">resourceScrapIron</set>
 
+	<!-- ===== Intellect Mastery 4-5 no longer boost the stun baton (replaced in progression.xml) ===== -->
+	<!-- level 4: charge in 2 hits; level 5: sets perkIntelMaster5, which buffShocked turns into +300% shock damage -->
+	<remove xpath="/items/item[@name='meleeWpnBatonT2StunBaton']//triggered_effect[requirement[@progression_name='perkIntellectMastery' and (@value='4' or @value='5')]]"/>
+
 	<!-- ===== Rocket launcher: available at traders from the start ===== -->
 	<set xpath="/items/item[@name='gunExplosivesT3RocketLauncher']/property[@name='TraderStageTemplate']/@value">baseTier1</set>
 

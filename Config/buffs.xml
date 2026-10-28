@@ -46,6 +46,24 @@
 			</effect_group>
 		</buff>
 
+		<!-- Rage (replaces Grand Slam): number = stacks; bonuses only with clubs/sledges in hand -->
+		<buff name="buffAposRage" name_key="buffAposRageName" description_key="buffAposRageDesc" icon="ui_game_symbol_berserker" icon_color="255,60,0">
+			<stack_type value="ignore"/>
+			<display_value value="aposRageStacks"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposRageTime" operation="add" value="-1"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposRage">
+					<requirement name="CVarCompare" cvar="aposRageTime" operation="LTE" value="0"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="aposRageStacks" operation="set" value="0"/>
+			</effect_group>
+			<effect_group>
+				<requirement name="HoldingItemHasTags" tags="perkPummelPete,perkSkullCrusher"/>
+				<passive_effect name="EntityDamage" operation="perc_add" value="@aposRageDamage"/>
+				<passive_effect name="AttacksPerMinute" operation="perc_add" value="@aposRageSpeed"/>
+			</effect_group>
+		</buff>
+
 		<!-- Pipe weapons: marks that the "max bonus" message was shown once -->
 		<buff name="buffAposPipeMaxShown" hidden="true" remove_on_death="false">
 			<stack_type value="ignore"/>
