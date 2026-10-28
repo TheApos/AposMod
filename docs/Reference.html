@@ -71,7 +71,7 @@ h2 small { font: 500 13px var(--f-body); color: var(--muted); }
 .dmg { display: flex; gap: 10px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; }
 .num { font: 400 20px var(--f-display); min-width: 70px; text-align: center; text-shadow: 1px 1px 0 rgba(0,0,0,.6); background: #26282c; border-radius: 3px; padding: 2px 8px; }
 .n-white { color: #ffffff; } .n-yellow { color: #ffd91a; } .n-cyan { color: #4dd9ff; } .n-red { color: #ff2a1a; }
-.n-magenta { color: #ff3df2; } .n-green { color: #8cff2e; } .n-orange { color: #ff8c1a; } .n-violet { color: #b38cff; } .n-pink { color: #ff7380; }
+.n-magenta { color: #ff3df2; } .n-green { color: #8cff2e; } .n-orange { color: #ff8c1a; } .n-blue { color: #4073ff; } .n-pink { color: #ff7380; }
 code, .mono { font: 13px var(--f-mono); background: var(--amber-soft); padding: 1px 5px; border-radius: 3px; }
 pre { font: 13px var(--f-mono); background: var(--panel); border: 1px solid var(--line); padding: 10px 12px; border-radius: 4px; overflow-x: auto; margin: 0; }
 .legendary h3 .trait { color: var(--gold); }
@@ -242,7 +242,7 @@ footer { color: var(--muted); font-size: 13px; padding-block: 30px 40px; border-
       <h3>Арбалети — <span class="trait">Mark · Pin</span></h3>
       <div class="tagline">Перк: Archery</div>
       <ul>
-        <li><b>Mark:</b> болт позначає зомбі на 10 с. Уся ваша шкода по ньому, будь-якою зброєю, зростає.</li>
+        <li><b>Mark:</b> болт позначає зомбі на 10 с. Уся ваша шкода по ньому, будь-якою зброєю, зростає. Над позначеним зомбі світиться червоне кільце-приціл, видно навіть крізь стіни.</li>
         <li><b>Pin:</b> якщо за зомбі до 3 м стіна, болт прибиває його до смерті. Елітного — на 10 с.</li>
       </ul>
       <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Бонус Mark</td><td>+20%</td><td>+40%</td><td>+60%</td><td>+80%</td><td>+100%</td><td>+120%</td></tr></table></div>
@@ -382,7 +382,7 @@ footer { color: var(--muted); font-size: 13px; padding-block: 30px 40px; border-
     <div class="dmg"><span class="num n-magenta">60</span><span>Реакція стихій</span></div>
     <div class="dmg"><span class="num n-orange">8</span><span>Горіння</span></div>
     <div class="dmg"><span class="num n-green">3</span><span>Кислота</span></div>
-    <div class="dmg"><span class="num n-violet">5</span><span>Струм</span></div>
+    <div class="dmg"><span class="num n-blue">5</span><span>Струм</span></div>
     <div class="dmg"><span class="num n-pink">4</span><span>Кровотеча</span></div>
   </div>
 
@@ -416,6 +416,7 @@ aposdmg color off    без блакитного кольору</pre>
         <li>Guardian Protocol, Energy Shield</li>
         <li>Перезарядка Earthquake і Chain Lightning</li>
         <li>Грозові заряди Thunderclap, безкоштовна ракета Big Boom</li>
+        <li>Червоне кільце над зомбі — на ньому Mark арбалета</li>
       </ul>
     </article>
     <article class="card">

@@ -43,7 +43,8 @@ public class AposDamageNumbers : MonoBehaviour
     static readonly Color ReactionColor = new Color(1f, 0.24f, 0.95f);  // magenta
     static readonly Color AcidColor = new Color(0.55f, 1f, 0.18f);      // toxic green
     static readonly Color FireColor = new Color(1f, 0.55f, 0.1f);       // orange
-    static readonly Color ShockColor = new Color(0.7f, 0.55f, 1f);      // violet
+    static readonly Color ShockColor = new Color(0.25f, 0.45f, 1f);     // deep blue (darker than the cyan of buffed hits)
+    static readonly Color MarkColor = new Color(1f, 0.2f, 0.1f);        // crossbow Mark ring
     static readonly Color BleedColor = new Color(1f, 0.45f, 0.5f);      // pink
 
     static readonly string[] FireBuffs = { "buffBurningElement", "buffBurningFlamingArrow", "buffBurningMolotov", "buffBurningZombie" };
@@ -68,6 +69,8 @@ public class AposDamageNumbers : MonoBehaviour
     readonly HashSet<int> seen = new HashSet<int>();
     readonly List<int> stale = new List<int>();
     readonly List<Popup> popups = new List<Popup>();
+    readonly List<EntityAlive> marked = new List<EntityAlive>();  // zombies with the crossbow Mark, drawn as a ring
+    Texture2D ringTexture;
     Camera cam;
     GUIStyle style;
     string killText;
@@ -94,6 +97,7 @@ public class AposDamageNumbers : MonoBehaviour
         cam = player.playerCamera;
 
         seen.Clear();
+        marked.Clear();
         List<Entity> list = gm.World.Entities.list;
         for (int i = 0; i < list.Count; i++)
         {
@@ -103,6 +107,7 @@ public class AposDamageNumbers : MonoBehaviour
 
             int id = e.entityId;
             seen.Add(id);
+            if (!e.IsDead() && e.Buffs.HasBuff("buffAposMark")) marked.Add(e);
             int hp = e.Health;
             DamageResponse rec = e.RecordedDamage;
 
@@ -202,7 +207,7 @@ public class AposDamageNumbers : MonoBehaviour
 
     void OnGUI()
     {
-        if (popups.Count == 0 || cam == null || Event.current.type != EventType.Repaint) return;
+        if ((popups.Count == 0 && marked.Count == 0) || cam == null || Event.current.type != EventType.Repaint) return;
         if (style == null)
         {
             style = new GUIStyle(GUI.skin.label);
@@ -236,6 +241,48 @@ public class AposDamageNumbers : MonoBehaviour
             GUI.color = new Color(p.Color.r, p.Color.g, p.Color.b, alpha);
             GUI.Label(r, p.Text, style);
         }
+        DrawMarks();
         GUI.color = oldColor;
+    }
+
+    // Crossbow Mark: a red target ring above every marked zombie, visible through walls like a Borderlands mark
+    void DrawMarks()
+    {
+        if (marked.Count == 0) return;
+        if (ringTexture == null) ringTexture = MakeRing(64);
+        const float size = 34f;
+        float pulse = 0.75f + 0.25f * Mathf.Sin(Time.time * 6f);
+        GUI.color = new Color(MarkColor.r, MarkColor.g, MarkColor.b, pulse);
+        for (int i = 0; i < marked.Count; i++)
+        {
+            EntityAlive e = marked[i];
+            if (e == null) continue;
+            Vector3 vp = cam.WorldToViewportPoint(e.transform.position + Vector3.up * (e.height + 0.5f));
+            if (vp.z <= 0f) continue;
+            float x = vp.x * Screen.width;
+            float y = (1f - vp.y) * Screen.height;
+            GUI.DrawTexture(new Rect(x - size / 2f, y - size / 2f, size, size), ringTexture);
+        }
+    }
+
+    // White ring with four inner ticks (tinted by GUI.color when drawn)
+    static Texture2D MakeRing(int n)
+    {
+        Texture2D t = new Texture2D(n, n, TextureFormat.RGBA32, false);
+        float c = (n - 1) / 2f, outer = n / 2f - 1f, inner = outer - 5f;
+        for (int y = 0; y < n; y++)
+        {
+            for (int x = 0; x < n; x++)
+            {
+                float dx = x - c, dy = y - c;
+                float d = Mathf.Sqrt(dx * dx + dy * dy);
+                bool ring = d <= outer && d >= inner;
+                bool tick = (Mathf.Abs(dx) < 2f && Mathf.Abs(dy) > inner - 9f && Mathf.Abs(dy) < inner)
+                         || (Mathf.Abs(dy) < 2f && Mathf.Abs(dx) > inner - 9f && Mathf.Abs(dx) < inner);
+                t.SetPixel(x, y, (ring || tick) ? Color.white : new Color(1f, 1f, 1f, 0f));
+            }
+        }
+        t.Apply();
+        return t;
     }
 }
