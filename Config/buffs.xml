@@ -170,6 +170,23 @@
 			</effect_group>
 		</buff>
 
+		<!-- Crossbow Pin (on the zombie, added by Source/AposPin.cs when a wall is right behind it): cannot move.
+		     Regular zombies stay pinned until they die, elites for 10 s. -->
+		<buff name="buffAposPinned" hidden="true">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<passive_effect name="WalkSpeed" operation="perc_add" value="-1"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value="-1"/>
+			</effect_group>
+		</buff>
+		<buff name="buffAposPinnedElite" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="10"/>
+			<effect_group>
+				<passive_effect name="WalkSpeed" operation="perc_add" value="-1"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value="-1"/>
+			</effect_group>
+		</buff>
 		<!-- Area damage for Ricochet (rifles) and Splinter (bows): the target loses its own aposSplashDmg (negative) HP.
 		     stack_type ignore + short duration: a second application in the same moment does nothing. -->
 		<buff name="buffAposSplash" hidden="true">

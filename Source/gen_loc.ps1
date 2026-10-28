@@ -25,7 +25,7 @@ $traits = @{
   rifle  = T 'Ricochet' 'A headshot hurts every zombie near the hit: 4 m and 20 HP, with Dead Eye up to 15 m and 70 HP.'
   mg     = T 'Suppression' 'Every hit slows the target by 5% for 8 s (max 20%, +6% per Machine Gunner level).\nEvery 4th hit: the next shot costs no ammo.'
   bow    = T 'Splinter' 'Every arrow hurts zombies within 3 m of the impact for 25 HP (+15 HP and +0.4 m per Archery level).'
-  xbow   = T 'Mark' 'A bolt marks the zombie for 10 s: all your damage to it +30% (+14% per Archery level, +100% at level 5).'
+  xbow   = T 'Mark' 'A bolt marks the zombie for 10 s: all your damage to it +30% (+14% per Archery level, +100% at level 5).\nPin: if a wall is right behind the zombie, the bolt pins it in place until it dies (elites for 10 s).'
   robot  = T 'Guardian Protocol' 'While your health is below 30%, your turrets and robotic sledges attack 30% faster and deal 10% more damage (+10% speed and +5% damage per Robotics Inventor level; at level 5 below 50% health: +80% / +35%).'}
 $traitsRu = @{
   knife  = T 'Кровопийца' 'Каждый удар добавляет стак регенерации (силовая атака: +2): +1 HP/с за стак, каждый удар продлевает до 5 с.\nМаксимум стаков: 2 + уровень «Глубоких ран» (как кровоточащие раны).\nСиловая атака: цель кровоточит.'
@@ -43,7 +43,7 @@ $traitsRu = @{
   rifle  = T 'Рикошет' 'Хедшот ранит всех зомби рядом с попаданием: 4 м и 20 HP, с «Безжалостным снайпером» до 15 м и 70 HP.'
   mg     = T 'Подавление' 'Каждое попадание замедляет цель на 5% на 8 с (максимум 20%, +6% за уровень «Пулеметчика»).\nКаждое 4-е попадание: следующий выстрел не тратит патрон.'
   bow    = T 'Расщепление' 'Каждая стрела ранит зомби в радиусе 3 м от попадания на 25 HP (+15 HP и +0.4 м за уровень «Стрельбы из лука»).'
-  xbow   = T 'Метка' 'Болт помечает зомби на 10 с: весь ваш урон по нему +30% (+14% за уровень «Стрельбы из лука», +100% на 5 уровне).'
+  xbow   = T 'Метка' 'Болт помечает зомби на 10 с: весь ваш урон по нему +30% (+14% за уровень «Стрельбы из лука», +100% на 5 уровне).\nПригвоздить: если прямо за зомби стена, болт пригвождает его на месте до смерти (элиту — на 10 с).'
   robot  = T 'Протокол защиты' 'Пока ваше здоровье ниже 30%, ваши турели и робо-кувалды атакуют на 30% быстрее и наносят на 10% больше урона (+10% скорости и +5% урона за уровень «Изобретателя роботов»; на 5 уровне при здоровье ниже 50%: +80% / +35%).'}
 $map = [ordered]@{
   meleeWpnBladeT0BoneKnife = 'knife'; meleeWpnBladeT1HuntingKnife = 'knife'; meleeWpnBladeT1CandyKnife = 'knife'; meleeWpnBladeT3Machete = 'knife'

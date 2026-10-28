@@ -3,7 +3,7 @@
 $ErrorActionPreference = 'Stop'
 $managed = Join-Path $PSScriptRoot '..\..\..\7DaysToDie_Data\Managed'
 $csc = 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
-$refs = 'mscorlib', 'netstandard', 'System', 'System.Core', 'System.Xml', 'Assembly-CSharp', 'UnityEngine', 'UnityEngine.CoreModule', 'UnityEngine.IMGUIModule', 'UnityEngine.TextRenderingModule' |
+$refs = 'mscorlib', 'netstandard', 'System', 'System.Core', 'System.Xml', 'Assembly-CSharp', 'UnityEngine', 'UnityEngine.CoreModule', 'UnityEngine.PhysicsModule', 'UnityEngine.IMGUIModule', 'UnityEngine.TextRenderingModule' |
   ForEach-Object { "/r:$(Join-Path $managed "$_.dll")" }
 & $csc /nologo /nostdlib /noconfig /optimize /target:library "/out:$(Join-Path $PSScriptRoot '..\AposMod.dll')" @refs (Join-Path $PSScriptRoot '*.cs')
 if ($LASTEXITCODE -ne 0) { throw "Build failed ($LASTEXITCODE)" }

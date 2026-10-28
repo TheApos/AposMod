@@ -52,6 +52,8 @@
 	<append xpath="/items/item[starts-with(@name,'ammoCrossbowBolt')]">
 		<effect_group name="AposMod mark" tiered="false">
 			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="other" cvar="aposMarkTime" operation="set" value="10"/>
+			<!-- Pin: ask the C# part (Source/AposPin.cs) to check for a wall behind the target -->
+			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="other" cvar="aposPinCheck" operation="set" value="1"/>
 			<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffAposMark">
 				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
 			</triggered_effect>
