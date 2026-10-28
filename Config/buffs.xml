@@ -79,6 +79,82 @@
 			</effect_group>
 		</buff>
 
+		<!-- ===== Ranged pack ===== -->
+
+		<!-- Pistols "Headhunter": number = empowered shots left. Damage bonus aposHHDamage is set on activation. -->
+		<buff name="buffAposHeadhunter" name_key="buffAposHeadhunterName" description_key="buffAposHeadhunterDesc" icon="ui_game_symbol_head_shot" icon_color="0,220,255">
+			<stack_type value="ignore"/>
+			<display_value value="aposHHShots"/>
+			<effect_group>
+				<requirement name="HoldingItemHasTags" tags="handgunSkill"/>
+				<passive_effect name="EntityDamage" operation="perc_add" value="@aposHHDamage"/>
+				<passive_effect name="SpreadDegreesVertical" operation="perc_add" value="-.9"/>
+				<passive_effect name="SpreadDegreesHorizontal" operation="perc_add" value="-.9"/>
+			</effect_group>
+			<effect_group>
+				<!-- the shot after the last empowered one removes the buff (see entityclasses.xml) -->
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposHeadhunter">
+					<requirement name="CVarCompare" cvar="aposHHShots" operation="LT" value="0"/>
+				</triggered_effect>
+			</effect_group>
+		</buff>
+
+		<!-- Machine guns "Thrifty": the next shot or two cost no ammo -->
+		<buff name="buffAposThrifty" hidden="true">
+			<stack_type value="replace"/>
+			<duration value=".2"/>
+			<effect_group>
+				<passive_effect name="InfiniteAmmo" operation="base_set" value="1"/>
+			</effect_group>
+		</buff>
+
+		<!-- Machine guns "Suppression" (on the zombie): aposSupStacks hits, -5% speed each, capped at aposSupMax (negative).
+		     aposSupFull = 1 at the cap (Machine Gunner 5 deals +25% to such targets). Every hit resets aposSupTime to 8 s. -->
+		<buff name="buffAposSuppressed" hidden="true">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposSupSlow" operation="set" value="@aposSupStacks"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposSupSlow" operation="multiply" value="-.05"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposSupFull" operation="set" value="0"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposSupFull" operation="set" value="1">
+					<requirement name="CVarCompare" cvar="aposSupSlow" operation="LTE" value="@aposSupMax"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposSupSlow" operation="set" value="@aposSupMax">
+					<requirement name="CVarCompare" cvar="aposSupSlow" operation="LT" value="@aposSupMax"/>
+				</triggered_effect>
+				<passive_effect name="WalkSpeed" operation="perc_add" value="@aposSupSlow"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value="@aposSupSlow"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposSupTime" operation="add" value="-1"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposSuppressed">
+					<requirement name="CVarCompare" cvar="aposSupTime" operation="LTE" value="0"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffRemove" action="RemoveCVar" cvar="aposSupStacks,aposSupSlow,aposSupFull,aposSupTime"/>
+			</effect_group>
+		</buff>
+
+		<!-- Crossbows "Mark" (on the zombie): aposMarked = 1 while marked; your damage to it is raised in entityclasses.xml -->
+		<buff name="buffAposMark" hidden="true">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="aposMarked" operation="set" value="1"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposMarkTime" operation="add" value="-1"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposMark">
+					<requirement name="CVarCompare" cvar="aposMarkTime" operation="LTE" value="0"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffRemove" action="RemoveCVar" cvar="aposMarked,aposMarkTime"/>
+			</effect_group>
+		</buff>
+
+		<!-- Area damage for Ricochet (rifles) and Splinter (bows): the target loses its own aposSplashDmg (negative) HP.
+		     stack_type ignore + short duration: a second application in the same moment does nothing. -->
+		<buff name="buffAposSplash" hidden="true">
+			<stack_type value="ignore"/>
+			<duration value=".3"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="@aposSplashDmg"/>
+			</effect_group>
+		</buff>
+
 		<!-- Pipe weapons: marks that the "max bonus" message was shown once -->
 		<buff name="buffAposPipeMaxShown" hidden="true" remove_on_death="false">
 			<stack_type value="ignore"/>

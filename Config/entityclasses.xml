@@ -263,6 +263,116 @@
 			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposCounterPower" operation="multiply" value=".5"/>
 		</effect_group>
 
+		<!-- ===== Pistols / SMG: "Headhunter" — scales with Gunslinger ===== -->
+		<!-- aposHHStreak = headshots in a row; 3 in a row -> buffAposHeadhunter for aposHHShots empowered shots
+		     (10 + 2 per level), +25% damage + 10% per level (aposHHDamage), almost no spread -->
+		<effect_group name="AposMod pistol headhunter">
+			<requirement name="HoldingItemHasTags" tags="handgunSkill"/>
+			<!-- streak: headshot +1, body shot or miss resets (not counted while Headhunter is active) -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHStreak" operation="add" value="1">
+				<requirement name="HitLocation" body_parts="Head"/>
+				<requirement name="!HasBuff" buff="buffAposHeadhunter"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHStreak" operation="set" value="0">
+				<requirement name="!HitLocation" body_parts="Head"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayMiss" action="ModifyCVar" cvar="aposHHStreak" operation="set" value="0"/>
+			<triggered_effect trigger="onSelfPrimaryActionMissEntity" action="ModifyCVar" cvar="aposHHStreak" operation="set" value="0"/>
+			<!-- activation -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHShots" operation="set" value="10"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="0"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHShots" operation="set" value="12"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHShots" operation="set" value="14"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHShots" operation="set" value="16"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHShots" operation="set" value="18"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHShots" operation="set" value="20"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="5"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHDamage" operation="set" value=".25"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="0"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHDamage" operation="set" value=".35"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHDamage" operation="set" value=".45"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHDamage" operation="set" value=".55"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHDamage" operation="set" value=".65"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHDamage" operation="set" value=".75"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="5"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" buff="buffAposHeadhunter">
+				<requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHStreak" operation="set" value="0">
+				<requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="3"/>
+			</triggered_effect>
+			<!-- every shot while active spends one; the shot after the last one ends the buff before it deals damage -->
+			<triggered_effect trigger="onSelfRangedBurstShotStart" action="ModifyCVar" cvar="aposHHShots" operation="add" value="-1">
+				<requirement name="HasBuff" buff="buffAposHeadhunter"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfRangedBurstShotStart" action="RemoveBuff" buff="buffAposHeadhunter">
+				<requirement name="CVarCompare" cvar="aposHHShots" operation="LT" value="0"/>
+			</triggered_effect>
+			<!-- Gunslinger 5: every kill during Headhunter gives +2 shots -->
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposHHShots" operation="add" value="2">
+				<requirement name="HasBuff" buff="buffAposHeadhunter"/>
+				<requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="5"/>
+			</triggered_effect>
+		</effect_group>
+
+		<!-- ===== Rifles: "Ricochet" — scales with Dead Eye ===== -->
+		<!-- A headshot hurts every zombie within 4 m of the hit point for 20 + 10 per level HP (aposSplashDmg on each target).
+		     positionAOE = around the hit position (same targeting the molotov uses) -->
+		<effect_group name="AposMod rifle ricochet">
+			<requirement name="HoldingItemHasTags" tags="perkDeadEye"/>
+			<requirement name="HitLocation" body_parts="Head"/>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-20"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="0"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-30"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-40"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-50"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-60"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-70"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="5"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="4" target_tags="zombie,animal" buff="buffAposSplash"/>
+			<!-- Dead Eye 5: ricochet also stuns everything it hits for 2 s -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="4" target_tags="zombie,animal" buff="buffInjuryStunned01" duration="2">
+				<requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="5"/>
+			</triggered_effect>
+		</effect_group>
+
+		<!-- ===== Machine guns: "Suppression" + "Thrifty" — scale with Machine Gunner ===== -->
+		<effect_group name="AposMod mg">
+			<requirement name="HoldingItemHasTags" tags="perkMachineGunner"/>
+			<!-- every hit: +1 suppression stack on the target, timer 8 s; slow cap 20% + 6% per level (aposSupMax) -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar="aposSupStacks" operation="add" value="1"><requirement name="IsAlive" target="other"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar="aposSupTime" operation="set" value="8"><requirement name="IsAlive" target="other"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar="aposSupMax" operation="set" value="-.2"><requirement name="ProgressionLevel" progression_name="perkMachineGunner" operation="Equals" value="0"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar="aposSupMax" operation="set" value="-.26"><requirement name="ProgressionLevel" progression_name="perkMachineGunner" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar="aposSupMax" operation="set" value="-.32"><requirement name="ProgressionLevel" progression_name="perkMachineGunner" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar="aposSupMax" operation="set" value="-.38"><requirement name="ProgressionLevel" progression_name="perkMachineGunner" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar="aposSupMax" operation="set" value="-.44"><requirement name="ProgressionLevel" progression_name="perkMachineGunner" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar="aposSupMax" operation="set" value="-.5"><requirement name="ProgressionLevel" progression_name="perkMachineGunner" operation="Equals" value="5"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" buff="buffAposSuppressed">
+				<requirement name="IsAlive" target="other"/>
+				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+			</triggered_effect>
+			<!-- every 4th hit: the next shot or two cost no ammo -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposMGHits" operation="add" value="1"/>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" buff="buffAposThrifty">
+				<requirement name="CVarCompare" cvar="aposMGHits" operation="GTE" value="4"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposMGHits" operation="set" value="0">
+				<requirement name="CVarCompare" cvar="aposMGHits" operation="GTE" value="4"/>
+			</triggered_effect>
+			<!-- Machine Gunner 5: +25% damage to fully suppressed targets -->
+			<passive_effect name="EntityDamage" operation="perc_add" value=".25">
+				<requirement name="ProgressionLevel" progression_name="perkMachineGunner" operation="Equals" value="5"/>
+				<requirement name="CVarCompare" cvar="aposSupFull" operation="Equals" value="1" target="other"/>
+			</passive_effect>
+		</effect_group>
+
+		<!-- ===== Crossbows: "Mark" — your damage (any weapon) to a marked zombie: +30%, +14% per Archery level, +100% at 5 ===== -->
+		<!-- the mark itself is applied by the bolts (items.xml) -->
+		<effect_group name="AposMod crossbow mark bonus">
+			<requirement name="CVarCompare" cvar="aposMarked" operation="Equals" value="1" target="other"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".3"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="0"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".44"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="1"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".58"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="2"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".72"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="3"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".86"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="4"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value="1"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="5"/></passive_effect>
+		</effect_group>
+
 		<!-- ===== Pipe weapons (T0): "Veteran Junk" — +2% damage per kill, max +1000% ===== -->
 		<!-- aposPipeBonus = shown bonus in % (0..1000), aposPipeMult = the same as a fraction for perc_add -->
 		<effect_group name="AposMod pipe veteran">
