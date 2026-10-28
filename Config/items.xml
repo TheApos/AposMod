@@ -22,18 +22,23 @@
 		</triggered_effect>
 	</append>
 
-	<!-- ===== Bows "Splinter": every arrow hurts zombies within 2.5 m of the impact for 10 + 8 HP per Archery level ===== -->
+	<!-- ===== Bows "Splinter": every arrow hurts zombies near the impact: 25 HP + 15 per Archery level, radius 3 m + 0.4 m per level ===== -->
 	<!-- On the arrows because only ammo knows the impact point (positionAOE). buffAposSplash ignores a second
 	     application, so an effect group inherited through Extends cannot double the damage. -->
 	<append xpath="/items/item[starts-with(@name,'ammoArrow')]">
 		<effect_group name="AposMod splinter" tiered="false">
-			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="positionAOE" range="2.5" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-10"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="0"/></triggered_effect>
-			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="positionAOE" range="2.5" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-18"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="1"/></triggered_effect>
-			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="positionAOE" range="2.5" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-26"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="2"/></triggered_effect>
-			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="positionAOE" range="2.5" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-34"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="3"/></triggered_effect>
-			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="positionAOE" range="2.5" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-42"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="4"/></triggered_effect>
-			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="positionAOE" range="2.5" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-50"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="5"/></triggered_effect>
-			<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="positionAOE" range="2.5" target_tags="zombie,animal" buff="buffAposSplash"/>
+			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="positionAOE" range="3" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-25"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="0"/></triggered_effect>
+			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="positionAOE" range="3.4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-40"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="positionAOE" range="3.8" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-55"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="positionAOE" range="4.2" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-70"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="positionAOE" range="4.6" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-85"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="positionAOE" range="5" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-100"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="5"/></triggered_effect>
+			<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="positionAOE" range="3" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="0"/></triggered_effect>
+			<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="positionAOE" range="3.4" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="positionAOE" range="3.8" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="positionAOE" range="4.2" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="positionAOE" range="4.6" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="positionAOE" range="5" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="5"/></triggered_effect>
 			<!-- Archery 5: a headshot arrow sets the target on fire -->
 			<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffBurningFlamingArrow">
 				<requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="5"/>

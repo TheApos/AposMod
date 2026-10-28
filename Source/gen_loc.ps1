@@ -21,10 +21,10 @@ $traits = @{
   nade   = T 'Wide Blast' 'Blast radius against zombies x3. Block damage radius is unchanged.'
   molo   = T 'Busy Burning' 'Burning zombies move 70% slower. The fire lasts twice as long.'
   rocket = T 'Early Artillery' 'Sold by traders and found in loot from the start of the game.\nThe final loot chest of every POI contains rockets: 1 at tier 1 up to 4-6 at tier 5.'
-  pistol = T 'Headhunter' '3 headshots in a row start Headhunter: the next 10 shots (+2 per Gunslinger level) deal +25% damage (+10% per level) with almost no spread. Their damage numbers are framed.'
-  rifle  = T 'Ricochet' 'A headshot hurts every zombie within 4 m of the hit for 20 HP (+10 per Dead Eye level).'
+  pistol = T 'Headhunter' '3 headshots in a row start Headhunter: the next 10 shots (+2 per Gunslinger level) deal +25% damage (+10% per level) with almost no spread. Their damage numbers are cyan.'
+  rifle  = T 'Ricochet' 'A headshot hurts every zombie near the hit: 4 m and 20 HP, with Dead Eye up to 15 m and 70 HP.'
   mg     = T 'Suppression' 'Every hit slows the target by 5% for 8 s (max 20%, +6% per Machine Gunner level).\nEvery 4th hit: the next shot costs no ammo.'
-  bow    = T 'Splinter' 'Every arrow hurts zombies within 2.5 m of the impact for 10 HP (+8 per Archery level).'
+  bow    = T 'Splinter' 'Every arrow hurts zombies within 3 m of the impact for 25 HP (+15 HP and +0.4 m per Archery level).'
   xbow   = T 'Mark' 'A bolt marks the zombie for 10 s: all your damage to it +30% (+14% per Archery level, +100% at level 5).'
 }
 $traitsRu = @{
@@ -39,10 +39,10 @@ $traitsRu = @{
   nade   = T 'Широкий взрыв' 'Радиус поражения зомби x3. Радиус разрушения блоков без изменений.'
   molo   = T 'Заняты горением' 'Горящие зомби двигаются на 70% медленнее. Огонь горит вдвое дольше.'
   rocket = T 'Ранняя артиллерия' 'Продаётся у торговцев и встречается в луте с начала игры.\nВ финальном сундуке каждого здания есть ракеты: 1 на уровне 1, до 4-6 на уровне 5.'
-  pistol = T 'Охотник за головами' '3 хедшота подряд включают Охотника за головами: следующие 10 выстрелов (+2 за уровень «Меткого стрелка») наносят +25% урона (+10% за уровень) почти без разброса. Их цифры урона в рамке.'
-  rifle  = T 'Рикошет' 'Хедшот ранит всех зомби в радиусе 4 м от попадания на 20 HP (+10 за уровень «Безжалостного снайпера»).'
+  pistol = T 'Охотник за головами' '3 хедшота подряд включают Охотника за головами: следующие 10 выстрелов (+2 за уровень «Меткого стрелка») наносят +25% урона (+10% за уровень) почти без разброса. Их цифры урона голубые.'
+  rifle  = T 'Рикошет' 'Хедшот ранит всех зомби рядом с попаданием: 4 м и 20 HP, с «Безжалостным снайпером» до 15 м и 70 HP.'
   mg     = T 'Подавление' 'Каждое попадание замедляет цель на 5% на 8 с (максимум 20%, +6% за уровень «Пулеметчика»).\nКаждое 4-е попадание: следующий выстрел не тратит патрон.'
-  bow    = T 'Расщепление' 'Каждая стрела ранит зомби в радиусе 2.5 м от попадания на 10 HP (+8 за уровень «Стрельбы из лука»).'
+  bow    = T 'Расщепление' 'Каждая стрела ранит зомби в радиусе 3 м от попадания на 25 HP (+15 HP и +0.4 м за уровень «Стрельбы из лука»).'
   xbow   = T 'Метка' 'Болт помечает зомби на 10 с: весь ваш урон по нему +30% (+14% за уровень «Стрельбы из лука», +100% на 5 уровне).'
 }
 $map = [ordered]@{
@@ -102,9 +102,9 @@ $perkLines = [ordered]@{
   perkJavelinMaster     = { param($L) "Battering Ram (spears): power attack pierces $(1 + $L) zombies behind the target, normal hits push $([int](40 * $L / 1.2))% harder.", "Таран (копья): силовая атака пробивает $(1 + $L) зомби за целью, обычный удар отталкивает на $([int](40 * $L / 1.2))% сильнее." }
   perkBrawler           = { param($L) "Counter Punch (knuckles): up to $(2 + $L) counter charges. Replaces the power stagger / knockdown above: normal punches have a $(10 * $L)% chance to give +1 charge.", "Контрудар (кастеты): до $(2 + $L) зарядов. Заменяет оглушение / сбивание с ног силовой атакой выше: обычный удар с шансом $(10 * $L)% даёт +1 заряд." }
   perkGunslinger        = { param($L) "Headhunter (handguns): $(10 + 2 * $L) empowered shots with +$(25 + 10 * $L)% damage after 3 headshots in a row.", "Охотник за головами (пистолеты): $(10 + 2 * $L) усиленных выстрелов с +$(25 + 10 * $L)% урона после 3 хедшотов подряд." }
-  perkDeadEye           = { param($L) "Ricochet (rifles): a headshot hurts zombies within 4 m for $(20 + 10 * $L) HP.", "Рикошет (винтовки): хедшот ранит зомби в радиусе 4 м на $(20 + 10 * $L) HP." }
+  perkDeadEye           = { param($L) "Ricochet (rifles): a headshot hurts zombies within $(@(4,5,7,9,12,15)[$L]) m for $(20 + 10 * $L) HP.", "Рикошет (винтовки): хедшот ранит зомби в радиусе $(@(4,5,7,9,12,15)[$L]) м на $(20 + 10 * $L) HP." }
   perkMachineGunner     = { param($L) "Suppression (machine guns): hits slow targets up to $(20 + 6 * $L)%; every 4th hit makes the next shot free.", "Подавление (автоматы): попадания замедляют цель до $(20 + 6 * $L)%; каждое 4-е попадание делает следующий выстрел бесплатным." }
-  perkArchery           = { param($L) "Splinter (bows): arrows hurt zombies within 2.5 m for $(10 + 8 * $L) HP. Mark (crossbows): your damage to marked zombies +$(30 + 14 * $L)%.", "Расщепление (луки): стрелы ранят зомби в радиусе 2.5 м на $(10 + 8 * $L) HP. Метка (арбалеты): ваш урон по помеченным зомби +$(30 + 14 * $L)%." }
+  perkArchery           = { param($L) "Splinter (bows): arrows hurt zombies within $([math]::Round(3 + 0.4 * $L, 1)) m for $(25 + 15 * $L) HP. Mark (crossbows): your damage to marked zombies +$(30 + 14 * $L)%.", "Расщепление (луки): стрелы ранят зомби в радиусе $([math]::Round(3 + 0.4 * $L, 1)) м на $(25 + 15 * $L) HP. Метка (арбалеты): ваш урон по помеченным зомби +$(30 + 14 * $L)%." }
 }
 # Rank 5 highlights, appended after the scaling line
 $perkFinale = @{

@@ -26,6 +26,6 @@
 - A lootgroup must be **defined before it is referenced**; otherwise loot.xml fails to load and world generation breaks (player falls through the ground).
 - A mod with a DLL is skipped entirely (XML too) when the game runs with EasyAntiCheat. Launch `7DaysToDie.exe -noeac`. The log shows `Loaded Mod: AposMod` when it worked.
 - Ammo item effect groups fire together with the weapon's events (ItemValue.FireEvent forwards to the loaded ammo) — that is how the slug-only knockback works.
-- Game 3.4 ships **no Harmony DLLs** (`Mods/0_TFP_Harmony` has only ModInfo.xml even after Steam file verification; only `Licenses/HarmonyX-MIT.txt` exists). Harmony patches would need our own bundled HarmonyX. Prefer XML or polling C# (as the damage numbers do).
+- Harmony (HarmonyX) lives in `Mods/0_TFP_Harmony/0Harmony.dll` (restored by a full Steam "verify files"; it was missing before). Reference it from there when writing Harmony patches.
 - Ranged AOE: `target="positionAOE"` hits around the impact/hit point (ammo `onProjectileImpact`, player `onSelfPrimaryActionRayHit`); arrows/bolts cannot pierce via XML (projectiles ignore EntityPenetrationCount).
 - Game logs: `%APPDATA%/7DaysToDie/logs/output_log_client__*.txt`.

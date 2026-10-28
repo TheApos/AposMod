@@ -16,7 +16,7 @@ public class AposModInit : IModApi
 // player every frame and shows each drop as a number rising above the head.
 // Headshots (yellow) are read from EntityAlive.RecordedDamage when it changed this frame.
 // A killing blow adds a red "Kill!" label (text from Localization.csv, key aposKillText).
-// Hits boosted by an AposMod buff are cyan; Headhunter (pistols) shots also get a frame.
+// Hits boosted by an AposMod buff are cyan.
 public class AposDamageNumbers : MonoBehaviour
 {
     const float Range = 60f;
@@ -30,7 +30,6 @@ public class AposDamageNumbers : MonoBehaviour
 
     // Player buffs that raise the damage of your hits, and target markers that do the same
     static readonly string[] PlayerDamageBuffs = { "buffAposHeadhunter", "buffAposRage", "buffAposCounter" };
-    const string HeadhunterBuff = "buffAposHeadhunter";
     const string MarkBuff = "buffAposMark";
     const string SuppressedFullVar = "aposSupFull";
 
@@ -41,7 +40,6 @@ public class AposDamageNumbers : MonoBehaviour
         public Color Color;
         public int Size;
         public float Start;
-        public bool Framed;
     }
 
     // Last seen values per entity id, to detect a new hit
@@ -94,10 +92,9 @@ public class AposDamageNumbers : MonoBehaviour
                 float prevRandom;
                 bool freshRecord = !lastHitRandom.TryGetValue(id, out prevRandom) || prevRandom != rec.Random;
                 bool headshot = freshRecord && (rec.HitBodyPart & EnumBodyPartHit.Head) != 0;
-                bool framed = player.Buffs.HasBuff(HeadhunterBuff);
-                bool buffed = framed || HasAnyBuff(player, PlayerDamageBuffs)
+                bool buffed = HasAnyBuff(player, PlayerDamageBuffs)
                     || e.Buffs.HasBuff(MarkBuff) || e.Buffs.GetCustomVar(SuppressedFullVar) > 0f;
-                AddPopup(e, prevHp - hp, headshot, buffed, framed, hp <= 0);
+                AddPopup(e, prevHp - hp, headshot, buffed, hp <= 0);
             }
             lastHealth[id] = hp;
             lastHitRandom[id] = rec.Random;
@@ -132,7 +129,7 @@ public class AposDamageNumbers : MonoBehaviour
         return false;
     }
 
-    void AddPopup(EntityAlive e, int damage, bool headshot, bool buffed, bool framed, bool kill)
+    void AddPopup(EntityAlive e, int damage, bool headshot, bool buffed, bool kill)
     {
         // The game shifts the render origin around the player (floating origin): Entity.position is the
         // logical world position, the camera works in scene space, so take the scene transform.
@@ -146,7 +143,6 @@ public class AposDamageNumbers : MonoBehaviour
         p.Color = buffed ? BuffedColor : (headshot ? HeadshotColor : NormalColor);
         p.Size = headshot ? 40 : 30;
         p.Start = Time.time;
-        p.Framed = framed;
         popups.Add(p);
 
         if (kill)
@@ -206,25 +202,7 @@ public class AposDamageNumbers : MonoBehaviour
 
             GUI.color = new Color(p.Color.r, p.Color.g, p.Color.b, alpha);
             GUI.Label(r, p.Text, style);
-
-            if (p.Framed) DrawFrame(r, style.CalcSize(new GUIContent(p.Text)));
         }
         GUI.color = oldColor;
-    }
-
-    // Thin box around the text, in the current GUI.color
-    static void DrawFrame(Rect r, Vector2 textSize)
-    {
-        const float pad = 6f;
-        const float t = 2f;
-        float w = textSize.x + pad * 2f;
-        float h = textSize.y + pad;
-        float x = r.center.x - w / 2f;
-        float y = r.center.y - h / 2f;
-        Texture2D tex = Texture2D.whiteTexture;
-        GUI.DrawTexture(new Rect(x, y, w, t), tex);
-        GUI.DrawTexture(new Rect(x, y + h - t, w, t), tex);
-        GUI.DrawTexture(new Rect(x, y, t, h), tex);
-        GUI.DrawTexture(new Rect(x + w - t, y, t, h), tex);
     }
 }

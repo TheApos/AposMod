@@ -312,20 +312,25 @@
 		</effect_group>
 
 		<!-- ===== Rifles: "Ricochet" — scales with Dead Eye ===== -->
-		<!-- A headshot hurts every zombie within 4 m of the hit point for 20 + 10 per level HP (aposSplashDmg on each target).
+		<!-- A headshot hurts every zombie near the hit point (4 m, then 5/7/9/12/15 m by level) for 20 + 10 per level HP (aposSplashDmg on each target).
 		     positionAOE = around the hit position (same targeting the molotov uses) -->
 		<effect_group name="AposMod rifle ricochet">
 			<requirement name="HoldingItemHasTags" tags="perkDeadEye"/>
 			<requirement name="HitLocation" body_parts="Head"/>
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-20"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="0"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-30"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="1"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-40"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="2"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-50"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="3"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-60"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="4"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-70"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="5"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="4" target_tags="zombie,animal" buff="buffAposSplash"/>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="5" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-30"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="7" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-40"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="9" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-50"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="12" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-60"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="15" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-70"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="5"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="4" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="0"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="5" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="7" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="9" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="12" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="15" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="5"/></triggered_effect>
 			<!-- Dead Eye 5: ricochet also stuns everything it hits for 2 s -->
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="4" target_tags="zombie,animal" buff="buffInjuryStunned01" duration="2">
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="15" target_tags="zombie,animal" buff="buffInjuryStunned01" duration="2">
 				<requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="5"/>
 			</triggered_effect>
 		</effect_group>
