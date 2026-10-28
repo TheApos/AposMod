@@ -1139,6 +1139,23 @@
 				<property class="GrazeSounds">
 					<property name="Override0" value="organic" param1="metalgrazeorganic" />
 				</property>
+				<property name="Class" value="DynamicMelee" />
+				<property name="Sphere" value=".1" />
+				<property name="Damage_type" value="Bashing" />
+				<property class="ToolCategory">
+					<property name="Butcher" value="0" param1="4.7" />
+				</property>
+				<property name="UseGrazingHits" value="true" />
+				<property name="GrazeStart" value=".3" />
+				<property name="GrazeEnd" value=".5" />
+				<property name="SwingDegrees" value="90" />
+				<property name="SwingAngle" value="-90" />
+				<property class="HitSounds">
+					<property name="Override0" value="organic" param1="metalhitorganic" />
+				</property>
+				<property class="GrazeSounds">
+					<property name="Override0" value="organic" param1="metalhitcloth" />
+				</property>
 			</property>
 			<property class="Action1">
 				<property class="ToolCategory">
@@ -1150,6 +1167,23 @@
 				</property>
 				<property class="GrazeSounds">
 					<property name="Override0" value="organic" param1="metalgrazeorganic" />
+				</property>
+				<property name="Class" value="DynamicMelee" />
+				<property name="Sphere" value=".1" />
+				<property name="UsePowerAttackAnimation" value="true" />
+				<property class="ToolCategory">
+					<property name="Butcher" value="0" param1="4.7" />
+				</property>
+				<property name="UseGrazingHits" value="true" />
+				<property name="GrazeStart" value=".35" />
+				<property name="GrazeEnd" value=".4" />
+				<property name="SwingDegrees" value="30" />
+				<property name="SwingAngle" value="90" />
+				<property class="HitSounds">
+					<property name="Override0" value="organic" param1="metalhitorganic" />
+				</property>
+				<property class="GrazeSounds">
+					<property name="Override0" value="organic" param1="metalhitcloth" />
 				</property>
 			</property>
 			<stats>
@@ -1233,6 +1267,14 @@
 				<passive_effect name="BlockDamage" operation="perc_add" value="1" tags="secondary" />
 				<passive_effect name="StaminaLoss" operation="base_set" value="17.3" tags="secondary" />
 			</effect_group>
+			<property name="RepairTools" value="resourceRepairKit" />
+			<property name="DegradationBreaksAfter" value="false" />
+			<property name="SoundJammed" value="ItemNeedsRepair" />
+			<property name="SoundDestroy" value="wooddestroy1" />
+			<property name="DisplayType" value="melee" />
+			<property name="Canhold" value="true" />
+			<property name="Group" value="Ammo/Weapons,Melee Weapons" />
+			<property name="ShowQuality" value="true" />
 			<effect_group name="AposMod legendary" tiered="false">
 			<passive_effect name="EntityDamage" operation="perc_add" value=".2" />
 			<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffBurningElement">

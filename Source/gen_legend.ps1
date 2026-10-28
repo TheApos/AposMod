@@ -142,6 +142,27 @@ foreach ($name in $legends.Keys) {
   if (-not $src) { throw "No vanilla item $base" }
   $item = $src.CloneNode($true)
   $item.SetAttribute('name', $name)
+  # the clone drops "Extends", so copy in what the base inherits (e.g. steel knuckles get Action0 Class from iron ones)
+  $ext = $src.SelectSingleNode("property[@name='Extends']")
+  $skip = @()
+  while ($ext) {
+    if ($ext.GetAttribute('param1')) { $skip += $ext.GetAttribute('param1').Split(',') }
+    $parent = $vanilla.SelectSingleNode("/items/item[@name='$($ext.GetAttribute('value'))']")
+    if (-not $parent) { throw "No vanilla parent $($ext.GetAttribute('value')) of $base" }
+    foreach ($p in @($parent.SelectNodes('property'))) {
+      $pn = $p.GetAttribute('name'); $pc = $p.GetAttribute('class')
+      if ($pn -and $pn -ne 'Extends' -and $skip -notcontains $pn -and -not $item.SelectSingleNode("property[@name='$pn']")) {
+        [void]$item.AppendChild($p.CloneNode($true))
+      } elseif ($pc) {
+        $own = $item.SelectSingleNode("property[@class='$pc']")
+        if (-not $own) { [void]$item.AppendChild($p.CloneNode($true)); continue }
+        foreach ($sub in @($p.SelectNodes('property'))) {
+          if (-not $own.SelectSingleNode("property[@name='$($sub.GetAttribute('name'))']")) { [void]$own.AppendChild($sub.CloneNode($true)) }
+        }
+      }
+    }
+    $ext = $parent.SelectSingleNode("property[@name='Extends']")
+  }
   # not sold by traders, no crafting unlock; keep the base icon, tint it gold
   foreach ($p in 'TraderStageTemplate', 'UnlockedBy', 'Extends', 'CustomIcon', 'CustomIconTint', 'DescriptionKey') {
     foreach ($n in @($item.SelectNodes("property[@name='$p']"))) { [void]$item.RemoveChild($n) }
