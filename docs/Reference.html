@@ -1,0 +1,421 @@
+<title>Довідник AposMod</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Russo+One&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a field manual — one column of sections, cards in a wrapping grid, sticky section bar with search */
+:root {
+  --bg: #eceae4;          /* dusty concrete */
+  --panel: #f8f7f3;
+  --ink: #1f2124;
+  --muted: #5d6066;
+  --line: #cfccc3;
+  --amber: #b86a00;       /* hazard paint, readable on light */
+  --amber-soft: #f3e3c8;
+  --rust: #a2361f;
+  --cyan: #0b7fa6;
+  --gold: #a87800;
+  --f-display: "Russo One", "Arial Black", Impact, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", Roboto, Arial, sans-serif;
+  --f-mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17181a; --panel: #212326; --ink: #e9e6de; --muted: #a3a29c; --line: #34373b;
+    --amber: #f0a43a; --amber-soft: #3a2c16; --rust: #e0694c; --cyan: #5cc8ef; --gold: #f2c14e;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17181a; --panel: #212326; --ink: #e9e6de; --muted: #a3a29c; --line: #34373b;
+  --amber: #f0a43a; --amber-soft: #3a2c16; --rust: #e0694c; --cyan: #5cc8ef; --gold: #f2c14e;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--f-body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1100px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.top { padding-block: 28px 18px; border-bottom: 3px solid var(--amber); }
+.stripe { height: 10px; background: repeating-linear-gradient(135deg, var(--amber) 0 14px, transparent 14px 28px); opacity: .85; margin-bottom: 18px; border-radius: 2px; }
+h1 { font: 400 clamp(30px, 6vw, 48px)/1.05 var(--f-display); margin: 0; letter-spacing: .5px; text-wrap: balance; }
+.sub { color: var(--muted); margin: 8px 0 0; max-width: 65ch; }
+.meta { font: 600 12px var(--f-mono); color: var(--amber); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+nav.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+nav.bar .wrap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding-block: 10px; }
+nav.bar a { font: 600 13px var(--f-body); color: var(--ink); text-decoration: none; padding: 5px 10px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); }
+nav.bar a:hover, nav.bar a:focus-visible { border-color: var(--amber); outline: none; }
+#q { flex: 1 1 200px; min-width: 0; font: 14px var(--f-body); padding: 7px 10px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); color: var(--ink); }
+#q:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+section { padding-block: 26px 6px; }
+h2 { font: 400 24px/1.2 var(--f-display); margin: 0 0 4px; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+h2 small { font: 500 13px var(--f-body); color: var(--muted); }
+.lead { color: var(--muted); margin: 0 0 14px; max-width: 70ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 14px 15px; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.card h3 { font: 600 16px/1.3 var(--f-body); margin: 0; }
+.card h3 .trait { color: var(--amber); }
+.tagline { font: 500 12px var(--f-mono); color: var(--muted); letter-spacing: .3px; }
+.card ul { margin: 0; padding-left: 18px; }
+.card li { margin: 2px 0; }
+.k { font: 600 11px var(--f-mono); text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+.five { border-top: 1px dashed var(--line); padding-top: 8px; }
+.five b { color: var(--amber); }
+.cost { font-size: 13px; color: var(--rust); }
+.scale { overflow-x: auto; }
+.scale table { border-collapse: collapse; font: 12.5px var(--f-mono); font-variant-numeric: tabular-nums; min-width: 100%; }
+.scale th, .scale td { border: 1px solid var(--line); padding: 3px 6px; text-align: center; white-space: nowrap; }
+.scale th { background: var(--amber-soft); font-weight: 600; }
+.scale td:first-child, .scale th:first-child { text-align: left; }
+.legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.dmg { display: flex; gap: 10px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; }
+.num { font: 400 22px var(--f-display); min-width: 64px; text-align: center; text-shadow: 1px 1px 0 rgba(0,0,0,.55); }
+.n-white { color: #ffffff; } .n-yellow { color: #ffd91a; } .n-cyan { color: #4dd9ff; } .n-red { color: #ff2a1a; }
+.dark-chip { background: #2a2c30; border-radius: 3px; padding: 2px 8px; }
+code, .mono { font: 13px var(--f-mono); background: var(--amber-soft); padding: 1px 5px; border-radius: 3px; }
+pre { font: 13px var(--f-mono); background: var(--panel); border: 1px solid var(--line); padding: 10px 12px; border-radius: 4px; overflow-x: auto; margin: 0; }
+.legendary h3 .trait { color: var(--gold); }
+.empty { color: var(--muted); padding: 10px 0; }
+footer { color: var(--muted); font-size: 13px; padding-block: 30px 40px; border-top: 1px solid var(--line); margin-top: 26px; }
+.hide { display: none !important; }
+@media (prefers-reduced-motion: no-preference) { nav.bar a { transition: border-color .15s; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="stripe" aria-hidden="true"></div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 0.8.0</div>
+    <h1>Довідник AposMod</h1>
+    <p class="sub">Усі фішки зброї, перки, моди, легендарки й налаштування в одному місці. Числа «0 → 5» — від рівня відповідного перка.</p>
+  </div>
+</header>
+
+<nav class="bar" aria-label="Розділи">
+  <div class="wrap">
+    <a href="#melee">Ближній бій</a>
+    <a href="#ranged">Дальній бій</a>
+    <a href="#explosives">Вибухівка й інше</a>
+    <a href="#perks">Перки</a>
+    <a href="#gear">Моди й легендарки</a>
+    <a href="#systems">Системи</a>
+    <input id="q" type="search" placeholder="Пошук: кувалда, Драчун, шок…" aria-label="Пошук по довіднику">
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section id="melee" data-sec>
+  <h2>Ближній бій <small>ЛКМ — звичайний удар, ПКМ — силовий</small></h2>
+  <p class="lead">Звичайний удар дає невеликий бонус, силовий — головну фішку класу.</p>
+  <div class="grid">
+
+    <article class="card">
+      <h3>Ножі й мачете — <span class="trait">Кровопийца</span></h3>
+      <div class="tagline">Перк: «Глубокие раны»</div>
+      <ul>
+        <li>Кожен удар — стак регенерації (силовий +2): +1 HP/с за стак, кожен удар продовжує до 5 с.</li>
+        <li>Силовий: кровотеча на цілі.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Макс. стаків</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr></table></div>
+      <div class="five"><b>5 рівень — Пир крови:</b> вбивство ножем на максимумі стаків одразу лікує 25 HP.</div>
+    </article>
+
+    <article class="card">
+      <h3>Дубинки й біти — <span class="trait">Хоумран</span></h3>
+      <div class="tagline">Перк: «Громила Пит»</div>
+      <ul>
+        <li>Звичайний: шанс оглушити на 1 с.</li>
+        <li>Силовий у голову: зомбі летить і падає.</li>
+        <li>Силовий по оглушених — додаткова шкода (замість ванільного «KO»).</li>
+      </ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Оглушення</td><td>15%</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td></tr><tr><td>Сила відкидання</td><td>800</td><td>950</td><td>1100</td><td>1250</td><td>1400</td><td>1550</td></tr><tr><td>Силова по оглушених</td><td>—</td><td>+10%</td><td>+20%</td><td>+30%</td><td>+40%</td><td>+50%</td></tr></table></div>
+      <div class="cost">Силова атака +30% витривалості.</div>
+      <div class="five"><b>5 рівень:</b> Хоумран від силової в будь-яку частину тіла.</div>
+    </article>
+
+    <article class="card">
+      <h3>Кувалди — <span class="trait">Землетрясение</span></h3>
+      <div class="tagline">Перк: «Дробитель черепов»</div>
+      <ul>
+        <li>Звичайний: шанс збити ціль з ніг.</li>
+        <li>Силовий: валить усіх зомбі навколо + шкода кожному (замість ванільних шансів збити).</li>
+      </ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Збити звичайним</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td><td>45%</td></tr><tr><td>Радіус</td><td>3 м</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Шкода збитим</td><td>—</td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr></table></div>
+      <div class="cost">Перезарядка 4 с (бафф «Землетрясение: перезарядка»). Силова +50% витривалості.</div>
+      <div class="five"><b>5 рівень — Афтершок:</b> збиті ще ~3 с оглушені після підйому.</div>
+    </article>
+
+    <article class="card">
+      <h3>Жезли — <span class="trait">Цепная молния</span></h3>
+      <div class="tagline">Перк: «Просчитанная атака» · жезли й дубинка з труби</div>
+      <ul>
+        <li>Звичайний: короткий шок цілі.</li>
+        <li>Силовий: шок усім зомбі навколо.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Шок звичайним</td><td>0.5 с</td><td>0.6</td><td>0.7</td><td>0.8</td><td>0.9</td><td>1.0</td></tr><tr><td>Радіус силової</td><td>3 м</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Шок силовою</td><td>2 с</td><td>2.4</td><td>2.8</td><td>3.2</td><td>3.6</td><td>4.0</td></tr></table></div>
+      <div class="cost">Перезарядка 3 с. Силова +50% витривалості.</div>
+      <div class="five"><b>5 рівень:</b> кожен 4-й звичайний удар теж запускає Цепную молнию.</div>
+    </article>
+
+    <article class="card">
+      <h3>Списи — <span class="trait">Таран</span></h3>
+      <div class="tagline">Перк: «Мастер копья»</div>
+      <ul>
+        <li>Звичайний: відштовхує ціль.</li>
+        <li>Силовий: пробиває зомбі позаду і відкидає кожного.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Пробиття силовою</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr><tr><td>Сила поштовху</td><td>120</td><td>160</td><td>200</td><td>240</td><td>280</td><td>320</td></tr></table></div>
+      <div class="cost">Звичайний удар +25% витривалості.</div>
+      <div class="five"><b>5 рівень — Насадить:</b> усі зачеплені силовою збиті з ніг.</div>
+    </article>
+
+    <article class="card">
+      <h3>Кастети — <span class="trait">Контрудар</span></h3>
+      <div class="tagline">Перк: «Драчун»</div>
+      <ul>
+        <li>Отриманий удар заповнює заряди (без таймера).</li>
+        <li>Звичайний: +25% шкоди, −1 заряд; шанс отримати +1 заряд (замість ванільного оглушення/збиття).</li>
+        <li>Силовий: витрачає всі заряди, +50% шкоди за заряд, збиває з ніг.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Заряди</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>Шанс +1 заряд</td><td>—</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td></tr></table></div>
+      <div class="five"><b>5 рівень — Нокаут:</b> силова на повних зарядах вбиває будь-якого не-елітного зомбі.</div>
+    </article>
+
+    <article class="card">
+      <h3>Дубинки й кувалди — <span class="trait">Ярость</span></h3>
+      <div class="tagline">Перк: «Ярость» (замість «Волшебного пенделя»)</div>
+      <ul>
+        <li>Вбивство дубинкою, битою чи кувалдою — стак на 8 с: +10% шкоди, +5% швидкості атаки.</li>
+        <li>Макс. стаків = рівень перка (1–5).</li>
+      </ul>
+      <div class="five"><b>5 рівень — Буйство:</b> на 5 стаках удари не витрачають витривалість, а вас не можна оглушити чи збити з ніг.</div>
+    </article>
+
+  </div>
+</section>
+
+<section id="ranged" data-sec>
+  <h2>Дальній бій</h2>
+  <p class="lead">Кожна фішка росте від перка своєї зброї.</p>
+  <div class="grid">
+
+    <article class="card">
+      <h3>Пістолети й ПП — <span class="trait">Охотник за головами</span></h3>
+      <div class="tagline">Перк: «Меткий стрелок»</div>
+      <ul>
+        <li>3 хедшоти поспіль (промах чи тіло скидає серію) → режим посилених пострілів.</li>
+        <li>Посилені постріли: більше шкоди, майже без розкиду, цифри блакитні.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Пострілів</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td></tr><tr><td>Шкода</td><td>+25%</td><td>+35%</td><td>+45%</td><td>+55%</td><td>+65%</td><td>+75%</td></tr></table></div>
+      <div class="five"><b>5 рівень:</b> кожне вбивство в режимі +2 постріли.</div>
+    </article>
+
+    <article class="card">
+      <h3>Гвинтівки — <span class="trait">Рикошет</span></h3>
+      <div class="tagline">Перк: «Безжалостный снайпер»</div>
+      <ul><li>Хедшот ранить усіх зомбі поруч із місцем влучання.</li></ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Радіус</td><td>4 м</td><td>5</td><td>7</td><td>9</td><td>12</td><td>15</td></tr><tr><td>Шкода</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td></tr></table></div>
+      <div class="five"><b>5 рівень:</b> рикошет ще й оглушає всіх зачеплених на 2 с.</div>
+    </article>
+
+    <article class="card">
+      <h3>Автомати й кулемети — <span class="trait">Подавление</span></h3>
+      <div class="tagline">Перк: «Пулеметчик»</div>
+      <ul>
+        <li>Кожне влучання сповільнює ціль на 5% на 8 с.</li>
+        <li>Кожне 4-те влучання: наступний постріл без витрати патрона.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Макс. сповільнення</td><td>20%</td><td>26%</td><td>32%</td><td>38%</td><td>44%</td><td>50%</td></tr></table></div>
+      <div class="five"><b>5 рівень:</b> +25% шкоди по повністю подавлених.</div>
+    </article>
+
+    <article class="card">
+      <h3>Луки — <span class="trait">Расщепление</span></h3>
+      <div class="tagline">Перк: «Стрельба из лука»</div>
+      <ul><li>Кожна стріла ранить зомбі поруч із місцем влучання.</li></ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Шкода</td><td>25</td><td>40</td><td>55</td><td>70</td><td>85</td><td>100</td></tr><tr><td>Радіус</td><td>3 м</td><td>3.4</td><td>3.8</td><td>4.2</td><td>4.6</td><td>5</td></tr></table></div>
+      <div class="five"><b>5 рівень:</b> стріла в голову підпалює ціль.</div>
+    </article>
+
+    <article class="card">
+      <h3>Арбалети — <span class="trait">Метка · Пригвоздить</span></h3>
+      <div class="tagline">Перк: «Стрельба из лука»</div>
+      <ul>
+        <li>Болт позначає зомбі на 10 с: уся ваша шкода по ньому (будь-якою зброєю) вища, цифри блакитні.</li>
+        <li>Стіна до 2 м позаду зомбі — болт прибиває його до смерті (еліту — на 10 с).</li>
+      </ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Бонус Метки</td><td>+30%</td><td>+44%</td><td>+58%</td><td>+72%</td><td>+86%</td><td>+100%</td></tr></table></div>
+    </article>
+
+    <article class="card">
+      <h3>Роботи — <span class="trait">Протокол защиты</span></h3>
+      <div class="tagline">Перк: «Изобретатель роботов» · турель і робо-кувалда</div>
+      <ul><li>Поки ваше здоров'я нижче 30%, ваші роботи атакують швидше й сильніше (бафф-індикатор).</li></ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Швидкість</td><td>+30%</td><td>+40%</td><td>+50%</td><td>+60%</td><td>+70%</td><td>+80%</td></tr><tr><td>Шкода</td><td>+10%</td><td>+15%</td><td>+20%</td><td>+25%</td><td>+30%</td><td>+35%</td></tr></table></div>
+      <div class="five"><b>5 рівень:</b> вмикається вже при здоров'ї нижче 50%.</div>
+    </article>
+
+  </div>
+</section>
+
+<section id="explosives" data-sec>
+  <h2>Вибухівка, дробовики й інше</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Дробовики — <span class="trait">Отбрасывание пулей</span></h3>
+      <ul>
+        <li>Куля (Slug, Breaching Slug) відкидає зомбі й валить з ніг. Дріб без змін.</li>
+        <li>Breaching Slug б'є лише до 4 м — так у самій грі.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Гранати — <span class="trait">Широкий взрыв</span></h3>
+      <ul><li>Граната, контактна граната й самопальна бомба: радіус по зомбі ×3. Руйнування блоків без змін.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Молотов — <span class="trait">Заняты горением</span></h3>
+      <ul><li>Палаючі зомбі −70% швидкості. Калюжа горить удвічі довше. Вас не сповільнює.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Ракетниця — <span class="trait">Ранняя артиллерия</span></h3>
+      <ul><li>Продається й трапляється в луті з початку гри.</li><li>Ракети у фінальній скрині кожного будинку:</li></ul>
+      <div class="scale"><table><tr><th>Зірки</th><th>★1</th><th>★2</th><th>★3</th><th>★4</th><th>★5</th></tr><tr><td>Ракет</td><td>1</td><td>1–2</td><td>2–3</td><td>3–4</td><td>4–6</td></tr></table></div>
+    </article>
+    <article class="card">
+      <h3>Саморобна зброя — <span class="trait">Ветеран-самоделка</span></h3>
+      <ul><li>Кожне вбивство pipe-зброєю: +2% шкоди всій pipe-зброї, до +1000%. Бафф показує бонус.</li><li>Ремонт брухтом заліза.</li></ul>
+    </article>
+  </div>
+</section>
+
+<section id="perks" data-sec>
+  <h2>Змінені перки</h2>
+  <p class="lead">Ванільні ефекти, що дублювали фішки мода, замінені. В описі кожного рівня перка в грі є жовтий рядок AposMod з точними числами.</p>
+  <div class="grid">
+    <article class="card"><h3>«Волшебный пендель» → <span class="trait">«Ярость»</span></h3><ul><li>Збиття з ніг на бігу прибрано. Див. «Ярость» у ближньому бою.</li></ul></article>
+    <article class="card"><h3>«Мастерство интеллекта» 4–5</h3><ul><li><b>4 — Полевой ремонт:</b> уся зброя, інструменти й броня зношуються на 30% повільніше.</li><li><b>5 — Изобретатель:</b> усе скрафчене на +1 рівень якості.</li><li>Бонуси жезла (заряд за 2 удари, +300% шоку) прибрано.</li></ul></article>
+    <article class="card"><h3>«Громила Пит»</h3><ul><li>Прибрано: силова по оглушеному кладе його «назавжди».</li><li>Замість цього: силова по оглушених +10…50% шкоди.</li></ul></article>
+    <article class="card"><h3>«Дробитель черепов»</h3><ul><li>Прибрано: шанси збити з ніг силовою (ціль і сусіди).</li><li>Замість цього: Землетрясение знімає 10…50 HP кожному збитому.</li></ul></article>
+    <article class="card"><h3>«Драчун»</h3><ul><li>Прибрано: силова оглушає / в голову збиває з ніг.</li><li>Замість цього: звичайний удар з шансом 10…50% дає заряд Контрудару.</li></ul></article>
+  </div>
+</section>
+
+<section id="gear" data-sec>
+  <h2>Моди й легендарна зброя</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Мод: <span class="trait">энергощит</span></h3>
+      <div class="tagline">Нагрудник · верстак, лут модів броні, торговці</div>
+      <ul>
+        <li>Заряджений щит: дальні атаки (кулі, стріли, плювки) не шкодять.</li>
+        <li>Будь-яке попадання розряджає; заряд через 5 с без шкоди. Бафф «Энергощит».</li>
+      </ul>
+      <div class="k">Рецепт</div>
+      <div>6 електродеталей, 4 механічні деталі, 10 полімерів, 10 кованого заліза, 2 ізострічки.</div>
+    </article>
+    <article class="card">
+      <h3>Стихійні моди</h3>
+      <div class="tagline">Будь-яка зброя · один стихійний мод на зброю · верстак</div>
+      <ul>
+        <li><b>Зажигательный:</b> 20% підпалити. (4 олії)</li>
+        <li><b>Тесла:</b> 20% шок на 1.5 с. (5 електродеталей)</li>
+        <li><b>Кислотный:</b> 25% роз'їсти на 6 с: −25 фізичного опору, −3 HP/с, цифри блакитні. (2 кислоти)</li>
+      </ul>
+      <div class="tagline">+3 механічні деталі й 6 полімерів у кожному рецепті</div>
+    </article>
+    <article class="card legendary">
+      <h3><span class="trait">Легендарна зброя</span></h3>
+      <div class="tagline">Золота назва · 4% у фінальних скринях ★4, 10% у ★5 · не продається</div>
+      <ul>
+        <li><b>Растрёпанный Гарольд</b> (.44 «Стервятник»): 3 кулі за постріл віялом.</li>
+        <li><b>Леди Кулак</b> (9-мм пістолет): +50% шкоди, хедшот лікує 5 HP.</li>
+        <li><b>Дыхание дракона</b> (помповий дробовик): +20%, кожне влучання підпалює.</li>
+        <li><b>Потрошитель</b> (мачете): +40%, кожен удар — кровотеча.</li>
+        <li><b>Раскат грома</b> (сталева кувалда): +25%, силова шокує всіх у 4 м на 2 с без перезарядки.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="systems" data-sec>
+  <h2>Системи</h2>
+  <div class="k" style="margin-bottom:8px">Кольори цифр шкоди</div>
+  <div class="legend">
+    <div class="dmg"><span class="num n-white dark-chip">45</span><span>Звичайна шкода</span></div>
+    <div class="dmg"><span class="num n-yellow dark-chip">90!</span><span>Хедшот</span></div>
+    <div class="dmg"><span class="num n-cyan dark-chip">120</span><span>Посилено баффом: Охотник, Ярость, Контрудар, Метка, Подавление, Кислота</span></div>
+    <div class="dmg"><span class="num n-red dark-chip">Труп!</span><span>Вбивчий удар (над цифрою)</span></div>
+  </div>
+
+  <div class="grid" style="margin-top:14px">
+    <article class="card">
+      <h3>Налаштування цифр — <span class="trait">aposdmg</span></h3>
+      <div class="tagline">Консоль F1 · зберігається в Mods/AposMod/Settings.xml</div>
+      <pre>aposdmg              стан
+aposdmg on | off     увімкнути / вимкнути
+aposdmg size 1.5     розмір 0.5–3
+aposdmg time 2       час на екрані 0.5–5 с
+aposdmg kill off     без «Труп!»
+aposdmg color off    без блакитного кольору</pre>
+    </article>
+    <article class="card">
+      <h3>Стелс</h3>
+      <ul>
+        <li>Зони будинків, що раніше чекали тригера чи одразу кидали зомбі в атаку, тепер спавнять їх сплячими на місцях, коли ви підходите.</li>
+        <li>Прокидаються від шуму або коли вас побачать — можна прокрастися.</li>
+        <li>Вимкнути: <code>&lt;Stealth rework="false"/&gt;</code> у Settings.xml і перезапуск.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Індикатори-баффи</h3>
+      <ul>
+        <li>Кровопийца — стаки регенерації ножа</li>
+        <li>Контрудар — заряди кастетів</li>
+        <li>Ветеран-самоделка — бонус pipe-зброї, %</li>
+        <li>Охотник за головами — посилені постріли</li>
+        <li>Ярость — стаки</li>
+        <li>Протокол защиты, Энергощит</li>
+        <li>Землетрясение / Цепная молния: перезарядка</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Запуск</h3>
+      <ul>
+        <li>Гру запускати <b>без EasyAntiCheat</b>, інакше мод не завантажиться.</li>
+        <li>У лозі має бути <code>Loaded Mod: AposMod</code>.</li>
+        <li>Гра російською чи англійською — тексти мода є обома мовами.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<p class="empty hide" id="none">Нічого не знайдено. Спробуйте іншу назву зброї чи перка.</p>
+</main>
+
+<footer>
+  <div class="wrap">AposMod 0.8.0 для 7 Days to Die 3.4. Автонаведення пістолета відкладено на потім.</div>
+</footer>
+
+<script>
+(function () {
+  var q = document.getElementById('q');
+  var none = document.getElementById('none');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.card, .dmg'));
+  var secs = Array.prototype.slice.call(document.querySelectorAll('[data-sec]'));
+  function apply() {
+    var term = q.value.trim().toLowerCase();
+    var shown = 0;
+    cards.forEach(function (c) {
+      var hit = !term || c.textContent.toLowerCase().indexOf(term) !== -1;
+      c.classList.toggle('hide', !hit);
+      if (hit) shown++;
+    });
+    secs.forEach(function (s) {
+      var any = s.querySelector('.card:not(.hide), .dmg:not(.hide)');
+      s.classList.toggle('hide', !!term && !any);
+    });
+    none.classList.toggle('hide', shown > 0);
+  }
+  q.addEventListener('input', apply);
+})();
+</script>

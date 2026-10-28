@@ -4,7 +4,8 @@
 
 - Game version: **V3.4.0 (b6)**. Always verify against the installed game files in `../../Data/Config` (items.xml, buffs.xml, loot.xml, entityclasses.xml, Localization.csv) — do not guess XML names or engine behavior.
 - The owner speaks Ukrainian (answer in Ukrainian) and is learning modding — explain briefly.
-- Ideas and implementation status: `docs/WeaponIdeas.md`. In-game test steps: `docs/TestChecklist.md`. Weapon list: `docs/Weapons.md`.
+- Ideas and implementation status: `docs/WeaponIdeas.md`. In-game test steps: `docs/TestChecklist.md`. Weapon list: `docs/Weapons.md`. Balance review: `docs/BalanceAnalysis.md`.
+- Player-facing reference page: `docs/Reference.html`, published as a private artifact at https://claude.ai/artifact/C9rHeAvrTK86bwcwhjAHvm — keep it in sync with gameplay changes and republish (same file path or that URL).
 
 ## Layout
 - `ModInfo.xml` — mod name/version (bump on releases).
