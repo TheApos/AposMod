@@ -1,0 +1,155 @@
+<configs>
+	<!-- playerFemale extends playerMale, so both genders get these -->
+	<append xpath="/entity_classes/entity_class[@name='playerMale']">
+
+		<!-- ===== Knives / machete: "Bloodsucker" ===== -->
+		<effect_group name="AposMod knife">
+			<requirement name="HoldingItemHasTags" tags="bladeSkill"/>
+			<!-- normal: heal 1 HP per hit -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyStats" stat="Health" operation="add" value="1">
+				<requirement name="IsAlive" target="other"/>
+			</triggered_effect>
+			<!-- power: heavy bleeding on target, regen for you -->
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="other" buff="buffInjuryBleeding">
+				<requirement name="IsAlive" target="other"/>
+				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" buff="buffAposKnifeRegen">
+				<requirement name="IsAlive" target="other"/>
+			</triggered_effect>
+			<!-- power kill: +20 stamina -->
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyStats" stat="Stamina" operation="add" value="20">
+				<requirement name="IsSecondaryAttack"/>
+			</triggered_effect>
+		</effect_group>
+
+		<!-- ===== Clubs / bats: "Home run" ===== -->
+		<effect_group name="AposMod club">
+			<requirement name="HoldingItemHasTags" tags="clubSkill"/>
+			<!-- normal: 15% chance to stun for 1 s -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" buff="buffInjuryStunned01" duration="1">
+				<requirement name="IsAlive" target="other"/>
+				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="15"/>
+			</triggered_effect>
+			<!-- power to the head: launch the target -->
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="other" duration="3" force="800">
+				<requirement name="IsAlive" target="other"/>
+				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+				<requirement name="HitLocation" body_parts="Head"/>
+			</triggered_effect>
+		</effect_group>
+
+		<!-- ===== Sledgehammers: "Earthquake" ===== -->
+		<effect_group name="AposMod sledge">
+			<requirement name="HoldingItemHasTags" tags="sledgeSkill"/>
+			<!-- normal: 20% chance to knock down -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" buff="buffInjuryKnockdown01">
+				<requirement name="IsAlive" target="other"/>
+				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="20"/>
+			</triggered_effect>
+			<!-- power: knock down everything around -->
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="3" duration="2.5" force="250" target_tags="zombie,animal"/>
+		</effect_group>
+
+		<!-- ===== Batons: "Chain lightning" ===== -->
+		<effect_group name="AposMod baton">
+			<requirement name="HoldingItemHasTags" tags="batonJunkie"/>
+			<!-- normal: short shock -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" buff="buffShocked" duration=".5">
+				<requirement name="IsAlive" target="other"/>
+				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+			</triggered_effect>
+			<!-- power: shock jumps to zombies around (3 m) -->
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="3" buff="buffShocked" duration="2" target_tags="zombie,animal"/>
+		</effect_group>
+
+		<!-- ===== Spears: "Battering ram" ===== -->
+		<effect_group name="AposMod spear">
+			<requirement name="HoldingItemHasTags" tags="spearSkill"/>
+			<!-- normal: small push back -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration=".2" force="120">
+				<requirement name="IsAlive" target="other"/>
+				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+			</triggered_effect>
+			<!-- power: pierces up to 2 more zombies and throws every hit one back -->
+			<passive_effect name="EntityPenetrationCount" operation="base_add" value="2" tags="perkJavelinMaster">
+				<requirement name="IsSecondaryAttack"/>
+			</passive_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="other" duration="1.5" force="400">
+				<requirement name="IsAlive" target="other"/>
+				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+			</triggered_effect>
+		</effect_group>
+
+		<!-- ===== Knuckles: "Counter punch" ===== -->
+		<effect_group name="AposMod knuckles">
+			<requirement name="HoldingItemHasTags" tags="knuckleSkill"/>
+			<!-- getting hit starts Counter Punch (5 s, visible buff) and charges 3 boosted normal punches -->
+			<!-- buff first: re-adding it may fire its onSelfBuffRemove, which zeroes the counter -->
+			<triggered_effect trigger="onOtherDamagedSelf" action="AddBuff" buff="buffAposCounter"/>
+			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterHits" operation="set" value="3"/>
+			<!-- normal: +25% for up to 3 punches while Counter Punch is active -->
+			<passive_effect name="EntityDamage" operation="perc_add" value=".25">
+				<requirement name="!IsSecondaryAttack"/>
+				<requirement name="HasBuff" buff="buffAposCounter"/>
+				<requirement name="CVarCompare" cvar="aposCounterHits" operation="GT" value="0"/>
+			</passive_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposCounterHits" operation="add" value="-1">
+				<requirement name="CVarCompare" cvar="aposCounterHits" operation="GT" value="0"/>
+			</triggered_effect>
+			<!-- power while Counter Punch is active: x3 damage, knockdown, +20 stamina, ends the buff -->
+			<passive_effect name="EntityDamage" operation="perc_add" value="2">
+				<requirement name="IsSecondaryAttack"/>
+				<requirement name="HasBuff" buff="buffAposCounter"/>
+			</passive_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="other" buff="buffInjuryKnockdown01">
+				<requirement name="HasBuff" buff="buffAposCounter"/>
+				<requirement name="IsAlive" target="other"/>
+				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyStats" stat="Stamina" operation="add" value="20">
+				<requirement name="HasBuff" buff="buffAposCounter"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="RemoveBuff" buff="buffAposCounter"/>
+		</effect_group>
+
+		<!-- ===== Pipe weapons (T0): "Veteran junk" — +10% damage per 5 kills, max +100% ===== -->
+		<!-- aposPipeStep counts kills 0..4, aposPipeBonus is the shown bonus in % (0..100) -->
+		<effect_group name="AposMod pipe veteran">
+			<requirement name="HoldingItemHasTags" tags="aposPipe"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposPipeStep" operation="add" value="1">
+				<requirement name="CVarCompare" cvar="aposPipeBonus" operation="LT" value="100"/>
+			</triggered_effect>
+			<!-- every 5th kill: +10%, reset the step, tell the player (order matters) -->
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposPipeBonus" operation="add" value="10">
+				<requirement name="CVarCompare" cvar="aposPipeStep" operation="GTE" value="5"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfKilledOther" action="ShowToolbeltMessage" message_key="aposPipeLevelUp">
+				<requirement name="CVarCompare" cvar="aposPipeStep" operation="GTE" value="5"/>
+				<requirement name="CVarCompare" cvar="aposPipeBonus" operation="LT" value="100"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfKilledOther" action="ShowToolbeltMessage" message_key="aposPipeMaxed">
+				<requirement name="CVarCompare" cvar="aposPipeStep" operation="GTE" value="5"/>
+				<requirement name="CVarCompare" cvar="aposPipeBonus" operation="GTE" value="100"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposPipeStep" operation="set" value="0">
+				<requirement name="CVarCompare" cvar="aposPipeStep" operation="GTE" value="5"/>
+			</triggered_effect>
+		</effect_group>
+		<effect_group name="AposMod pipe veteran damage">
+			<requirement name="HoldingItemHasTags" tags="aposPipe"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".1"><requirement name="CVarCompare" cvar="aposPipeBonus" operation="GTE" value="10"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".1"><requirement name="CVarCompare" cvar="aposPipeBonus" operation="GTE" value="20"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".1"><requirement name="CVarCompare" cvar="aposPipeBonus" operation="GTE" value="30"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".1"><requirement name="CVarCompare" cvar="aposPipeBonus" operation="GTE" value="40"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".1"><requirement name="CVarCompare" cvar="aposPipeBonus" operation="GTE" value="50"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".1"><requirement name="CVarCompare" cvar="aposPipeBonus" operation="GTE" value="60"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".1"><requirement name="CVarCompare" cvar="aposPipeBonus" operation="GTE" value="70"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".1"><requirement name="CVarCompare" cvar="aposPipeBonus" operation="GTE" value="80"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".1"><requirement name="CVarCompare" cvar="aposPipeBonus" operation="GTE" value="90"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".1"><requirement name="CVarCompare" cvar="aposPipeBonus" operation="GTE" value="100"/></passive_effect>
+		</effect_group>
+	</append>
+</configs>

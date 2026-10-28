@@ -1,0 +1,66 @@
+<configs>
+	<!-- ===== Grenades: x3 radius vs entities, block radius unchanged ===== -->
+	<!-- thrownGrenade extends thrownGrenadeContact, but gets its own value to be explicit -->
+	<set xpath="/items/item[@name='thrownGrenadeContact']/property[@class='Explosion']/property[@name='RadiusEntities']/@value">15</set>
+	<set xpath="/items/item[@name='thrownGrenadeContact']/effect_group/display_value[@name='dExRadius']/@value">7.5</set>
+	<append xpath="/items/item[@name='thrownGrenade']/property[@class='Explosion']">
+		<property name="RadiusEntities" value="15"/>
+	</append>
+	<set xpath="/items/item[@name='thrownGrenade']/effect_group/display_value[@name='dExRadius']/@value">4.5</set>
+	<set xpath="/items/item[@name='thrownAmmoPipeBomb']/property[@class='Explosion']/property[@name='RadiusEntities']/@value">12</set>
+	<set xpath="/items/item[@name='thrownAmmoPipeBomb']/effect_group/display_value[@name='dExRadius']/@value">4.5</set>
+
+	<!-- ===== Molotov: fire puddle lasts twice as long (slow is in buffs.xml) ===== -->
+	<set xpath="/items/item[@name='thrownAmmoMolotovCocktail']/property[@class='Explosion']/property[@name='Duration']/@value">16</set>
+
+	<!-- ===== Shotgun slugs: knock the target back and down ===== -->
+	<!-- Ammo effects fire together with the weapon's, so buckshot is not affected -->
+	<append xpath="/items/item[@name='ammoShotgunSlug' or @name='ammoShotgunBreachingSlug']/effect_group[1]">
+		<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration="2" force="600">
+			<requirement name="IsAlive" target="other"/>
+			<requirement name="!EntityTagCompare" target="other" tags="trader"/>
+		</triggered_effect>
+	</append>
+
+	<!-- ===== Pipe weapons (T0): tag for the "veteran" bonus, repair with scrap iron ===== -->
+	<csv xpath="/items/item[@name='gunHandgunT0PipePistol' or @name='gunShotgunT0PipeShotgun' or @name='gunRifleT0PipeRifle' or @name='gunMGT0PipeMachineGun' or @name='meleeWpnBatonT0PipeBaton']/property[@name='Tags']/@value" delim="," op="add">aposPipe</csv>
+	<set xpath="/items/item[@name='gunHandgunT0PipePistol' or @name='gunShotgunT0PipeShotgun' or @name='gunRifleT0PipeRifle' or @name='gunMGT0PipeMachineGun' or @name='meleeWpnBatonT0PipeBaton']/property[@name='RepairTools']/@value">resourceScrapIron</set>
+
+	<!-- ===== Rocket launcher: available at traders from the start ===== -->
+	<set xpath="/items/item[@name='gunExplosivesT3RocketLauncher']/property[@name='TraderStageTemplate']/@value">baseTier1</set>
+
+	<!-- ===== Descriptions: vanilla text + class trait (texts in Localization.txt) ===== -->
+	<append xpath="/items/item[@name='meleeWpnBladeT0BoneKnife']"><property name="DescriptionKey" value="aposDesc_meleeWpnBladeT0BoneKnife"/></append>
+	<append xpath="/items/item[@name='meleeWpnBladeT1HuntingKnife']"><property name="DescriptionKey" value="aposDesc_meleeWpnBladeT1HuntingKnife"/></append>
+	<append xpath="/items/item[@name='meleeWpnBladeT1CandyKnife']"><property name="DescriptionKey" value="aposDesc_meleeWpnBladeT1CandyKnife"/></append>
+	<append xpath="/items/item[@name='meleeWpnBladeT3Machete']"><property name="DescriptionKey" value="aposDesc_meleeWpnBladeT3Machete"/></append>
+	<append xpath="/items/item[@name='meleeWpnClubT0WoodenClub']"><property name="DescriptionKey" value="aposDesc_meleeWpnClubT0WoodenClub"/></append>
+	<append xpath="/items/item[@name='meleeWpnClubT1BaseballBat']"><property name="DescriptionKey" value="aposDesc_meleeWpnClubT1BaseballBat"/></append>
+	<append xpath="/items/item[@name='meleeWpnClubT1CandyClub']"><property name="DescriptionKey" value="aposDesc_meleeWpnClubT1CandyClub"/></append>
+	<append xpath="/items/item[@name='meleeWpnClubT3SteelClub']"><property name="DescriptionKey" value="aposDesc_meleeWpnClubT3SteelClub"/></append>
+	<append xpath="/items/item[@name='meleeWpnSledgeT0StoneSledgehammer']"><property name="DescriptionKey" value="aposDesc_meleeWpnSledgeT0StoneSledgehammer"/></append>
+	<append xpath="/items/item[@name='meleeWpnSledgeT1IronSledgehammer']"><property name="DescriptionKey" value="aposDesc_meleeWpnSledgeT1IronSledgehammer"/></append>
+	<append xpath="/items/item[@name='meleeWpnSledgeT3SteelSledgehammer']"><property name="DescriptionKey" value="aposDesc_meleeWpnSledgeT3SteelSledgehammer"/></append>
+	<append xpath="/items/item[@name='meleeWpnBatonT0PipeBaton']"><property name="DescriptionKey" value="aposDesc_meleeWpnBatonT0PipeBaton"/></append>
+	<append xpath="/items/item[@name='meleeWpnBatonT2StunBaton']"><property name="DescriptionKey" value="aposDesc_meleeWpnBatonT2StunBaton"/></append>
+	<append xpath="/items/item[@name='meleeWpnSpearT0StoneSpear']"><property name="DescriptionKey" value="aposDesc_meleeWpnSpearT0StoneSpear"/></append>
+	<append xpath="/items/item[@name='meleeWpnSpearT1IronSpear']"><property name="DescriptionKey" value="aposDesc_meleeWpnSpearT1IronSpear"/></append>
+	<append xpath="/items/item[@name='meleeWpnSpearT3SteelSpear']"><property name="DescriptionKey" value="aposDesc_meleeWpnSpearT3SteelSpear"/></append>
+	<append xpath="/items/item[@name='meleeWpnKnucklesT0LeatherKnuckles']"><property name="DescriptionKey" value="aposDesc_meleeWpnKnucklesT0LeatherKnuckles"/></append>
+	<append xpath="/items/item[@name='meleeWpnKnucklesT1IronKnuckles']"><property name="DescriptionKey" value="aposDesc_meleeWpnKnucklesT1IronKnuckles"/></append>
+	<append xpath="/items/item[@name='meleeWpnKnucklesT3SteelKnuckles']"><property name="DescriptionKey" value="aposDesc_meleeWpnKnucklesT3SteelKnuckles"/></append>
+	<append xpath="/items/item[@name='gunHandgunT0PipePistol']"><property name="DescriptionKey" value="aposDesc_gunHandgunT0PipePistol"/></append>
+	<append xpath="/items/item[@name='gunRifleT0PipeRifle']"><property name="DescriptionKey" value="aposDesc_gunRifleT0PipeRifle"/></append>
+	<append xpath="/items/item[@name='gunMGT0PipeMachineGun']"><property name="DescriptionKey" value="aposDesc_gunMGT0PipeMachineGun"/></append>
+	<append xpath="/items/item[@name='gunShotgunT0PipeShotgun']"><property name="DescriptionKey" value="aposDesc_gunShotgunT0PipeShotgun"/></append>
+	<append xpath="/items/item[@name='gunShotgunT1DoubleBarrel']"><property name="DescriptionKey" value="aposDesc_gunShotgunT1DoubleBarrel"/></append>
+	<append xpath="/items/item[@name='gunShotgunT2PumpShotgun']"><property name="DescriptionKey" value="aposDesc_gunShotgunT2PumpShotgun"/></append>
+	<append xpath="/items/item[@name='gunShotgunT3AutoShotgun']"><property name="DescriptionKey" value="aposDesc_gunShotgunT3AutoShotgun"/></append>
+	<append xpath="/items/item[@name='ammoShotgunSlug']"><property name="DescriptionKey" value="aposDesc_ammoShotgunSlug"/></append>
+	<append xpath="/items/item[@name='ammoShotgunBreachingSlug']"><property name="DescriptionKey" value="aposDesc_ammoShotgunBreachingSlug"/></append>
+	<append xpath="/items/item[@name='thrownGrenade']"><property name="DescriptionKey" value="aposDesc_thrownGrenade"/></append>
+	<append xpath="/items/item[@name='thrownGrenadeContact']"><property name="DescriptionKey" value="aposDesc_thrownGrenadeContact"/></append>
+	<append xpath="/items/item[@name='thrownAmmoPipeBomb']"><property name="DescriptionKey" value="aposDesc_thrownAmmoPipeBomb"/></append>
+	<append xpath="/items/item[@name='thrownAmmoMolotovCocktail']"><property name="DescriptionKey" value="aposDesc_thrownAmmoMolotovCocktail"/></append>
+	<append xpath="/items/item[@name='gunExplosivesT3RocketLauncher']"><property name="DescriptionKey" value="aposDesc_gunExplosivesT3RocketLauncher"/></append>
+</configs>

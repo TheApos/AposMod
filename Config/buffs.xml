@@ -1,0 +1,53 @@
+<configs>
+	<!-- ===== Molotov: burning zombies move much slower ===== -->
+	<append xpath="/buffs/buff[@name='buffBurningMolotov']">
+		<effect_group name="AposMod molotov slow">
+			<requirement name="!EntityTagCompare" tags="player"/>
+			<passive_effect name="WalkSpeed" operation="perc_add" value="-.7"/>
+			<passive_effect name="RunSpeed" operation="perc_add" value="-.7"/>
+		</effect_group>
+	</append>
+
+	<!-- ===== Veteran Junk indicator: shown while a pipe weapon is in hand ===== -->
+	<!-- buffStatusCheck01 is always on the player and updates every 2 s -->
+	<append xpath="/buffs/buff[@name='buffStatusCheck01']">
+		<effect_group name="AposMod pipe veteran indicator">
+			<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffAposPipeVeteran">
+				<requirement name="HoldingItemHasTags" tags="aposPipe"/>
+				<requirement name="!HasBuff" buff="buffAposPipeVeteran"/>
+			</triggered_effect>
+		</effect_group>
+	</append>
+
+	<append xpath="/buffs">
+		<!-- Knife power attack: heal 1 HP per second for 5 seconds -->
+		<buff name="buffAposKnifeRegen" name_key="buffAposKnifeRegenName" description_key="buffAposKnifeRegenDesc" icon="ui_game_symbol_laceration" icon_color="200,30,30">
+			<stack_type value="replace"/>
+			<duration value="5"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="1"/>
+			</effect_group>
+		</buff>
+
+		<!-- Knuckles: counter punch window; the number shows boosted normal punches left -->
+		<buff name="buffAposCounter" name_key="buffAposCounterName" description_key="buffAposCounterDesc" icon="ui_game_symbol_boxer" icon_color="255,180,0">
+			<stack_type value="replace"/>
+			<duration value="5"/>
+			<display_value value="aposCounterHits"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="aposCounterHits" operation="set" value="0"/>
+			</effect_group>
+		</buff>
+
+		<!-- Pipe weapons: the number shows the current damage bonus in % -->
+		<buff name="buffAposPipeVeteran" name_key="buffAposPipeVeteranName" description_key="buffAposPipeVeteranDesc" icon="ui_game_symbol_pistol" icon_color="255,180,0" remove_on_death="false">
+			<stack_type value="ignore"/>
+			<display_value value="aposPipeBonus"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposPipeVeteran">
+					<requirement name="!HoldingItemHasTags" tags="aposPipe"/>
+				</triggered_effect>
+			</effect_group>
+		</buff>
+	</append>
+</configs>

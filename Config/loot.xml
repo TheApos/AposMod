@@ -1,0 +1,31 @@
+<configs>
+	<!-- ===== Rocket launcher in early-game explosive loot (launcher + 1 rocket) ===== -->
+	<!-- A lootgroup must be defined before it is referenced, so the new group goes right above its user -->
+	<insertBefore xpath="/lootcontainers/lootgroup[@name='groupWeaponsT1_Demolitionist']">
+		<lootgroup name="groupAposEarlyRocketLauncher" count="all" loot_quality_template="QLTemplateT1">
+			<item name="gunExplosivesT3RocketLauncher"/>
+			<item group="groupAmmoRocket"/>
+		</lootgroup>
+	</insertBefore>
+	<append xpath="/lootcontainers/lootgroup[@name='groupWeaponsT1_Demolitionist']">
+		<item group="groupAposEarlyRocketLauncher" prob="0.15"/>
+	</append>
+
+	<!-- ===== Final POI chests always contain rockets, more for harder POIs ===== -->
+	<!-- Chest tier matches POI difficulty: T1 leather trunk ... T5 hardened chest -->
+	<append xpath="/lootcontainers/lootgroup[@name='groupReinforcedChestT1']">
+		<item group="groupAmmoRocket" count="1"/>
+	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='groupReinforcedChestT2']">
+		<item group="groupAmmoRocket" count="1,2"/>
+	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='groupReinforcedChestT3']">
+		<item group="groupAmmoRocket" count="2,3"/>
+	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT4']">
+		<item group="groupAmmoRocket" count="3,4"/>
+	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT5']">
+		<item group="groupAmmoRocket" count="4,6"/>
+	</append>
+</configs>
