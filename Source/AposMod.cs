@@ -1,4 +1,4 @@
-// AposMod C# part. Built with Source\build.ps1 (C# 5, no Harmony needed).
+// AposMod C# part. Built with Source\build.ps1 (C# 5, no Harmony needed). Settings: AposSettings.cs.
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +6,7 @@ public class AposModInit : IModApi
 {
     public void InitMod(Mod _modInstance)
     {
+        AposSettings.Load(_modInstance.Path);
         GameObject go = new GameObject("AposDamageNumbers");
         Object.DontDestroyOnLoad(go);
         go.AddComponent<AposDamageNumbers>();
@@ -20,7 +21,6 @@ public class AposModInit : IModApi
 public class AposDamageNumbers : MonoBehaviour
 {
     const float Range = 60f;
-    const float Lifetime = 1.5f;
     const float RiseHeight = 1.2f;
 
     static readonly Color NormalColor = Color.white;
@@ -30,7 +30,7 @@ public class AposDamageNumbers : MonoBehaviour
 
     // Player buffs that raise the damage of your hits, and target markers that do the same
     static readonly string[] PlayerDamageBuffs = { "buffAposHeadhunter", "buffAposRage", "buffAposCounter" };
-    const string MarkBuff = "buffAposMark";
+    static readonly string[] TargetDamageBuffs = { "buffAposMark", "buffAposCorroded" };
     const string SuppressedFullVar = "aposSupFull";
 
     class Popup
@@ -92,9 +92,9 @@ public class AposDamageNumbers : MonoBehaviour
                 float prevRandom;
                 bool freshRecord = !lastHitRandom.TryGetValue(id, out prevRandom) || prevRandom != rec.Random;
                 bool headshot = freshRecord && (rec.HitBodyPart & EnumBodyPartHit.Head) != 0;
-                bool buffed = HasAnyBuff(player, PlayerDamageBuffs)
-                    || e.Buffs.HasBuff(MarkBuff) || e.Buffs.GetCustomVar(SuppressedFullVar) > 0f;
-                AddPopup(e, prevHp - hp, headshot, buffed, hp <= 0);
+                bool buffed = AposSettings.BuffColor && (HasAnyBuff(player, PlayerDamageBuffs)
+                    || HasAnyBuff(e, TargetDamageBuffs) || e.Buffs.GetCustomVar(SuppressedFullVar) > 0f);
+                if (AposSettings.Enabled) AddPopup(e, prevHp - hp, headshot, buffed, hp <= 0);
             }
             lastHealth[id] = hp;
             lastHitRandom[id] = rec.Random;
@@ -116,7 +116,7 @@ public class AposDamageNumbers : MonoBehaviour
         float now = Time.time;
         for (int i = popups.Count - 1; i >= 0; i--)
         {
-            if (now - popups[i].Start > Lifetime) popups.RemoveAt(i);
+            if (now - popups[i].Start > AposSettings.Lifetime) popups.RemoveAt(i);
         }
     }
 
@@ -145,7 +145,7 @@ public class AposDamageNumbers : MonoBehaviour
         p.Start = Time.time;
         popups.Add(p);
 
-        if (kill)
+        if (kill && AposSettings.KillLabel)
         {
             Popup k = new Popup();
             k.Pos = pos + Vector3.up * 0.45f;
@@ -183,7 +183,7 @@ public class AposDamageNumbers : MonoBehaviour
         for (int i = 0; i < popups.Count; i++)
         {
             Popup p = popups[i];
-            float t = (now - p.Start) / Lifetime;
+            float t = (now - p.Start) / AposSettings.Lifetime;
             // Viewport (0..1) instead of camera pixels: the game may render at a lower resolution
             // than the screen (DLSS/FSR), which shifts WorldToScreenPoint results
             Vector3 vp = cam.WorldToViewportPoint(p.Pos + Vector3.up * (RiseHeight * t));
@@ -192,8 +192,9 @@ public class AposDamageNumbers : MonoBehaviour
             float y = (1f - vp.y) * Screen.height;
 
             float alpha = 1f - t * t;
-            style.fontSize = p.Size;
-            Rect r = new Rect(x - 100f, y - 25f, 200f, 50f);
+            style.fontSize = Mathf.RoundToInt(p.Size * AposSettings.Scale);
+            float w = 200f * AposSettings.Scale, h = 50f * AposSettings.Scale;
+            Rect r = new Rect(x - w / 2f, y - h / 2f, w, h);
 
             // Dark outline for readability
             GUI.color = new Color(0f, 0f, 0f, alpha * 0.8f);

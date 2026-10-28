@@ -1,3 +1,6 @@
 # Build output — rebuild with Source/build.ps1
 *.dll
 *.pdb
+
+# Player settings, created by the mod on first run
+Settings.xml
