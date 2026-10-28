@@ -12,6 +12,7 @@ public static class AposSettings
     public static float Lifetime = 1.5f;  // seconds a number stays on screen
     public static bool KillLabel = true;  // red "Kill!" above killing blows
     public static bool BuffColor = true;  // cyan numbers for buffed hits
+    public static bool StealthRework = true; // POI trigger/attack volumes spawn sleeping zombies (AposStealth.cs)
 
     static string file;
 
@@ -27,6 +28,8 @@ public static class AposSettings
         {
             XmlDocument doc = new XmlDocument();
             doc.Load(file);
+            XmlElement s = doc.DocumentElement["Stealth"];
+            if (s != null) StealthRework = ReadBool(s, "rework", StealthRework);
             XmlElement d = doc.DocumentElement["DamageNumbers"];
             if (d == null) return;
             Enabled = ReadBool(d, "enabled", Enabled);
@@ -58,6 +61,10 @@ public static class AposSettings
             d.SetAttribute("killLabel", KillLabel ? "true" : "false");
             d.SetAttribute("buffColor", BuffColor ? "true" : "false");
             root.AppendChild(d);
+            root.AppendChild(doc.CreateComment(" Stealth rework: POI zombies spawn asleep instead of triggered waves. Needs a game restart. "));
+            XmlElement s = doc.CreateElement("Stealth");
+            s.SetAttribute("rework", StealthRework ? "true" : "false");
+            root.AppendChild(s);
             doc.Save(file);
         }
         catch (Exception e)

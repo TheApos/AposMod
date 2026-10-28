@@ -1,4 +1,4 @@
-// AposMod C# part. Built with Source\build.ps1 (C# 5, no Harmony needed). Settings: AposSettings.cs.
+// AposMod C# part. Built with Source\build.ps1 (C# 5). Settings: AposSettings.cs. Harmony patches: AposStealth.cs.
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +7,15 @@ public class AposModInit : IModApi
     public void InitMod(Mod _modInstance)
     {
         AposSettings.Load(_modInstance.Path);
+        try
+        {
+            new HarmonyLib.Harmony("apos.aposmod").PatchAll(typeof(AposModInit).Assembly);
+        }
+        catch (System.Exception e)
+        {
+            // the rest of the mod still works; the stealth rework is just off
+            Debug.LogError("[AposMod] Harmony patches failed, stealth rework disabled: " + e);
+        }
         GameObject go = new GameObject("AposDamageNumbers");
         Object.DontDestroyOnLoad(go);
         go.AddComponent<AposDamageNumbers>();

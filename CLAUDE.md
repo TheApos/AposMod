@@ -10,7 +10,7 @@
 - `ModInfo.xml` — mod name/version (bump on releases).
 - `Config/*.xml` — XPath patches (`set`, `append`, `insertBefore`, `remove`, `csv`) over vanilla configs. `progression.xml` replaces Grand Slam with Rage, Intellect Mastery 4-5 with Field Repair / Inventor, and removes vanilla knockdowns of Pummel Pete / Skull Crusher / The Brawler that duplicated mod traits (replacements in entityclasses.xml).
 - `Config/Localization.csv` — must be **.csv** (game 3.x ignores Localization.txt). Columns `english` and `russian`; **fill both** (the game client runs in Russian; an empty column shows a blank text).
-- `Source/AposMod.cs` — C# part (floating damage numbers, no Harmony). Build: `& Source/build.ps1` → `AposMod.dll` (gitignored).
+- `Source/*.cs` — C# part. Build: `& Source/build.ps1` → `AposMod.dll` (gitignored).
 - `Source/gen_loc.ps1` — regenerates `Config/Localization.csv` (vanilla text + trait, EN/RU). Edit trait texts there, not in the CSV. Keep it UTF-8 **with BOM**.
 - Damage numbers: draw at `entity.transform.position` (scene space). `Entity.position` is logical world space; the game uses a floating origin, so it is off by hundreds of meters on screen.
 - Perk scaling: one triggered/passive effect per perk level with `ProgressionLevel ... Equals N` (Ragdoll force/range cannot read `@cvar`; CVarCompare, ModifyStats, RandomRoll, AddBuff duration and passive values can).
@@ -20,7 +20,8 @@
 - References the game's `7DaysToDie_Data/Managed` DLLs via a path relative to the repo, so the repo must live in `<game>/Mods/AposMod`.
 - A running game locks `AposMod.dll`; close the game before building.
 - Run scripts with `& script.ps1`; `-ExecutionPolicy Bypass` is blocked.
-- Runtime reflection on Assembly-CSharp fails under .NET Framework; check a game API by test-compiling a small probe `.cs` against the Managed DLLs.
+- Runtime reflection on Assembly-CSharp fails under .NET Framework. To read game code use **Mono.Cecil** from `Mods/0_TFP_Harmony/Mono.Cecil.dll` in PowerShell (`Add-Type`, `AssemblyDefinition.ReadAssembly`): fields, method signatures and IL. To confirm an API, test-compile a small probe `.cs` against the Managed DLLs.
+- C# files: `AposMod.cs` (init + damage numbers), `AposSettings.cs` (Settings.xml + `aposdmg` console command), `AposPin.cs` (crossbow pin raycast), `AposStealth.cs` (Harmony: SleeperVolume Create/Read turn Trigger/Attack volumes into Active). `Source/gen_legend.ps1` regenerates the legendary weapons block in items.xml.
 
 ## Gotchas found the hard way
 - A lootgroup must be **defined before it is referenced**; otherwise loot.xml fails to load and world generation breaks (player falls through the ground).
