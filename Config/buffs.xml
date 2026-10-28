@@ -24,6 +24,17 @@
 				<requirement name="!HasBuff" buff="buffAposGuardian"/>
 			</triggered_effect>
 		</effect_group>
+		<!-- Energy Shield: count down the recharge timer (every 2 s) and raise the shield when it is over -->
+		<effect_group name="AposMod energy shield recharge">
+			<requirement name="CVarCompare" cvar="aposShieldWorn" operation="Equals" value="1"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposShieldDown" operation="add" value="-2">
+				<requirement name="CVarCompare" cvar="aposShieldDown" operation="GT" value="0"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffAposShieldUp">
+				<requirement name="CVarCompare" cvar="aposShieldDown" operation="LTE" value="0"/>
+				<requirement name="!HasBuff" buff="buffAposShieldUp"/>
+			</triggered_effect>
+		</effect_group>
 		<effect_group name="AposMod pipe veteran indicator">
 			<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffAposPipeVeteran">
 				<requirement name="HoldingItemHasTags" tags="aposPipe"/>
@@ -179,6 +190,17 @@
 				</triggered_effect>
 				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposGuardian">
 					<requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value=".5"/>
+				</triggered_effect>
+			</effect_group>
+		</buff>
+
+		<!-- Energy Shield charged: ranged attacks deal no damage -->
+		<buff name="buffAposShieldUp" name_key="buffAposShieldUpName" description_key="buffAposShieldUpDesc" icon="ui_game_symbol_defense" icon_color="0,200,255">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<passive_effect name="PhysicalDamageResist" operation="base_add" value="100" tags="ranged"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposShieldUp">
+					<requirement name="CVarCompare" cvar="aposShieldWorn" operation="NotEquals" value="1"/>
 				</triggered_effect>
 			</effect_group>
 		</buff>

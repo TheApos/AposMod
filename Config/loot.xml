@@ -11,6 +11,11 @@
 		<item group="groupAposEarlyRocketLauncher" prob="0.15"/>
 	</append>
 
+	<!-- ===== Energy Shield armor mod can drop where other tier 3 armor mods drop ===== -->
+	<append xpath="/lootcontainers/lootgroup[@name='modArmorT3']">
+		<item name="modArmorAposEnergyShield"/>
+	</append>
+
 	<!-- ===== Final POI chests always contain rockets, more for harder POIs ===== -->
 	<!-- Chest tier matches POI difficulty: T1 leather trunk ... T5 hardened chest -->
 	<append xpath="/lootcontainers/lootgroup[@name='groupReinforcedChestT1']">

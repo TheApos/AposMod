@@ -1,0 +1,25 @@
+<configs>
+	<!-- ===== Energy Shield (chest armor mod) ===== -->
+	<!-- While charged (buffAposShieldUp) ranged attacks deal no damage (PhysicalDamageResist +100 for the "ranged" tag,
+	     the same tag vanilla uses for ranged-immune creatures). Any hit drains it; it recharges after 5 s without damage.
+	     aposShieldWorn tells buffStatusCheck01 (buffs.xml) that the mod is worn; aposShieldDown is the recharge timer. -->
+	<append xpath="/item_modifiers">
+		<item_modifier name="modArmorAposEnergyShield" installable_tags="armorChest" modifier_tags="aposShield" blocked_tags="noMods" type="attachment">
+			<property name="Extends" value="modGeneralMaster" param1="CustomIcon"/>
+			<property name="CustomIcon" value="modArmorPlatingReinforced"/>
+			<property name="CustomIconTint" value="0,200,255"/>
+			<property name="TraderStageTemplate" value="modsTier2"/>
+			<property name="DisplayType" value="modArmor"/>
+			<property name="DescriptionKey" value="modArmorAposEnergyShieldDesc"/>
+			<effect_group tiered="false">
+				<triggered_effect trigger="onSelfEquipStart" action="ModifyCVar" cvar="aposShieldWorn" operation="set" value="1"/>
+				<triggered_effect trigger="onSelfEquipStop" action="ModifyCVar" cvar="aposShieldWorn" operation="set" value="0"/>
+				<triggered_effect trigger="onSelfEquipStop" action="RemoveBuff" buff="buffAposShieldUp"/>
+				<!-- a hit drains the shield (the hit itself is still absorbed if it was ranged) -->
+				<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposShieldWorn" operation="set" value="1"/>
+				<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposShieldDown" operation="set" value="5"/>
+				<triggered_effect trigger="onOtherDamagedSelf" action="RemoveBuff" buff="buffAposShieldUp"/>
+			</effect_group>
+		</item_modifier>
+	</append>
+</configs>

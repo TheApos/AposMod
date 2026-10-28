@@ -84,6 +84,10 @@ $extra = [ordered]@{
   buffAposChainCDDesc     = 'Chain Lightning is recharging.', 'Цепная молния перезаряжается.'
   buffAposGuardianName    = 'Guardian Protocol', 'Протокол защиты'
   buffAposGuardianDesc    = 'Your health is low: your robots attack faster and harder.', 'Ваше здоровье низкое: ваши роботы атакуют быстрее и сильнее.'
+  modArmorAposEnergyShield     = 'Energy Shield Mod', 'Мод: энергощит'
+  modArmorAposEnergyShieldDesc = '[FFB400]AposMod: Energy Shield[-]\nChest armor mod. While charged, ranged attacks (bullets, arrows, spit) deal no damage to you.\nAny hit drains the shield; it recharges after 5 s without taking damage.\nCraft at a workbench or find in loot.', '[FFB400]AposMod: Энергощит[-]\nМод для нагрудника. Пока заряжен, дальние атаки (пули, стрелы, плевки) не наносят вам урона.\nЛюбое попадание разряжает щит; он заряжается через 5 с без получения урона.\nСоздаётся на верстаке или находится в луте.'
+  buffAposShieldUpName    = 'Energy Shield', 'Энергощит'
+  buffAposShieldUpDesc    = 'Charged: ranged attacks deal no damage. Any hit drains it.', 'Заряжен: дальние атаки не наносят урона. Любое попадание разряжает его.'
   # Grand Slam is replaced by Rage (full texts)
   perkGrandSlamName       = 'Rage', 'Ярость'
   perkGrandSlamDesc       = 'Every kill with a club, bat or sledgehammer fuels your rage: more damage and faster attacks for a short time.', 'Каждое убийство дубинкой, битой или кувалдой разжигает ярость: больше урона и быстрее атаки на короткое время.'

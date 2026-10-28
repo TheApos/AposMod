@@ -1,0 +1,12 @@
+<configs>
+	<!-- Energy Shield armor mod: craftable at a workbench -->
+	<append xpath="/recipes">
+		<recipe name="modArmorAposEnergyShield" count="1" craft_area="workbench" tags="workbenchCrafting">
+			<ingredient name="resourceElectricParts" count="6"/>
+			<ingredient name="resourceMechanicalParts" count="4"/>
+			<ingredient name="resourceScrapPolymers" count="10"/>
+			<ingredient name="resourceForgedIron" count="10"/>
+			<ingredient name="resourceDuctTape" count="2"/>
+		</recipe>
+	</append>
+</configs>
