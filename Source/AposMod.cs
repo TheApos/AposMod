@@ -43,6 +43,17 @@ public class AposDamageNumbers : MonoBehaviour
     Camera cam;
     GUIStyle style;
 
+    // TEMP diagnostics (remove once damage numbers are confirmed in game)
+    bool loggedCamera;
+    bool loggedDraw;
+    int debugHitsLogged;
+
+    static string Describe(Camera c)
+    {
+        if (c == null) return "null";
+        return c.name + "(enabled=" + c.enabled + ", rect=" + c.pixelRect + ", rt=" + (c.targetTexture != null) + ")";
+    }
+
     void Awake()
     {
         // Skip the IMGUI layout pass: we only draw labels, so this avoids per-frame work and garbage
@@ -62,6 +73,13 @@ public class AposDamageNumbers : MonoBehaviour
             return;
         }
         cam = player.playerCamera;
+        if (!loggedCamera)
+        {
+            loggedCamera = true;
+            Camera main = Camera.main;
+            Debug.Log("[AposMod] DamageNumbers: playerCamera=" + Describe(cam) + " Camera.main=" + Describe(main)
+                + " screen=" + Screen.width + "x" + Screen.height);
+        }
 
         seen.Clear();
         List<Entity> list = gm.World.Entities.list;
@@ -119,11 +137,26 @@ public class AposDamageNumbers : MonoBehaviour
         p.Size = (headshot || kill) ? 30 : 22;
         p.Start = Time.time;
         popups.Add(p);
+
+        // TEMP diagnostics: where the first hits would be drawn
+        if (debugHitsLogged < 10 && cam != null)
+        {
+            debugHitsLogged++;
+            Camera main = Camera.main;
+            Debug.Log("[AposMod] DamageNumbers hit: " + damage + " on " + e.EntityName + " pos=" + p.Pos
+                + " vp(player)=" + cam.WorldToViewportPoint(p.Pos)
+                + " vp(main)=" + (main != null ? main.WorldToViewportPoint(p.Pos).ToString() : "null"));
+        }
     }
 
     void OnGUI()
     {
         if (popups.Count == 0 || cam == null || Event.current.type != EventType.Repaint) return;
+        if (!loggedDraw)
+        {
+            loggedDraw = true;
+            Debug.Log("[AposMod] DamageNumbers: OnGUI drawing " + popups.Count + " popup(s)");
+        }
         if (style == null)
         {
             style = new GUIStyle(GUI.skin.label);

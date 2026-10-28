@@ -9,7 +9,7 @@
 ## Layout
 - `ModInfo.xml` — mod name/version (bump on releases).
 - `Config/*.xml` — XPath patches (`set`, `append`, `insertBefore`, `csv`) over vanilla configs.
-- `Config/Localization.txt` — columns `english` and `russian`; **fill both** (the game client runs in Russian; an empty column shows a blank text).
+- `Config/Localization.csv` — must be **.csv** (game 3.x ignores Localization.txt). Columns `english` and `russian`; **fill both** (the game client runs in Russian; an empty column shows a blank text).
 - `Source/AposMod.cs` — C# part (floating damage numbers, no Harmony). Build: `& Source/build.ps1` → `AposMod.dll` (gitignored).
 
 ## Build
