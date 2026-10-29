@@ -40,7 +40,8 @@
 			</effect_group>
 		</item_modifier>
 
-		<item_modifier name="modWeaponAposShock" installable_tags="weapon" modifier_tags="aposElement" blocked_tags="noMods,turretRanged,turretMelee" type="attachment">
+		<!-- batons (perkElectrocutioner) already shock with every hit, so Tesla is blocked on them -->
+		<item_modifier name="modWeaponAposShock" installable_tags="weapon" modifier_tags="aposElement" blocked_tags="noMods,turretRanged,turretMelee,perkElectrocutioner" type="attachment">
 			<property name="Extends" value="modGeneralMaster" param1="CustomIcon"/>
 			<property name="CustomIcon" value="modMeleeStunBatonRepulsor"/>
 			<property name="CustomIconTint" value="80,170,255"/>
