@@ -285,9 +285,11 @@ public class AposElites : MonoBehaviour
     public static int ScrapEridium(ItemValue iv)
     {
         if (iv == null || iv.ItemClass == null) return 0;
-        if (iv.ItemClass.Name.StartsWith("aposLegend")) return 50;
+        // half of the Eridium put into sharpening comes back
+        int sharpened = AposTiers.Spent(iv) / 2;
+        if (iv.ItemClass.Name.StartsWith("aposLegend")) return 50 + sharpened;
         int affixes = AposAffixes.Decompose(iv).Count;
-        return affixes * 2 * (iv.Quality >= 6 ? 2 : 1);
+        return affixes * 2 * (iv.Quality >= 6 ? 2 : 1) + sharpened;
     }
 
     public static void GiveEridium(int count)
