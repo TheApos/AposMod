@@ -53,7 +53,7 @@
 
 	<append xpath="/buffs">
 		<!-- ===== Elemental reactions (Gunfire Reborn style) =====
-		     fire + acid  = Explosion: 60 to the target and every zombie within 4 m
+		     fire + acid  = Explosion: 50% of the last hit (min 60) to the target and every zombie within 4 m
 		     fire + shock = Confusion: 5 s, -60% speed, -30 physical resist, 1.5 s stun
 		     shock + acid = Miasma:    6 s, -20% max health (current health drops with it), bleeding
 		     3 s cooldown per target. buffAposReactionHit (short) lets the damage numbers colour reaction damage. -->
@@ -67,15 +67,7 @@
 					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
 					<requirement name="HasBuff" buff="buffAposCorroded"/>
 				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" target="otherAOE" range="4" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-60">
-					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
-					<requirement name="HasBuff" buff="buffAposCorroded"/>
-				</triggered_effect>
 				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" target="otherAOE" range="4" target_tags="zombie,animal" buff="buffAposReactionHit">
-					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
-					<requirement name="HasBuff" buff="buffAposCorroded"/>
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" target="otherAOE" range="4" target_tags="zombie,animal" buff="buffAposSplash">
 					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
 					<requirement name="HasBuff" buff="buffAposCorroded"/>
 				</triggered_effect>
@@ -83,7 +75,8 @@
 					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
 					<requirement name="HasBuff" buff="buffAposCorroded"/>
 				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="-60">
+				<!-- damage: 50% of the last hit (at least 60) here and within 4 m, dealt by Source/AposSplinter.cs -->
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="aposExplodeReq" operation="set" value="1">
 					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
 					<requirement name="HasBuff" buff="buffAposCorroded"/>
 				</triggered_effect>
@@ -333,12 +326,12 @@
 			</effect_group>
 		</buff>
 
-		<!-- Acid mod (on the zombie): -25% physical resistance and 3 HP/s for 6 s (aposCorrodeTime, refreshed by acid hits) -->
+		<!-- Acid mod (on the zombie): -25% physical resistance for 6 s (aposCorrodeTime, refreshed by acid hits);
+		     the damage per second scales with your last hit (acid scaling group below) -->
 		<buff name="buffAposCorroded" hidden="true">
 			<stack_type value="ignore"/>
 			<effect_group>
 				<passive_effect name="PhysicalDamageResist" operation="base_add" value="-25"/>
-				<passive_effect name="HealthChangeOT" operation="base_add" value="-3"/>
 				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposElementCheck"/>
 				<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffAposElementCheck"/>
 				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposCorrodeTime" operation="add" value="-1"/>
@@ -385,6 +378,47 @@
 				</triggered_effect>
 			</effect_group>
 		</buff>
+	</append>
+
+	<!-- ===================== Elemental damage scales with the weapon =====================
+	     Source/AposCombat.cs stores the damage of your last hit on the zombie in aposHitDmg. Every second the element
+	     deals a share of it on top of the vanilla tick, never less than a minimum:
+	     fire (mod, flaming arrows, legendaries) 10%/s, min 10 · shock 15%/s, min 10 · acid 8%/s, min 8.
+	     Only on zombies/animals you have hit (aposHitDmg > 0); players are never affected. -->
+	<append xpath="/buffs/buff[@name='buffBurningElement' or @name='buffBurningFlamingArrow']">
+		<effect_group name="AposMod fire scaling">
+			<requirement name="!EntityTagCompare" tags="player"/>
+			<requirement name="CVarCompare" cvar="aposHitDmg" operation="GT" value="0"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposFireTick" operation="set" value="@aposHitDmg"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposFireTick" operation="multiply" value="-.1"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposFireTick" operation="set" value="-10">
+				<requirement name="CVarCompare" cvar="aposFireTick" operation="GT" value="-10"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@aposFireTick"/>
+		</effect_group>
+	</append>
+	<append xpath="/buffs/buff[@name='buffShocked']">
+		<effect_group name="AposMod shock scaling">
+			<requirement name="!EntityTagCompare" tags="player"/>
+			<requirement name="CVarCompare" cvar="aposHitDmg" operation="GT" value="0"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposShockTick" operation="set" value="@aposHitDmg"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposShockTick" operation="multiply" value="-.15"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposShockTick" operation="set" value="-10">
+				<requirement name="CVarCompare" cvar="aposShockTick" operation="GT" value="-10"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@aposShockTick"/>
+		</effect_group>
+	</append>
+	<append xpath="/buffs/buff[@name='buffAposCorroded']">
+		<effect_group name="AposMod acid scaling">
+			<requirement name="CVarCompare" cvar="aposHitDmg" operation="GT" value="0"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposAcidTick" operation="set" value="@aposHitDmg"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposAcidTick" operation="multiply" value="-.08"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposAcidTick" operation="set" value="-8">
+				<requirement name="CVarCompare" cvar="aposAcidTick" operation="GT" value="-8"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@aposAcidTick"/>
+		</effect_group>
 	</append>
 
 	<!-- ===================== 1.0: buffs for attribute and perk highlights (progression.xml) ===================== -->

@@ -89,11 +89,11 @@ $extra = [ordered]@{
   buffAposShieldUpName    = 'Energy Shield', 'Энергощит'
   buffAposShieldUpDesc    = 'Charged: ranged attacks deal no damage. Any hit drains it.', 'Заряжен: дальние атаки не наносят урона. Любое попадание разряжает его.'
   modWeaponAposFire       = 'Incendiary Mod', 'Мод: зажигательный'
-  modWeaponAposFireDesc   = '[FFB400]AposMod: Fire[-]\nAny weapon. Hits have a 20% chance to set the target on fire.\nOnly one elemental mod per weapon.\n[FF3DF2]Reactions[-] (two elements on one zombie): fire + acid = Explosion, fire + shock = Confusion, shock + acid = Miasma.', '[FFB400]AposMod: Огонь[-]\nЛюбое оружие. Попадания с шансом 20% поджигают цель.\nНа оружие — только один стихийный мод.\n[FF3DF2]Реакции[-] (две стихии на одном зомби): огонь + кислота = Взрыв, огонь + ток = Замешательство, ток + кислота = Миазмы.'
+  modWeaponAposFireDesc   = '[FFB400]AposMod: Fire[-]\nAny weapon. Hits have a 20% chance to set the target on fire for 10 s: every second it loses 10% of your last hit (at least 10).\nOnly one elemental mod per weapon.\n[FF3DF2]Reactions[-] (two elements on one zombie): fire + acid = Explosion (50% of your last hit, at least 60, within 4 m), fire + shock = Confusion, shock + acid = Miasma.', '[FFB400]AposMod: Огонь[-]\nЛюбое оружие. Попадания с шансом 20% поджигают цель на 10 с: каждую секунду она теряет 10% урона вашего последнего удара (не меньше 10).\nНа оружие — только один стихийный мод.\n[FF3DF2]Реакции[-] (две стихии на одном зомби): огонь + кислота = Взрыв (50% урона последнего удара, не меньше 60, в радиусе 4 м), огонь + ток = Замешательство, ток + кислота = Миазмы.'
   modWeaponAposShock      = 'Tesla Mod', 'Мод: тесла'
-  modWeaponAposShockDesc  = '[FFB400]AposMod: Shock[-]\nAny weapon. Hits have a 20% chance to shock the target for 1.5 s.\nOnly one elemental mod per weapon.\n[FF3DF2]Reactions[-] (two elements on one zombie): fire + acid = Explosion, fire + shock = Confusion, shock + acid = Miasma.', '[FFB400]AposMod: Ток[-]\nЛюбое оружие. Попадания с шансом 20% шокируют цель на 1.5 с.\nНа оружие — только один стихийный мод.\n[FF3DF2]Реакции[-] (две стихии на одном зомби): огонь + кислота = Взрыв, огонь + ток = Замешательство, ток + кислота = Миазмы.'
+  modWeaponAposShockDesc  = '[FFB400]AposMod: Shock[-]\nAny weapon. Hits have a 20% chance to shock the target for 1.5 s: every second 15% of your last hit (at least 10).\nOnly one elemental mod per weapon.\n[FF3DF2]Reactions[-] (two elements on one zombie): fire + acid = Explosion (50% of your last hit, at least 60, within 4 m), fire + shock = Confusion, shock + acid = Miasma.', '[FFB400]AposMod: Ток[-]\nЛюбое оружие. Попадания с шансом 20% шокируют цель на 1.5 с: каждую секунду 15% урона вашего последнего удара (не меньше 10).\nНа оружие — только один стихийный мод.\n[FF3DF2]Реакции[-] (две стихии на одном зомби): огонь + кислота = Взрыв (50% урона последнего удара, не меньше 60, в радиусе 4 м), огонь + ток = Замешательство, ток + кислота = Миазмы.'
   modWeaponAposAcid       = 'Corrosive Mod', 'Мод: кислотный'
-  modWeaponAposAcidDesc   = '[FFB400]AposMod: Acid[-]\nAny weapon. Hits have a 25% chance to corrode the target for 6 s: it takes more physical damage and loses 3 HP per second.\nOnly one elemental mod per weapon.\n[FF3DF2]Reactions[-] (two elements on one zombie): fire + acid = Explosion, fire + shock = Confusion, shock + acid = Miasma.', '[FFB400]AposMod: Кислота[-]\nЛюбое оружие. Попадания с шансом 25% разъедают цель на 6 с: она получает больше физического урона и теряет 3 HP в секунду.\nНа оружие — только один стихийный мод.\n[FF3DF2]Реакции[-] (две стихии на одном зомби): огонь + кислота = Взрыв, огонь + ток = Замешательство, ток + кислота = Миазмы.'
+  modWeaponAposAcidDesc   = '[FFB400]AposMod: Acid[-]\nAny weapon. Hits have a 25% chance to corrode the target for 6 s: it takes more physical damage and every second loses 8% of your last hit (at least 8).\nOnly one elemental mod per weapon.\n[FF3DF2]Reactions[-] (two elements on one zombie): fire + acid = Explosion (50% of your last hit, at least 60, within 4 m), fire + shock = Confusion, shock + acid = Miasma.', '[FFB400]AposMod: Кислота[-]\nЛюбое оружие. Попадания с шансом 25% разъедают цель на 6 с: она получает больше физического урона и каждую секунду теряет 8% урона вашего последнего удара (не меньше 8).\nНа оружие — только один стихийный мод.\n[FF3DF2]Реакции[-] (две стихии на одном зомби): огонь + кислота = Взрыв (50% урона последнего удара, не меньше 60, в радиусе 4 м), огонь + ток = Замешательство, ток + кислота = Миазмы.'
   aposLegendHarold           = '[FF9900]Unkempt Harold[-]', '[FF9900]Растрёпанный Гарольд[-]'
   aposLegendHaroldDesc       = '[FF9900]Legendary .44 Desert Vulture.[-]\nEvery shot fires 3 bullets in a wide fan. Why aim when you can do everything at once?', '[FF9900]Легендарный .44 «Пустынный стервятник».[-]\nКаждый выстрел — 3 пули широким веером. Зачем целиться, если можно всё и сразу?'
   aposLegendLadyFist         = '[FF9900]Lady Fist[-]', '[FF9900]Леди Кулак[-]'
@@ -257,45 +257,48 @@ foreach ($a in $attrHighlights.Keys) {
 }
 
 # Affix names for the item tooltip (Source/AposAffixes.cs: "aposAffix" + key, followed by the value)
+# Plain stat names (no flavour names: the tooltip line reads "Damage +35%")
 $affixNames = [ordered]@{
-  Rapid = 'Rapid: fire rate', 'Скорострельный: темп стрельбы'
-  Precise = 'Precise: spread', 'Точный: разброс'
-  LongShot = 'Long Shot: range', 'Дальнобойный: дальность'
-  Brutal = 'Brutal: damage', 'Жестокий: урон'
-  Quickload = 'Quickload: reload speed', 'Быстрая перезарядка: скорость перезарядки'
-  Scatter = 'Scatter: pellets', 'Картечь: дробины'
-  Twin = 'Twin Shot', 'Двойной выстрел'
+  Rapid = 'Fire rate', 'Скорострельность'
+  Precise = 'Spread', 'Разброс'
+  LongShot = 'Range', 'Дальность'
+  Brutal = 'Damage', 'Урон'
+  Quickload = 'Reload speed', 'Скорость перезарядки'
+  Scatter = 'Pellets', 'Дробины'
+  Twin = 'Second bullet', 'Вторая пуля'
   TwinDesc = '2 bullets per shot, each -40% damage', '2 пули за выстрел, каждая -40% урона'
-  Deadly = 'Deadly: headshot damage', 'Смертельный: урон в голову'
-  Extended = 'Extended: magazine', 'Расширенный: магазин'
-  Swift = 'Swift: move speed', 'Быстроногий: скорость передвижения'
-  Steady = 'Steady: recoil', 'Устойчивый: отдача'
-  Fury = 'Fury: attack speed', 'Неистовый: скорость атаки'
-  Tireless = 'Tireless: stamina per attack', 'Неутомимый: выносливость за удар'
-  Reach = 'Reach: attack range', 'Длинная рука: дальность удара'
-  Leech = 'Leech: health from damage', 'Вампиризм: здоровье от урона'
-  Butcher = 'Butcher: dismember chance', 'Мясник: шанс отрубить конечность'
-  Durable = 'Durable: durability', 'Прочный: прочность'
-  Wrecker = 'Wrecker: block damage', 'Разрушитель: урон блокам'
+  Deadly = 'Headshot damage', 'Урон в голову'
+  Extended = 'Magazine size', 'Размер магазина'
+  Swift = 'Move speed', 'Скорость передвижения'
+  Steady = 'Recoil', 'Отдача'
+  Fury = 'Attack speed', 'Скорость атаки'
+  Tireless = 'Stamina per attack', 'Выносливость за удар'
+  Reach = 'Attack range', 'Дальность удара'
+  Leech = 'Life steal (share of damage)', 'Лечение от урона'
+  Butcher = 'Dismember chance', 'Шанс отрубить конечность'
+  Durable = 'Durability', 'Прочность'
+  Wrecker = 'Block damage', 'Урон по блокам'
 }
 foreach ($k in $affixNames.Keys) { $extra["aposAffix$k"] = $affixNames[$k] }
 
-# Legendaries: always quality 6 + fixed affixes (Source/gen_legend.ps1)
+# Legendaries: always quality 6 + fixed affixes (values as in Source/gen_legend.ps1)
 $legendAffixes = [ordered]@{
-  aposLegendHarold = 'Brutal +35%, Rapid +25%, Extended +60%', 'Жестокий +35%, Скорострельный +25%, Расширенный +60%'
-  aposLegendLadyFist = 'Deadly +60%, Precise -40%, Quickload +40%', 'Смертельный +60%, Точный -40%, Быстрая перезарядка +40%'
-  aposLegendDragonBreath = 'Scatter +35%, Brutal +35%, Quickload +40%', 'Картечь +35%, Жестокий +35%, Быстрая перезарядка +40%'
-  aposLegendRipper = 'Brutal +35%, Fury +20%, Leech 6%', 'Жестокий +35%, Неистовый +20%, Вампиризм 6%'
-  aposLegendThunderclap = 'Brutal +35%, Tireless -40%, Deadly +60%', 'Жестокий +35%, Неутомимый -40%, Смертельный +60%'
-  aposLegendHornet = 'Extended +60%, Rapid +25%, Steady -50%', 'Расширенный +60%, Скорострельный +25%, Устойчивый -50%'
-  aposLegendStormFist = 'Fury +20%, Brutal +35%, Swift +10%', 'Неистовый +20%, Жестокий +35%, Быстроногий +10%'
-  aposLegendArtemis = 'Brutal +35%, Deadly +60%, Quickload +40%', 'Жестокий +35%, Смертельный +60%, Быстрая перезарядка +40%'
-  aposLegendBigBoom = 'Brutal +35%, Quickload +40%, Long Shot +60%', 'Жестокий +35%, Быстрая перезарядка +40%, Дальнобойный +60%'
-  aposLegendPredator = 'Deadly +60%, Long Shot +60%, Steady -50%', 'Смертельный +60%, Дальнобойный +60%, Устойчивый -50%'
+  aposLegendHarold = @(@('Brutal', '+35%'), @('Rapid', '+25%'), @('Extended', '+60%'))
+  aposLegendLadyFist = @(@('Deadly', '+60%'), @('Precise', '-40%'), @('Quickload', '+40%'))
+  aposLegendDragonBreath = @(@('Scatter', '+35%'), @('Brutal', '+35%'), @('Quickload', '+40%'))
+  aposLegendRipper = @(@('Brutal', '+35%'), @('Fury', '+20%'), @('Leech', '6%'))
+  aposLegendThunderclap = @(@('Brutal', '+35%'), @('Tireless', '-40%'), @('Deadly', '+60%'))
+  aposLegendHornet = @(@('Extended', '+60%'), @('Rapid', '+25%'), @('Steady', '-50%'))
+  aposLegendStormFist = @(@('Fury', '+20%'), @('Brutal', '+35%'), @('Swift', '+10%'))
+  aposLegendArtemis = @(@('Brutal', '+35%'), @('Deadly', '+60%'), @('Quickload', '+40%'))
+  aposLegendBigBoom = @(@('Brutal', '+35%'), @('Quickload', '+40%'), @('LongShot', '+60%'))
+  aposLegendPredator = @(@('Deadly', '+60%'), @('LongShot', '+60%'), @('Steady', '-50%'))
 }
 foreach ($k in $legendAffixes.Keys) {
+  $en = ($legendAffixes[$k] | ForEach-Object { $affixNames[$_[0]][0] + ' ' + $_[1] }) -join ', '
+  $ru = ($legendAffixes[$k] | ForEach-Object { $affixNames[$_[0]][1] + ' ' + $_[1] }) -join ', '
   $d = $extra["${k}Desc"]
-  $extra["${k}Desc"] = ($d[0] + '\n[FFD24D]Always quality 6. Affixes: ' + $legendAffixes[$k][0] + '.[-]'), ($d[1] + '\n[FFD24D]Всегда 6 качества. Аффиксы: ' + $legendAffixes[$k][1] + '.[-]')
+  $extra["${k}Desc"] = ($d[0] + '\n[FFD24D]Always quality 6. Bonuses: ' + $en + '.[-]'), ($d[1] + '\n[FFD24D]Всегда 6 качества. Бонусы: ' + $ru + '.[-]')
 }
 
 function Csv($s) { '"' + $s.Replace('"', '""') + '"' }

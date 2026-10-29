@@ -56,6 +56,9 @@ public static class AposCombat
         EntityPlayer attacker = world.GetEntity(source.getEntityId()) as EntityPlayer;
         if (attacker == null) return;
 
+        // the last hit's damage: elemental ticks and the Explosion reaction scale with it (buffs.xml)
+        target.Buffs.SetCustomVar("aposHitDmg", response.Strength);
+
         // Strength Mastery 5 "Crippling Blows": a club/sledge power hit flagged the target (progression.xml)
         if (!response.Fatal && target.Buffs.GetCustomVar("aposCripple") > 0f)
         {
