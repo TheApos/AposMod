@@ -16,9 +16,16 @@
 		<item name="modArmorAposEnergyShield"/>
 	</append>
 
-	<!-- ===== Legendary weapons: rare drop from tier 4 (4%) and tier 5 (10%) final chests ===== -->
+	<!-- ===== Legendary weapons: rare drop from tier 4 (4%) and tier 5 (10%) final chests, always quality 6 ===== -->
+	<append xpath="/lootcontainers/lootqualitytemplates[1]">
+		<lootqualitytemplate name="QLTemplateApos6">
+			<qualitytemplate level="0,999999" default_quality="6">
+				<loot quality="6" prob="1"/>
+			</qualitytemplate>
+		</lootqualitytemplate>
+	</append>
 	<insertBefore xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT4']">
-		<lootgroup name="groupAposLegendary" loot_quality_template="QLTemplateT3">
+		<lootgroup name="groupAposLegendary" loot_quality_template="QLTemplateApos6">
 			<item name="aposLegendHarold"/>
 			<item name="aposLegendLadyFist"/>
 			<item name="aposLegendDragonBreath"/>
