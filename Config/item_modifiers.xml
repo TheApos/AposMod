@@ -35,7 +35,7 @@
 					<requirement name="IsAlive" target="other"/>
 					<requirement name="!EntityTagCompare" target="other" tags="trader"/>
 					<requirement name="CVarCompare" target="other" cvar="_underwater" operation="LT" value="0.3"/>
-					<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="20"/>
+					<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="30"/>
 				</triggered_effect>
 			</effect_group>
 		</item_modifier>
@@ -74,4 +74,12 @@
 			</effect_group>
 		</item_modifier>
 	</append>
+	<!-- ===== Burning Shaft: half the vanilla ignite chance (5-30% instead of 10-60%): fire now scales with the hit ===== -->
+	<set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$burningShaft' and @value='10']/@value">5</set>
+	<set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$burningShaft' and @value='20']/@value">10</set>
+	<set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$burningShaft' and @value='30']/@value">15</set>
+	<set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$burningShaft' and @value='40']/@value">20</set>
+	<set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$burningShaft' and @value='50']/@value">25</set>
+	<set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$burningShaft' and @value='60']/@value">30</set>
+	<set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//display_value[@name='dburningShaft']/@value">.05,.1,.15,.2,.25,.3</set>
 </configs>

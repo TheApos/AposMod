@@ -415,6 +415,19 @@
 			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@aposShockTick"/>
 		</effect_group>
 	</append>
+	<!-- Bleeding on zombies you hit: 5% of the last hit per second, min 5 (same idea as the elements) -->
+	<append xpath="/buffs/buff[@name='buffInjuryBleeding']">
+		<effect_group name="AposMod bleed scaling">
+			<requirement name="!EntityTagCompare" tags="player"/>
+			<requirement name="CVarCompare" cvar="aposHitDmg" operation="GT" value="0"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposBleedTick" operation="set" value="@aposHitDmg"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposBleedTick" operation="multiply" value="-.05"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposBleedTick" operation="set" value="-5">
+				<requirement name="CVarCompare" cvar="aposBleedTick" operation="GT" value="-5"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@aposBleedTick"/>
+		</effect_group>
+	</append>
 	<append xpath="/buffs/buff[@name='buffAposCorroded']">
 		<effect_group name="AposMod acid scaling">
 			<requirement name="CVarCompare" cvar="aposHitDmg" operation="GT" value="0"/>
