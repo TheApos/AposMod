@@ -36,11 +36,18 @@ public static class AposCombat
         if (target is EntityPlayer)
         {
             if (!response.Fatal) SecondWind(target as EntityPlayer, healthBefore - response.Strength);
+            // Vampire elite heals by half the damage it deals
+            EntityAlive biter = world.GetEntity(source.getEntityId()) as EntityAlive;
+            if (biter != null && !biter.IsDead() && AposElites.IsElite(biter) && AposElites.Has(biter, "Vampire"))
+            {
+                biter.AddHealth(Mathf.Max(1, Math.Min(response.Strength, healthBefore) / 2));
+            }
             return;
         }
 
         int dealt = Math.Min(response.Strength, healthBefore);
         if (dealt <= 0) return;
+        AposElites.NoteDamaged(target); // Regenerator elites wait 3 s after damage
 
         // traps and turret blocks: the damage carries the block position and its owner
         if (source.BlockPosition != Vector3i.zero)
@@ -188,9 +195,15 @@ public static class AposCombat
 [HarmonyPatch(typeof(EntityAlive), "damageEntityLocal")]
 public static class AposCombatDamagePatch
 {
-    static void Prefix(EntityAlive __instance, out int __state)
+    static void Prefix(EntityAlive __instance, DamageSource _damageSource, ref int _strength, out int __state)
     {
         __state = __instance.Health;
+        // Armored elite: half damage except headshots
+        if (_damageSource != null && AposElites.IsElite(__instance) && AposElites.Has(__instance, "Armored")
+            && (_damageSource.GetEntityDamageBodyPart(__instance) & EnumBodyPartHit.Head) == 0)
+        {
+            _strength = Mathf.Max(1, _strength / 2);
+        }
     }
 
     static void Postfix(EntityAlive __instance, DamageSource _damageSource, ref DamageResponse __result, int __state)

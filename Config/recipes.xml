@@ -24,5 +24,26 @@
 			<ingredient name="resourceMechanicalParts" count="3"/>
 			<ingredient name="resourceScrapPolymers" count="6"/>
 		</recipe>
+		<!-- Eridium modules (Source/AposElites.cs) -->
+		<recipe name="modWeaponAposReroll" count="1" craft_area="workbench" tags="workbenchCrafting">
+			<ingredient name="resourceAposEridium" count="10"/>
+		</recipe>
+		<recipe name="modWeaponAposLock" count="1" craft_area="workbench" tags="workbenchCrafting">
+			<ingredient name="resourceAposEridium" count="25"/>
+		</recipe>
+		<recipe name="modWeaponAposTemper" count="1" craft_area="workbench" tags="workbenchCrafting">
+			<ingredient name="resourceAposEridium" count="40"/>
+		</recipe>
+		<!-- Legendaries for 300 Eridium: always quality 6 (CraftingTier for the aposLegend tag, entityclasses.xml) -->
+		<recipe name="aposLegendHarold" count="1" craft_area="workbench" tags="workbenchCrafting"><ingredient name="resourceAposEridium" count="300"/></recipe>
+		<recipe name="aposLegendLadyFist" count="1" craft_area="workbench" tags="workbenchCrafting"><ingredient name="resourceAposEridium" count="300"/></recipe>
+		<recipe name="aposLegendDragonBreath" count="1" craft_area="workbench" tags="workbenchCrafting"><ingredient name="resourceAposEridium" count="300"/></recipe>
+		<recipe name="aposLegendRipper" count="1" craft_area="workbench" tags="workbenchCrafting"><ingredient name="resourceAposEridium" count="300"/></recipe>
+		<recipe name="aposLegendThunderclap" count="1" craft_area="workbench" tags="workbenchCrafting"><ingredient name="resourceAposEridium" count="300"/></recipe>
+		<recipe name="aposLegendHornet" count="1" craft_area="workbench" tags="workbenchCrafting"><ingredient name="resourceAposEridium" count="300"/></recipe>
+		<recipe name="aposLegendStormFist" count="1" craft_area="workbench" tags="workbenchCrafting"><ingredient name="resourceAposEridium" count="300"/></recipe>
+		<recipe name="aposLegendArtemis" count="1" craft_area="workbench" tags="workbenchCrafting"><ingredient name="resourceAposEridium" count="300"/></recipe>
+		<recipe name="aposLegendBigBoom" count="1" craft_area="workbench" tags="workbenchCrafting"><ingredient name="resourceAposEridium" count="300"/></recipe>
+		<recipe name="aposLegendPredator" count="1" craft_area="workbench" tags="workbenchCrafting"><ingredient name="resourceAposEridium" count="300"/></recipe>
 	</append>
 </configs>

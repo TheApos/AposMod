@@ -553,6 +553,71 @@
 		</buff>
 	</append>
 
+	<!-- ===================== 1.1: elite zombies (Source/AposElites.cs adds these on spawn) =====================
+	     Armored, Regen, Explosive, Vampire and Summoner are markers: their logic is in C#. -->
+	<append xpath="/buffs">
+		<buff name="buffAposElite" hidden="true" remove_on_death="false">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<passive_effect name="HealthMax" operation="perc_add" value="1"/>
+			</effect_group>
+		</buff>
+		<buff name="buffAposEliteArmored" hidden="true"><stack_type value="ignore"/></buff>
+		<buff name="buffAposEliteRegen" hidden="true"><stack_type value="ignore"/></buff>
+		<buff name="buffAposEliteExplosive" hidden="true"><stack_type value="ignore"/></buff>
+		<buff name="buffAposEliteVampire" hidden="true"><stack_type value="ignore"/></buff>
+		<buff name="buffAposEliteSummoner" hidden="true"><stack_type value="ignore"/></buff>
+		<buff name="buffAposEliteFast" hidden="true">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<!-- walking pace becomes a run, running gets +60% -->
+				<passive_effect name="WalkSpeed" operation="perc_add" value="1.5"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value=".6"/>
+			</effect_group>
+		</buff>
+		<buff name="buffAposEliteBurning" hidden="true">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<passive_effect name="BuffResistance" operation="base_add" value="1" tags="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov,buffBurningEnvironment"/>
+				<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffBurningElement">
+					<requirement name="EntityTagCompare" target="other" tags="player"/>
+				</triggered_effect>
+			</effect_group>
+		</buff>
+		<buff name="buffAposEliteElectric" hidden="true">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<passive_effect name="BuffResistance" operation="base_add" value="1" tags="buffShocked"/>
+				<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffShocked" duration="1">
+					<requirement name="EntityTagCompare" target="other" tags="player"/>
+				</triggered_effect>
+			</effect_group>
+		</buff>
+		<buff name="buffAposEliteAcidic" hidden="true">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffAposAcidArmor">
+					<requirement name="EntityTagCompare" target="other" tags="player"/>
+				</triggered_effect>
+			</effect_group>
+		</buff>
+		<buff name="buffAposEliteGiant" hidden="true">
+			<stack_type value="ignore"/>
+			<effect_group>
+				<passive_effect name="HealthMax" operation="perc_add" value=".5"/>
+				<passive_effect name="EntityDamage" operation="perc_add" value=".5"/>
+			</effect_group>
+		</buff>
+		<!-- on the player: hit by an Acidic elite -->
+		<buff name="buffAposAcidArmor" name_key="buffAposAcidArmorName" description_key="buffAposAcidArmorDesc" icon="ui_game_symbol_defense" icon_color="120,255,60">
+			<stack_type value="replace"/>
+			<duration value="10"/>
+			<effect_group>
+				<passive_effect name="PhysicalDamageResist" operation="base_add" value="-20"/>
+			</effect_group>
+		</buff>
+	</append>
+
 	<!-- Charismatic Nature 5 "Leader": the perk owner gets the Charismatic bonuses twice -->
 	<append xpath="/buffs/buff[@name='buffPerkCharismaticNature']">
 		<effect_group name="AposMod leader">

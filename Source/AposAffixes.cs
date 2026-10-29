@@ -114,7 +114,15 @@ public static class AposAffixes
         return null;
     }
 
-    // Replaces vanilla boosted rolls with a fresh affix set. forceMax = roll the full cap (console command).
+    // One affix on a weapon: which affix and its value (fraction, 0.25 = +25%)
+    public class Entry
+    {
+        public AposAffix Affix;
+        public float Value;
+        public Entry(AposAffix a, float v) { Affix = a; Value = v; }
+    }
+
+    // Replaces vanilla boosted rolls with a fresh affix set. forceMax = roll the full cap (console command, elites).
     public static void Roll(ItemValue iv, bool forceMax)
     {
         ItemClass ic = iv.ItemClass;
@@ -131,21 +139,72 @@ public static class AposAffixes
         }
         if (!forceMax && LootingPlayer != null && Level(LootingPlayer, "perkLuckyLooter") >= 5) count = Math.Min(cap, count + 1);
 
-        List<AposAffix> pool = new List<AposAffix>();
-        foreach (AposAffix a in All) if (Fits(a, ic, kind, quality)) pool.Add(a);
-
-        List<ItemValue.Stat> stats = new List<ItemValue.Stat>();
-        if (iv.Stats != null) foreach (ItemValue.Stat s in iv.Stats) if (!s.isBoosted && s.value != 0) stats.Add(s);
-
-        for (int i = 0; i < count && pool.Count > 0; i++)
+        List<Entry> list = new List<Entry>();
+        for (int i = 0; i < count; i++)
         {
-            AposAffix a = pool[rand.Next(pool.Count)];
-            pool.RemoveAll(p => p.Types[0] == a.Types[0]); // no duplicates (Scatter / Twin share a stat)
-            float v = a.Roll(quality, rand);
-            foreach (PassiveEffects t in a.Types) Add(stats, t, v);
-            if (a.Only == 2) Add(stats, PassiveEffects.EntityDamage, ScatterDamage);
+            AposAffix a = Pick(ic, kind, quality, list);
+            if (a == null) break;
+            list.Add(new Entry(a, a.Roll(quality, rand)));
+        }
+        iv.RemoveMetaData(LockKey);
+        Compose(iv, list, true);
+    }
+
+    // A random affix that fits the weapon and is not on it yet (Scatter and Twin share a stat, so only one of them)
+    static AposAffix Pick(ItemClass ic, int kind, int quality, List<Entry> have)
+    {
+        List<AposAffix> pool = new List<AposAffix>();
+        foreach (AposAffix a in All)
+        {
+            if (!Fits(a, ic, kind, quality)) continue;
+            bool taken = false;
+            foreach (Entry e in have) if (e.Affix.Types[0] == a.Types[0]) taken = true;
+            if (!taken) pool.Add(a);
+        }
+        return pool.Count > 0 ? pool[rand.Next(pool.Count)] : null;
+    }
+
+    // Reads the affixes back from the stats (Twin's -40% damage is separated from Brutal)
+    public static List<Entry> Decompose(ItemValue iv)
+    {
+        List<Entry> list = new List<Entry>();
+        int kind = Kind(iv.ItemClass);
+        if (kind == 0 || iv.Stats == null) return list;
+        bool twin = IsTwin(iv);
+        foreach (ItemValue.Stat s in iv.Stats)
+        {
+            if (!s.isBoosted) continue;
+            AposAffix a = Find(s.type, kind == 1);
+            if (a == null) continue;
+            float v = s.value * StatStep;
+            if (s.type == PassiveEffects.RoundRayCount && twin) a = FindKey("Twin");
+            if (s.type == PassiveEffects.EntityDamage && twin)
+            {
+                v = (1f + v) / (1f + ScatterDamage) - 1f;
+                if (Math.Abs(v) < 0.005f) continue;
+            }
+            list.Add(new Entry(a, v));
+        }
+        return list;
+    }
+
+    // Writes the affixes as stats; keepBase keeps the small unboosted vanilla base rolls
+    public static void Compose(ItemValue iv, List<Entry> list, bool keepBase)
+    {
+        List<ItemValue.Stat> stats = new List<ItemValue.Stat>();
+        if (keepBase && iv.Stats != null) foreach (ItemValue.Stat s in iv.Stats) if (!s.isBoosted && s.value != 0) stats.Add(s);
+        foreach (Entry e in list)
+        {
+            foreach (PassiveEffects t in e.Affix.Types) Add(stats, t, e.Value);
+            if (e.Affix.Only == 2) Add(stats, PassiveEffects.EntityDamage, ScatterDamage);
         }
         iv.Stats = stats.Count > 0 ? stats.ToArray() : null;
+    }
+
+    static AposAffix FindKey(string key)
+    {
+        foreach (AposAffix a in All) if (a.Key == key) return a;
+        return null;
     }
 
     // Combines an added value with an existing stat of the same type (only the first stat of a type counts)
@@ -168,54 +227,94 @@ public static class AposAffixes
     // After combining two weapons the game keeps the best stats of both; trim back to the quality cap
     public static void Trim(ItemValue iv)
     {
-        int kind = Kind(iv.ItemClass);
-        if (kind == 0 || iv.Stats == null) return;
-        List<PassiveEffects> affixes = new List<PassiveEffects>();
-        foreach (ItemValue.Stat s in iv.Stats)
-        {
-            if (s.isBoosted && Find(s.type, kind == 1) != null && !affixes.Contains(s.type)) affixes.Add(s.type);
-        }
-        int extra = affixes.Count - Cap(iv.Quality);
+        List<Entry> list = Decompose(iv);
+        int extra = list.Count - Cap(iv.Quality);
         if (extra <= 0) return;
-        // Twin's damage penalty is mixed into the damage stat, so Twin itself is never the one dropped
-        if (IsTwin(iv)) affixes.Remove(PassiveEffects.RoundRayCount);
-
-        List<PassiveEffects> drop = new List<PassiveEffects>();
-        for (int i = 0; i < extra && affixes.Count > 0; i++)
-        {
-            PassiveEffects t = affixes[rand.Next(affixes.Count)];
-            affixes.Remove(t);
-            drop.AddRange(Find(t, kind == 1).Types);
-        }
-        List<ItemValue.Stat> keep = new List<ItemValue.Stat>();
-        foreach (ItemValue.Stat s in iv.Stats) if (!drop.Contains(s.type)) keep.Add(s);
-        iv.Stats = keep.ToArray();
+        for (int i = 0; i < extra; i++) list.RemoveAt(rand.Next(list.Count));
+        Compose(iv, list, false);
     }
 
-    // Affix lines for the item tooltip, e.g. "Brutal +27%"
-    public static string Describe(ItemValue iv)
+    // ===== Eridium modules (Source/AposElites.cs installs them). Each returns false when it cannot do anything,
+    // so the module is given back. =====
+    public const string LockKey = "aposLock";
+
+    // Reroll: one random affix that is not locked gets a new type and value (an empty weapon gets its first affix)
+    public static bool RerollOne(ItemValue iv)
     {
         int kind = Kind(iv.ItemClass);
-        if (kind == 0 || iv.Stats == null) return null;
-        List<string> lines = new List<string>();
-        bool twin = IsTwin(iv);
-        foreach (ItemValue.Stat s in iv.Stats)
+        if (kind == 0 || Cap(iv.Quality) == 0) return false;
+        List<Entry> list = Decompose(iv);
+        int locked = LockedType(iv);
+        List<int> free = new List<int>();
+        for (int i = 0; i < list.Count; i++) if ((int)list[i].Affix.Types[0] != locked) free.Add(i);
+        if (list.Count > 0 && free.Count == 0) return false;
+
+        if (list.Count > 0) list.RemoveAt(free[rand.Next(free.Count)]);
+        AposAffix a = Pick(iv.ItemClass, kind, iv.Quality, list);
+        if (a == null) return false;
+        list.Add(new Entry(a, a.Roll(iv.Quality, rand)));
+        Compose(iv, list, true);
+        return true;
+    }
+
+    // Lock: protects the best affix (closest to its quality 6 maximum) from Reroll
+    public static bool LockBest(ItemValue iv)
+    {
+        List<Entry> list = Decompose(iv);
+        if (list.Count == 0) return false;
+        Entry best = null;
+        float bestScore = -1f;
+        foreach (Entry e in list)
         {
-            if (!s.isBoosted) continue;
-            AposAffix a = Find(s.type, kind == 1);
-            if (a == null || (twin && s.type == PassiveEffects.RoundRayCount)) continue;
-            float fraction = s.value * StatStep;
-            // Twin's -40% damage is folded into the damage stat; show only the Brutal part
-            if (twin && s.type == PassiveEffects.EntityDamage) fraction = (1f + fraction) / (1f + ScatterDamage) - 1f;
-            float pct = fraction * 100f;
-            if (Math.Abs(pct) < 0.5f) continue;
-            string name = Localization.Get("aposAffix" + a.Key);
-            lines.Add("[FFD24D]" + name + "[-] " + (pct > 0 ? "+" : "") + pct.ToString("0", CultureInfo.InvariantCulture) + "%");
+            float score = Math.Abs(e.Value) / Math.Max(0.01f, Math.Abs(e.Affix.Max6));
+            if (score > bestScore) { bestScore = score; best = e; }
         }
-        if (twin) lines.Add("[FFD24D]" + Localization.Get("aposAffixTwin") + "[-] " + Localization.Get("aposAffixTwinDesc"));
-        if (lines.Count == 0) return null;
+        iv.SetMetadata(LockKey, (int)best.Affix.Types[0]);
+        return true;
+    }
+
+    // Temper: +1 quality (max 6); every affix is rolled again at the new quality, the locked one keeps its type
+    public static bool Temper(ItemValue iv)
+    {
+        if (Kind(iv.ItemClass) == 0 || iv.Quality >= 6) return false;
+        List<Entry> list = Decompose(iv);
+        iv.Quality = (ushort)(iv.Quality + 1);
+        foreach (Entry e in list) e.Value = Better(e.Value, e.Affix.Roll(iv.Quality, rand), Math.Sign(e.Affix.Max6));
+        Compose(iv, list, true);
+        return true;
+    }
+
+    // For negative affixes (spread, recoil, stamina) "bigger" means more negative
+    static float Better(float a, float b, int sign) { return sign < 0 ? Math.Min(a, b) : Math.Max(a, b); }
+
+    public static int LockedType(ItemValue iv)
+    {
+        int t;
+        return iv.TryGetMetadata(LockKey, out t) ? t : -1;
+    }
+
+    // Affix lines for the item tooltip, e.g. "Damage +27%"; the locked affix is marked
+    public static string Describe(ItemValue iv)
+    {
+        List<Entry> list = Decompose(iv);
+        if (list.Count == 0) return null;
+        int locked = LockedType(iv);
+        List<string> lines = new List<string>();
+        foreach (Entry e in list)
+        {
+            string name = Localization.Get("aposAffix" + e.Affix.Key);
+            string lockMark = (int)e.Affix.Types[0] == locked ? " [BE5AFF](" + Localization.Get("aposAffixLocked") + ")[-]" : "";
+            if (e.Affix.Key == "Twin")
+            {
+                lines.Add("[FFD24D]" + name + "[-] " + Localization.Get("aposAffixTwinDesc") + lockMark);
+                continue;
+            }
+            float pct = e.Value * 100f;
+            lines.Add("[FFD24D]" + name + "[-] " + (pct > 0 ? "+" : "") + pct.ToString("0", CultureInfo.InvariantCulture) + "%" + lockMark);
+        }
         return string.Join("\n", lines.ToArray());
     }
+
 
     // single-projectile gun with the extra bullet
     static bool IsTwin(ItemValue iv)

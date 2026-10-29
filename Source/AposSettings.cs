@@ -13,6 +13,7 @@ public static class AposSettings
     public static bool KillLabel = true;  // red "Kill!" above killing blows
     public static bool BuffColor = true;  // cyan numbers for buffed hits
     public static bool StealthRework = true; // POI trigger/attack volumes spawn sleeping zombies (AposStealth.cs)
+    public static bool EliteTags = true;     // names above elite zombies (AposElites.cs)
 
     static string file;
 
@@ -30,6 +31,8 @@ public static class AposSettings
             doc.Load(file);
             XmlElement s = doc.DocumentElement["Stealth"];
             if (s != null) StealthRework = ReadBool(s, "rework", StealthRework);
+            XmlElement el = doc.DocumentElement["Elites"];
+            if (el != null) EliteTags = ReadBool(el, "tags", EliteTags);
             XmlElement d = doc.DocumentElement["DamageNumbers"];
             if (d == null) return;
             Enabled = ReadBool(d, "enabled", Enabled);
@@ -65,6 +68,10 @@ public static class AposSettings
             XmlElement s = doc.CreateElement("Stealth");
             s.SetAttribute("rework", StealthRework ? "true" : "false");
             root.AppendChild(s);
+            root.AppendChild(doc.CreateComment(" Names above elite zombies. In game: aposelite on|off "));
+            XmlElement el = doc.CreateElement("Elites");
+            el.SetAttribute("tags", EliteTags ? "true" : "false");
+            root.AppendChild(el);
             doc.Save(file);
         }
         catch (Exception e)
@@ -141,5 +148,71 @@ public class AposDamageNumbersCommand : ConsoleCmdAbstract
             AposSettings.Save();
         }
         console.Output(AposSettings.Describe());
+    }
+}
+
+// aposelite on|off                 -> names above elite zombies
+// aposelite make                   -> nearest zombie within 20 m becomes an elite with 1 random modifier
+// aposelite make 2                 -> ... with 2 random modifiers
+// aposelite make Armored Giant     -> ... with these modifiers
+public class AposEliteCommand : ConsoleCmdAbstract
+{
+    public override string[] getCommands()
+    {
+        return new string[] { "aposelite" };
+    }
+
+    public override string getDescription()
+    {
+        return "AposMod elites: aposelite on|off | make [1|2|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
+    }
+
+    public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
+    {
+        SdtdConsole console = SingletonMonoBehaviour<SdtdConsole>.Instance;
+        if (_params.Count > 0 && _params[0] == "make")
+        {
+            EntityAlive e = Nearest();
+            if (e == null)
+            {
+                console.Output("No zombie within 20 m.");
+                return;
+            }
+            int mask = 0, count = 1;
+            for (int i = 1; i < _params.Count; i++)
+            {
+                int n;
+                if (int.TryParse(_params[i], out n)) { count = Math.Max(1, Math.Min(2, n)); continue; }
+                int m = Array.FindIndex(AposElites.Modifiers, x => string.Equals(x, _params[i], StringComparison.OrdinalIgnoreCase));
+                if (m >= 0) mask |= 1 << m;
+                else console.Output("Unknown modifier: " + _params[i]);
+            }
+            if (mask == 0) mask = AposElites.RandomMask(e, count);
+            AposElites.Make(e, mask);
+            console.Output("Elite: " + e.EntityName);
+            return;
+        }
+        if (_params.Count > 0 && (_params[0] == "on" || _params[0] == "off"))
+        {
+            AposSettings.EliteTags = _params[0] == "on";
+            AposSettings.Save();
+        }
+        console.Output("Elite names: " + (AposSettings.EliteTags ? "on" : "off"));
+    }
+
+    static EntityAlive Nearest()
+    {
+        EntityPlayerLocal p = AposRewards.Player();
+        if (p == null) return null;
+        EntityAlive best = null;
+        float bestDist = 400f; // 20 m squared
+        foreach (Entity ent in GameManager.Instance.World.Entities.list)
+        {
+            EntityAlive e = ent as EntityAlive;
+            if (e == null || e is EntityPlayer || e.IsDead() || AposElites.IsElite(e)) continue;
+            float d = (e.position - p.position).sqrMagnitude;
+            if (d < bestDist) { bestDist = d; best = e; }
+        }
+        return best;
     }
 }
