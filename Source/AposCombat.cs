@@ -3,6 +3,10 @@
 // - Strength 10 "Overkill": damage beyond a killing blow with a Strength weapon hits the nearest zombie within 4 m
 // - Penetrator 5 "Shrapnel": armor-piercing hits deal 40% of the damage to every zombie within 3 m of the target
 // - Boomstick 5 "Pump Action": a shotgun kill loads 1 shell into the magazine
+// - Demolitions Expert 5 "Chain Reaction": an explosive kill blows the zombie up (250 within 4 m)
+// - Advanced Engineering 5 "Overclock": your traps and turret blocks deal +50%
+// - Strength Mastery 5 "Crippling Blows": the flagged target becomes a crawler
+// - Fortitude Mastery 5 "Second Wind" (damage to the player)
 // Extra damage goes through buffAposSplash (reads the cvar aposSplashDmg), like bow splinters.
 using System;
 using System.Collections.Generic;
@@ -14,20 +18,50 @@ public static class AposCombat
     const float OverkillRadius = 4f;
     const float ShrapnelRadius = 3f;
     const float ShrapnelShare = 0.4f;
+    const float OverclockShare = 0.5f;
+    const float ChainRadius = 4f;
+    const int ChainDamage = 250;
 
     static readonly FastTags<TagGroup.Global> StrengthTag = FastTags<TagGroup.Global>.Parse("attStrength");
     static readonly FastTags<TagGroup.Global> ShotgunTag = FastTags<TagGroup.Global>.Parse("shotgun");
+    static readonly FastTags<TagGroup.Global> DemolitionsTag = FastTags<TagGroup.Global>.Parse("perkDemolitionsExpert");
+    static readonly FastTags<TagGroup.Global> AmmoTag = FastTags<TagGroup.Global>.Parse("ammo");
+    static readonly FastTags<TagGroup.Global> MolotovTag = FastTags<TagGroup.Global>.Parse("molotov");
 
-    public static void OnDamaged(EntityAlive target, DamageSource source, DamageResponse response, int healthBefore)
+    public static void OnDamaged(EntityAlive target, DamageSource source, ref DamageResponse response, int healthBefore)
     {
-        if (target == null || target is EntityPlayer || source == null) return;
+        if (target == null || source == null) return;
         World world = GameManager.Instance.World;
         if (world == null) return;
-        EntityPlayer attacker = world.GetEntity(source.getEntityId()) as EntityPlayer;
-        if (attacker == null) return;
+        if (target is EntityPlayer)
+        {
+            if (!response.Fatal) SecondWind(target as EntityPlayer, healthBefore - response.Strength);
+            return;
+        }
 
         int dealt = Math.Min(response.Strength, healthBefore);
         if (dealt <= 0) return;
+
+        // traps and turret blocks: the damage carries the block position and its owner
+        if (source.BlockPosition != Vector3i.zero)
+        {
+            EntityPlayer owner = world.GetEntity(source.CreatorEntityId) as EntityPlayer ?? world.GetEntity(source.ownerEntityId) as EntityPlayer;
+            if (owner != null && AposAffixes.Level(owner, "perkAdvancedEngineering") >= 5)
+            {
+                Splash(target, Mathf.RoundToInt(dealt * OverclockShare)); // Overclock
+            }
+            return;
+        }
+
+        EntityPlayer attacker = world.GetEntity(source.getEntityId()) as EntityPlayer;
+        if (attacker == null) return;
+
+        // Strength Mastery 5 "Crippling Blows": a club/sledge power hit flagged the target (progression.xml)
+        if (!response.Fatal && target.Buffs.GetCustomVar("aposCripple") > 0f)
+        {
+            target.Buffs.SetCustomVar("aposCripple", 0f);
+            response.TurnIntoCrawler = true;
+        }
         ItemValue weapon = source.AttackingItem;
         if (weapon == null || weapon.IsEmpty()) weapon = attacker.inventory.holdingItemItemValue;
         ItemClass weaponClass = weapon != null ? weapon.ItemClass : null;
@@ -52,6 +86,12 @@ public static class AposCombat
             {
                 LoadShell(attacker as EntityPlayerLocal, weaponClass);
             }
+            // Demolitions Expert 5 "Chain Reaction": a zombie killed by your explosive blows up too
+            if (IsExplosive(weaponClass) && AposAffixes.Level(attacker, "perkDemolitionsExpert") >= 5)
+            {
+                target.Buffs.AddBuff("buffAposChainBlast"); // visual only
+                foreach (EntityAlive e in Around(world, target, ChainRadius)) Splash(e, ChainDamage);
+            }
         }
 
         if (AposAffixes.Level(attacker, "perkPenetrator") >= 5 && IsArmorPiercing(source.AttackingItem, attacker))
@@ -62,6 +102,22 @@ public static class AposCombat
                 foreach (EntityAlive e in Around(world, target, ShrapnelRadius)) Splash(e, share);
             }
         }
+    }
+
+    static bool IsExplosive(ItemClass ic)
+    {
+        // rockets, grenades, pipe bombs, exploding arrows arrive as the ammo item; molotov fire does not count
+        return ic.ItemTags.Test_AnySet(DemolitionsTag) && ic.ItemTags.Test_AnySet(AmmoTag) && !ic.ItemTags.Test_AnySet(MolotovTag);
+    }
+
+    // Fortitude Mastery 5 "Second Wind": once per 5 minutes, dropping below 20% health heals 70% of max health
+    static void SecondWind(EntityPlayer player, int healthAfter)
+    {
+        if (AposAffixes.Level(player, "perkFortitudeMastery") < 5 || player.Buffs.HasBuff("buffAposSecondWindCD")) return;
+        float max = player.Stats.Health.Max;
+        if (healthAfter <= 0 || healthAfter >= max * 0.2f) return;
+        player.AddHealth(Mathf.RoundToInt(max * 0.7f));
+        player.Buffs.AddBuff("buffAposSecondWindCD");
     }
 
     static bool IsArmorPiercing(ItemValue attacking, EntityPlayer attacker)
@@ -134,11 +190,11 @@ public static class AposCombatDamagePatch
         __state = __instance.Health;
     }
 
-    static void Postfix(EntityAlive __instance, DamageSource _damageSource, DamageResponse __result, int __state)
+    static void Postfix(EntityAlive __instance, DamageSource _damageSource, ref DamageResponse __result, int __state)
     {
         try
         {
-            AposCombat.OnDamaged(__instance, _damageSource, __result, __state);
+            AposCombat.OnDamaged(__instance, _damageSource, ref __result, __state);
         }
         catch (Exception e)
         {

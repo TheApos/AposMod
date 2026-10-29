@@ -386,4 +386,140 @@
 			</effect_group>
 		</buff>
 	</append>
+
+	<!-- ===================== 1.0: buffs for attribute and perk highlights (progression.xml) ===================== -->
+	<append xpath="/buffs">
+		<!-- Flurry 5 "Frenzy": +25% attack speed with that perk's weapons for 5 s -->
+		<buff name="buffAposFrenzyPerception" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_game_symbol_run" icon_color="255,180,0">
+			<stack_type value="replace"/>
+			<duration value="5"/>
+			<effect_group>
+				<requirement name="HoldingItemHasTags" tags="perkFlurryOfPerception"/>
+				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".25"/>
+			</effect_group>
+		</buff>
+		<buff name="buffAposFrenzyStrength" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_game_symbol_run" icon_color="255,180,0">
+			<stack_type value="replace"/>
+			<duration value="5"/>
+			<effect_group>
+				<requirement name="HoldingItemHasTags" tags="perkFlurryOfStrength"/>
+				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".25"/>
+			</effect_group>
+		</buff>
+		<buff name="buffAposFrenzyFortitude" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_game_symbol_run" icon_color="255,180,0">
+			<stack_type value="replace"/>
+			<duration value="5"/>
+			<effect_group>
+				<requirement name="HoldingItemHasTags" tags="perkFlurryOfFortitude"/>
+				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".25"/>
+			</effect_group>
+		</buff>
+		<buff name="buffAposFrenzyAgility" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_game_symbol_run" icon_color="255,180,0">
+			<stack_type value="replace"/>
+			<duration value="5"/>
+			<effect_group>
+				<requirement name="HoldingItemHasTags" tags="perkFlurryOfAgility"/>
+				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".25"/>
+			</effect_group>
+		</buff>
+
+		<!-- Agility 10 "Adrenaline": number = stacks (max 3), +10% move speed each, 15 s after the last kill -->
+		<buff name="buffAposAdrenaline" name_key="buffAposAdrenalineName" description_key="buffAposAdrenalineDesc" icon="ui_game_symbol_run" icon_color="0,220,120">
+			<stack_type value="ignore"/>
+			<display_value value="aposAdrenaline"/>
+			<effect_group>
+				<passive_effect name="WalkSpeed" operation="perc_add" value="@aposAdrenalineSpeed"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value="@aposAdrenalineSpeed"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposAdrenalineTime" operation="add" value="-1"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposAdrenaline">
+					<requirement name="CVarCompare" cvar="aposAdrenalineTime" operation="LTE" value="0"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="aposAdrenaline" operation="set" value="0"/>
+				<triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="aposAdrenalineSpeed" operation="set" value="0"/>
+			</effect_group>
+		</buff>
+
+		<!-- Intellect 10 "EMP": number = charges (10 = ready) -->
+		<buff name="buffAposEmp" name_key="buffAposEmpName" description_key="buffAposEmpDesc" icon="ui_game_symbol_electric_power" icon_color="80,140,255" remove_on_death="false">
+			<stack_type value="ignore"/>
+			<display_value value="aposEmp"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposEmp">
+					<requirement name="CVarCompare" cvar="aposEmp" operation="LTE" value="0"/>
+				</triggered_effect>
+			</effect_group>
+		</buff>
+
+		<!-- Mother Lode 5 "Jackpot": x5 harvest for 2 s -->
+		<buff name="buffAposJackpot" name_key="buffAposJackpotName" description_key="buffAposJackpotDesc" icon="ui_game_symbol_mining" icon_color="255,210,0">
+			<stack_type value="replace"/>
+			<duration value="2"/>
+			<effect_group>
+				<passive_effect name="HarvestCount" operation="perc_add" value="4" tags="oreWoodHarvest"/>
+			</effect_group>
+		</buff>
+
+		<!-- Agility Mastery 5 "Evasion" -->
+		<buff name="buffAposEvasion" name_key="buffAposEvasionName" description_key="buffAposEvasionDesc" icon="ui_game_symbol_run" icon_color="0,200,255">
+			<stack_type value="replace"/>
+			<duration value="5"/>
+			<effect_group>
+				<passive_effect name="WalkSpeed" operation="perc_add" value=".3"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value=".3"/>
+			</effect_group>
+		</buff>
+
+		<!-- Fortitude Mastery 5 "Second Wind" cooldown (visible: you know when it is ready again) -->
+		<buff name="buffAposSecondWindCD" name_key="buffAposSecondWindName" description_key="buffAposSecondWindDesc" icon="ui_game_symbol_healing_factor" icon_color="150,150,150">
+			<stack_type value="ignore"/>
+			<duration value="300"/>
+		</buff>
+		<!-- Rule 1: Cardio 5 "Second Lungs" cooldown -->
+		<buff name="buffAposSecondLungsCD" name_key="buffAposSecondLungsName" description_key="buffAposSecondLungsDesc" icon="ui_game_symbol_run" icon_color="150,150,150">
+			<stack_type value="ignore"/>
+			<duration value="60"/>
+		</buff>
+
+		<!-- Healing Factor 5: "in combat" for 10 s after any hit given or taken -->
+		<buff name="buffAposInCombat" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="10"/>
+		</buff>
+		<buff name="buffAposButcherCD" hidden="true">
+			<stack_type value="ignore"/>
+			<duration value="5"/>
+		</buff>
+
+		<!-- Demolitions Expert 5 "Chain Reaction": explosion look on the killed zombie (damage: Source/AposCombat.cs) -->
+		<buff name="buffAposChainBlast" hidden="true">
+			<stack_type value="replace"/>
+			<duration value=".1"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="Explode" blast_power="0" block_damage="0" block_radius="0" entity_damage="0" entity_radius="0" damage_type="Heat"/>
+			</effect_group>
+		</buff>
+	</append>
+
+	<!-- Charismatic Nature 5 "Leader": the perk owner gets the Charismatic bonuses twice -->
+	<append xpath="/buffs/buff[@name='buffPerkCharismaticNature']">
+		<effect_group name="AposMod leader">
+			<requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="GTE" value="5"/>
+			<passive_effect name="HealthChangeOT" operation="base_add" value=".5"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".2"/>
+			<passive_effect name="BlockDamage" operation="perc_add" value=".2" tags="melee"/>
+			<passive_effect name="GeneralDamageResist" operation="base_add" value=".1"/>
+			<passive_effect name="LootStage" operation="perc_add" value=".3"/>
+			<passive_effect name="AttributeLevel" operation="base_add" value="1"/>
+		</effect_group>
+	</append>
+
+	<!-- Fortitude 10 "Iron Body": an infection caught before reaching level 10 is cured -->
+	<append xpath="/buffs/buff[@name='buffStatusCheck01']">
+		<effect_group name="AposMod iron body cure">
+			<requirement name="ProgressionLevel" progression_name="attFortitude" operation="GTE" value="10"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffInfectionMain,buffInfectionGetsWorse,buffInfection01Untreated,buffInfection01GetBetter,buffInfection02Untreated,buffInfection02GetBetter,buffInfection03Untreated,buffInfection03GetBetter,buffInfection04">
+				<requirement name="HasBuff" buff="buffInfectionMain,buffInfection01Untreated,buffInfection02Untreated,buffInfection03Untreated,buffInfection04"/>
+			</triggered_effect>
+		</effect_group>
+	</append>
 </configs>

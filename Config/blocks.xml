@@ -1,0 +1,19 @@
+<configs>
+	<!-- ===== Living Off the Land 3 "Green Thumb": a harvested crop gives its seed back with 50% chance =====
+	     count="0" = nothing without the perk; the perk sets HarvestCount to 1 for the aposSeedReturn tag (progression.xml),
+	     the same trick vanilla uses for bonusCropHarvest. -->
+	<append xpath="/blocks/block[@name='plantedMushroom3Harvest']"><drop event="Harvest" name="plantedMushroom1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedYucca3Harvest']"><drop event="Harvest" name="plantedYucca1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedCotton3Harvest']"><drop event="Harvest" name="plantedCotton1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedCoffee3Harvest']"><drop event="Harvest" name="plantedCoffee1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedGoldenrod3Harvest']"><drop event="Harvest" name="plantedGoldenrod1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedAloe3Harvest']"><drop event="Harvest" name="plantedAloe1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedBlueberry3Harvest']"><drop event="Harvest" name="plantedBlueberry1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedPotato3Harvest']"><drop event="Harvest" name="plantedPotato1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedChrysanthemum3Harvest']"><drop event="Harvest" name="plantedChrysanthemum1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedCorn3Harvest']"><drop event="Harvest" name="plantedCorn1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedGraceCorn3Harvest']"><drop event="Harvest" name="plantedGraceCorn1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedHop3Harvest']"><drop event="Harvest" name="plantedHop1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedSnowberry3Harvest']"><drop event="Harvest" name="plantedSnowberry1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<append xpath="/blocks/block[@name='plantedPumpkin3Harvest']"><drop event="Harvest" name="plantedPumpkin1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+</configs>

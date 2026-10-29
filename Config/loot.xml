@@ -23,6 +23,38 @@
 				<loot quality="6" prob="1"/>
 			</qualitytemplate>
 		</lootqualitytemplate>
+		<lootqualitytemplate name="QLTemplateApos56">
+			<qualitytemplate level="0,999999" default_quality="5">
+				<loot quality="5" prob=".6"/>
+				<loot quality="6" prob="1"/>
+			</qualitytemplate>
+		</lootqualitytemplate>
+	</append>
+
+	<!-- ===== Treasure Hunter 5 "X Marks the Spot": buried treasure also holds a quality 5-6 weapon (with affixes).
+	     prob 0 + tag: only the perk's LootProb base_set (progression.xml) turns it on, like vanilla Master Chef 2. ===== -->
+	<insertBefore xpath="/lootcontainers/lootgroup[@name='groupBuriedTreasure']">
+		<lootgroup name="groupAposTreasureWeapon" count="1" loot_quality_template="QLTemplateApos56">
+			<item name="gunHandgunT3DesertVulture"/>
+			<item name="gunHandgunT3SMG5"/>
+			<item name="gunShotgunT3AutoShotgun"/>
+			<item name="gunShotgunT2PumpShotgun"/>
+			<item name="gunRifleT3SniperRifle"/>
+			<item name="gunRifleT2LeverActionRifle"/>
+			<item name="gunMGT3M60"/>
+			<item name="gunMGT2TacticalAR"/>
+			<item name="gunBowT3CompoundBow"/>
+			<item name="gunBowT3CompoundCrossbow"/>
+			<item name="meleeWpnBladeT3Machete"/>
+			<item name="meleeWpnClubT3SteelClub"/>
+			<item name="meleeWpnSledgeT3SteelSledgehammer"/>
+			<item name="meleeWpnSpearT3SteelSpear"/>
+			<item name="meleeWpnKnucklesT3SteelKnuckles"/>
+			<item name="meleeWpnBatonT2StunBaton"/>
+		</lootgroup>
+	</insertBefore>
+	<append xpath="/lootcontainers/lootgroup[@name='groupBuriedTreasure']">
+		<item group="groupAposTreasureWeapon" prob="0" tags="aposTreasureHunter5"/>
 	</append>
 	<insertBefore xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT4']">
 		<lootgroup name="groupAposLegendary" loot_quality_template="QLTemplateApos6">

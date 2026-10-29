@@ -1,4 +1,5 @@
-// AposMod C# part. Built with Source\build.ps1 (C# 5). Settings: AposSettings.cs. Harmony patches: AposStealth.cs.
+// AposMod C# part. Built with Source\build.ps1 (C# 5). Settings: AposSettings.cs. Harmony patches: AposStealth.cs,
+// AposAffixes.cs, AposCombat.cs, AposRewards.cs.
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,21 +8,30 @@ public class AposModInit : IModApi
     public void InitMod(Mod _modInstance)
     {
         AposSettings.Load(_modInstance.Path);
-        try
+        // Patch class by class: one patch broken by a game update must not switch off the others
+        HarmonyLib.Harmony harmony = new HarmonyLib.Harmony("apos.aposmod");
+        int ok = 0;
+        foreach (System.Type t in typeof(AposModInit).Assembly.GetTypes())
         {
-            new HarmonyLib.Harmony("apos.aposmod").PatchAll(typeof(AposModInit).Assembly);
+            if (t.GetCustomAttributes(typeof(HarmonyLib.HarmonyPatch), false).Length == 0) continue;
+            try
+            {
+                harmony.CreateClassProcessor(t).Patch();
+                ok++;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("[AposMod] Harmony patch " + t.Name + " failed, that feature is off: " + e);
+            }
         }
-        catch (System.Exception e)
-        {
-            // the rest of the mod still works; the stealth rework is just off
-            Debug.LogError("[AposMod] Harmony patches failed, stealth rework disabled: " + e);
-        }
+        Debug.Log("[AposMod] Harmony patches applied: " + ok);
         GameObject go = new GameObject("AposDamageNumbers");
         Object.DontDestroyOnLoad(go);
         go.AddComponent<AposDamageNumbers>();
         go.AddComponent<AposPin>();
         go.AddComponent<AposSplinter>();
         go.AddComponent<AposAmmo>();
+        go.AddComponent<AposSurvival>();
     }
 }
 

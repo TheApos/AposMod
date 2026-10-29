@@ -49,4 +49,361 @@
 			<passive_effect name="CraftingTier" operation="base_add" value="1"/>
 		</effect_group>
 	</append>
+
+	<!-- ===================== 1.0: attribute level 10 highlights ===================== -->
+	<!-- Perception 10 "Executioner": Perception weapons +100% damage to targets below 30% health -->
+	<append xpath="/progression/attributes/attribute[@name='attPerception']">
+		<effect_group name="AposMod executioner">
+			<requirement name="ProgressionLevel" progression_name="attPerception" operation="GTE" value="10"/>
+			<requirement name="HoldingItemHasTags" tags="attPerception"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value="1">
+				<requirement name="StatComparePercCurrentToMax" target="other" stat="Health" operation="LT" value=".3"/>
+			</passive_effect>
+		</effect_group>
+	</append>
+	<!-- Strength 10 "Overkill": Source/AposCombat.cs -->
+	<!-- Fortitude 10 "Iron Body": no bleeding, no infection (existing infection is cleared in buffs.xml) -->
+	<append xpath="/progression/attributes/attribute[@name='attFortitude']">
+		<effect_group name="AposMod iron body">
+			<requirement name="ProgressionLevel" progression_name="attFortitude" operation="GTE" value="10"/>
+			<passive_effect name="BuffResistance" operation="base_add" value="1" tags="buffInjuryBleeding,buffInjuryBleedingOne,buffInjuryBleedingTwo,buffInjuryBleedingBarbedWire,buffInfectionCatch,buffInfectionMain"/>
+		</effect_group>
+	</append>
+	<!-- Agility 10 "Adrenaline": Agility weapon kills give +10% move speed for 15 s, up to 3 stacks -->
+	<append xpath="/progression/attributes/attribute[@name='attAgility']">
+		<effect_group name="AposMod adrenaline">
+			<requirement name="ProgressionLevel" progression_name="attAgility" operation="GTE" value="10"/>
+			<requirement name="ItemHasTags" tags="attAgility"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposAdrenaline" operation="add" value="1">
+				<requirement name="CVarCompare" cvar="aposAdrenaline" operation="LT" value="3"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposAdrenalineSpeed" operation="set" value="@aposAdrenaline"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposAdrenalineSpeed" operation="multiply" value=".1"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposAdrenalineTime" operation="set" value="15"/>
+			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposAdrenaline"/>
+		</effect_group>
+	</append>
+	<!-- Intellect 10 "EMP": every kill +1 charge; at 10 your next hit releases an EMP: 200 damage and 4 s shock within 8 m -->
+	<append xpath="/progression/attributes/attribute[@name='attIntellect']">
+		<effect_group name="AposMod emp">
+			<requirement name="ProgressionLevel" progression_name="attIntellect" operation="GTE" value="10"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposEmp" operation="add" value="1">
+				<requirement name="CVarCompare" cvar="aposEmp" operation="LT" value="10"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposEmp"/>
+			<triggered_effect trigger="onSelfDamagedOther" action="Explode" blast_power="0" block_damage="0" block_radius="0" entity_damage="0" entity_radius="0" damage_type="Electrical">
+				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfDamagedOther" action="RemoveBuff" buff="buffAposEmp">
+				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="otherAOE" range="8" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-200">
+				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="otherAOE" range="8" target_tags="zombie,animal" buff="buffAposSplash">
+				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="otherAOE" range="8" target_tags="zombie,animal" buff="buffShocked" duration="4">
+				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" cvar="aposEmp" operation="set" value="0">
+				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
+			</triggered_effect>
+		</effect_group>
+	</append>
+
+	<!-- ===================== 1.0: max rank highlights of every perk ===================== -->
+	<!-- Flurry of Perception / Strength / Fortitude / Agility 5 "Frenzy": a kill with that perk's weapons: +25% attack speed for 5 s -->
+	<append xpath="/progression/perks/perk[@name='perkFlurryOfPerception']">
+		<effect_group name="AposMod frenzy">
+			<requirement name="ProgressionLevel" progression_name="perkFlurryOfPerception" operation="GTE" value="5"/>
+			<requirement name="ItemHasTags" tags="perkFlurryOfPerception"/>
+			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposFrenzyPerception"/>
+		</effect_group>
+	</append>
+	<append xpath="/progression/perks/perk[@name='perkFlurryOfStrength']">
+		<effect_group name="AposMod frenzy">
+			<requirement name="ProgressionLevel" progression_name="perkFlurryOfStrength" operation="GTE" value="5"/>
+			<requirement name="ItemHasTags" tags="perkFlurryOfStrength"/>
+			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposFrenzyStrength"/>
+		</effect_group>
+	</append>
+	<append xpath="/progression/perks/perk[@name='perkFlurryOfFortitude']">
+		<effect_group name="AposMod frenzy">
+			<requirement name="ProgressionLevel" progression_name="perkFlurryOfFortitude" operation="GTE" value="5"/>
+			<requirement name="ItemHasTags" tags="perkFlurryOfFortitude"/>
+			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposFrenzyFortitude"/>
+		</effect_group>
+	</append>
+	<append xpath="/progression/perks/perk[@name='perkFlurryOfAgility']">
+		<effect_group name="AposMod frenzy">
+			<requirement name="ProgressionLevel" progression_name="perkFlurryOfAgility" operation="GTE" value="5"/>
+			<requirement name="ItemHasTags" tags="perkFlurryOfAgility"/>
+			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposFrenzyAgility"/>
+		</effect_group>
+	</append>
+
+	<!-- Perception -->
+	<!-- Demolitions Expert 5 "Chain Reaction", Penetrator 5 "Shrapnel": Source/AposCombat.cs -->
+	<!-- Infiltrator 5 "Ghost": crouching halves noise and visibility; hits on unaware zombies x2; mines and traps cannot hurt you -->
+	<append xpath="/progression/perks/perk[@name='perkInfiltrator']">
+		<effect_group name="AposMod ghost">
+			<requirement name="ProgressionLevel" progression_name="perkInfiltrator" operation="GTE" value="5"/>
+			<passive_effect name="LandMineImmunity" operation="base_set" value="1"/>
+			<passive_effect name="TrapIncomingDamage" operation="perc_add" value="-.25"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value="1">
+				<requirement name="CVarCompare" cvar="_notAlerted" operation="GT" value="0" target="other"/>
+			</passive_effect>
+			<passive_effect name="NoiseMultiplier" operation="perc_add" value="-.5">
+				<requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+			</passive_effect>
+			<passive_effect name="LightMultiplier" operation="perc_add" value="-.5">
+				<requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+			</passive_effect>
+		</effect_group>
+	</append>
+	<!-- Animal Tracker 5 "Hunter's Mark": hitting an animal marks it like a crossbow bolt (ring, your damage up) -->
+	<append xpath="/progression/perks/perk[@name='perkAnimalTracker']">
+		<effect_group name="AposMod hunters mark">
+			<requirement name="ProgressionLevel" progression_name="perkAnimalTracker" operation="GTE" value="5"/>
+			<requirement name="EntityTagCompare" target="other" tags="animal"/>
+			<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar="aposMarkTime" operation="set" value="10"/>
+			<triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffAposMark"/>
+		</effect_group>
+	</append>
+	<!-- Treasure Hunter 5 "X Marks the Spot": the treasure circle shrinks to a point; the chest also has a quality 5-6 weapon (loot.xml) -->
+	<append xpath="/progression/perks/perk[@name='perkTreasureHunter']">
+		<effect_group name="AposMod x marks the spot">
+			<requirement name="ProgressionLevel" progression_name="perkTreasureHunter" operation="GTE" value="5"/>
+			<passive_effect name="TreasureRadius" operation="perc_add" value="-.9"/>
+			<passive_effect name="LootProb" operation="base_set" value="1" tags="aposTreasureHunter5"/>
+		</effect_group>
+	</append>
+	<!-- Salvage Operations 5 "Junk Genius": salvage tools barely wear -->
+	<append xpath="/progression/perks/perk[@name='perkSalvageOperations']">
+		<effect_group name="AposMod junk genius">
+			<requirement name="ProgressionLevel" progression_name="perkSalvageOperations" operation="GTE" value="5"/>
+			<requirement name="HoldingItemHasTags" tags="salvageTool"/>
+			<passive_effect name="DegradationPerUse" operation="perc_add" value="-.9"/>
+		</effect_group>
+	</append>
+	<!-- Perception Mastery 5 "Lucky Shot": 10% chance a hit with a Perception weapon deals +100% damage -->
+	<append xpath="/progression/perks/perk[@name='perkPerceptionMastery']">
+		<effect_group name="AposMod lucky shot">
+			<requirement name="ProgressionLevel" progression_name="perkPerceptionMastery" operation="GTE" value="5"/>
+			<requirement name="HoldingItemHasTags" tags="attPerception"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value="1">
+				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
+			</passive_effect>
+		</effect_group>
+	</append>
+
+	<!-- Strength -->
+	<!-- Boomstick 5 "Pump Action": Source/AposCombat.cs -->
+	<!-- Pack Mule 5 "Beast of Burden": an overloaded backpack no longer slows you -->
+	<append xpath="/progression/perks/perk[@name='perkPackMule']">
+		<effect_group name="AposMod beast of burden">
+			<requirement name="ProgressionLevel" progression_name="perkPackMule" operation="GTE" value="5"/>
+			<passive_effect name="BuffResistance" operation="base_add" value="1" tags="buffEncumberedInv"/>
+		</effect_group>
+	</append>
+	<!-- Strength Mastery 5 "Crippling Blows": a club/sledge power hit turns the zombie into a crawler (Source/AposCombat.cs) -->
+	<append xpath="/progression/perks/perk[@name='perkStrengthMastery']">
+		<effect_group name="AposMod crippling blows">
+			<requirement name="ProgressionLevel" progression_name="perkStrengthMastery" operation="GTE" value="5"/>
+			<requirement name="HoldingItemHasTags" tags="perkPummelPete,perkSkullCrusher"/>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="other" cvar="aposCripple" operation="set" value="1"/>
+		</effect_group>
+	</append>
+	<!-- Miner 69'er 5 "Tunnel Rat": mining tools cost half stamina -->
+	<append xpath="/progression/perks/perk[@name='perkMiner69r']">
+		<effect_group name="AposMod tunnel rat">
+			<requirement name="ProgressionLevel" progression_name="perkMiner69r" operation="GTE" value="5"/>
+			<requirement name="HoldingItemHasTags" tags="perkMiner69r"/>
+			<passive_effect name="StaminaLoss" operation="perc_add" value="-.5"/>
+		</effect_group>
+	</append>
+	<!-- Mother Lode 5 "Jackpot": 5% of hits on ore/wood: the next 2 s of hits yield x5 -->
+	<append xpath="/progression/perks/perk[@name='perkMotherLode']">
+		<effect_group name="AposMod jackpot">
+			<requirement name="ProgressionLevel" progression_name="perkMotherLode" operation="GTE" value="5"/>
+			<requirement name="HoldingItemHasTags" tags="perkMiner69r"/>
+			<triggered_effect trigger="onSelfDamagedBlock" action="AddBuff" buff="buffAposJackpot">
+				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="5"/>
+			</triggered_effect>
+		</effect_group>
+	</append>
+	<!-- Junk Miner 5 "Scrap King": +50% from junk piles and salvage -->
+	<append xpath="/progression/perks/perk[@name='perkJunkMiner']">
+		<effect_group name="AposMod scrap king">
+			<requirement name="ProgressionLevel" progression_name="perkJunkMiner" operation="GTE" value="5"/>
+			<passive_effect name="HarvestCount" operation="perc_add" value=".5" tags="perkJunkMiner"/>
+		</effect_group>
+	</append>
+
+	<!-- Fortitude -->
+	<!-- The Huntsman 5 "Butcher": harvesting a carcass heals 30 HP (once per 5 s) -->
+	<append xpath="/progression/perks/perk[@name='perkTheHuntsman']">
+		<effect_group name="AposMod butcher">
+			<requirement name="ProgressionLevel" progression_name="perkTheHuntsman" operation="GTE" value="5"/>
+			<requirement name="!HasBuff" buff="buffAposButcherCD"/>
+			<triggered_effect trigger="onSelfHarvestOther" action="ModifyStats" stat="Health" operation="add" value="30"/>
+			<triggered_effect trigger="onSelfHarvestOther" action="AddBuff" buff="buffAposButcherCD"/>
+		</effect_group>
+	</append>
+	<!-- Pain Tolerance 5 "Unbreakable": below 25% health you take 50% less damage -->
+	<append xpath="/progression/perks/perk[@name='perkPainTolerance']">
+		<effect_group name="AposMod unbreakable">
+			<requirement name="ProgressionLevel" progression_name="perkPainTolerance" operation="GTE" value="5"/>
+			<requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".25"/>
+			<passive_effect name="GeneralDamageResist" operation="base_add" value=".5"/>
+		</effect_group>
+	</append>
+	<!-- Fortitude Mastery 5 "Second Wind": Source/AposCombat.cs -->
+	<!-- Siphoning Strikes 5 "Vampire": melee kills also restore 20 stamina -->
+	<append xpath="/progression/perks/perk[@name='perkSiphoningStrikes']">
+		<effect_group name="AposMod vampire">
+			<requirement name="ProgressionLevel" progression_name="perkSiphoningStrikes" operation="GTE" value="5"/>
+			<requirement name="ItemHasTags" tags="melee"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyStats" stat="Stamina" operation="add" value="20"/>
+		</effect_group>
+	</append>
+	<!-- Healing Factor 5 "Regeneration": 10 s without fighting -> +3 HP/s -->
+	<append xpath="/progression/perks/perk[@name='perkHealingFactor']">
+		<effect_group name="AposMod regeneration">
+			<requirement name="ProgressionLevel" progression_name="perkHealingFactor" operation="GTE" value="5"/>
+			<triggered_effect trigger="onOtherDamagedSelf" action="AddBuff" buff="buffAposInCombat"/>
+			<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffAposInCombat"/>
+			<triggered_effect trigger="onSelfDamagedOther" action="AddBuff" buff="buffAposInCombat"/>
+			<passive_effect name="HealthChangeOT" operation="base_add" value="3">
+				<requirement name="!HasBuff" buff="buffAposInCombat"/>
+			</passive_effect>
+		</effect_group>
+	</append>
+	<!-- Slow Metabolism 5 "Iron Stomach": no food poisoning or dysentery (murky water is safe); food/water floor in Source/AposSurvival.cs -->
+	<append xpath="/progression/perks/perk[@name='perkSlowMetabolism']">
+		<effect_group name="AposMod iron stomach">
+			<requirement name="ProgressionLevel" progression_name="perkSlowMetabolism" operation="GTE" value="5"/>
+			<passive_effect name="BuffResistance" operation="base_add" value="1" tags="buffDysenteryCatchFood,buffDysenteryCatchDrink,buffDysenteryMain"/>
+		</effect_group>
+	</append>
+	<!-- Rule 1: Cardio 5 "Second Lungs": Source/AposSurvival.cs -->
+
+	<!-- Agility -->
+	<!-- Run and Gun 5 "Gun Kata": shooting on the move: no hip spread, +30% damage -->
+	<append xpath="/progression/perks/perk[@name='perkRunAndGun']">
+		<effect_group name="AposMod gun kata">
+			<requirement name="ProgressionLevel" progression_name="perkRunAndGun" operation="GTE" value="5"/>
+			<requirement name="EntityHasMovementTag" tags="walking,running"/>
+			<requirement name="HoldingItemHasTags" tags="ranged"/>
+			<passive_effect name="SpreadMultiplierHip" operation="perc_add" value="-1"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".3"/>
+		</effect_group>
+	</append>
+	<!-- Hard Target 5 "Blur": while running you take 50% less damage -->
+	<append xpath="/progression/perks/perk[@name='perkHardTarget']">
+		<effect_group name="AposMod blur">
+			<requirement name="ProgressionLevel" progression_name="perkHardTarget" operation="GTE" value="5"/>
+			<requirement name="EntityHasMovementTag" tags="running"/>
+			<passive_effect name="GeneralDamageResist" operation="base_add" value=".5"/>
+		</effect_group>
+	</append>
+	<!-- Parkour 5 "Cat Landing": 99% less fall damage -->
+	<append xpath="/progression/perks/perk[@name='perkParkour']">
+		<effect_group name="AposMod cat landing">
+			<requirement name="ProgressionLevel" progression_name="perkParkour" operation="GTE" value="5"/>
+			<passive_effect name="FallDamageReduction" operation="perc_add" value="-.99"/>
+		</effect_group>
+	</append>
+	<!-- Agility Mastery 5 "Evasion": after taking a hit +30% move speed for 5 s -->
+	<append xpath="/progression/perks/perk[@name='perkAgilityMastery']">
+		<effect_group name="AposMod evasion">
+			<requirement name="ProgressionLevel" progression_name="perkAgilityMastery" operation="GTE" value="5"/>
+			<triggered_effect trigger="onOtherDamagedSelf" action="AddBuff" buff="buffAposEvasion"/>
+		</effect_group>
+	</append>
+	<!-- Hidden Strike 5 "Assassinate": a sneak attack kills any non-elite zombie -->
+	<append xpath="/progression/perks/perk[@name='perkHiddenStrike']">
+		<effect_group name="AposMod assassinate">
+			<requirement name="ProgressionLevel" progression_name="perkHiddenStrike" operation="GTE" value="5"/>
+			<requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
+			<requirement name="CVarCompare" cvar="_notAlerted" operation="GT" value="0" target="other"/>
+			<requirement name="!EntityTagCompare" target="other" tags="feral,radiated,infernal,charged,special,boss"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value="10"/>
+		</effect_group>
+	</append>
+	<!-- From the Shadows 5 "Vanish": zombies that lost you give up the search almost at once -->
+	<append xpath="/progression/perks/perk[@name='perkFromTheShadows']">
+		<effect_group name="AposMod vanish">
+			<requirement name="ProgressionLevel" progression_name="perkFromTheShadows" operation="GTE" value="5"/>
+			<passive_effect name="EnemySearchDuration" operation="perc_add" value="20"/>
+		</effect_group>
+	</append>
+
+	<!-- Intellect -->
+	<!-- Electrocutioner 5 "Overcharge": +25% damage (any weapon) to shocked zombies -->
+	<append xpath="/progression/perks/perk[@name='perkElectrocutioner']">
+		<effect_group name="AposMod overcharge">
+			<requirement name="ProgressionLevel" progression_name="perkElectrocutioner" operation="GTE" value="5"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".25">
+				<requirement name="HasBuff" target="other" buff="buffShocked"/>
+			</passive_effect>
+		</effect_group>
+	</append>
+	<!-- Better Barter 5 "Black Market", Daring Adventurer 5 "Big Score": Source/AposRewards.cs -->
+	<!-- Charismatic Nature 5 "Leader": buffs.xml (your own Charismatic buff counts twice) -->
+	<!-- Physician 5 "Field Medic": healing +50%; healing with a medical item stops bleeding -->
+	<append xpath="/progression/perks/perk[@name='perkPhysician']">
+		<effect_group name="AposMod field medic">
+			<requirement name="ProgressionLevel" progression_name="perkPhysician" operation="GTE" value="5"/>
+			<passive_effect name="HealthGain" operation="perc_add" value=".5"/>
+			<triggered_effect trigger="onSelfHealedSelf" action="RemoveBuff" buff="buffInjuryBleeding,buffInjuryBleedingOne,buffInjuryBleedingTwo,buffInjuryBleedingBarbedWire">
+				<requirement name="HoldingItemHasTags" tags="medical"/>
+			</triggered_effect>
+		</effect_group>
+	</append>
+	<!-- Advanced Engineering 5 "Overclock": Source/AposCombat.cs -->
+	<!-- Grease Monkey 5 "Mechanic": vehicles use 50% less fuel -->
+	<append xpath="/progression/perks/perk[@name='perkGreaseMonkey']">
+		<effect_group name="AposMod mechanic">
+			<requirement name="ProgressionLevel" progression_name="perkGreaseMonkey" operation="GTE" value="5"/>
+			<passive_effect name="VehicleFuelUsePer" operation="perc_add" value="-.5"/>
+		</effect_group>
+	</append>
+
+	<!-- General perks -->
+	<append xpath="/progression/perks/perk[@name='perkLightArmor']">
+		<effect_group name="AposMod nimble">
+			<requirement name="ProgressionLevel" progression_name="perkLightArmor" operation="GTE" value="4"/>
+			<passive_effect name="WalkSpeed" operation="perc_add" value=".15"/>
+			<passive_effect name="RunSpeed" operation="perc_add" value=".15"/>
+		</effect_group>
+	</append>
+	<append xpath="/progression/perks/perk[@name='perkMediumArmor']">
+		<effect_group name="AposMod balanced">
+			<requirement name="ProgressionLevel" progression_name="perkMediumArmor" operation="GTE" value="4"/>
+			<passive_effect name="StaminaLoss" operation="perc_add" value="-.2" tags="primary,secondary"/>
+		</effect_group>
+	</append>
+	<append xpath="/progression/perks/perk[@name='perkHeavyArmor']">
+		<effect_group name="AposMod fortress">
+			<requirement name="ProgressionLevel" progression_name="perkHeavyArmor" operation="GTE" value="4"/>
+			<passive_effect name="BuffResistance" operation="base_add" value="1" tags="buffInjuryStunned01,buffInjuryStunned02,buffInjuryStunned03,buffInjuryKnockdown01,buffInjuryKnockdown02"/>
+		</effect_group>
+	</append>
+	<!-- Master Chef 3 "Gourmet": Source/AposSurvival.cs -->
+	<!-- Living Off the Land 3 "Green Thumb": 50% chance a harvested crop gives its seed back (blocks.xml) -->
+	<append xpath="/progression/perks/perk[@name='perkLivingOffTheLand']">
+		<effect_group name="AposMod green thumb">
+			<requirement name="ProgressionLevel" progression_name="perkLivingOffTheLand" operation="GTE" value="3"/>
+			<passive_effect name="HarvestCount" operation="base_set" value="1" tags="aposSeedReturn"/>
+		</effect_group>
+	</append>
+	<append xpath="/progression/perks/perk[@name='perkLockPicking']">
+		<effect_group name="AposMod safecracker">
+			<requirement name="ProgressionLevel" progression_name="perkLockPicking" operation="GTE" value="3"/>
+			<passive_effect name="LockPickBreakChance" operation="perc_add" value="-.9"/>
+		</effect_group>
+	</append>
+	<!-- Lucky Looter 5 "Fortune": Source/AposAffixes.cs -->
 </configs>
