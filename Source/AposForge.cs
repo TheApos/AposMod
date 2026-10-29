@@ -1,7 +1,7 @@
 // Eridium Forge: a workstation block (blocks.xml, Class "AposEridiumForge, AposMod" -> BlockAposEridiumForge) that
 // opens the window group "aposForge" (Config/XUi_InGame/xui.xml + windows.xml, controller "AposForge, AposMod" ->
 // XUiC_AposForge). It works on the weapon in your hands:
-// - per affix row: Reroll (10 Eridium) / Lock (25); an empty row (below the quality cap): Add (20)
+// - per affix row: Reroll (10 Eridium) / Lock (25, the locked row unlocks for free); an empty row: Add (20)
 // - Temper: +1 quality (40), Scrap: the weapon becomes Eridium
 // - 10 legendaries for 300 each, quality 6
 // Eridium is taken from the backpack and the toolbelt.
@@ -162,8 +162,9 @@ public class XUiC_AposForge : XUiController
             bool canAdd = iv != null && !hasAffix && i == list.Count && i < cap;
             SetText(rerollButtons[i], hasAffix ? Localization.Get("aposForgeReroll") + "  " + RerollCost : Localization.Get("aposForgeAdd") + "  " + AddCost);
             Enable(rerollButtons[i], hasAffix ? !isLocked && eridium >= RerollCost : canAdd && eridium >= AddCost);
-            SetText(lockButtons[i], isLocked ? Localization.Get("aposForgeLocked") : Localization.Get("aposForgeLock") + "  " + LockCost);
-            Enable(lockButtons[i], hasAffix && !isLocked && eridium >= LockCost);
+            // on the locked row the same button removes the lock for free
+            SetText(lockButtons[i], isLocked ? Localization.Get("aposForgeUnlock") : Localization.Get("aposForgeLock") + "  " + LockCost);
+            Enable(lockButtons[i], isLocked || (hasAffix && eridium >= LockCost));
         }
 
         SetText(temperButton, Localization.Get("aposForgeTemper") + "  " + TemperCost);
@@ -198,7 +199,10 @@ public class XUiC_AposForge : XUiController
 
     void Lock(int row)
     {
-        Modify(LockCost, w => AposAffixes.LockAt(w, row), "aposForgeDoneLock");
+        ItemValue iv = Weapon();
+        if (iv == null) return;
+        if (AposAffixes.IsLockedAt(iv, row)) Modify(0, AposAffixes.Unlock, "aposForgeDoneUnlock");
+        else Modify(LockCost, w => AposAffixes.LockAt(w, row), "aposForgeDoneLock");
     }
 
     void Temper()

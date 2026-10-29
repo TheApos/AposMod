@@ -272,6 +272,20 @@ public static class AposAffixes
         iv.SetMetadata(LockKey, (int)list[index].Affix.Types[0]);
         return true;
     }
+
+    public static bool IsLockedAt(ItemValue iv, int index)
+    {
+        List<Entry> list = Decompose(iv);
+        return index >= 0 && index < list.Count && (int)list[index].Affix.Types[0] == LockedType(iv);
+    }
+
+    // Remove the lock (free in the forge)
+    public static bool Unlock(ItemValue iv)
+    {
+        if (LockedType(iv) < 0) return false;
+        iv.RemoveMetaData(LockKey);
+        return true;
+    }
     // Temper: +1 quality (max 6); every affix is rolled again at the new quality, the locked one keeps its type
     public static bool Temper(ItemValue iv)
     {
