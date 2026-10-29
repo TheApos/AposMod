@@ -6,6 +6,12 @@
 			<passive_effect name="WalkSpeed" operation="perc_add" value="-.7"/>
 			<passive_effect name="RunSpeed" operation="perc_add" value="-.7"/>
 		</effect_group>
+		<!-- Molotov fire also burns 4% of the zombie's max health per second (at least 15): every buff update (1 s)
+		     asks Source/AposSplinter.cs for one tick, which knows the max health -->
+		<effect_group name="AposMod molotov burn">
+			<requirement name="!EntityTagCompare" tags="player"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposMolotovTicks" operation="add" value="1"/>
+		</effect_group>
 	</append>
 
 	<!-- ===== Veteran Junk indicator: shown while a pipe weapon is in hand ===== -->

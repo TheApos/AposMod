@@ -15,6 +15,9 @@ public class AposSplinter : MonoBehaviour
     const float ExplodeShare = 0.5f;
     const float ExplodeMin = 60f;
     const float ExplodeRadius = 4f;
+    const string MolotovVar = "aposMolotovTicks";
+    const float MolotovShare = 0.04f;
+    const float MolotovMin = 15f;
 
     readonly List<EntityAlive> near = new List<EntityAlive>();
 
@@ -39,6 +42,14 @@ public class AposSplinter : MonoBehaviour
                 float blast = -Mathf.Max(ExplodeMin, hit.Buffs.GetCustomVar("aposHitDmg") * ExplodeShare);
                 Splash(hit, blast);
                 foreach (EntityAlive e in Near(list, hit, ExplodeRadius)) Splash(e, blast);
+            }
+
+            // Molotov burn (buffs.xml counts the buff's 1 s updates): 4% of max health per tick, at least 15
+            int ticks = (int)hit.Buffs.GetCustomVar(MolotovVar);
+            if (ticks > 0)
+            {
+                hit.Buffs.SetCustomVar(MolotovVar, 0f);
+                Splash(hit, -ticks * Mathf.Max(MolotovMin, hit.GetMaxHealth() * MolotovShare));
             }
 
             int fragments = (int)hit.Buffs.GetCustomVar(CountVar);
