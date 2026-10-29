@@ -75,30 +75,6 @@
 			</effect_group>
 		</item_modifier>
 	</append>
-	<!-- ===== Eridium modules (Source/AposElites.cs): installed like a weapon mod, they change the weapon at once and
-	     disappear. Reroll: one random unlocked affix gets a new type and value. Lock: protects the best affix from Reroll.
-	     Temper: +1 quality (max 6), affix values grow to the new quality. Not on legendaries (fixed bonuses). ===== -->
-	<append xpath="/item_modifiers">
-		<item_modifier name="modWeaponAposReroll" installable_tags="weapon" modifier_tags="aposModuleReroll" blocked_tags="noMods,turretRanged,turretMelee,aposLegend" type="attachment">
-			<property name="Extends" value="modGeneralMaster" param1="CustomIcon"/>
-			<property name="CustomIcon" value="modGunTriggerGroupAutomatic"/>
-			<property name="CustomIconTint" value="190,90,255"/>
-			<property name="DescriptionKey" value="modWeaponAposRerollDesc"/>
-		</item_modifier>
-		<item_modifier name="modWeaponAposLock" installable_tags="weapon" modifier_tags="aposModuleLock" blocked_tags="noMods,turretRanged,turretMelee,aposLegend" type="attachment">
-			<property name="Extends" value="modGeneralMaster" param1="CustomIcon"/>
-			<property name="CustomIcon" value="modMeleeStructuralBrace"/>
-			<property name="CustomIconTint" value="190,90,255"/>
-			<property name="DescriptionKey" value="modWeaponAposLockDesc"/>
-		</item_modifier>
-		<item_modifier name="modWeaponAposTemper" installable_tags="weapon" modifier_tags="aposModuleTemper" blocked_tags="noMods,turretRanged,turretMelee,aposLegend" type="attachment">
-			<property name="Extends" value="modGeneralMaster" param1="CustomIcon"/>
-			<property name="CustomIcon" value="modMeleeTemperedBlade"/>
-			<property name="CustomIconTint" value="190,90,255"/>
-			<property name="DescriptionKey" value="modWeaponAposTemperDesc"/>
-		</item_modifier>
-	</append>
-
 	<!-- ===== Burning Shaft: half the vanilla ignite chance (5-30% instead of 10-60%): fire now scales with the hit ===== -->
 	<set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$burningShaft' and @value='10']/@value">5</set>
 	<set xpath="/item_modifiers/item_modifier[@name='modMeleeClubBurningShaft']//triggered_effect[@cvar='$burningShaft' and @value='20']/@value">10</set>

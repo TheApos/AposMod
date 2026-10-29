@@ -16,4 +16,17 @@
 	<append xpath="/blocks/block[@name='plantedHop3Harvest']"><drop event="Harvest" name="plantedHop1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
 	<append xpath="/blocks/block[@name='plantedSnowberry3Harvest']"><drop event="Harvest" name="plantedSnowberry1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
 	<append xpath="/blocks/block[@name='plantedPumpkin3Harvest']"><drop event="Harvest" name="plantedPumpkin1" count="0" prob="0.5" tag="aposSeedReturn"/></append>
+	<!-- ===== Eridium Forge: a workstation for everything Eridium (Source/AposForge.cs opens its window).
+	     Looks like a workbench; Class resolves to BlockAposEridiumForge in AposMod.dll. ===== -->
+	<append xpath="/blocks">
+		<block name="aposEridiumForge">
+			<property name="Extends" value="workbench" param1="Class,UnlockedBy,DescriptionKey,TraderStageTemplate,Tags,WorkstationIcon,Group"/>
+			<property name="Class" value="AposEridiumForge, AposMod"/>
+			<property name="CustomIcon" value="workbench"/>
+			<property name="CustomIconTint" value="190,90,255"/>
+			<property name="DescriptionKey" value="aposEridiumForgeDesc"/>
+			<property name="Group" value="Building,advBuilding"/>
+			<property name="Tags" value="workstationSkill"/>
+		</block>
+	</append>
 </configs>

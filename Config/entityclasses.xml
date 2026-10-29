@@ -468,11 +468,5 @@
 		<effect_group name="AposMod pipe veteran damage">
 			<requirement name="HoldingItemHasTags" tags="aposPipe"/>
 			<passive_effect name="EntityDamage" operation="perc_add" value="@aposPipeMult"/>
-		</effect_group>
-
-		<!-- ===== Legendaries crafted for Eridium always come out at quality 6 ===== -->
-		<effect_group name="AposMod legendary craft quality">
-			<passive_effect name="CraftingTier" operation="base_set" value="6" tags="aposLegend"/>
-		</effect_group>
-	</append>
+		</effect_group>	</append>
 </configs>

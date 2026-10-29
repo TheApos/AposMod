@@ -234,45 +234,44 @@ public static class AposAffixes
         Compose(iv, list, false);
     }
 
-    // ===== Eridium modules (Source/AposElites.cs installs them). Each returns false when it cannot do anything,
-    // so the module is given back. =====
+    // ===== Eridium Forge (Source/AposForge.cs). Each returns false when it cannot do anything (no Eridium is taken). =====
     public const string LockKey = "aposLock";
 
-    // Reroll: one random affix that is not locked gets a new type and value (an empty weapon gets its first affix)
-    public static bool RerollOne(ItemValue iv)
+    // Reroll the affix in row "index" (new type and value, same row); an index past the last affix adds a new one
+    // (up to the quality cap). The locked affix cannot be rerolled.
+    public static bool RerollAt(ItemValue iv, int index)
     {
         int kind = Kind(iv.ItemClass);
-        if (kind == 0 || Cap(iv.Quality) == 0) return false;
+        if (kind == 0) return false;
         List<Entry> list = Decompose(iv);
-        int locked = LockedType(iv);
-        List<int> free = new List<int>();
-        for (int i = 0; i < list.Count; i++) if ((int)list[i].Affix.Types[0] != locked) free.Add(i);
-        if (list.Count > 0 && free.Count == 0) return false;
-
-        if (list.Count > 0) list.RemoveAt(free[rand.Next(free.Count)]);
-        AposAffix a = Pick(iv.ItemClass, kind, iv.Quality, list);
-        if (a == null) return false;
-        list.Add(new Entry(a, a.Roll(iv.Quality, rand)));
+        if (index < list.Count)
+        {
+            if ((int)list[index].Affix.Types[0] == LockedType(iv)) return false;
+            List<Entry> others = new List<Entry>(list);
+            others.RemoveAt(index);
+            AposAffix a = Pick(iv.ItemClass, kind, iv.Quality, others);
+            if (a == null) return false;
+            list[index] = new Entry(a, a.Roll(iv.Quality, rand));
+        }
+        else
+        {
+            if (list.Count >= Cap(iv.Quality)) return false;
+            AposAffix a = Pick(iv.ItemClass, kind, iv.Quality, list);
+            if (a == null) return false;
+            list.Add(new Entry(a, a.Roll(iv.Quality, rand)));
+        }
         Compose(iv, list, true);
         return true;
     }
 
-    // Lock: protects the best affix (closest to its quality 6 maximum) from Reroll
-    public static bool LockBest(ItemValue iv)
+    // Lock the affix in row "index": Reroll skips it (one locked affix per weapon; locking another moves the lock)
+    public static bool LockAt(ItemValue iv, int index)
     {
         List<Entry> list = Decompose(iv);
-        if (list.Count == 0) return false;
-        Entry best = null;
-        float bestScore = -1f;
-        foreach (Entry e in list)
-        {
-            float score = Math.Abs(e.Value) / Math.Max(0.01f, Math.Abs(e.Affix.Max6));
-            if (score > bestScore) { bestScore = score; best = e; }
-        }
-        iv.SetMetadata(LockKey, (int)best.Affix.Types[0]);
+        if (index < 0 || index >= list.Count || (int)list[index].Affix.Types[0] == LockedType(iv)) return false;
+        iv.SetMetadata(LockKey, (int)list[index].Affix.Types[0]);
         return true;
     }
-
     // Temper: +1 quality (max 6); every affix is rolled again at the new quality, the locked one keeps its type
     public static bool Temper(ItemValue iv)
     {

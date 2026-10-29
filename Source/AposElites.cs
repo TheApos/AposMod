@@ -5,7 +5,7 @@
 // - Name tag above the head (OnGUI), regeneration, giant scale, summoner: this MonoBehaviour.
 // - Death (Harmony, EntityAlive.OnEntityDeath): weapon with affixes + Eridium, explosive blast.
 // - Armored / vampire damage changes: Source/AposCombat.cs. Other modifiers are plain buffs in buffs.xml.
-// - Eridium modules (Harmony, ItemValue.SetModification): installed like a weapon mod, applied at once, removed.
+// - Eridium is spent in the Eridium Forge (Source/AposForge.cs).
 // - Scrapping a weapon with affixes gives Eridium (Harmony, ItemActionEntryScrap.OnActivated).
 using System;
 using System.Collections.Generic;
@@ -281,29 +281,6 @@ public class AposElites : MonoBehaviour
         return text + Localization.Get(EntityClass.list[e.entityClass].entityClassName);
     }
 
-    // ===== Eridium modules =====
-    // Called when a mod lands in a weapon. Returns true if it was one of ours (then it is removed from the weapon).
-    public static bool ApplyModule(ItemValue weapon, ItemValue mod)
-    {
-        if (weapon == null || mod == null || mod.IsEmpty() || mod.ItemClass == null) return false;
-        string name = mod.ItemClass.Name;
-        bool ok;
-        if (name == "modWeaponAposReroll") ok = AposAffixes.RerollOne(weapon);
-        else if (name == "modWeaponAposLock") ok = AposAffixes.LockBest(weapon);
-        else if (name == "modWeaponAposTemper") ok = AposAffixes.Temper(weapon);
-        else return false;
-
-        EntityPlayerLocal p = AposRewards.Player();
-        if (!ok && p != null)
-        {
-            // nothing to change on this weapon: give the module back
-            ItemStack back = new ItemStack(mod.Clone(), 1);
-            if (!p.bag.AddItem(back)) p.inventory.AddItem(back);
-        }
-        if (p != null) GameManager.ShowTooltip(p, Localization.Get(ok ? name + "Done" : "aposModuleNothing"));
-        return true;
-    }
-
     // Eridium for scrapping a weapon: 2 per affix, x2 at quality 6; a legendary gives 50
     public static int ScrapEridium(ItemValue iv)
     {
@@ -339,39 +316,6 @@ public static class AposEliteDeathPatch
     {
         try { AposElites.OnDeath(__instance); }
         catch (Exception e) { Debug.LogError("[AposMod] Elite death failed: " + e); }
-    }
-}
-
-// A module put into a weapon (assemble window or dropped onto the weapon) is used up at once
-[HarmonyPatch(typeof(ItemValue), "SetModification")]
-public static class AposModulePatch
-{
-    static bool busy;
-
-    static void Postfix(ItemValue __instance, int _index, ItemValue _mod)
-    {
-        if (busy) return;
-        busy = true;
-        try
-        {
-            if (AposElites.ApplyModule(__instance, _mod)) __instance.SetModification(_index, ItemValue.None.Clone());
-        }
-        catch (Exception e) { Debug.LogError("[AposMod] Module failed: " + e); }
-        finally { busy = false; }
-    }
-}
-
-// The assemble window keeps showing the module in its slot: empty that slot too
-[HarmonyPatch(typeof(XUiC_ItemPartStackGrid), "HandleSlotChangedEvent")]
-public static class AposModuleSlotPatch
-{
-    static void Postfix(int slotNumber, ItemStack stack, XUiController[] ___itemControllers)
-    {
-        if (stack == null || stack.IsEmpty() || stack.itemValue.ItemClass == null) return;
-        string n = stack.itemValue.ItemClass.Name;
-        if (n != "modWeaponAposReroll" && n != "modWeaponAposLock" && n != "modWeaponAposTemper") return;
-        XUiC_BasePartStack slot = ___itemControllers[slotNumber] as XUiC_BasePartStack;
-        if (slot != null) slot.ItemStack = ItemStack.Empty.Clone();
     }
 }
 

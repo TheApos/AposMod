@@ -1,0 +1,112 @@
+<configs>
+	<!-- Eridium Forge window (Source/AposForge.cs, controller XUiC_AposForge) -->
+	<append xpath="/windows">
+		<window name="windowAposForge" width="610" height="600" panel="Left" cursor_area="true" controller="AposForge, AposMod">
+			<rect style="header.panel">
+				<headerbg />
+				<sprite style="header.icon" sprite="ui_game_symbol_workbench"/>
+				<label style="header.name" text="ERIDIUM FORGE" text_key="aposForgeTitle"/>
+			</rect>
+			<rect pos="0,-46" width="610" height="554">
+				<sprite depth="1" name="background" color="[darkGrey]" type="sliced"/>
+				<sprite depth="2" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false"/>
+				<label depth="3" name="lblWeapon" pos="12,-10" width="590" height="34" font_size="26" text="" />
+				<label depth="3" name="lblEridium" pos="12,-46" width="590" height="30" font_size="22" text="" />
+				<label depth="3" name="lblAffix0" pos="12,-100" width="300" height="30" font_size="22" text="" />
+				<rect name="btnReroll0" pos="318,-92" width="140" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="140" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnLock0" pos="462,-92" width="140" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="140" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<label depth="3" name="lblAffix1" pos="12,-146" width="300" height="30" font_size="22" text="" />
+				<rect name="btnReroll1" pos="318,-138" width="140" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="140" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnLock1" pos="462,-138" width="140" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="140" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<label depth="3" name="lblAffix2" pos="12,-192" width="300" height="30" font_size="22" text="" />
+				<rect name="btnReroll2" pos="318,-184" width="140" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="140" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnLock2" pos="462,-184" width="140" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="140" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnTemper" pos="12,-236" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnScrap" pos="312,-236" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<label depth="3" pos="12,-288" width="590" height="30" font_size="22" text_key="aposForgeLegends" text="" />
+				<rect name="btnLegend0" pos="12,-322" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnLegend1" pos="312,-322" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnLegend2" pos="12,-366" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnLegend3" pos="312,-366" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnLegend4" pos="12,-410" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnLegend5" pos="312,-410" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnLegend6" pos="12,-454" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnLegend7" pos="312,-454" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnLegend8" pos="12,-498" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnLegend9" pos="312,-498" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+			</rect>
+		</window>
+	</append>
+</configs>

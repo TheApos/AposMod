@@ -199,7 +199,7 @@ foreach ($name in $legends.Keys) {
     foreach ($n in @($item.SelectNodes("property[@name='$p']"))) { [void]$item.RemoveChild($n) }
   }
   foreach ($n in @($item.SelectNodes('stats'))) { [void]$item.RemoveChild($n) }
-  # aposLegend tag: blocks Eridium modules, gives crafted legendaries quality 6 (entityclasses.xml)
+  # aposLegend tag: marks legendaries (fixed bonuses, the Eridium Forge skips them)
   $tags = $item.SelectSingleNode("property[@name='Tags']")
   $tags.SetAttribute('value', $tags.GetAttribute('value') + ',aposLegend')
   $props = @(@('CustomIcon', $base), @('CustomIconTint', '255,180,0'), @('DescriptionKey', "${name}Desc"), @('ItemTypeIcon', 'trophy'))
