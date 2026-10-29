@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <xml>
 	<Name value="AposMod" />
 	<DisplayName value="AposMod" />
 	<Description value="Borderlands-style traits for weapon classes" />
 	<Author value="Apos" />
-	<Version value="0.9.0" />
+	<Version value="1.0.0" />
 </xml>

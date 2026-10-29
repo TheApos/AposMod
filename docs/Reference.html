@@ -85,9 +85,9 @@ footer { color: var(--muted); font-size: 13px; padding-block: 30px 40px; border-
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 0.9.0</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.0.0</div>
     <h1>Довідник AposMod</h1>
-    <p class="sub">Фішки зброї, перки, стихії, моди, легендарна зброя й налаштування в одному місці. Числа «0 → 5» залежать від рівня відповідного перка.</p>
+    <p class="sub">Фішки зброї, афікси, перки й атрибути, стихії, моди, легендарна зброя й налаштування в одному місці. Числа «0 → 5» залежать від рівня відповідного перка.</p>
   </div>
 </header>
 
@@ -97,7 +97,8 @@ footer { color: var(--muted); font-size: 13px; padding-block: 30px 40px; border-
     <a href="#ranged">Дальній бій</a>
     <a href="#elements">Стихії</a>
     <a href="#explosives">Вибухівка й інше</a>
-    <a href="#perks">Перки</a>
+    <a href="#affixes">Афікси</a>
+    <a href="#perks">Перки й атрибути</a>
     <a href="#gear">Моди й легендарки</a>
     <a href="#systems">Системи</a>
     <input id="q" type="search" placeholder="Пошук: кувалда, Brawler, кислота…" aria-label="Пошук по довіднику">
@@ -317,10 +318,145 @@ footer { color: var(--muted); font-size: 13px; padding-block: 30px 40px; border-
   </div>
 </section>
 
-<section id="perks" data-sec>
-  <h2>Змінені перки</h2>
-  <p class="lead">Ванільні ефекти, що дублювали фішки мода, замінено. В описі кожного рівня перка в грі є жовтий рядок AposMod з точними числами.</p>
+<section id="affixes" data-sec>
+  <h2>Афікси</h2>
+  <p class="lead">Зброя з луту, від зомбі й у торговців отримує випадкові афікси — як у Borderlands. Скрафчена зброя їх не має. Що вища якість, то більше афіксів і то вони сильніші.</p>
   <div class="grid">
+    <article class="card">
+      <h3>Скільки афіксів</h3>
+      <ul>
+        <li><b>Якість 1:</b> без афіксів.</li>
+        <li><b>Якість 2–3:</b> до 1 (шанс 50%).</li>
+        <li><b>Якість 4–5:</b> до 2 (75% / 35%).</li>
+        <li><b>Якість 6:</b> до 3 (100% / 60% / 30%), значення на максимумі.</li>
+        <li>Однакових афіксів на одній зброї не буває. Після об'єднання двох гармат зайві афікси зникають.</li>
+        <li>Афікси видно вгорі підказки предмета, а на іконці є значок-зірочка.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Вогнепальна зброя, луки, ракетниця</h3>
+      <div class="tagline">Значення: якість 2 → якість 6</div>
+      <ul>
+        <li><b>Rapid</b> — скорострільність +5% → +25%</li>
+        <li><b>Precise</b> — розкид −10% → −40%</li>
+        <li><b>Long Shot</b> — дальність +10% → +60%</li>
+        <li><b>Brutal</b> — шкода +5% → +35%</li>
+        <li><b>Quickload</b> — перезарядка +10% → +40%</li>
+        <li><b>Scatter</b> — дробовики: дробин +10% → +35%</li>
+        <li><b>Twin Shot</b> — пістолети, гвинтівки, автомати, лише якість 6: 2 кулі за постріл, кожна −40% шкоди</li>
+        <li><b>Deadly</b> — шкода в голову +10% → +60%</li>
+        <li><b>Extended</b> — магазин +10% → +60%</li>
+        <li><b>Swift</b> — швидкість бігу зі зброєю в руках +2% → +10%</li>
+        <li><b>Steady</b> — віддача −10% → −50%</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Ближній бій</h3>
+      <div class="tagline">Значення: якість 2 → якість 6</div>
+      <ul>
+        <li><b>Brutal</b> — шкода +5% → +35%</li>
+        <li><b>Fury</b> — швидкість атак +4% → +20%</li>
+        <li><b>Tireless</b> — витривалість на удар −10% → −40%</li>
+        <li><b>Deadly</b> — шкода в голову +10% → +60%</li>
+        <li><b>Reach</b> — дальність удару +5% → +20%</li>
+        <li><b>Swift</b> — швидкість бігу +2% → +10%</li>
+        <li><b>Leech</b> — лікує 1% → 6% від завданої шкоди</li>
+        <li><b>Butcher</b> — шанс відрубати кінцівку +5% → +30%</li>
+        <li><b>Durable</b> — міцність +20% → +80%</li>
+        <li><b>Wrecker</b> — шкода блокам +10% → +60%</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="perks" data-sec>
+  <h2>Перки й атрибути</h2>
+  <p class="lead">Кожен перк на максимальному рівні має свою фішку, а кожен атрибут — на 10 рівні. Ванільні ефекти, що дублювали фішки мода, замінено. В описі рівня в грі є жовтий рядок AposMod з точними числами.</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>Атрибути — <span class="trait">рівень 10</span></h3>
+      <ul>
+        <li><b>Perception — Executioner:</b> гвинтівки, списи й вибухівка завдають +100% шкоди цілям, у яких менше 30% здоров'я.</li>
+        <li><b>Strength — Overkill:</b> зайва шкода від добивального удару дробовиком, дубинкою чи кувалдою переходить на найближчого зомбі в 4 м.</li>
+        <li><b>Fortitude — Iron Body:</b> ні кровотечі, ні інфекції, а наявна інфекція виліковується.</li>
+        <li><b>Agility — Adrenaline:</b> вбивства пістолетом, луком чи ножем дають +10% швидкості бігу на 15 с, до 3 стаків.</li>
+        <li><b>Intellect — EMP:</b> кожне вбивство дає заряд. На 10 зарядах наступний удар випускає ЕМІ: 200 шкоди й 4 с шоку всім зомбі в 8 м.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Perception — <span class="trait">рівень 5</span></h3>
+      <ul>
+        <li><b>Flurry of Perception — Frenzy:</b> вбивство списом дає +25% швидкості атак на 5 с.</li>
+        <li><b>Demolitions Expert — Chain Reaction:</b> зомбі, вбитий вашою вибухівкою, сам вибухає: 250 шкоди в 4 м.</li>
+        <li><b>Penetrator — Shrapnel:</b> бронебійні набої завдають 40% шкоди пострілу всім у 3 м від цілі.</li>
+        <li><b>Infiltrator — Ghost:</b> навпочіпки вас удвічі важче помітити, удар по зомбі, що вас не бачить, ×2, а міни й пастки вам не шкодять.</li>
+        <li><b>Animal Tracker — Hunter's Mark:</b> влучання по тварині ставить на неї Mark.</li>
+        <li><b>Treasure Hunter — X Marks the Spot:</b> коло пошуку скарбу стискається майже до точки, а в скрині лежить зброя якості 5–6 з афіксами.</li>
+        <li><b>Salvage Operations — Junk Genius:</b> інструменти для розбирання зношуються на 90% повільніше.</li>
+        <li><b>Perception Mastery — Lucky Shot:</b> 10% шанс, що влучання зброєю Perception завдасть +100% шкоди.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Strength — <span class="trait">рівень 5</span></h3>
+      <ul>
+        <li><b>Flurry of Strength — Frenzy:</b> вбивство дубинкою чи кувалдою дає +25% швидкості атак на 5 с.</li>
+        <li><b>Boomstick — Pump Action:</b> вбивство з дробовика заряджає 1 набій у магазин.</li>
+        <li><b>Pack Mule — Beast of Burden:</b> перевантаження більше не сповільнює.</li>
+        <li><b>Strength Mastery — Crippling Blows:</b> силовий удар дубинкою чи кувалдою ламає зомбі ноги, і він повзе.</li>
+        <li><b>Miner 69'er — Tunnel Rat:</b> інструменти для видобутку витрачають на 50% менше витривалості.</li>
+        <li><b>Mother Lode — Jackpot:</b> удар по руді чи дереву з шансом 5% дає ×5 видобутку на 2 с.</li>
+        <li><b>Junk Miner — Scrap King:</b> +50% з куп мотлоху й розбирання.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Fortitude — <span class="trait">рівень 5</span></h3>
+      <ul>
+        <li><b>Flurry of Fortitude — Frenzy:</b> вбивство кастетами дає +25% швидкості атак на 5 с.</li>
+        <li><b>The Huntsman — Butcher:</b> розбирання туші лікує 30 HP.</li>
+        <li><b>Pain Tolerance — Unbreakable:</b> коли здоров'я нижче 25%, ви отримуєте на 50% менше шкоди.</li>
+        <li><b>Fortitude Mastery — Second Wind:</b> раз на 5 хв, коли здоров'я падає нижче 20%, ви одразу відновлюєте 70%.</li>
+        <li><b>Siphoning Strikes — Vampire:</b> вбивства в ближньому бою ще й відновлюють 20 витривалості.</li>
+        <li><b>Healing Factor — Regeneration:</b> 10 с без бою — і ви відновлюєте 3 HP/с.</li>
+        <li><b>Slow Metabolism — Iron Stomach:</b> ні отруєння, ні дизентерії (брудну воду можна пити), а їжа й вода не падають нижче 25%.</li>
+        <li><b>Rule 1: Cardio — Second Lungs:</b> коли витривалість закінчується, ви одразу отримуєте +50% (раз на 60 с).</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Agility — <span class="trait">рівень 5</span></h3>
+      <ul>
+        <li><b>Flurry of Agility — Frenzy:</b> вбивство ножем дає +25% швидкості атак на 5 с.</li>
+        <li><b>Run and Gun — Gun Kata:</b> на ходу стрільба від стегна без розкиду і з +30% шкоди.</li>
+        <li><b>Hard Target — Blur:</b> на бігу ви отримуєте на 50% менше шкоди.</li>
+        <li><b>Parkour — Cat Landing:</b> падіння завдає на 99% менше шкоди.</li>
+        <li><b>Agility Mastery — Evasion:</b> після отриманого удару ви бігаєте на 30% швидше 5 с.</li>
+        <li><b>Hidden Strike — Assassinate:</b> скрадлива атака вбиває будь-якого неелітного зомбі.</li>
+        <li><b>From the Shadows — Vanish:</b> зомбі, що вас загубили, майже одразу кидають пошук.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Intellect — <span class="trait">рівень 5</span></h3>
+      <ul>
+        <li><b>Electrocutioner — Overcharge:</b> по шокованих зомбі будь-яка ваша зброя завдає +25% шкоди.</li>
+        <li><b>Better Barter — Black Market:</b> після кожного оновлення асортименту з шансом 25% у торговця з'являється легендарка.</li>
+        <li><b>Daring Adventurer — Big Score:</b> зброя в нагороду за квест ★5+ завжди якості 6 з 3 афіксами.</li>
+        <li><b>Charismatic Nature — Leader:</b> бонуси вашої харизми діють на вас удвічі сильніше.</li>
+        <li><b>Physician — Field Medic:</b> лікування +50%, а аптечка ще й зупиняє кровотечу.</li>
+        <li><b>Advanced Engineering — Overclock:</b> ваші пастки й турелі-блоки завдають +50% шкоди.</li>
+        <li><b>Grease Monkey — Mechanic:</b> транспорт витрачає на 50% менше пального.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Загальні перки — <span class="trait">максимум</span></h3>
+      <ul>
+        <li><b>Light Armor 4 — Nimble:</b> +15% швидкості руху.</li>
+        <li><b>Medium Armor 4 — Balanced:</b> атаки витрачають на 20% менше витривалості.</li>
+        <li><b>Heavy Armor 4 — Fortress:</b> вас не можна оглушити чи збити з ніг.</li>
+        <li><b>Master Chef 3 — Gourmet:</b> ефекти їжі й напоїв діють утричі довше.</li>
+        <li><b>Living Off the Land 3 — Green Thumb:</b> урожай з шансом 50% повертає насіння.</li>
+        <li><b>Lock Picking 3 — Safecracker:</b> відмички майже не ламаються.</li>
+        <li><b>Lucky Looter 5 — Fortune:</b> знайдена зброя отримує +1 афікс у межах ліміту якості.</li>
+      </ul>
+    </article>
     <article class="card"><h3>Grand Slam → <span class="trait">Rage</span></h3><ul><li>Збиття з ніг на бігу прибрано. Опис Rage — у розділі «Ближній бій».</li></ul></article>
     <article class="card"><h3>Intellect Mastery 4–5</h3><ul><li><b>4 — Field Repair:</b> уся зброя, інструменти й броня зношуються на 30% повільніше.</li><li><b>5 — Inventor:</b> усе, що ви створюєте, виходить на рівень якості вище.</li><li>Колишні бонуси жезла (заряд за 2 удари, +300% шкоди струмом) прибрано.</li></ul></article>
     <article class="card"><h3>Pummel Pete</h3><ul><li>Прибрано: силовий удар по оглушеному клав його «назавжди».</li><li>Натомість: силовий удар по оглушеному +10…50% шкоди.</li></ul></article>
@@ -354,18 +490,19 @@ footer { color: var(--muted); font-size: 13px; padding-block: 30px 40px; border-
     </article>
     <article class="card legendary">
       <h3><span class="trait">Легендарна зброя</span></h3>
-      <div class="tagline">Золота назва · 4% у фінальних скринях ★4, 10% у ★5 · не продається</div>
+      <div class="tagline">Золота назва · значок-трофей · завжди якість 6 · 4% у фінальних скринях ★4, 10% у ★5 · Black Market</div>
+      <p>Кожна легендарка має 3 постійні афікси на максимумі якості 6 і власну фішку, тому вона завжди не гірша за найкращу зброю з випадковими афіксами.</p>
       <ul>
-        <li><b>Unkempt Harold</b> (.44 Desert Vulture): 3 кулі за постріл віялом.</li>
-        <li><b>Lady Fist</b> (9-мм пістолет): +50% шкоди, хедшот лікує 5 HP.</li>
-        <li><b>Dragon's Breath</b> (помповий дробовик): +20%, кожне влучання підпалює.</li>
-        <li><b>The Ripper</b> (мачете): +40%, кожен удар спричиняє кровотечу, по тих, хто вже стікає кров'ю, ще +50%; вбивство лікує 20 HP.</li>
-        <li><b>Thunderclap</b> (сталева кувалда): +25%, силовий удар шокує всіх у 4 м. Кожне вбивство дає грозовий заряд, на 3 зарядах силовий удар кличе блискавку: 150 шкоди й 3 с шоку всім у 6 м.</li>
-        <li><b>Hornet</b> (SMG-5): +15%, влучання з шансом 30% роз'їдає кислотою.</li>
-        <li><b>Storm Fist</b> (сталеві кастети): +20%, удар з шансом 25% підпалює і з шансом 25% шокує, тож Confusion вмикається сама.</li>
-        <li><b>Artemis</b> (блочний лук): кожна стріла підпалює й розлітається на 8 уламків по 50.</li>
-        <li><b>Big Boom</b> (ракетниця): з шансом 50% наступна ракета безкоштовна.</li>
-        <li><b>Predator</b> (снайперська гвинтівка): +25%, кожен хедшот рикошетить на 15 м: 100 шкоди й 2 с оглушення.</li>
+        <li><b>Unkempt Harold</b> (.44 Desert Vulture): 3 кулі за постріл віялом. <i>Brutal, Rapid, Extended.</i></li>
+        <li><b>Lady Fist</b> (9-мм пістолет): +50% шкоди, хедшот лікує 5 HP. <i>Deadly, Precise, Quickload.</i></li>
+        <li><b>Dragon's Breath</b> (помповий дробовик): +20%, кожне влучання підпалює. <i>Scatter, Brutal, Quickload.</i></li>
+        <li><b>The Ripper</b> (мачете): +40%, кожен удар спричиняє кровотечу, по тих, хто вже стікає кров'ю, ще +50%; вбивство лікує 20 HP. <i>Brutal, Fury, Leech.</i></li>
+        <li><b>Thunderclap</b> (сталева кувалда): +25%, силовий удар шокує всіх у 4 м. Кожне вбивство дає грозовий заряд, на 3 зарядах силовий удар кличе блискавку: 150 шкоди й 3 с шоку всім у 6 м. <i>Brutal, Tireless, Deadly.</i></li>
+        <li><b>Hornet</b> (SMG-5): +15%, влучання з шансом 30% роз'їдає кислотою. <i>Extended, Rapid, Steady.</i></li>
+        <li><b>Storm Fist</b> (сталеві кастети): +20%, удар з шансом 25% підпалює і з шансом 25% шокує, тож Confusion вмикається сама. <i>Fury, Brutal, Swift.</i></li>
+        <li><b>Artemis</b> (блочний лук): кожна стріла підпалює й розлітається на 8 уламків по 50. <i>Brutal, Deadly, Quickload.</i></li>
+        <li><b>Big Boom</b> (ракетниця): з шансом 50% наступна ракета безкоштовна. <i>Brutal, Quickload, Long Shot.</i></li>
+        <li><b>Predator</b> (снайперська гвинтівка): +25%, кожен хедшот рикошетить на 15 м: 100 шкоди й 2 с оглушення. <i>Deadly, Long Shot, Steady.</i></li>
       </ul>
     </article>
   </div>
@@ -398,6 +535,12 @@ aposdmg kill off     без напису «Труп!»
 aposdmg color off    без блакитного кольору</pre>
     </article>
     <article class="card">
+      <h3>Перевірка афіксів — <span class="trait">aposaffix</span></h3>
+      <div class="tagline">Консоль F1 · зброя в руках</div>
+      <pre>aposaffix            нові афікси, максимум для якості
+aposaffix 6          спершу якість 6, потім 3 афікси</pre>
+    </article>
+    <article class="card">
       <h3>Стелс</h3>
       <ul>
         <li>Зомбі в будинках, які раніше вибігали хвилею після тригера або одразу кидалися в атаку, тепер з'являються сплячими на своїх місцях, коли ви підходите.</li>
@@ -417,6 +560,8 @@ aposdmg color off    без блакитного кольору</pre>
         <li>Перезарядка Earthquake і Chain Lightning</li>
         <li>Грозові заряди Thunderclap, безкоштовна ракета Big Boom</li>
         <li>Червоне кільце над зомбі — на ньому Mark арбалета</li>
+        <li>Frenzy, Adrenaline (стаки), заряди EMP, Jackpot, Evasion</li>
+        <li>Перезарядка Second Wind (5 хв) і Second Lungs (60 с)</li>
       </ul>
     </article>
     <article class="card">

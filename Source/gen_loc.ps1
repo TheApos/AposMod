@@ -118,6 +118,20 @@ $extra = [ordered]@{
   buffAposThunderChargeDesc  = 'Thunderclap: at 3 charges the next power attack calls lightning.', 'Раскат грома: на 3 зарядах следующая силовая атака вызывает молнию.'
   buffAposFreeRocketName     = 'Free Rocket', 'Бесплатная ракета'
   buffAposFreeRocketDesc     = 'Big Boom: the next rocket costs no ammo.', 'Большой бабах: следующая ракета не тратит боеприпас.'
+  buffAposFrenzyName         = 'Frenzy', 'Неистовство'
+  buffAposFrenzyDesc         = '+25% attack speed with these weapons.', '+25% скорости атаки этим оружием.'
+  buffAposAdrenalineName     = 'Adrenaline', 'Адреналин'
+  buffAposAdrenalineDesc     = '+10% move speed per stack. 15 s after the last kill.', '+10% скорости передвижения за стак. 15 с после последнего убийства.'
+  buffAposEmpName            = 'EMP Charges', 'Заряды ЭМИ'
+  buffAposEmpDesc            = 'At 10 charges your next hit releases an EMP around you.', 'На 10 зарядах следующий удар выпускает ЭМИ вокруг вас.'
+  buffAposJackpotName        = 'Jackpot!', 'Джекпот!'
+  buffAposJackpotDesc        = 'Mining yields x5.', 'Добыча x5.'
+  buffAposEvasionName        = 'Evasion', 'Уклонение'
+  buffAposEvasionDesc        = '+30% move speed.', '+30% скорости передвижения.'
+  buffAposSecondWindName     = 'Second Wind (recharging)', 'Второе дыхание (перезарядка)'
+  buffAposSecondWindDesc     = 'Second Wind is ready again when this ends.', 'Второе дыхание снова готово, когда это закончится.'
+  buffAposSecondLungsName    = 'Second Lungs (recharging)', 'Второе дыхание лёгких (перезарядка)'
+  buffAposSecondLungsDesc    = 'Second Lungs is ready again when this ends.', 'Второе дыхание лёгких снова готово, когда это закончится.'
   # Grand Slam is replaced by Rage (full texts)
   perkGrandSlamName       = 'Rage', 'Ярость'
   perkGrandSlamDesc       = 'Every kill with a club, bat or sledgehammer fuels your rage: more damage and faster attacks for a short time.', 'Каждое убийство дубинкой, битой или кувалдой разжигает ярость: больше урона и быстрее атаки на короткое время.'
@@ -170,6 +184,118 @@ foreach ($p in $perkLines.Keys) {
     if ($L -eq 5) { $en += '\n[FFB400]Level 5:[-] ' + $perkFinale[$p][0]; $ru += '\n[FFB400]Уровень 5:[-] ' + $perkFinale[$p][1] }
     $extra[$key] = $en, $ru
   }
+}
+
+# ===== 1.0: max-rank highlights of the other perks (perk -> max rank, EN, RU), appended to that rank's vanilla text =====
+$perkHighlights = [ordered]@{
+  perkFlurryOfPerception = 5, 'Frenzy: a kill with a spear gives +25% attack speed for 5 s.', 'Неистовство: убийство копьём даёт +25% скорости атаки на 5 с.'
+  perkFlurryOfStrength   = 5, 'Frenzy: a kill with clubs or sledgehammers gives +25% attack speed for 5 s.', 'Неистовство: убийство дубинкой или кувалдой даёт +25% скорости атаки на 5 с.'
+  perkFlurryOfFortitude  = 5, 'Frenzy: a kill with knuckles or bare hands gives +25% attack speed for 5 s.', 'Неистовство: убийство кастетом или голыми руками даёт +25% скорости атаки на 5 с.'
+  perkFlurryOfAgility    = 5, 'Frenzy: a kill with knives gives +25% attack speed for 5 s.', 'Неистовство: убийство ножом даёт +25% скорости атаки на 5 с.'
+  perkDemolitionsExpert  = 5, 'Chain Reaction: a zombie killed by your explosive blows up too: 250 damage within 4 m.', 'Цепная реакция: зомби, убитый вашей взрывчаткой, сам взрывается: 250 урона в радиусе 4 м.'
+  perkPenetrator         = 5, 'Shrapnel: armor-piercing hits deal 40% of their damage to every zombie within 3 m of the target.', 'Шрапнель: бронебойные попадания наносят 40% своего урона всем зомби в радиусе 3 м от цели.'
+  perkInfiltrator        = 5, 'Ghost: crouching halves your noise and visibility, hits on zombies that have not noticed you deal x2 damage, mines and traps cannot hurt you.', 'Призрак: в приседе вы вдвое тише и незаметнее, удары по зомби, которые вас не заметили, наносят x2 урона, мины и ловушки вам не вредят.'
+  perkAnimalTracker      = 5, "Hunter's Mark: hitting an animal marks it for 10 s like a crossbow bolt (red ring, more damage).", 'Метка охотника: попадание по животному помечает его на 10 с, как болт арбалета (красное кольцо, больше урона).'
+  perkTreasureHunter     = 5, 'X Marks the Spot: the treasure search circle shrinks almost to a point, and buried treasure also holds a quality 5-6 weapon with affixes.', 'Крестик на карте: круг поиска клада сжимается почти до точки, а в кладе ещё и оружие 5-6 качества с аффиксами.'
+  perkSalvageOperations  = 5, 'Junk Genius: salvage tools wear 90% slower.', 'Гений хлама: инструменты для разборки изнашиваются на 90% медленнее.'
+  perkPerceptionMastery  = 5, 'Lucky Shot: a hit with a Perception weapon has a 10% chance to deal +100% damage.', 'Удачный выстрел: попадание оружием Восприятия с шансом 10% наносит +100% урона.'
+  perkBoomstick          = 5, 'Pump Action: every shotgun kill loads 1 shell into the magazine.', 'Помпа: каждое убийство из дробовика заряжает 1 патрон в магазин.'
+  perkPackMule           = 5, 'Beast of Burden: an overloaded backpack no longer slows you down.', 'Вьючный зверь: перегруз больше не замедляет вас.'
+  perkStrengthMastery    = 5, 'Crippling Blows: a club or sledgehammer power attack breaks the legs: the zombie crawls.', 'Калечащие удары: силовая атака дубинкой или кувалдой ломает ноги — зомби ползёт.'
+  perkMiner69r           = 5, 'Tunnel Rat: mining tools cost 50% less stamina.', 'Туннельная крыса: инструменты добычи тратят на 50% меньше выносливости.'
+  perkMotherLode         = 5, 'Jackpot: a hit on ore or wood has a 5% chance to make the next 2 s of mining yield x5.', 'Джекпот: удар по руде или дереву с шансом 5% даёт x5 добычи на 2 с.'
+  perkJunkMiner          = 5, 'Scrap King: +50% more from junk piles and salvage.', 'Король хлама: +50% добычи с куч хлама и разборки.'
+  perkTheHuntsman        = 5, 'Butcher: harvesting a carcass heals 30 HP (once per 5 s).', 'Мясник: разделка туши лечит 30 HP (раз в 5 с).'
+  perkPainTolerance      = 5, 'Unbreakable: below 25% health you take 50% less damage.', 'Несгибаемый: при здоровье ниже 25% вы получаете на 50% меньше урона.'
+  perkFortitudeMastery   = 5, 'Second Wind: once per 5 minutes, dropping below 20% health instantly heals 70% of your max health.', 'Второе дыхание: раз в 5 минут, когда здоровье падает ниже 20%, вы сразу восстанавливаете 70% максимума.'
+  perkSiphoningStrikes   = 5, 'Vampire: melee kills also restore 20 stamina.', 'Вампир: убийства в ближнем бою ещё и восстанавливают 20 выносливости.'
+  perkHealingFactor      = 5, 'Regeneration: after 10 s without hitting or being hit you regenerate 3 HP/s.', 'Регенерация: через 10 с без ударов (ваших и по вам) вы восстанавливаете 3 HP/с.'
+  perkSlowMetabolism     = 5, 'Iron Stomach: no food poisoning or dysentery (murky water is safe), and food and water never drop below 25%.', 'Железный желудок: никаких отравлений и дизентерии (мутная вода безопасна), а еда и вода не падают ниже 25%.'
+  perkRuleOneCardio      = 5, 'Second Lungs: when your stamina runs out you instantly get 50% back (once per 60 s).', 'Второе дыхание лёгких: когда выносливость кончается, вы сразу получаете 50% обратно (раз в 60 с).'
+  perkRunAndGun          = 5, 'Gun Kata: shooting on the move: no hip spread and +30% damage.', 'Ган-ката: стрельба на ходу без разброса от бедра и с +30% урона.'
+  perkHardTarget         = 5, 'Blur: while running you take 50% less damage.', 'Размытие: на бегу вы получаете на 50% меньше урона.'
+  perkParkour            = 5, 'Cat Landing: 99% less fall damage.', 'Кошачье приземление: на 99% меньше урона от падения.'
+  perkAgilityMastery     = 5, 'Evasion: after taking a hit you move 30% faster for 5 s.', 'Уклонение: после полученного удара вы двигаетесь на 30% быстрее 5 с.'
+  perkHiddenStrike       = 5, 'Assassinate: a sneak attack kills any non-elite zombie.', 'Убийство из тени: скрытная атака убивает любого не-элитного зомби.'
+  perkFromTheShadows     = 5, 'Vanish: zombies that lost you give up the search almost at once.', 'Исчезновение: зомби, потерявшие вас, почти сразу прекращают поиск.'
+  perkElectrocutioner    = 5, 'Overcharge: you deal +25% damage (any weapon) to shocked zombies.', 'Перегрузка: вы наносите +25% урона (любым оружием) шокированным зомби.'
+  perkBetterBarter       = 5, 'Black Market: every trader restock has a 25% chance to include a legendary weapon.', 'Чёрный рынок: при каждом обновлении товара торговца с шансом 25% появляется легендарное оружие.'
+  perkDaringAdventurer   = 5, 'Big Score: the weapon reward of a tier 5+ quest is always quality 6 with 3 affixes.', 'Крупный куш: оружие в награду за квест 5+ уровня всегда 6 качества с 3 аффиксами.'
+  perkCharismaticNature  = 5, 'Leader: your own Charismatic Nature bonuses count twice for you.', 'Лидер: бонусы вашей «Харизмы» действуют на вас вдвойне.'
+  perkPhysician          = 5, 'Field Medic: all healing +50%; healing with a medical item also stops bleeding.', 'Полевой медик: всё лечение +50%; лечение медицинским предметом ещё и останавливает кровотечение.'
+  perkAdvancedEngineering = 5, 'Overclock: your traps and turret blocks deal +50% damage.', 'Разгон: ваши ловушки и турели-блоки наносят +50% урона.'
+  perkGreaseMonkey       = 5, 'Mechanic: vehicles use 50% less fuel.', 'Механик: транспорт тратит на 50% меньше топлива.'
+  perkLightArmor         = 4, 'Nimble: +15% move speed.', 'Проворство: +15% скорости передвижения.'
+  perkMediumArmor        = 4, 'Balanced: attacks cost 20% less stamina.', 'Баланс: атаки тратят на 20% меньше выносливости.'
+  perkHeavyArmor         = 4, 'Fortress: you cannot be stunned or knocked down.', 'Крепость: вас нельзя оглушить или сбить с ног.'
+  perkMasterChef         = 3, 'Gourmet: food and drink buffs last 3 times longer.', 'Гурман: эффекты еды и напитков длятся втрое дольше.'
+  perkLivingOffTheLand   = 3, 'Green Thumb: a harvested crop gives its seed back with a 50% chance.', 'Зелёные руки: собранный урожай с шансом 50% возвращает семя.'
+  perkLockPicking        = 3, 'Safecracker: lockpicks almost never break (-90%).', 'Медвежатник: отмычки почти не ломаются (-90%).'
+  perkLuckyLooter        = 5, 'Fortune: weapons you loot get +1 affix (within the quality limit).', 'Фортуна: найденное вами оружие получает +1 аффикс (в пределах лимита качества).'
+}
+[xml]$progXml = Get-Content (Join-Path $cfg 'progression.xml') -Raw -Encoding UTF8
+foreach ($p in $perkHighlights.Keys) {
+  $h = $perkHighlights[$p]
+  # the long description key of that rank as progression.xml names it (some perks do not follow <perk>RankNLongDesc)
+  $key = ($progXml.SelectSingleNode("//perk[@name='$p']//effect_description[@level='$($h[0])']")).long_desc_key
+  if (-not $key) { $key = "${p}Rank$($h[0])LongDesc" }
+  if (-not $loc[$key]) { throw "No vanilla text for $key" }
+  $extra[$key] = ($loc[$key] + '\n\n[FFB400]AposMod — Level ' + $h[0] + ':[-] ' + $h[1]), ($locRu[$key] + '\n\n[FFB400]AposMod — Уровень ' + $h[0] + ':[-] ' + $h[2])
+}
+# Attribute level 10 highlights
+$attrHighlights = [ordered]@{
+  attPerception = 'Executioner: Perception weapons (rifles, spears, explosives) deal +100% damage to targets below 30% health.', 'Палач: оружие Восприятия (винтовки, копья, взрывчатка) наносит +100% урона целям, у которых меньше 30% здоровья.'
+  attStrength   = 'Overkill: damage beyond a killing blow with a Strength weapon (shotguns, clubs, sledgehammers) hits the nearest zombie within 4 m.', 'Перебор: лишний урон от добивающего удара оружием Силы (дробовики, дубинки, кувалды) переходит на ближайшего зомби в радиусе 4 м.'
+  attFortitude  = 'Iron Body: you cannot bleed or get infected, and an existing infection is cured.', 'Железное тело: вы не кровоточите и не заражаетесь, а текущая инфекция излечивается.'
+  attAgility    = 'Adrenaline: kills with Agility weapons (pistols, bows, knives) give +10% move speed for 15 s, up to 3 stacks.', 'Адреналин: убийства оружием Ловкости (пистолеты, луки, ножи) дают +10% скорости передвижения на 15 с, до 3 стаков.'
+  attIntellect  = 'EMP: every kill gives a charge; at 10 charges your next hit releases an EMP: 200 damage and a 4 s shock to every zombie within 8 m of you.', 'ЭМИ: каждое убийство даёт заряд; на 10 зарядах следующий удар выпускает ЭМИ: 200 урона и шок на 4 с всем зомби в радиусе 8 м от вас.'
+}
+foreach ($a in $attrHighlights.Keys) {
+  $key = "${a}Rank10LongDesc"
+  if (-not $loc[$key]) { throw "No vanilla text for $key" }
+  $extra[$key] = ($loc[$key] + '\n\n[FFB400]AposMod — Level 10:[-] ' + $attrHighlights[$a][0]), ($locRu[$key] + '\n\n[FFB400]AposMod — Уровень 10:[-] ' + $attrHighlights[$a][1])
+}
+
+# Affix names for the item tooltip (Source/AposAffixes.cs: "aposAffix" + key, followed by the value)
+$affixNames = [ordered]@{
+  Rapid = 'Rapid: fire rate', 'Скорострельный: темп стрельбы'
+  Precise = 'Precise: spread', 'Точный: разброс'
+  LongShot = 'Long Shot: range', 'Дальнобойный: дальность'
+  Brutal = 'Brutal: damage', 'Жестокий: урон'
+  Quickload = 'Quickload: reload speed', 'Быстрая перезарядка: скорость перезарядки'
+  Scatter = 'Scatter: pellets', 'Картечь: дробины'
+  Twin = 'Twin Shot', 'Двойной выстрел'
+  TwinDesc = '2 bullets per shot, each -40% damage', '2 пули за выстрел, каждая -40% урона'
+  Deadly = 'Deadly: headshot damage', 'Смертельный: урон в голову'
+  Extended = 'Extended: magazine', 'Расширенный: магазин'
+  Swift = 'Swift: move speed', 'Быстроногий: скорость передвижения'
+  Steady = 'Steady: recoil', 'Устойчивый: отдача'
+  Fury = 'Fury: attack speed', 'Неистовый: скорость атаки'
+  Tireless = 'Tireless: stamina per attack', 'Неутомимый: выносливость за удар'
+  Reach = 'Reach: attack range', 'Длинная рука: дальность удара'
+  Leech = 'Leech: health from damage', 'Вампиризм: здоровье от урона'
+  Butcher = 'Butcher: dismember chance', 'Мясник: шанс отрубить конечность'
+  Durable = 'Durable: durability', 'Прочный: прочность'
+  Wrecker = 'Wrecker: block damage', 'Разрушитель: урон блокам'
+}
+foreach ($k in $affixNames.Keys) { $extra["aposAffix$k"] = $affixNames[$k] }
+
+# Legendaries: always quality 6 + fixed affixes (Source/gen_legend.ps1)
+$legendAffixes = [ordered]@{
+  aposLegendHarold = 'Brutal +35%, Rapid +25%, Extended +60%', 'Жестокий +35%, Скорострельный +25%, Расширенный +60%'
+  aposLegendLadyFist = 'Deadly +60%, Precise -40%, Quickload +40%', 'Смертельный +60%, Точный -40%, Быстрая перезарядка +40%'
+  aposLegendDragonBreath = 'Scatter +35%, Brutal +35%, Quickload +40%', 'Картечь +35%, Жестокий +35%, Быстрая перезарядка +40%'
+  aposLegendRipper = 'Brutal +35%, Fury +20%, Leech 6%', 'Жестокий +35%, Неистовый +20%, Вампиризм 6%'
+  aposLegendThunderclap = 'Brutal +35%, Tireless -40%, Deadly +60%', 'Жестокий +35%, Неутомимый -40%, Смертельный +60%'
+  aposLegendHornet = 'Extended +60%, Rapid +25%, Steady -50%', 'Расширенный +60%, Скорострельный +25%, Устойчивый -50%'
+  aposLegendStormFist = 'Fury +20%, Brutal +35%, Swift +10%', 'Неистовый +20%, Жестокий +35%, Быстроногий +10%'
+  aposLegendArtemis = 'Brutal +35%, Deadly +60%, Quickload +40%', 'Жестокий +35%, Смертельный +60%, Быстрая перезарядка +40%'
+  aposLegendBigBoom = 'Brutal +35%, Quickload +40%, Long Shot +60%', 'Жестокий +35%, Быстрая перезарядка +40%, Дальнобойный +60%'
+  aposLegendPredator = 'Deadly +60%, Long Shot +60%, Steady -50%', 'Смертельный +60%, Дальнобойный +60%, Устойчивый -50%'
+}
+foreach ($k in $legendAffixes.Keys) {
+  $d = $extra["${k}Desc"]
+  $extra["${k}Desc"] = ($d[0] + '\n[FFD24D]Always quality 6. Affixes: ' + $legendAffixes[$k][0] + '.[-]'), ($d[1] + '\n[FFD24D]Всегда 6 качества. Аффиксы: ' + $legendAffixes[$k][1] + '.[-]')
 }
 
 function Csv($s) { '"' + $s.Replace('"', '""') + '"' }
