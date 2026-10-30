@@ -92,9 +92,16 @@ public static class AposCombat
                 EntityAlive next = Nearest(world, target, OverkillRadius);
                 if (next != null) Splash(next, excess);
             }
-            if (weaponClass.ItemTags.Test_AnySet(ShotgunTag) && AposAffixes.Level(attacker, "perkBoomstick") >= 5)
+            if (weaponClass.ItemTags.Test_AnySet(ShotgunTag) && AposAffixes.Level(attacker, "perkBoomstick") >= 5
+                && attacker.inventory.holdingItem == weaponClass)
             {
-                LoadShell(attacker as EntityPlayerLocal, weaponClass);
+                AposAmmo.LoadRounds(attacker as EntityPlayerLocal, 1);
+            }
+            // Gunslinger 5: a headshot kill during Headhunter adds 2 empowered shots
+            if ((response.HitBodyPart & EnumBodyPartHit.Head) != 0 && attacker.Buffs.HasBuff("buffAposHeadhunter")
+                && AposAffixes.Level(attacker, "perkGunslinger") >= 5)
+            {
+                attacker.Buffs.SetCustomVar("aposHHShots", attacker.Buffs.GetCustomVar("aposHHShots") + 2f);
             }
             // Demolitions Expert 5 "Chain Reaction": a zombie killed by your explosive blows up too
             if (IsExplosive(weaponClass) && AposAffixes.Level(attacker, "perkDemolitionsExpert") >= 5)
@@ -145,21 +152,6 @@ public static class AposCombat
     static bool IsApAmmo(string name)
     {
         return name.StartsWith("ammo") && name.EndsWith("AP");
-    }
-
-    static void LoadShell(EntityPlayerLocal player, ItemClass weaponClass)
-    {
-        if (player == null || player.inventory.holdingItem != weaponClass) return;
-        ItemActionRanged ranged = weaponClass.Actions[0] as ItemActionRanged;
-        if (ranged == null) return;
-        ItemInventoryData data = player.inventory.holdingItemData;
-        ItemValue iv = data.itemValue;
-        int max = (int)EffectManager.GetValue(PassiveEffects.MagazineSize, iv, ranged.BulletsPerMagazine, player);
-        if (iv.Meta >= max) return;
-        iv.Meta++;
-        ItemValue hand = player.inventory.holdingItemItemValue;
-        if (hand != iv) hand.Meta = iv.Meta;
-        player.inventory.CallOnToolbeltChangedInternal();
     }
 
     static void Splash(EntityAlive e, int damage)

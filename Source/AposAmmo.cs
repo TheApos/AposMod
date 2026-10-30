@@ -5,12 +5,37 @@ using UnityEngine;
 public class AposAmmo : MonoBehaviour
 {
     const string RefundVar = "aposAmmoRefund";
+    const string MagRefundVar = "aposMagRefund";
+
+    // Adds rounds straight into the magazine of the held ranged weapon (up to its magazine size)
+    public static void LoadRounds(EntityPlayerLocal player, int rounds)
+    {
+        if (player == null || rounds <= 0) return;
+        ItemClass held = player.inventory.holdingItem;
+        ItemActionRanged ranged = (held != null && held.Actions != null && held.Actions.Length > 0) ? held.Actions[0] as ItemActionRanged : null;
+        if (ranged == null) return;
+        ItemValue iv = player.inventory.holdingItemData.itemValue;
+        int max = (int)EffectManager.GetValue(PassiveEffects.MagazineSize, iv, ranged.BulletsPerMagazine, player);
+        if (iv.Meta >= max) return;
+        iv.Meta = Mathf.Min(max, iv.Meta + rounds);
+        ItemValue hand = player.inventory.holdingItemItemValue;
+        if (hand != iv) hand.Meta = iv.Meta;
+        player.inventory.CallOnToolbeltChangedInternal();
+    }
 
     void Update()
     {
         GameManager gm = GameManager.Instance;
         EntityPlayerLocal player = (gm != null && gm.World != null) ? gm.World.GetPrimaryPlayer() : null;
         if (player == null) return;
+
+        // Suppression "Thrifty": every 4th hit puts 1 round back into the magazine (entityclasses.xml sets aposMagRefund)
+        int toMag = (int)player.Buffs.GetCustomVar(MagRefundVar);
+        if (toMag > 0)
+        {
+            player.Buffs.SetCustomVar(MagRefundVar, 0f);
+            LoadRounds(player, toMag);
+        }
 
         int count = (int)player.Buffs.GetCustomVar(RefundVar);
         if (count <= 0) return;
