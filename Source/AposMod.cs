@@ -33,6 +33,7 @@ public class AposModInit : IModApi
         go.AddComponent<AposAmmo>();
         go.AddComponent<AposSurvival>();
         go.AddComponent<AposElites>();
+        go.AddComponent<AposWardrobe>();
     }
 }
 

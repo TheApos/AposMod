@@ -213,5 +213,51 @@
 				<label depth="5" name="lblProgress" pos="0,-420" width="610" height="44" font_size="30" justify="center" text="" />
 			</rect>
 		</window>
-	</append>
+		<!-- Wardrobe window (Source/AposWardrobe.cs, controller XUiC_AposWardrobe) -->
+		<window name="windowAposWardrobe" width="610" height="480" panel="Left" cursor_area="true" controller="AposWardrobe, AposMod">
+			<rect style="header.panel">
+				<headerbg />
+				<sprite style="header.icon" sprite="ui_game_symbol_armor_iron"/>
+				<label style="header.name" text="WARDROBE" text_key="aposWardrobeTitle"/>
+			</rect>
+			<rect pos="0,-46" width="610" height="434">
+				<sprite depth="1" name="background" color="[darkGrey]" type="sliced"/>
+				<sprite depth="2" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false"/>
+				<rect name="btnTab0" pos="12,-8" width="192" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="192" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnTab1" pos="209,-8" width="192" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="192" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnTab2" pos="406,-8" width="192" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="192" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<label depth="3" name="lblOutfit" pos="12,-56" width="590" height="32" font_size="26" text="" />
+				<label depth="3" name="lblItem0" pos="18,-96" width="570" height="30" font_size="22" text="" />
+				<label depth="3" name="lblItem1" pos="18,-130" width="570" height="30" font_size="22" text="" />
+				<label depth="3" name="lblItem2" pos="18,-164" width="570" height="30" font_size="22" text="" />
+				<label depth="3" name="lblItem3" pos="18,-198" width="570" height="30" font_size="22" text="" />
+				<label depth="3" name="lblItem4" pos="18,-232" width="570" height="30" font_size="22" text="" />
+				<label depth="3" name="lblItem5" pos="18,-266" width="570" height="30" font_size="22" text="" />
+				<label depth="3" name="lblItem6" pos="18,-300" width="570" height="30" font_size="22" text="" />
+				<label depth="3" name="lblItem7" pos="18,-334" width="570" height="30" font_size="22" text="" />
+				<rect name="btnWear" pos="12,-376" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<rect name="btnTake" pos="312,-376" width="290" height="38" controller="SimpleButton">
+					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="30" font_size="22" justify="center" text="" />
+				</rect>
+				<label depth="3" pos="12,-414" width="590" height="24" font_size="18" justify="center" text_key="aposWardrobeHint" text="" />
+			</rect>
+		</window>	</append>
 </configs>

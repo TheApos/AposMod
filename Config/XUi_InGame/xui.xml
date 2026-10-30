@@ -4,5 +4,9 @@
 		<window_group name="aposForge" open_backpack_on_open="true" close_compass_on_open="true">
 			<window name="windowAposForge" />
 		</window_group>
+		<!-- Wardrobe: Alt+0 (Source/AposWardrobe.cs) -->
+		<window_group name="aposWardrobe" close_compass_on_open="true">
+			<window name="windowAposWardrobe" />
+		</window_group>
 	</append>
 </configs>

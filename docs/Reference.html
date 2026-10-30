@@ -85,7 +85,7 @@ footer { color: var(--muted); font-size: 13px; padding-block: 30px 40px; border-
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.3.1</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.4.0</div>
     <h1>Довідник AposMod</h1>
     <p class="sub">Фішки зброї, афікси, перки й атрибути, стихії, моди, легендарна зброя й налаштування в одному місці. Числа «0 → 5» залежать від рівня відповідного перка.</p>
   </div>
@@ -100,7 +100,7 @@ footer { color: var(--muted); font-size: 13px; padding-block: 30px 40px; border-
     <a href="#affixes">Афікси</a>
     <a href="#elites">Еліти й Ерідій</a>
     <a href="#perks">Перки й атрибути</a>
-    <a href="#gear">Моди й легендарки</a>
+    <a href="#sets">Сети й гардероб</a>
     <a href="#systems">Системи</a>
     <input id="q" type="search" placeholder="Пошук: кувалда, Brawler, кислота…" aria-label="Пошук по довіднику">
   </div>
@@ -206,11 +206,11 @@ footer { color: var(--muted); font-size: 13px; padding-block: 30px 40px; border-
       <h3>Пістолети й ПП — <span class="trait">Headhunter</span></h3>
       <div class="tagline">Перк: Gunslinger</div>
       <ul>
-        <li>3 хедшоти поспіль вмикають режим посилених пострілів. Промах або влучання в тіло обнуляє серію.</li>
+        <li>5 хедшотів поспіль (4 у повному сеті Gunslinger) вмикають режим посилених пострілів. Промах або влучання в тіло обнуляє серію.</li>
         <li>Посилені постріли б'ють сильніше й майже без розкиду.</li>
       </ul>
       <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Пострілів</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td></tr><tr><td>Шкода</td><td>+25%</td><td>+35%</td><td>+45%</td><td>+55%</td><td>+65%</td><td>+75%</td></tr></table></div>
-      <div class="five"><b>5 рівень:</b> кожне вбивство в цьому режимі додає ще 2 постріли.</div>
+      <div class="five"><b>5 рівень:</b> кожне вбивство <b>в голову</b> в цьому режимі додає ще 2 постріли.</div>
     </article>
 
     <article class="card">
@@ -226,7 +226,7 @@ footer { color: var(--muted); font-size: 13px; padding-block: 30px 40px; border-
       <div class="tagline">Перк: Machine Gunner</div>
       <ul>
         <li>Кожне влучання додає цілі 5% сповільнення на 8 с — до максимуму з таблиці.</li>
-        <li>Кожне 4-те влучання робить наступний постріл безкоштовним.</li>
+        <li>Кожне 4-те влучання повертає 1 набій у магазин (кожне 3-тє в повному сеті Commando).</li>
       </ul>
       <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Макс. сповільнення</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td><td>60%</td></tr></table></div>
       <div class="five"><b>5 рівень:</b> +25% шкоди по повністю сповільнених, а кожне вбивство приносить 5 набоїв того типу, що заряджений.</div>
@@ -509,6 +509,43 @@ footer { color: var(--muted); font-size: 13px; padding-block: 30px 40px; border-
   </div>
 </section>
 
+<section id="sets" data-sec>
+  <h2>Сети броні та гардероб</h2>
+  <p class="lead">Бойові сети тепер прив'язані до стилів гри: частини дають бонуси на одну тему, а повний сет посилює фішку мода. Числа частин ростуть з якістю, як у ванілі, і далі до 10 через заточку. Процентні бонуси повного сету на якості 7–10 ростуть на 5% за кожен рівень вище 6 (рахується найгірша частина).</p>
+  <div class="grid">
+    <article class="card">
+      <h3>Бойові сети</h3>
+      <ul>
+        <li><b>Bruiser</b> (був Biker) — дубинки й кувалди: шкода, дешевші силові удари, HP, біг. <b>Сет:</b> Earthquake на 1 м далі, Home Run відкидає далі, Rage тримає на 1 стак більше.</li>
+        <li><b>Gunslinger</b> (був Enforcer) — пістолети: точність, шкода, перезарядка, біг. <b>Сет:</b> Headhunter після 4 хедшотів замість 5 і +30% шкоди, поки він діє.</li>
+        <li><b>Ranger</b> — гвинтівки: віддача, HP, шкода, витривалість. <b>Сет:</b> Ricochet на 3 м далі й на 20% сильніше.</li>
+        <li><b>Commando</b> — автомати: магазин, віддача, шкода, біг. <b>Сет:</b> Suppression сповільнює ще на 20%, кожне 3-тє влучання повертає набій.</li>
+        <li><b>Hunter</b> (був Farmer) — луки й арбалети: шкода, тиша, швидкість натягу й перезарядки, біг. <b>Сет:</b> Splinter +2 уламки, по позначених зомбі +20%.</li>
+        <li><b>Preacher</b> — стихії: опір вогню й струму, HP, рукавиці підвищують шанс стихійних модів. <b>Сет:</b> вогонь, струм, кислота й кровотеча +50%, реакції перезаряджаються за 1.5 с.</li>
+        <li><b>Nerd</b> — жезли й роботи. <b>Сет:</b> Chain Lightning на 1 м далі, заряди EMP накопичуються вдвічі швидше.</li>
+        <li><b>Assassin</b> і <b>Raider</b> — як у ванілі, плюс: Assassin +2 стаки Bloodsucker і ×1.5 по зомбі, що вас не бачать; Raider +2 заряди Counter Punch і −15% шкоди при повних зарядах.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Господарські сети</h3>
+      <ul>
+        <li>Lumberjack, Miner, Scavenger, Rogue, Athletic — як у ванілі.</li>
+        <li><b>Nomad</b> — плюс −50% пального й +10% швидкості транспорту (переїхало з Biker).</li>
+        <li><b>Primitive</b> — отримав фермерські бонуси (насіння, урожай).</li>
+        <li>DLC-сети — косметика, без бонусів.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Гардероб — <span class="trait">3 комплекти</span></h3>
+      <ul>
+        <li><b>Alt+1 / Alt+2 / Alt+3</b> — переодягтися в комплект за 1.5 с. Поточний одяг ховається в гардероб, рюкзак не займає.</li>
+        <li><b>Alt+0</b> — вікно гардероба з трьома закладками: що в кожному комплекті, кнопки «Надеть» і «Забрать в рюкзак».</li>
+        <li>Як заповнити: вдягніть перший сет, натисніть Alt+2, вдягніть другий сет з рюкзака, натисніть Alt+3 і вдягніть третій.</li>
+        <li>Гардероб зберігається разом зі світом і не випадає після смерті.</li>
+      </ul>
+    </article>
+  </div>
+</section>
 <section id="gear" data-sec>
   <h2>Моди та легендарна зброя</h2>
   <div class="grid">

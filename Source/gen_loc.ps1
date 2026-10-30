@@ -389,6 +389,17 @@ $renamed = [ordered]@{
 }
 foreach ($k in $renamed.Keys) { $extra[$k] = $renamed[$k] }
 
+# Wardrobe (Source/AposWardrobe.cs)
+$extra['aposWardrobeTitle']    = 'WARDROBE', 'ГАРДЕРОБ'
+$extra['aposWardrobeTab']      = 'Outfit {0}', 'Комплект {0}'
+$extra['aposWardrobeWorn']     = 'worn now', 'надет сейчас'
+$extra['aposWardrobeEmpty']    = 'empty', 'пусто'
+$extra['aposWardrobeWear']     = 'Put on', 'Надеть'
+$extra['aposWardrobeTake']     = 'Take to backpack', 'Забрать в рюкзак'
+$extra['aposWardrobeHint']     = 'Alt+1 / Alt+2 / Alt+3 - change outfit, Alt+0 - this window', 'Alt+1 / Alt+2 / Alt+3 - сменить комплект, Alt+0 - это окно'
+$extra['aposWardrobeChanging'] = 'Changing into outfit {0}', 'Переодевание в комплект {0}'
+$extra['aposWardrobeSwitched'] = 'Outfit {0} is on', 'Надет комплект {0}'
+
 function Csv($s) { '"' + $s.Replace('"', '""') + '"' }
 $rows = @('Key,File,Type,UsedInMainMenu,NoTranslate,english,russian')
 foreach ($item in $map.Keys) {
