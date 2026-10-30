@@ -13,6 +13,8 @@
 			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposKnifeCap" operation="set" value="5"><requirement name="ProgressionLevel" progression_name="perkDeepCuts" operation="Equals" value="3"/></triggered_effect>
 			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposKnifeCap" operation="set" value="6"><requirement name="ProgressionLevel" progression_name="perkDeepCuts" operation="Equals" value="4"/></triggered_effect>
 			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposKnifeCap" operation="set" value="7"><requirement name="ProgressionLevel" progression_name="perkDeepCuts" operation="Equals" value="5"/></triggered_effect>
+			<!-- full Assassin set: +2 stacks -->
+			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposKnifeCap" operation="add" value="2"><requirement name="HasBuff" buff="buffAssassinSetBonus"/></triggered_effect>
 			<!-- normal hit: +1 stack, power attack: +2 stacks (all in one event so the clamp below runs after) -->
 			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposKnifeStacks" operation="add" value="1">
 				<requirement name="IsAlive" target="other"/>
@@ -84,6 +86,31 @@
 				<requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/>
 				<requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="5"/>
 			</triggered_effect>
+			<!-- full Bruiser set: Home Run launches further (+300 force; the later ragdoll wins) -->
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="other" duration="3" force="1100">
+				<requirement name="HasBuff" buff="buffBikerSetBonus"/><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="HitLocation" body_parts="Head"/>
+				<requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="0"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="other" duration="3" force="1250">
+				<requirement name="HasBuff" buff="buffBikerSetBonus"/><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="HitLocation" body_parts="Head"/>
+				<requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="1"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="other" duration="3" force="1400">
+				<requirement name="HasBuff" buff="buffBikerSetBonus"/><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="HitLocation" body_parts="Head"/>
+				<requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="2"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="other" duration="3" force="1550">
+				<requirement name="HasBuff" buff="buffBikerSetBonus"/><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="HitLocation" body_parts="Head"/>
+				<requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="3"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="other" duration="3" force="1700">
+				<requirement name="HasBuff" buff="buffBikerSetBonus"/><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="HitLocation" body_parts="Head"/>
+				<requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="4"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="other" duration="3" force="1850">
+				<requirement name="HasBuff" buff="buffBikerSetBonus"/><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/>
+				<requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="5"/>
+			</triggered_effect>
 			<!-- Pummel Pete 5: every 3rd normal hit is a Home Run as well -->
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposClubCount" operation="add" value="1">
 				<requirement name="ProgressionLevel" progression_name="perkPummelPete" operation="Equals" value="5"/>
@@ -138,6 +165,13 @@
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="4.5" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="3"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="5" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="4"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="5.5" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="5"/></triggered_effect>
+			<!-- full Bruiser set (vanilla Biker): Earthquake reaches 1 m further -->
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="4" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="HasBuff" buff="buffBikerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="0"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="4.5" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="HasBuff" buff="buffBikerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="5" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="HasBuff" buff="buffBikerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="5.5" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="HasBuff" buff="buffBikerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="6" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="HasBuff" buff="buffBikerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="Ragdoll" target="otherAOE" range="6.5" duration="2.5" force="250" target_tags="zombie,animal"><requirement name="HasBuff" buff="buffBikerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="5"/></triggered_effect>
 			<!-- replaces Skull Crusher's vanilla power knockdown chances: Earthquake also deals 10 HP per level
 			     to everything it knocks down (the value is written into each target's cvar, buffAposQuakeHit applies it) -->
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="ModifyCVar" target="otherAOE" range="3.5" target_tags="zombie,animal" cvar="aposQuakeDmg" operation="set" value="-10"><requirement name="ProgressionLevel" progression_name="perkSkullCrusher" operation="Equals" value="1"/></triggered_effect>
@@ -189,6 +223,13 @@
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="4.5" buff="buffShocked" duration="3.2" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="3"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5" buff="buffShocked" duration="3.6" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="4"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5.5" buff="buffShocked" duration="4" target_tags="zombie,animal"><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="5"/></triggered_effect>
+			<!-- full Nerd set: Chain Lightning reaches 1 m further -->
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="4" buff="buffShocked" duration="2" target_tags="zombie,animal"><requirement name="HasBuff" buff="buffNerdSetBonus"/><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="0"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="4.5" buff="buffShocked" duration="2.4" target_tags="zombie,animal"><requirement name="HasBuff" buff="buffNerdSetBonus"/><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5" buff="buffShocked" duration="2.8" target_tags="zombie,animal"><requirement name="HasBuff" buff="buffNerdSetBonus"/><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="5.5" buff="buffShocked" duration="3.2" target_tags="zombie,animal"><requirement name="HasBuff" buff="buffNerdSetBonus"/><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="6" buff="buffShocked" duration="3.6" target_tags="zombie,animal"><requirement name="HasBuff" buff="buffNerdSetBonus"/><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" target="otherAOE" range="6.5" buff="buffShocked" duration="4" target_tags="zombie,animal"><requirement name="HasBuff" buff="buffNerdSetBonus"/><requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="5"/></triggered_effect>
 			<triggered_effect trigger="onSelfSecondaryActionRayHit" action="AddBuff" buff="buffAposChainCD"/>
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="otherAOE" range="5.5" buff="buffShocked" duration="4" target_tags="zombie,animal">
 				<requirement name="ProgressionLevel" progression_name="perkFlurryOfIntellect" operation="Equals" value="5"/>
@@ -248,6 +289,9 @@
 			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="6"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="4"/></triggered_effect>
 			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="7"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="5"/></triggered_effect>
 			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposCounterCap" operation="set" value="7"><requirement name="ProgressionLevel" progression_name="perkBrawler" operation="Equals" value="5"/></triggered_effect>
+			<!-- full Raider set: +2 charges -->
+			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterCap" operation="add" value="2"><requirement name="HasBuff" buff="buffRaiderSetBonus"/></triggered_effect>
+			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposCounterCap" operation="add" value="2"><requirement name="HasBuff" buff="buffRaiderSetBonus"/></triggered_effect>
 			<triggered_effect trigger="onOtherDamagedSelf" action="ModifyCVar" cvar="aposCounterHits" operation="set" value="@aposCounterCap"/>
 			<triggered_effect trigger="onOtherDamagedSelf" action="AddBuff" buff="buffAposCounter"/>
 
@@ -353,6 +397,20 @@
 		<effect_group name="AposMod rifle ricochet">
 			<requirement name="HoldingItemHasTags" tags="perkDeadEye"/>
 			<requirement name="HitLocation" body_parts="Head"/>
+			<!-- full Ranger set: +3 m and +20% damage. These go first: buffAposSplash ignores a second application,
+			     so the zombies they reach keep the bigger damage, and the normal lines below no longer apply to them -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="8" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-24"><requirement name="HasBuff" buff="buffRangerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="0"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="10" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-36"><requirement name="HasBuff" buff="buffRangerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="12" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-48"><requirement name="HasBuff" buff="buffRangerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="14" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-60"><requirement name="HasBuff" buff="buffRangerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="16" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-72"><requirement name="HasBuff" buff="buffRangerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="18" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-84"><requirement name="HasBuff" buff="buffRangerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="5"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="8" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="HasBuff" buff="buffRangerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="0"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="10" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="HasBuff" buff="buffRangerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="1"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="12" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="HasBuff" buff="buffRangerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="2"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="14" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="HasBuff" buff="buffRangerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="3"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="16" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="HasBuff" buff="buffRangerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="4"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="positionAOE" range="18" target_tags="zombie,animal" buff="buffAposSplash"><requirement name="HasBuff" buff="buffRangerSetBonus"/><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="5"/></triggered_effect>
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="5" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-20"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="0"/></triggered_effect>
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="7" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-30"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="1"/></triggered_effect>
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="positionAOE" range="9" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-40"><requirement name="ProgressionLevel" progression_name="perkDeadEye" operation="Equals" value="2"/></triggered_effect>
@@ -383,6 +441,10 @@
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar="aposSupMax" operation="set" value="-.4"><requirement name="ProgressionLevel" progression_name="perkMachineGunner" operation="Equals" value="3"/></triggered_effect>
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar="aposSupMax" operation="set" value="-.5"><requirement name="ProgressionLevel" progression_name="perkMachineGunner" operation="Equals" value="4"/></triggered_effect>
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar="aposSupMax" operation="set" value="-.6"><requirement name="ProgressionLevel" progression_name="perkMachineGunner" operation="Equals" value="5"/></triggered_effect>
+			<!-- full Commando set: suppression cap +20% and every 3rd hit refunds a round (aposMGNeed) -->
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" target="other" cvar="aposSupMax" operation="add" value="-.2"><requirement name="HasBuff" buff="buffCommandoSetBonus"/></triggered_effect>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposMGNeed" operation="set" value="4"/>
+			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposMGNeed" operation="set" value="3"><requirement name="HasBuff" buff="buffCommandoSetBonus"/></triggered_effect>
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" target="other" buff="buffAposSuppressed">
 				<requirement name="IsAlive" target="other"/>
 				<requirement name="!EntityTagCompare" target="other" tags="trader"/>
@@ -390,10 +452,10 @@
 			<!-- every 4th hit gives the round back: 1 round into the magazine (Source/AposAmmo.cs reads aposMagRefund) -->
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposMGHits" operation="add" value="1"/>
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposMagRefund" operation="add" value="1">
-				<requirement name="CVarCompare" cvar="aposMGHits" operation="GTE" value="4"/>
+				<requirement name="CVarCompare" cvar="aposMGHits" operation="GTE" value="@aposMGNeed"/>
 			</triggered_effect>
 			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposMGHits" operation="set" value="0">
-				<requirement name="CVarCompare" cvar="aposMGHits" operation="GTE" value="4"/>
+				<requirement name="CVarCompare" cvar="aposMGHits" operation="GTE" value="@aposMGNeed"/>
 			</triggered_effect>
 			<!-- Machine Gunner 5: every kill puts 5 rounds of the loaded ammo into the backpack (Source/AposAmmo.cs reads the cvar) -->
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposAmmoRefund" operation="add" value="5">

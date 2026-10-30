@@ -67,7 +67,7 @@
 			<stack_type value="replace"/>
 			<duration value=".1"/>
 			<effect_group>
-				<requirement name="!HasBuff" buff="buffAposReactionCD"/>
+				<requirement name="!HasBuff" buff="buffAposReactionCD,buffAposReactionCDShort"/>
 				<!-- Explosion -->
 				<triggered_effect trigger="onSelfBuffStart" action="Explode" blast_power="0" block_damage="0" block_radius="0" entity_damage="0" entity_radius="0" damage_type="Heat">
 					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
@@ -89,26 +89,47 @@
 				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposReactionCD">
 					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
 					<requirement name="HasBuff" buff="buffAposCorroded"/>
+					<requirement name="CVarCompare" cvar="aposPreacher" operation="LT" value="1"/>
+				</triggered_effect>
+				<!-- hit by a player in the full Preacher set: 1.5 s cooldown -->
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposReactionCDShort">
+					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
+					<requirement name="HasBuff" buff="buffAposCorroded"/>
+					<requirement name="CVarCompare" cvar="aposPreacher" operation="GTE" value="1"/>
 				</triggered_effect>
 				<!-- Confusion -->
 				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposConfused">
 					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
 					<requirement name="HasBuff" buff="buffShocked"/>
-					<requirement name="!HasBuff" buff="buffAposReactionCD"/>
+					<requirement name="!HasBuff" buff="buffAposReactionCD,buffAposReactionCDShort"/>
 				</triggered_effect>
 				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposReactionCD">
 					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
 					<requirement name="HasBuff" buff="buffShocked"/>
+					<requirement name="CVarCompare" cvar="aposPreacher" operation="LT" value="1"/>
+				</triggered_effect>
+				<!-- hit by a player in the full Preacher set: 1.5 s cooldown -->
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposReactionCDShort">
+					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
+					<requirement name="HasBuff" buff="buffShocked"/>
+					<requirement name="CVarCompare" cvar="aposPreacher" operation="GTE" value="1"/>
 				</triggered_effect>
 				<!-- Miasma -->
 				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposMiasma">
 					<requirement name="HasBuff" buff="buffShocked"/>
 					<requirement name="HasBuff" buff="buffAposCorroded"/>
-					<requirement name="!HasBuff" buff="buffAposReactionCD"/>
+					<requirement name="!HasBuff" buff="buffAposReactionCD,buffAposReactionCDShort"/>
 				</triggered_effect>
 				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposReactionCD">
 					<requirement name="HasBuff" buff="buffShocked"/>
 					<requirement name="HasBuff" buff="buffAposCorroded"/>
+					<requirement name="CVarCompare" cvar="aposPreacher" operation="LT" value="1"/>
+				</triggered_effect>
+				<!-- hit by a player in the full Preacher set: 1.5 s cooldown -->
+				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposReactionCDShort">
+					<requirement name="HasBuff" buff="buffShocked"/>
+					<requirement name="HasBuff" buff="buffAposCorroded"/>
+					<requirement name="CVarCompare" cvar="aposPreacher" operation="GTE" value="1"/>
 				</triggered_effect>
 			</effect_group>
 		</buff>
@@ -130,6 +151,11 @@
 			<effect_group>
 				<passive_effect name="InfiniteAmmo" operation="base_set" value="1"/>
 			</effect_group>
+		</buff>
+
+		<buff name="buffAposReactionCDShort" hidden="true">
+			<stack_type value="ignore"/>
+			<duration value="1.5"/>
 		</buff>
 
 		<buff name="buffAposReactionCD" hidden="true">
@@ -638,6 +664,106 @@
 			<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffInfectionMain,buffInfectionGetsWorse,buffInfection01Untreated,buffInfection01GetBetter,buffInfection02Untreated,buffInfection02GetBetter,buffInfection03Untreated,buffInfection03GetBetter,buffInfection04">
 				<requirement name="HasBuff" buff="buffInfectionMain,buffInfection01Untreated,buffInfection02Untreated,buffInfection03Untreated,buffInfection04"/>
 			</triggered_effect>
+		</effect_group>
+	</append>
+	<!-- ===================== 1.4: armor set bonuses (docs/Design-Sets.md) =====================
+	     Reworked sets lose their vanilla bonus; the new bonuses mostly live with the AposMod traits that check this buff.
+	     aposSetExtra5 = 5% per forge tier above 6 of the lowest worn piece (Source/AposSurvival.cs) -->
+	<remove xpath="/buffs/buff[@name='buffBikerSetBonus']/effect_group"/>
+	<set xpath="/buffs/buff[@name='buffBikerSetBonus']/@description_key">aposSetBikerDesc</set>
+	<set xpath="/buffs/buff[@name='buffBikerSetBonus']/@name_key">aposSetBikerName</set>
+	<remove xpath="/buffs/buff[@name='buffBikerSetBonus']/display_value"/>
+	<remove xpath="/buffs/buff[@name='buffEnforcerSetBonus']/effect_group"/>
+	<set xpath="/buffs/buff[@name='buffEnforcerSetBonus']/@description_key">aposSetEnforcerDesc</set>
+	<set xpath="/buffs/buff[@name='buffEnforcerSetBonus']/@name_key">aposSetEnforcerName</set>
+	<remove xpath="/buffs/buff[@name='buffEnforcerSetBonus']/display_value"/>
+	<remove xpath="/buffs/buff[@name='buffRangerSetBonus']/effect_group"/>
+	<set xpath="/buffs/buff[@name='buffRangerSetBonus']/@description_key">aposSetRangerDesc</set>
+	<set xpath="/buffs/buff[@name='buffRangerSetBonus']/@name_key">aposSetRangerName</set>
+	<remove xpath="/buffs/buff[@name='buffRangerSetBonus']/display_value"/>
+	<remove xpath="/buffs/buff[@name='buffCommandoSetBonus']/effect_group"/>
+	<set xpath="/buffs/buff[@name='buffCommandoSetBonus']/@description_key">aposSetCommandoDesc</set>
+	<set xpath="/buffs/buff[@name='buffCommandoSetBonus']/@name_key">aposSetCommandoName</set>
+	<remove xpath="/buffs/buff[@name='buffCommandoSetBonus']/display_value"/>
+	<remove xpath="/buffs/buff[@name='buffFarmerSetBonus']/effect_group"/>
+	<set xpath="/buffs/buff[@name='buffFarmerSetBonus']/@description_key">aposSetFarmerDesc</set>
+	<set xpath="/buffs/buff[@name='buffFarmerSetBonus']/@name_key">aposSetFarmerName</set>
+	<remove xpath="/buffs/buff[@name='buffFarmerSetBonus']/display_value"/>
+	<remove xpath="/buffs/buff[@name='buffPreacherSetBonus']/effect_group"/>
+	<set xpath="/buffs/buff[@name='buffPreacherSetBonus']/@description_key">aposSetPreacherDesc</set>
+	<set xpath="/buffs/buff[@name='buffPreacherSetBonus']/@name_key">aposSetPreacherName</set>
+	<remove xpath="/buffs/buff[@name='buffPreacherSetBonus']/display_value"/>
+	<remove xpath="/buffs/buff[@name='buffNerdSetBonus']/effect_group"/>
+	<set xpath="/buffs/buff[@name='buffNerdSetBonus']/@description_key">aposSetNerdDesc</set>
+	<set xpath="/buffs/buff[@name='buffNerdSetBonus']/@name_key">aposSetNerdName</set>
+	<remove xpath="/buffs/buff[@name='buffNerdSetBonus']/display_value"/>
+	<append xpath="/buffs/buff[@name='buffEnforcerSetBonus']">
+		<effect_group name="AposMod gunslinger set">
+			<!-- 4 headshots start Headhunter (entityclasses.xml); +30% damage while it runs (+5% per tier above 6) -->
+			<requirement name="HasBuff" buff="buffAposHeadhunter"/>
+			<requirement name="HoldingItemHasTags" tags="handgunSkill"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".3"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value="@aposSetExtra5"/>
+		</effect_group>
+	</append>
+	<append xpath="/buffs/buff[@name='buffRangerSetBonus']">
+		<effect_group name="AposMod ranger set">
+			<!-- Ricochet +3 m and +20% (entityclasses.xml); rifles +5% per tier above 6 -->
+			<requirement name="HoldingItemHasTags" tags="rifleSkill"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value="@aposSetExtra5"/>
+		</effect_group>
+	</append>
+	<append xpath="/buffs/buff[@name='buffFarmerSetBonus']">
+		<effect_group name="AposMod hunter set">
+			<!-- Splinter +2 fragments (items.xml arrows); Mark +20% (+5% per tier above 6) -->
+			<passive_effect name="EntityDamage" operation="perc_add" value=".2">
+				<requirement name="CVarCompare" cvar="aposMarked" operation="Equals" value="1" target="other"/>
+			</passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value="@aposSetExtra5">
+				<requirement name="CVarCompare" cvar="aposMarked" operation="Equals" value="1" target="other"/>
+			</passive_effect>
+		</effect_group>
+	</append>
+	<append xpath="/buffs/buff[@name='buffAssassinSetBonus']">
+		<effect_group name="AposMod assassin set">
+			<!-- +2 Bloodsucker stacks (entityclasses.xml); knife hits on zombies that have not noticed you x1.5 (+5% per tier above 6) -->
+			<requirement name="HoldingItemHasTags" tags="bladeSkill"/>
+			<passive_effect name="EntityDamage" operation="perc_add" value=".5">
+				<requirement name="CVarCompare" cvar="_notAlerted" operation="GT" value="0" target="other"/>
+			</passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value="@aposSetExtra5">
+				<requirement name="CVarCompare" cvar="_notAlerted" operation="GT" value="0" target="other"/>
+			</passive_effect>
+		</effect_group>
+	</append>
+	<append xpath="/buffs/buff[@name='buffRaiderSetBonus']">
+		<effect_group name="AposMod raider set">
+			<!-- +2 Counter Punch charges (entityclasses.xml); with full charges you take 15% less damage (+5% per tier above 6) -->
+			<requirement name="CVarCompare" cvar="aposCounterHits" operation="GTE" value="@aposCounterCap"/>
+			<requirement name="CVarCompare" cvar="aposCounterHits" operation="GT" value="0"/>
+			<passive_effect name="GeneralDamageResist" operation="base_add" value=".15"/>
+			<passive_effect name="GeneralDamageResist" operation="base_add" value="@aposSetExtra5"/>
+		</effect_group>
+	</append>
+	<append xpath="/buffs/buff[@name='buffNomadSetBonus']">
+		<effect_group name="AposMod nomad set">
+			<!-- the vehicle bonus moved here from the Biker set -->
+			<passive_effect name="VehicleFuelUsePer" operation="perc_add" value="-.5"/>
+			<passive_effect name="VehicleVelocityMaxPer" operation="perc_add" value=".1"/>
+		</effect_group>
+	</append>
+	<!-- Bruiser, Commando, Preacher, Nerd: their bonuses live in entityclasses.xml / progression.xml / Source; the buffs
+	     only mark that the full set is worn -->
+
+	<!-- Elemental mod chances: 30 / 20 / 25% + Preacher gloves (aposElemBonus); read by item_modifiers.xml -->
+	<append xpath="/buffs/buff[@name='buffStatusCheck01']">
+		<effect_group name="AposMod element chances">
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposFireChance" operation="set" value="30"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposFireChance" operation="add" value="@aposElemBonus"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposShockChance" operation="set" value="20"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposShockChance" operation="add" value="@aposElemBonus"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposAcidChance" operation="set" value="25"/>
+			<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposAcidChance" operation="add" value="@aposElemBonus"/>
 		</effect_group>
 	</append>
 </configs>

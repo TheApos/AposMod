@@ -63,8 +63,12 @@ public static class AposCombat
         EntityPlayer attacker = world.GetEntity(source.getEntityId()) as EntityPlayer;
         if (attacker == null) return;
 
-        // the last hit's damage: elemental ticks and the Explosion reaction scale with it (buffs.xml)
-        target.Buffs.SetCustomVar("aposHitDmg", response.Strength);
+        // the last hit's damage: elemental ticks and the Explosion reaction scale with it (buffs.xml);
+        // the full Preacher set makes elements +50% (+5% per forge tier above 6) and reactions recharge in 1.5 s
+        bool preacher = attacker.Buffs.HasBuff("buffPreacherSetBonus");
+        float elemMult = preacher ? 1.5f + attacker.Buffs.GetCustomVar("aposSetExtra5") : 1f;
+        target.Buffs.SetCustomVar("aposHitDmg", response.Strength * elemMult);
+        target.Buffs.SetCustomVar("aposPreacher", preacher ? 1f : 0f);
 
         // Strength Mastery 5 "Crippling Blows": a club/sledge power hit flagged the target (progression.xml)
         if (!response.Fatal && target.Buffs.GetCustomVar("aposCripple") > 0f)

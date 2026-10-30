@@ -2,6 +2,7 @@
 // - Rule 1: Cardio 5 "Second Lungs": out of stamina -> +50% stamina, once per 60 s (buffAposSecondLungsCD)
 // - Slow Metabolism 5 "Iron Stomach": food and water never drop below 25%
 // - Master Chef 3 "Gourmet": food and drink buffs last 3 times longer (their elapsed time runs at 1/3 speed)
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,6 +41,30 @@ public class AposSurvival : MonoBehaviour
         }
 
         if (AposAffixes.Level(player, "perkMasterChef") >= 3) SlowFoodBuffs(player);
+
+        // Set bonuses grow on forge tiers 7..10: 5% per tier above 6 of the lowest worn armor piece (head, chest,
+        // hands, feet), read by the set bonus buffs as aposSetExtra5
+        if (Time.time >= nextSetCheck)
+        {
+            nextSetCheck = Time.time + 1f;
+            player.Buffs.SetCustomVar("aposSetExtra5", 0.05f * LowestArmorTierAbove6(player));
+        }
+    }
+
+    float nextSetCheck;
+
+    static int LowestArmorTierAbove6(EntityPlayerLocal player)
+    {
+        int lowest = int.MaxValue, pieces = 0;
+        Equipment eq = player.equipment;
+        for (int i = 0; i < eq.GetSlotCount(); i++)
+        {
+            ItemValue iv = eq.GetSlotItem(i);
+            if (iv == null || iv.IsEmpty() || iv.ItemClass == null || !iv.ItemClass.Properties.Contains("ArmorGroup")) continue;
+            pieces++;
+            lowest = Math.Min(lowest, AposTiers.Tier(iv));
+        }
+        return pieces >= 4 ? Math.Max(0, lowest - 6) : 0;
     }
 
     void SlowFoodBuffs(EntityPlayerLocal player)

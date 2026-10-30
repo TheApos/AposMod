@@ -352,6 +352,43 @@ foreach ($k in $legendAffixes.Keys) {
   $extra["${k}Desc"] = ($d[0] + '\n[FFD24D]Always quality 6. Bonuses: ' + $en + '.[-]'), ($d[1] + '\n[FFD24D]Всегда 6 качества. Бонусы: ' + $ru + '.[-]')
 }
 
+# ===== 1.4: armor set rework (docs/Design-Sets.md) =====
+$tierNote = '\n[808080]On forge tiers 7-10 percentage bonuses grow by 5% per tier above 6 (lowest worn piece).[-]', '\n[808080]На качестве 7-10 процентные бонусы растут на 5% за каждый уровень выше 6 (по худшей вещи).[-]'
+$setTexts = [ordered]@{
+  Biker    = 'Bruiser Full Set Bonus', 'Бонус полного комплекта громилы', 'Clubs and sledgehammers: Earthquake reaches 1 m further, Home Run launches further, Rage holds 1 more stack.', 'Дубинки и кувалды: Землетрясение достаёт на 1 м дальше, Хоумран отправляет дальше, Ярость держит на 1 стак больше.'
+  Enforcer = 'Gunslinger Full Set Bonus', 'Бонус полного комплекта стрелка', 'Pistols: Headhunter starts after 4 headshots instead of 5 and deals +30% more damage while it runs.', 'Пистолеты: Охотник за головами включается после 4 хедшотов вместо 5 и пока действует, наносит ещё +30% урона.'
+  Ranger   = 'Ranger Full Set Bonus', 'Бонус полного комплекта рейнджера', 'Rifles: Ricochet reaches 3 m further and deals 20% more damage.', 'Винтовки: Рикошет достаёт на 3 м дальше и наносит на 20% больше урона.'
+  Commando = 'Commando Full Set Bonus', 'Бонус полного комплекта коммандос', 'Machine guns: Suppression slows up to 20% more, every 3rd hit puts a round back into the magazine.', 'Автоматы: Подавление замедляет ещё на 20% сильнее, каждое 3-е попадание возвращает патрон в магазин.'
+  Farmer   = 'Hunter Full Set Bonus', 'Бонус полного комплекта охотника', 'Bows and crossbows: Splinter +2 fragments, your damage to marked zombies +20%.', 'Луки и арбалеты: Расщепление +2 осколка, ваш урон по помеченным зомби +20%.'
+  Preacher = 'Preacher Full Set Bonus', 'Бонус полного комплекта проповедника', 'Elements: fire, shock, acid and bleeding deal 50% more, reactions recharge in 1.5 s instead of 3 s. The gloves raise the chance of elemental mods.', 'Стихии: огонь, ток, кислота и кровотечение наносят на 50% больше, реакции перезаряжаются за 1.5 с вместо 3. Перчатки повышают шанс стихийных модов.'
+  Nerd     = 'Nerd Full Set Bonus', 'Бонус полного комплекта ботана', 'Batons and robots: Chain Lightning reaches 1 m further, EMP charges come twice as fast.', 'Жезлы и роботы: Цепная молния достаёт на 1 м дальше, заряды ЭМИ копятся вдвое быстрее.'
+}
+foreach ($s in $setTexts.Keys) {
+  $v = $setTexts[$s]
+  $extra["aposSet${s}Name"] = $v[0], $v[1]
+  $extra["aposSet${s}Desc"] = ('[FFB400]AposMod:[-] ' + $v[2] + $tierNote[0]), ('[FFB400]AposMod:[-] ' + $v[3] + $tierNote[1])
+}
+# kept vanilla sets get an AposMod line on top of their own text
+$setAdds = [ordered]@{
+  buffAssassinSetBonusDesc = 'Knives: +2 Bloodsucker stacks, hits on zombies that have not noticed you deal x1.5.', 'Ножи: +2 стака Кровопийцы, удары по зомби, которые вас не заметили, x1.5.'
+  buffRaiderSetBonusDesc   = 'Knuckles: +2 Counter Punch charges; with full charges you take 15% less damage.', 'Кастеты: +2 заряда Контрудара; с полными зарядами вы получаете на 15% меньше урона.'
+  buffNomadSetBonusDesc    = 'Vehicles use 50% less fuel and drive 10% faster.', 'Транспорт тратит на 50% меньше топлива и едет на 10% быстрее.'
+}
+foreach ($k in $setAdds.Keys) {
+  if (-not $loc[$k]) { throw "No vanilla text for $k" }
+  $extra[$k] = ($loc[$k] + '\n\n[FFB400]AposMod:[-] ' + $setAdds[$k][0]), ($locRu[$k] + '\n\n[FFB400]AposMod:[-] ' + $setAdds[$k][1])
+}
+# renamed sets (the look stays)
+$renamed = [ordered]@{
+  armorBikerHelmet = 'Bruiser Helmet', 'Шлем громилы'; armorBikerOutfit = 'Bruiser Outfit', 'Костюм громилы'
+  armorBikerGloves = 'Bruiser Gloves', 'Перчатки громилы'; armorBikerBoots = 'Bruiser Boots', 'Ботинки громилы'
+  armorEnforcerHelmet = 'Gunslinger Sunglasses', 'Очки стрелка'; armorEnforcerOutfit = 'Gunslinger Suit', 'Костюм стрелка'
+  armorEnforcerGloves = 'Gunslinger Gloves', 'Перчатки стрелка'; armorEnforcerBoots = 'Gunslinger Shoes', 'Туфли стрелка'
+  armorFarmerHelmet = 'Hunter Hat', 'Шляпа охотника'; armorFarmerOutfit = 'Hunter Outfit', 'Костюм охотника'
+  armorFarmerGloves = 'Hunter Gloves', 'Перчатки охотника'; armorFarmerBoots = 'Hunter Boots', 'Сапоги охотника'
+}
+foreach ($k in $renamed.Keys) { $extra[$k] = $renamed[$k] }
+
 function Csv($s) { '"' + $s.Replace('"', '""') + '"' }
 $rows = @('Key,File,Type,UsedInMainMenu,NoTranslate,english,russian')
 foreach ($item in $map.Keys) {

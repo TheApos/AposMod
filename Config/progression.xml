@@ -13,6 +13,8 @@
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="3"><requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="Equals" value="3"/></triggered_effect>
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="4"><requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="Equals" value="4"/></triggered_effect>
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="5"><requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="Equals" value="5"/></triggered_effect>
+			<!-- full Bruiser set (vanilla Biker): one more Rage stack -->
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="add" value="1"><requirement name="HasBuff" buff="buffBikerSetBonus"/></triggered_effect>
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageStacks" operation="add" value="1"/>
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageStacks" operation="set" value="@aposRageCap">
 				<requirement name="CVarCompare" cvar="aposRageStacks" operation="GT" value="@aposRageCap"/>
@@ -90,6 +92,8 @@
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposEmp" operation="add" value="1">
 				<requirement name="CVarCompare" cvar="aposEmp" operation="LT" value="10"/>
 			</triggered_effect>
+			<!-- full Nerd set: EMP charges twice as fast -->
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposEmp" operation="add" value="1"><requirement name="HasBuff" buff="buffNerdSetBonus"/><requirement name="CVarCompare" cvar="aposEmp" operation="LT" value="10"/></triggered_effect>
 			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposEmp"/>
 			<triggered_effect trigger="onSelfDamagedOther" action="Explode" blast_power="0" block_damage="0" block_radius="0" entity_damage="0" entity_radius="0" damage_type="Electrical">
 				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
