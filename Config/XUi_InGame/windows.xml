@@ -61,15 +61,10 @@
 					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<label depth="4" name="btnLabel" pos="0,-8" width="140" height="38" font_size="22" justify="center" text="" />
 				</rect>
-				<rect name="btnTemper" pos="12,-184" width="290" height="38" controller="SimpleButton">
+				<rect name="btnScrap" pos="12,-184" width="590" height="38" controller="SimpleButton">
 					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
 					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
-					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="38" font_size="22" justify="center" text="" />
-				</rect>
-				<rect name="btnScrap" pos="312,-184" width="290" height="38" controller="SimpleButton">
-					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
-					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
-					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="38" font_size="22" justify="center" text="" />
+					<label depth="4" name="btnLabel" pos="0,-8" width="590" height="38" font_size="22" justify="center" text="" />
 				</rect>
 				<label depth="3" name="lblSharpen" pos="12,-236" width="590" height="32" font_size="22" text="" />
 				<rect name="btnSharpen" pos="12,-272" width="290" height="38" controller="SimpleButton">

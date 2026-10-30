@@ -131,6 +131,27 @@ public static class AposTierValuePatch
     }
 }
 
+// Combine Station (vanilla ItemValue.MergeBest keeps only the first item's metadata): the result keeps the higher
+// forge tier of the two, the Eridium spent on both, and the second item's affix lock if the first had none
+[HarmonyPatch(typeof(ItemValue), "MergeBest")]
+public static class AposTierMergePatch
+{
+    static void Prefix(ItemValue __instance, ItemValue _iv, out int[] __state)
+    {
+        int lockB;
+        __state = new int[] { Math.Max(AposTiers.Tier(__instance), AposTiers.Tier(_iv)),
+            AposTiers.Spent(__instance) + AposTiers.Spent(_iv),
+            _iv != null && _iv.TryGetMetadata(AposAffixes.LockKey, out lockB) ? lockB : -1 };
+    }
+
+    static void Postfix(ItemValue __instance, int[] __state)
+    {
+        if (__state[0] > 6) AposTiers.SetTier(__instance, __state[0]);
+        if (__state[1] > 0) __instance.SetMetadata(AposTiers.SpentKey, __state[1]);
+        if (AposAffixes.LockedType(__instance) < 0 && __state[2] >= 0) __instance.SetMetadata(AposAffixes.LockKey, __state[2]);
+    }
+}
+
 // The item name in the tooltip shows the tier: "Pistol [8]"
 [HarmonyPatch(typeof(XUiC_ItemInfoWindow), "GetBindingValueInternal")]
 public static class AposTierNamePatch

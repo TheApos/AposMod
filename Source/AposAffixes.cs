@@ -224,14 +224,23 @@ public static class AposAffixes
         stats.Add(new ItemValue.Stat(type, 0, added));
     }
 
-    // After combining two weapons the game keeps the best stats of both; trim back to the quality cap
+    // After combining two weapons the game keeps the best stats of both; trim back to the quality cap,
+    // keeping the locked affix and then the strongest ones (closest to their quality 6 maximum)
     public static void Trim(ItemValue iv)
     {
         List<Entry> list = Decompose(iv);
         int extra = list.Count - Cap(iv.Quality);
         if (extra <= 0) return;
-        for (int i = 0; i < extra; i++) list.RemoveAt(rand.Next(list.Count));
+        int locked = LockedType(iv);
+        list.Sort((a, b) => Score(b, locked).CompareTo(Score(a, locked)));
+        list.RemoveRange(list.Count - extra, extra);
         Compose(iv, list, false);
+    }
+
+    static float Score(Entry e, int locked)
+    {
+        if ((int)e.Affix.Types[0] == locked) return float.MaxValue;
+        return Math.Abs(e.Value) / Math.Max(0.01f, Math.Abs(e.Affix.Max6));
     }
 
     // ===== Eridium Forge (Source/AposForge.cs). Each returns false when it cannot do anything (no Eridium is taken). =====

@@ -2,11 +2,11 @@
 // opens the window group "aposForge" (Config/XUi_InGame/xui.xml + windows.xml, controller "AposForge, AposMod" ->
 // XUiC_AposForge). Three tabs:
 // - Weapon (the one in your hands): per affix row Reroll (10 Eridium) / Lock (25, the locked row unlocks for free),
-//   an empty row: Add (20); Quality +1 (40) up to 6; Scrap into Eridium; Sharpen 7 -> 10 (Source/AposTiers.cs)
+//   an empty row: Add (20); Scrap into Eridium; Sharpen 1 -> 10 (7..10: Source/AposTiers.cs)
 // - Apparel: sharpen every worn item that has values growing with quality
 // - Legendaries: 10 legendaries for 300 each, quality 6
-// Sharpening (one tier at a time): Eridium + forged steel, a chance to fail; on 8-10 a failure can break the item
-// (30% of its scrap value comes back). "Safe" costs 5x: a failure only burns the resources.
+// Sharpening (one quality at a time, always paid): up to 6 it always works; 7-10 can fail, a failure breaks the item
+// (30% of its scrap value comes back). "Safe" costs 5x: a failure drops one tier instead (not below 6).
 // Every sharpening attempt takes 2.5 s with anvil sounds and a progress line before the result.
 // Eridium and steel are taken from the backpack and the toolbelt.
 using System;
@@ -45,21 +45,31 @@ public class BlockAposEridiumForge : Block
 
 public class XUiC_AposForge : XUiController
 {
-    public const int RerollCost = 10, AddCost = 20, LockCost = 25, TemperCost = 40, LegendCost = 300, SafeMultiplier = 5;
+    public const int RerollCost = 10, AddCost = 20, LockCost = 25, LegendCost = 300, SafeMultiplier = 5;
     const string Steel = "resourceForgedSteel";
     const int Rows = 3, WearRows = 7;
     const float SharpenTime = 2.5f;
 
-    // sharpening to tier 7..10: Eridium (= steel), success chance, break chance on failure
-    static readonly int[] SharpenCost = { 35, 40, 45, 50 };
-    static readonly float[] SharpenChance = { 0.65f, 0.5f, 0.4f, 0.3f };
-    static readonly float[] BreakChance = { 0f, 0.05f, 0.10f, 0.15f };
+    // Sharpening to the next quality (Eridium = forged steel): 2..6 costs 5 x target and always works;
+    // 7..10 costs 35..50 with this chance; a normal failure breaks the item, a Safe one (x5) drops one tier (not below 6)
+    static readonly int[] HighCost = { 35, 40, 45, 50 };
+    static readonly float[] HighChance = { 0.65f, 0.5f, 0.4f, 0.3f };
+
+    static int CostFor(int target)
+    {
+        return target <= 6 ? 5 * target : HighCost[target - 7];
+    }
+
+    static float ChanceFor(int target)
+    {
+        return target <= 6 ? 1f : HighChance[target - 7];
+    }
 
     XUiV_Label eridiumLabel, weaponLabel, sharpenLabel, progressLabel;
     readonly XUiV_Label[] affixLabels = new XUiV_Label[Rows];
     readonly XUiC_SimpleButton[] rerollButtons = new XUiC_SimpleButton[Rows];
     readonly XUiC_SimpleButton[] lockButtons = new XUiC_SimpleButton[Rows];
-    XUiC_SimpleButton temperButton, scrapButton, sharpenButton, sharpenSafeButton;
+    XUiC_SimpleButton scrapButton, sharpenButton, sharpenSafeButton;
     readonly XUiV_Label[] wearLabels = new XUiV_Label[WearRows];
     readonly XUiC_SimpleButton[] wearButtons = new XUiC_SimpleButton[WearRows];
     readonly XUiC_SimpleButton[] wearSafeButtons = new XUiC_SimpleButton[WearRows];
@@ -102,7 +112,6 @@ public class XUiC_AposForge : XUiController
             rerollButtons[i] = Button("btnReroll" + i, () => Reroll(row));
             lockButtons[i] = Button("btnLock" + i, () => Lock(row));
         }
-        temperButton = Button("btnTemper", Temper);
         scrapButton = Button("btnScrap", Scrap);
         sharpenButton = Button("btnSharpen", () => StartSharpen(-1, false));
         sharpenSafeButton = Button("btnSharpenSafe", () => StartSharpen(-1, true));
@@ -254,8 +263,6 @@ public class XUiC_AposForge : XUiController
             Enable(lockButtons[i], isLocked || (hasAffix && eridium >= LockCost));
         }
 
-        SetText(temperButton, Localization.Get("aposForgeTemper") + "  " + TemperCost);
-        Enable(temperButton, iv != null && iv.Quality < 6 && eridium >= TemperCost);
         SetText(scrapButton, string.Format(Localization.Get("aposForgeScrap"), iv != null ? ScrapValue(iv) : 0));
         Enable(scrapButton, iv != null && ScrapValue(iv) > 0);
 
@@ -305,22 +312,22 @@ public class XUiC_AposForge : XUiController
     static string SharpenInfo(ItemValue iv, int tier)
     {
         if (iv == null) return "";
-        if (iv.Quality < 6) return "[808080]" + Localization.Get("aposForgeSharpenNeed6") + "[-]";
         if (tier >= AposTiers.MaxTier) return "[FFD24D]" + Localization.Get("aposForgeSharpenMax") + "[-]";
-        int n = tier - 6; // 0..3 -> target 7..10
-        string text = string.Format(Localization.Get("aposForgeSharpenInfo"), tier + 1, Mathf.RoundToInt(SharpenChance[n] * 100f));
-        if (BreakChance[n] > 0f) text += "  [FF4040]" + string.Format(Localization.Get("aposForgeBreakInfo"), Mathf.RoundToInt(BreakChance[n] * 100f)) + "[-]";
-        return text;
+        int target = tier + 1;
+        if (target <= 6) return string.Format(Localization.Get("aposForgeSharpenSure"), target);
+        return string.Format(Localization.Get("aposForgeSharpenInfo"), target, Mathf.RoundToInt(ChanceFor(target) * 100f))
+            + "  [FF4040]" + Localization.Get("aposForgeBreakInfo") + "[-]";
     }
 
     void SharpenButtons(XUiC_SimpleButton normal, XUiC_SimpleButton safe, ItemValue iv, int tier, int eridium, int steel)
     {
-        bool can = iv != null && iv.Quality >= 6 && tier < AposTiers.MaxTier;
-        int cost = can ? SharpenCost[tier - 6] : 0;
+        bool can = iv != null && tier < AposTiers.MaxTier;
+        int cost = can ? CostFor(tier + 1) : 0;
+        bool risky = can && tier + 1 >= 7; // Safe only matters where a failure is possible
         SetText(normal, can ? Localization.Get("aposForgeSharpen") + "  " + cost + "/" + cost : Localization.Get("aposForgeSharpen"));
-        SetText(safe, can ? Localization.Get("aposForgeSharpenSafe") + "  " + cost * SafeMultiplier + "/" + cost * SafeMultiplier : Localization.Get("aposForgeSharpenSafe"));
+        SetText(safe, risky ? Localization.Get("aposForgeSharpenSafe") + "  " + cost * SafeMultiplier + "/" + cost * SafeMultiplier : Localization.Get("aposForgeSharpenSafe"));
         Enable(normal, can && eridium >= cost && steel >= cost);
-        Enable(safe, can && eridium >= cost * SafeMultiplier && steel >= cost * SafeMultiplier);
+        Enable(safe, risky && eridium >= cost * SafeMultiplier && steel >= cost * SafeMultiplier);
     }
 
     static string AffixText(AposAffixes.Entry e, bool isLocked)
@@ -352,11 +359,6 @@ public class XUiC_AposForge : XUiController
         if (iv == null) return;
         if (AposAffixes.IsLockedAt(iv, row)) Modify(0, AposAffixes.Unlock, "aposForgeDoneUnlock");
         else Modify(LockCost, w => AposAffixes.LockAt(w, row), "aposForgeDoneLock");
-    }
-
-    void Temper()
-    {
-        Modify(TemperCost, AposAffixes.Temper, "aposForgeDoneTemper");
     }
 
     void Modify(int cost, Func<ItemValue, bool> change, string doneKey)
@@ -424,10 +426,11 @@ public class XUiC_AposForge : XUiController
     {
         EntityPlayerLocal p = Player;
         ItemValue iv = p != null ? ItemIn(p, slot) : null;
-        if (iv == null || iv.Quality < 6) return;
+        if (iv == null) return;
         int tier = AposTiers.Tier(iv);
         if (tier >= AposTiers.MaxTier) return;
-        int cost = SharpenCost[tier - 6] * (safe ? SafeMultiplier : 1);
+        if (tier + 1 <= 6) safe = false;
+        int cost = CostFor(tier + 1) * (safe ? SafeMultiplier : 1);
         if (Count(p, AposElites.Eridium) < cost || Count(p, Steel) < cost) return;
 
         Take(p, AposElites.Eridium, cost);
@@ -471,18 +474,19 @@ public class XUiC_AposForge : XUiController
         if (now == null || now.type != busyItem.type) return;
 
         int tier = AposTiers.Tier(now);
-        int n = tier - 6;
+        int target = tier + 1;
         ItemValue copy = now.Clone();
         string text;
-        if (UnityEngine.Random.value < SharpenChance[n])
+        if (UnityEngine.Random.value < ChanceFor(target))
         {
-            AposTiers.SetTier(copy, tier + 1);
+            Raise(copy, target);
             PutBack(p, busySlot, copy);
             Audio.Manager.PlayInsidePlayerHead("levelup", p.entityId);
-            text = "[40FF60]" + string.Format(Localization.Get("aposForgeSharpenOk"), tier + 1) + "[-]";
+            text = "[40FF60]" + string.Format(Localization.Get("aposForgeSharpenOk"), target) + "[-]";
         }
-        else if (!busySafe && UnityEngine.Random.value < BreakChance[n])
+        else if (!busySafe)
         {
+            // normal failure: the item breaks, 30% of its scrap value comes back
             int back = Mathf.RoundToInt(AposElites.ScrapEridium(now) * 0.3f);
             PutBack(p, busySlot, null);
             AposElites.GiveEridium(back);
@@ -491,19 +495,28 @@ public class XUiC_AposForge : XUiController
         }
         else
         {
-            // a normal failure drops one tier (never below 6); a safe one keeps the tier
-            if (!busySafe && tier > 6)
-            {
-                AposTiers.SetTier(copy, tier - 1);
-                PutBack(p, busySlot, copy);
-            }
+            // safe failure: one tier down, never below 6
+            int down = Math.Max(6, tier - 1);
+            AposTiers.SetTier(copy, down);
+            PutBack(p, busySlot, copy);
             Audio.Manager.PlayInsidePlayerHead("lockpick_fail", p.entityId);
-            text = "[FF6040]" + (busySafe || tier <= 6 ? Localization.Get("aposForgeSharpenFailSafe")
-                : string.Format(Localization.Get("aposForgeSharpenFail"), tier - 1)) + "[-]";
+            text = "[FF6040]" + (down == tier ? Localization.Get("aposForgeSharpenFailSafe")
+                : string.Format(Localization.Get("aposForgeSharpenFail"), down)) + "[-]";
         }
         if (progressLabel != null) progressLabel.Text = text;
         resultUntil = Time.time + 4f;
         Refresh();
+    }
+
+    // Quality up to 6 is the real item quality (affix values grow with it), 7..10 is the forge tier
+    static void Raise(ItemValue iv, int target)
+    {
+        if (target <= 6)
+        {
+            if (AposAffixes.Kind(iv.ItemClass) != 0) AposAffixes.Temper(iv);
+            else iv.Quality = (ushort)target;
+        }
+        else AposTiers.SetTier(iv, target);
     }
 
     // ===== resources from the backpack + toolbelt =====
