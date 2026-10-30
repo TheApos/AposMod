@@ -173,8 +173,8 @@ $extra = [ordered]@{
   buffAposFrenzyDesc         = '+25% attack speed with these weapons.', '+25% скорости атаки этим оружием.'
   buffAposAdrenalineName     = 'Adrenaline', 'Адреналин'
   buffAposAdrenalineDesc     = '+10% move speed per stack. 15 s after the last kill.', '+10% скорости передвижения за стак. 15 с после последнего убийства.'
-  buffAposEmpName            = 'EMP Charges', 'Заряды ЭМИ'
-  buffAposEmpDesc            = 'At 10 charges your next hit releases an EMP around you.', 'На 10 зарядах следующий удар выпускает ЭМИ вокруг вас.'
+  buffAposEmpName            = 'Lightning Charges', 'Заряды молнии'
+  buffAposEmpDesc            = 'At 10 charges your next hit fires a Charged Chain Lightning around you.', 'На 10 зарядах следующий удар выпускает Заряженную цепную молнию вокруг вас.'
   buffAposJackpotName        = 'Jackpot!', 'Джекпот!'
   buffAposJackpotDesc        = 'Mining yields x5.', 'Добыча x5.'
   buffAposEvasionName        = 'Evasion', 'Уклонение'
@@ -299,7 +299,7 @@ $attrHighlights = [ordered]@{
   attStrength   = 'Overkill: damage beyond a killing blow with a Strength weapon (shotguns, clubs, sledgehammers) hits the nearest zombie within 4 m.', 'Перебор: лишний урон от добивающего удара оружием Силы (дробовики, дубинки, кувалды) переходит на ближайшего зомби в радиусе 4 м.'
   attFortitude  = 'Iron Body: you cannot bleed or get infected, and an existing infection is cured.', 'Железное тело: вы не кровоточите и не заражаетесь, а текущая инфекция излечивается.'
   attAgility    = 'Adrenaline: kills with Agility weapons (pistols, bows, knives) give +10% move speed for 15 s, up to 3 stacks.', 'Адреналин: убийства оружием Ловкости (пистолеты, луки, ножи) дают +10% скорости передвижения на 15 с, до 3 стаков.'
-  attIntellect  = 'EMP: every kill gives a charge; at 10 charges your next hit releases an EMP: 200 damage and a 4 s shock to every zombie within 8 m of you.', 'ЭМИ: каждое убийство даёт заряд; на 10 зарядах следующий удар выпускает ЭМИ: 200 урона и шок на 4 с всем зомби в радиусе 8 м от вас.'
+  attIntellect  = 'Charged Chain Lightning: every kill gives a lightning charge; at 10 charges your next hit with any weapon fires Chain Lightning around you that also deals 200 damage: shock for 4 s and 200 damage to every zombie within 8 m.', 'Заряженная цепная молния: каждое убийство даёт заряд молнии; на 10 зарядах следующий удар любым оружием выпускает вокруг вас Цепную молнию, которая ещё и наносит 200 урона: шок на 4 с и 200 урона всем зомби в радиусе 8 м.'
 }
 foreach ($a in $attrHighlights.Keys) {
   $key = "${a}Rank10LongDesc"
@@ -361,7 +361,7 @@ $setTexts = [ordered]@{
   Commando = 'Commando Full Set Bonus', 'Бонус полного комплекта коммандос', 'Machine guns: Suppression slows up to 20% more, every 3rd hit puts a round back into the magazine.', 'Автоматы: Подавление замедляет ещё на 20% сильнее, каждое 3-е попадание возвращает патрон в магазин.'
   Farmer   = 'Hunter Full Set Bonus', 'Бонус полного комплекта охотника', 'Bows and crossbows: Splinter +2 fragments, your damage to marked zombies +20%.', 'Луки и арбалеты: Расщепление +2 осколка, ваш урон по помеченным зомби +20%.'
   Preacher = 'Preacher Full Set Bonus', 'Бонус полного комплекта проповедника', 'Elements: fire, shock, acid and bleeding deal 50% more, reactions recharge in 1.5 s instead of 3 s. The gloves raise the chance of elemental mods.', 'Стихии: огонь, ток, кислота и кровотечение наносят на 50% больше, реакции перезаряжаются за 1.5 с вместо 3. Перчатки повышают шанс стихийных модов.'
-  Nerd     = 'Nerd Full Set Bonus', 'Бонус полного комплекта ботана', 'Batons and robots: Chain Lightning reaches 1 m further, EMP charges come twice as fast.', 'Жезлы и роботы: Цепная молния достаёт на 1 м дальше, заряды ЭМИ копятся вдвое быстрее.'
+  Nerd     = 'Nerd Full Set Bonus', 'Бонус полного комплекта ботана', 'Batons and robots: Chain Lightning reaches 1 m further, lightning charges come twice as fast.', 'Жезлы и роботы: Цепная молния достаёт на 1 м дальше, заряды молнии копятся вдвое быстрее.'
 }
 foreach ($s in $setTexts.Keys) {
   $v = $setTexts[$s]
