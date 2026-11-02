@@ -5,7 +5,7 @@
 			<ingredient name="resourceArrowHeadIron" count="3"/>
 			<ingredient name="resourceWood" count="3"/>
 			<ingredient name="resourceFeather" count="3"/>
-			<ingredient name="resourceAcid" count="1"/>
+			<ingredient name="foodRottingFlesh" count="1"/>
 		</recipe>
 		<recipe name="ammoArrowAposShock" count="3" craft_time="4">
 			<ingredient name="resourceArrowHeadIron" count="3"/>
