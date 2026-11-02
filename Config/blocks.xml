@@ -29,4 +29,7 @@
 			<property name="Tags" value="workstationSkill"/>
 		</block>
 	</append>
+	<!-- ===== Bird nests: x3 feathers (loot: loot.xml; harvesting the nest block: here) ===== -->
+	<set xpath="/blocks/block[@name='cntBirdnest']/drop[@event='Harvest' and @name='resourceFeather' and @count='3']/@count">9</set>
+	<set xpath="/blocks/block[@name='cntBirdnest']/drop[@event='Harvest' and @name='resourceFeather' and @count='2']/@count">6</set>
 </configs>

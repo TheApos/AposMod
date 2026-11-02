@@ -94,4 +94,7 @@
 	<append xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT5']">
 		<item group="groupAmmoRocket" count="4,6"/>
 	</append>
+	<!-- ===== Bird nests: x3 feathers (vanilla 1 + 1-5) ===== -->
+	<set xpath="/lootcontainers/lootgroup[@name='groupBirdNest01']/item[@name='resourceFeather']/@count">3</set>
+	<set xpath="/lootcontainers/lootgroup[@name='groupBirdNest02']/item[@name='resourceFeather']/@count">3,15</set>
 </configs>
