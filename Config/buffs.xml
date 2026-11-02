@@ -587,13 +587,19 @@
 			<stack_type value="ignore"/>
 			<duration value="300"/>
 		</buff>
-		<!-- Siphoning Strikes 5 "Vampire": a melee kill heals 150 HP over 15 s; another kill restarts the 15 s -->
+		<!-- Siphoning Strikes 5 "Vampire": every melee kill adds +50 max health and heals those 50, for 15 s.
+		     A kill while it is active stacks another +50 and restarts the 15 s, without a limit.
+		     aposVampHP = the bonus (reset by the first kill after the buff ended, progression.xml),
+		     aposVampHeal = health still to add once the bigger maximum is in place. -->
 		<buff name="buffAposVampire" name_key="buffAposVampireName" description_key="buffAposVampireDesc" icon="ui_game_symbol_siphoning_strikes" icon_color="200,40,60">
+			<display_value value="aposVampHP"/>
 			<stack_type value="replace"/>
 			<duration value="15"/>
-			<update_rate value="1"/>
+			<update_rate value="0.5"/>
 			<effect_group>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="10"/>
+				<passive_effect name="HealthMax" operation="base_add" value="@aposVampHP"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@aposVampHeal"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposVampHeal" operation="set" value="0"/>
 			</effect_group>
 		</buff>
 		<!-- Rule 1: Cardio 5 "Second Lungs" cooldown -->

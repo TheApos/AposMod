@@ -190,7 +190,7 @@ $extra = [ordered]@{
   buffAposSecondWindName     = 'Second Wind (recharging)', 'Второе дыхание (перезарядка)'
   buffAposSecondWindDesc     = 'Second Wind is ready again when this ends.', 'Второе дыхание снова готово, когда это закончится.'
   buffAposVampireName        = 'Vampire', 'Вампир'
-  buffAposVampireDesc        = 'Healing 10 HP per second.', 'Лечение 10 HP в секунду.'
+  buffAposVampireDesc        = 'Bonus max health from melee kills (the number). A melee kill adds +50 and restarts the timer.', 'Бонус к максимуму здоровья за убийства в ближнем бою (число). Убийство добавляет +50 и перезапускает таймер.'
   buffAposSecondLungsName   = 'Second Lungs (recharging)', 'Второе дыхание лёгких (перезарядка)'
   buffAposSecondLungsDesc    = 'Second Lungs is ready again when this ends.', 'Второе дыхание лёгких снова готово, когда это закончится.'
   # Grand Slam is replaced by Rage (full texts)
@@ -269,7 +269,7 @@ $perkHighlights = [ordered]@{
   perkTheHuntsman        = 5, 'Butcher: harvesting a carcass heals 30 HP (once per 5 s).', 'Мясник: разделка туши лечит 30 HP (раз в 5 с).'
   perkPainTolerance      = 5, 'Unbreakable: below 25% health you take 50% less damage.', 'Несгибаемый: при здоровье ниже 25% вы получаете на 50% меньше урона.'
   perkFortitudeMastery   = 5, 'Second Wind: once per 5 minutes, dropping below 20% health instantly heals 70% of your max health.', 'Второе дыхание: раз в 5 минут, когда здоровье падает ниже 20%, вы сразу восстанавливаете 70% максимума.'
-  perkSiphoningStrikes   = 5, 'Vampire: a melee kill heals 150 HP over 15 s (another kill restarts the 15 s).', 'Вампир: убийство в ближнем бою лечит 150 HP за 15 с (новое убийство перезапускает 15 с).'
+  perkSiphoningStrikes   = 5, 'Vampire: a melee kill gives +50 max health (and heals it) for 15 s. Every kill in that time adds another +50 and restarts the 15 s, without a limit.', 'Вампир: убийство в ближнем бою даёт +50 к максимуму здоровья (и лечит их) на 15 с. Каждое убийство за это время добавляет ещё +50 и перезапускает 15 с, без предела.'
   perkHealingFactor      = 5, 'Regeneration: after 10 s without hitting or being hit you regenerate 3 HP/s.', 'Регенерация: через 10 с без ударов (ваших и по вам) вы восстанавливаете 3 HP/с.'
   perkSlowMetabolism     = 5, 'Iron Stomach: no food poisoning or dysentery (murky water is safe), and food and water never drop below 25%.', 'Железный желудок: никаких отравлений и дизентерии (мутная вода безопасна), а еда и вода не падают ниже 25%.'
   perkRuleOneCardio      = 5, 'Second Lungs: when your stamina runs out you instantly get 50% back (once per 60 s).', 'Второе дыхание лёгких: когда выносливость кончается, вы сразу получаете 50% обратно (раз в 60 с).'
