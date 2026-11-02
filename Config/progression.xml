@@ -267,14 +267,13 @@
 	<!-- Siphoning Strikes: the vanilla kill heal (2-10 HP) is replaced by vampirism: every melee hit heals
 	     4% of the damage per level (Source/AposCombat.cs) -->
 	<remove xpath="/progression/perks/perk[@name='perkSiphoningStrikes']/effect_group/triggered_effect[@trigger='onSelfKilledOther']"/>
-	<!-- Siphoning Strikes 5 "Vampire": a melee kill stacks +50 max health (healed) for 15 s (buffAposVampire) -->
+	<!-- Siphoning Strikes 5 "Vampire": a melee kill stacks +50 max health (not healed) for 15 s (buffAposVampire) -->
 	<append xpath="/progression/perks/perk[@name='perkSiphoningStrikes']">
 		<effect_group name="AposMod vampire">
 			<requirement name="ProgressionLevel" progression_name="perkSiphoningStrikes" operation="GTE" value="5"/>
 			<requirement name="ItemHasTags" tags="melee"/>
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposVampHP" operation="set" value="0"><requirement name="!HasBuff" buff="buffAposVampire"/></triggered_effect>
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposVampHP" operation="add" value="50"/>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposVampHeal" operation="add" value="50"/>
 			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposVampire"/>
 		</effect_group>
 	</append>
