@@ -8,6 +8,7 @@ public class AposModInit : IModApi
     public void InitMod(Mod _modInstance)
     {
         AposSettings.Load(_modInstance.Path);
+        AposStealth.Init();
         // Patch class by class: one patch broken by a game update must not switch off the others
         HarmonyLib.Harmony harmony = new HarmonyLib.Harmony("apos.aposmod");
         int ok = 0;
@@ -34,6 +35,7 @@ public class AposModInit : IModApi
         go.AddComponent<AposSurvival>();
         go.AddComponent<AposElites>();
         go.AddComponent<AposWardrobe>();
+        go.AddComponent<AposBow>();
     }
 }
 
@@ -76,6 +78,8 @@ public class AposDamageNumbers : MonoBehaviour
     static EntityAlive hitTarget;
     static DamageResponse hitResponse;
     static bool ownCreate; // our own DamageText.Create call: already styled
+    // entities whose killing blow was shown: hits on the corpse (harvesting) show nothing
+    static readonly HashSet<int> killShown = new HashSet<int>();
 
     // Last seen values per entity id, to detect damage without a hit
     readonly Dictionary<int, int> lastHealth = new Dictionary<int, int>();
@@ -101,6 +105,7 @@ public class AposDamageNumbers : MonoBehaviour
         {
             lastHealth.Clear();
             lastHitRandom.Clear();
+            killShown.Clear();
             cam = null;
             killText = null; // re-read after a language change in the menu
             return;
@@ -132,7 +137,7 @@ public class AposDamageNumbers : MonoBehaviour
             {
                 Vector3 pos = e.getHeadPosition() + new Vector3(0f, 0.1f, 0f);
                 Show((prevHp - hp).ToString(), ElementColor(e) ?? NormalColor, pos, 0.85f, false);
-                if (hp <= 0) ShowKill(pos);
+                if (hp <= 0) ShowKill(e, pos);
             }
             lastHealth[id] = hp;
             lastHitRandom[id] = rec.Random;
@@ -148,6 +153,7 @@ public class AposDamageNumbers : MonoBehaviour
         {
             lastHealth.Remove(stale[i]);
             lastHitRandom.Remove(stale[i]);
+            killShown.Remove(stale[i]);
         }
     }
 
@@ -169,6 +175,7 @@ public class AposDamageNumbers : MonoBehaviour
         if (!AposSettings.Enabled || hitTarget == null) return false;
         EntityAlive e = hitTarget;
         DamageResponse r = hitResponse;
+        if (killShown.Contains(e.entityId) || (!r.Fatal && e.IsDead())) return false; // a corpse
         if (e is EntityPlayer)
         {
             Show(r.Strength.ToString(), HurtColor, worldPos, 1f, false);
@@ -183,12 +190,13 @@ public class AposDamageNumbers : MonoBehaviour
         // A buffed hit shows the buff colour; "!" still marks a headshot
         Color c = element ?? (buffed ? BuffedColor : (headshot ? HeadshotColor : NormalColor));
         Show(headshot ? r.Strength + "!" : r.Strength.ToString(), c, worldPos, headshot ? 1.3f : 1f, false);
-        if (r.Fatal) ShowKill(worldPos);
+        if (r.Fatal) ShowKill(e, worldPos);
         return false;
     }
 
-    static void ShowKill(Vector3 pos)
+    static void ShowKill(EntityAlive e, Vector3 pos)
     {
+        if (!killShown.Add(e.entityId)) return;
         if (AposSettings.KillLabel) Show(KillText(), KillColor, pos + new Vector3(0f, 0.45f, 0f), 1.1f, true);
     }
 
@@ -243,7 +251,7 @@ public class AposDamageNumbers : MonoBehaviour
         if (e.Buffs.HasBuff("buffAposCorroded")) return AcidColor;
         if (HasAnyBuff(e, FireBuffs)) return FireColor;
         if (e.Buffs.HasBuff("buffShocked")) return ShockColor;
-        if (e.Buffs.HasBuff("buffInjuryBleeding")) return BleedColor;
+        if (e.Buffs.HasBuff("buffInjuryBleeding") || e.Buffs.HasBuff("buffAposDeepBleed")) return BleedColor;
         return null;
     }
 

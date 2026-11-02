@@ -466,6 +466,35 @@
 		</effect_group>
 	</append>
 
+	<!-- ===================== Special arrows (items.xml) ===================== -->
+	<append xpath="/buffs">
+		<!-- Acid arrow: -90% speed; the duration (5-10 s by Archery level) comes from the arrow's AddBuff -->
+		<buff name="buffAposAcidSlow" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="5"/>
+			<effect_group>
+				<requirement name="!EntityTagCompare" tags="player"/>
+				<passive_effect name="WalkSpeed" operation="perc_add" value="-.9"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value="-.9"/>
+			</effect_group>
+		</buff>
+		<!-- Serrated arrow: 10 s of deep bleeding, 15% of the last hit per second (at least 12); a new arrow restarts it -->
+		<buff name="buffAposDeepBleed" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="10"/>
+			<update_rate value="1"/>
+			<effect_group>
+				<requirement name="!EntityTagCompare" tags="player"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposDeepBleedTick" operation="set" value="@aposHitDmg"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposDeepBleedTick" operation="multiply" value="-.15"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposDeepBleedTick" operation="set" value="-12">
+					<requirement name="CVarCompare" cvar="aposDeepBleedTick" operation="GT" value="-12"/>
+				</triggered_effect>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="@aposDeepBleedTick"/>
+			</effect_group>
+		</buff>
+	</append>
+
 	<!-- ===================== 1.0: buffs for attribute and perk highlights (progression.xml) ===================== -->
 	<append xpath="/buffs">
 		<!-- Flurry 5 "Frenzy": +25% attack speed with that perk's weapons for 5 s -->

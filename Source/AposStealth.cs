@@ -18,6 +18,16 @@ public static class AposStealth
 
     static int converted;
 
+    // Vanilla spawns a volume's zombies when you are within 8 m of it on the same floor (the 0.7 m vertical
+    // padding rounds down to 0), so they pop in at the door like a trigger. 12 m and +-3 m (next floor) puts them
+    // in place, asleep, before you get there; it stays under the 14 m at which the game despawns them again.
+    public static void Init()
+    {
+        if (!AposSettings.StealthRework) return;
+        SleeperVolume.triggerPaddingMin = new Vector3i(12, 3, 12);
+        SleeperVolume.triggerPaddingMax = new Vector3i(12, 3, 12);
+    }
+
     public static void Fix(SleeperVolume v)
     {
         if (v == null || !AposSettings.StealthRework) return;

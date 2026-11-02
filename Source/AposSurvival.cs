@@ -93,3 +93,18 @@ public class AposSurvival : MonoBehaviour
         }
     }
 }
+
+// From the Shadows 5 "Silent Shadow": crouching costs no speed. Crouched walking is as fast as walking upright and
+// a crouched sprint as fast as a normal run (EntityPlayer.GetSpeedModifier uses separate crouch values otherwise).
+[HarmonyLib.HarmonyPatch(typeof(EntityPlayer), "GetSpeedModifier")]
+public static class AposShadowSpeedPatch
+{
+    static void Postfix(EntityPlayer __instance, ref float __result)
+    {
+        if (!__instance.IsCrouching || AposAffixes.Level(__instance, "perkFromTheShadows") < 5) return;
+        float upright = __instance.MovementRunning
+            ? EffectManager.GetValue(PassiveEffects.RunSpeed, null, Constants.cPlayerSpeedModifierRunning, __instance) * EntityPlayer.RunSpeedModifier
+            : EffectManager.GetValue(PassiveEffects.WalkSpeed, null, Constants.cPlayerSpeedModifierWalking, __instance) * EntityPlayer.WalkSpeedModifier;
+        if (upright > __result) __result = upright;
+    }
+}

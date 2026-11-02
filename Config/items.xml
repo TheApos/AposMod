@@ -1507,4 +1507,64 @@
 		</item>
 	</append>
 	<!-- LEGENDARY END -->
+
+	<!-- ===================== Special arrows (bows only, not crossbows): acid, electric, serrated =====================
+	     Acid: corrodes (mod acid: -25% physical resist + ticks) and slows the zombie by 90% for 5-10 s (Archery 0-1: 5,
+	     2: 6, 3: 7, 4: 8, 5: 10). Electric: shocks for 4 s (mod shock ticks, reactions). Serrated: deep bleeding for
+	     10 s, 15% of your last hit per second (min 12) on top of the normal bleeding: shoot and kite.
+	     Added to every bow that takes stone arrows (also the legendary Artemis), after the LEGENDARY block. -->
+	<append xpath="/items">
+		<item name="ammoArrowAposAcid">
+			<property name="Extends" value="ammoArrowIron"/>
+			<property name="CustomIcon" value="ammoArrowIron"/>
+			<property name="CustomIconTint" value="120,255,60"/>
+			<property name="EconomicValue" value="30"/>
+			<property name="DescriptionKey" value="ammoArrowAposAcidDesc"/>
+			<effect_group name="AposMod acid arrow" tiered="false">
+				<passive_effect name="EntityDamage" operation="base_set" value="30" tags="perkArchery"/>
+				<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="other" cvar="aposCorrodeTime" operation="set" value="6"/>
+				<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffAposCorroded"/>
+				<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffAposAcidSlow" duration="5">
+					<requirement name="ProgressionLevel" progression_name="perkArchery" operation="LT" value="2"/>
+				</triggered_effect>
+				<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffAposAcidSlow" duration="6">
+					<requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="2"/>
+				</triggered_effect>
+				<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffAposAcidSlow" duration="7">
+					<requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="3"/>
+				</triggered_effect>
+				<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffAposAcidSlow" duration="8">
+					<requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="4"/>
+				</triggered_effect>
+				<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffAposAcidSlow" duration="10">
+					<requirement name="ProgressionLevel" progression_name="perkArchery" operation="GTE" value="5"/>
+				</triggered_effect>
+			</effect_group>
+		</item>
+		<item name="ammoArrowAposShock">
+			<property name="Extends" value="ammoArrowIron"/>
+			<property name="CustomIcon" value="ammoArrowIron"/>
+			<property name="CustomIconTint" value="80,140,255"/>
+			<property name="EconomicValue" value="30"/>
+			<property name="Damage_type" value="Electrical"/>
+			<property name="DescriptionKey" value="ammoArrowAposShockDesc"/>
+			<effect_group name="AposMod electric arrow" tiered="false">
+				<passive_effect name="EntityDamage" operation="base_set" value="32" tags="perkArchery"/>
+				<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffShocked" duration="4"/>
+			</effect_group>
+		</item>
+		<item name="ammoArrowAposBleed">
+			<property name="Extends" value="ammoArrowIron"/>
+			<property name="CustomIcon" value="ammoArrowIron"/>
+			<property name="CustomIconTint" value="230,40,60"/>
+			<property name="EconomicValue" value="30"/>
+			<property name="DescriptionKey" value="ammoArrowAposBleedDesc"/>
+			<effect_group name="AposMod serrated arrow" tiered="false">
+				<passive_effect name="EntityDamage" operation="base_set" value="34" tags="perkArchery"/>
+				<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffAposDeepBleed"/>
+				<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffInjuryBleeding"/>
+			</effect_group>
+		</item>
+	</append>
+	<csv xpath="/items/item/property[@class='Action0']/property[@name='Magazine_items'][contains(@value,'ammoArrowStone')]/@value" delim="," op="add">ammoArrowAposAcid,ammoArrowAposShock,ammoArrowAposBleed</csv>
 </configs>

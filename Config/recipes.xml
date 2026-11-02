@@ -1,4 +1,25 @@
 <configs>
+	<!-- Special arrows (items.xml): 3 per craft, in the backpack like iron arrows -->
+	<append xpath="/recipes">
+		<recipe name="ammoArrowAposAcid" count="3" craft_time="4">
+			<ingredient name="resourceArrowHeadIron" count="3"/>
+			<ingredient name="resourceWood" count="3"/>
+			<ingredient name="resourceFeather" count="3"/>
+			<ingredient name="resourceAcid" count="1"/>
+		</recipe>
+		<recipe name="ammoArrowAposShock" count="3" craft_time="4">
+			<ingredient name="resourceArrowHeadIron" count="3"/>
+			<ingredient name="resourceWood" count="3"/>
+			<ingredient name="resourceFeather" count="3"/>
+			<ingredient name="resourceElectricParts" count="1"/>
+		</recipe>
+		<recipe name="ammoArrowAposBleed" count="3" craft_time="4">
+			<ingredient name="resourceArrowHeadIron" count="3"/>
+			<ingredient name="resourceWood" count="3"/>
+			<ingredient name="resourceFeather" count="3"/>
+			<ingredient name="resourceForgedIron" count="1"/>
+		</recipe>
+	</append>
 	<!-- Energy Shield armor mod: craftable at a workbench -->
 	<append xpath="/recipes">
 		<recipe name="modArmorAposEnergyShield" count="1" craft_area="workbench" tags="workbenchCrafting">

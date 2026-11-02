@@ -336,7 +336,7 @@
 			<passive_effect name="EntityDamage" operation="perc_add" value="10"/>
 		</effect_group>
 	</append>
-	<!-- From the Shadows 5 "Vanish": zombies that lost you give up the search almost at once -->
+	<!-- From the Shadows 5 "Silent Shadow": zombies that lost you give up the search almost at once; crouching costs no speed (Source/AposSurvival.cs) -->
 	<append xpath="/progression/perks/perk[@name='perkFromTheShadows']">
 		<effect_group name="AposMod vanish">
 			<requirement name="ProgressionLevel" progression_name="perkFromTheShadows" operation="GTE" value="5"/>
