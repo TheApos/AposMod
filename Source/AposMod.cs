@@ -37,21 +37,27 @@ public class AposModInit : IModApi
     }
 }
 
-// Floating damage numbers. Watches the health of living non-player entities near the local
-// player every frame and shows each drop as a number rising above the head.
-// Headshots (yellow) are read from EntityAlive.RecordedDamage when it changed this frame.
-// A killing blow adds a red "Kill!" label (text from Localization.csv, key aposKillText).
-// Hits boosted by an AposMod buff are cyan. Damage over time and elemental reactions (health drops without a fresh
-// hit record) take the colour of the element on the target: reaction, acid, fire, shock, bleeding.
+// Floating damage numbers: the game's own 3D numbers (DamageText, normally a world option) in AposMod colours.
+// - Direct hits go through EntityAlive.ProcessDamageResponseLocal -> DamageText.Create; we restyle that call:
+//   white hit, yellow "N!" headshot, cyan buffed hit, element colour by damage type, red "Kill!" on a killing
+//   blow, light red for damage you take. The vanilla 15 m limit is raised to Range (sniper rifles, bows) and far
+//   numbers grow with distance so they stay readable.
+// - Damage without a hit (AposMod element ticks, reactions, splash: ModifyStats Health) is found by watching the
+//   health of nearby entities and shown with the same DamageText in the colour of the element on the target.
+// - Numbers live AposSettings.Lifetime seconds (vanilla 1.5 s).
+// Also draws the crossbow Mark ring.
 public class AposDamageNumbers : MonoBehaviour
 {
-    const float Range = 60f;
-    const float RiseHeight = 1.2f;
+    public const float Range = 120f;
+    public const float VanillaLifetime = 1.5f;
+    const float VanillaScale = 0.22f;
+    const float FullSizeDistance = 10f; // beyond this, numbers grow with distance
 
     static readonly Color NormalColor = Color.white;
     static readonly Color HeadshotColor = new Color(1f, 0.85f, 0.1f);
     static readonly Color BuffedColor = new Color(0.3f, 0.85f, 1f);
     static readonly Color KillColor = new Color(1f, 0.15f, 0.1f);
+    static readonly Color HurtColor = new Color(1f, 0.45f, 0.45f);      // damage to players
     static readonly Color ReactionColor = new Color(1f, 0.24f, 0.95f);  // magenta
     static readonly Color AcidColor = new Color(0.55f, 1f, 0.18f);      // toxic green
     static readonly Color FireColor = new Color(1f, 0.55f, 0.1f);       // orange
@@ -66,30 +72,24 @@ public class AposDamageNumbers : MonoBehaviour
     static readonly string[] TargetDamageBuffs = { "buffAposMark", "buffAposCorroded" };
     const string SuppressedFullVar = "aposSupFull";
 
-    class Popup
-    {
-        public Vector3 Pos;
-        public string Text;
-        public Color Color;
-        public int Size;
-        public float Start;
-    }
+    // The hit being processed by ProcessDamageResponseLocal (set by its prefix, main thread only)
+    static EntityAlive hitTarget;
+    static DamageResponse hitResponse;
+    static bool ownCreate; // our own DamageText.Create call: already styled
 
-    // Last seen values per entity id, to detect a new hit
+    // Last seen values per entity id, to detect damage without a hit
     readonly Dictionary<int, int> lastHealth = new Dictionary<int, int>();
     readonly Dictionary<int, float> lastHitRandom = new Dictionary<int, float>();
     readonly HashSet<int> seen = new HashSet<int>();
     readonly List<int> stale = new List<int>();
-    readonly List<Popup> popups = new List<Popup>();
     readonly List<EntityAlive> marked = new List<EntityAlive>();  // zombies with the crossbow Mark, drawn as a ring
     Texture2D ringTexture;
     Camera cam;
-    GUIStyle style;
-    string killText;
+    static string killText;
 
     void Awake()
     {
-        // Skip the IMGUI layout pass: we only draw labels, so this avoids per-frame work and garbage
+        // Skip the IMGUI layout pass: we only draw the Mark rings
         useGUILayout = false;
     }
 
@@ -101,12 +101,13 @@ public class AposDamageNumbers : MonoBehaviour
         {
             lastHealth.Clear();
             lastHitRandom.Clear();
-            popups.Clear();
             cam = null;
             killText = null; // re-read after a language change in the menu
             return;
         }
         cam = player.playerCamera;
+        // our setting switches the numbers on even when the world option is off
+        if (AposSettings.Enabled && !DamageText.Enabled) DamageText.Enabled = true;
 
         seen.Clear();
         marked.Clear();
@@ -124,15 +125,14 @@ public class AposDamageNumbers : MonoBehaviour
             DamageResponse rec = e.RecordedDamage;
 
             int prevHp;
-            if (lastHealth.TryGetValue(id, out prevHp) && hp < prevHp)
+            float prevRandom;
+            // a fresh hit record means the game already showed this damage
+            if (lastHealth.TryGetValue(id, out prevHp) && hp < prevHp
+                && lastHitRandom.TryGetValue(id, out prevRandom) && prevRandom == rec.Random && AposSettings.Enabled)
             {
-                float prevRandom;
-                bool freshRecord = !lastHitRandom.TryGetValue(id, out prevRandom) || prevRandom != rec.Random;
-                bool headshot = freshRecord && (rec.HitBodyPart & EnumBodyPartHit.Head) != 0;
-                bool buffed = AposSettings.BuffColor && (HasAnyBuff(player, PlayerDamageBuffs)
-                    || HasAnyBuff(e, TargetDamageBuffs) || e.Buffs.GetCustomVar(SuppressedFullVar) > 0f);
-                Color? element = freshRecord ? (Color?)null : ElementColor(e);
-                if (AposSettings.Enabled) AddPopup(e, prevHp - hp, headshot, buffed, element, hp <= 0);
+                Vector3 pos = e.getHeadPosition() + new Vector3(0f, 0.1f, 0f);
+                Show((prevHp - hp).ToString(), ElementColor(e) ?? NormalColor, pos, 0.85f, false);
+                if (hp <= 0) ShowKill(pos);
             }
             lastHealth[id] = hp;
             lastHitRandom[id] = rec.Random;
@@ -149,12 +149,67 @@ public class AposDamageNumbers : MonoBehaviour
             lastHealth.Remove(stale[i]);
             lastHitRandom.Remove(stale[i]);
         }
+    }
 
-        // Drop expired popups (backwards loop, no allocations)
-        float now = Time.time;
-        for (int i = popups.Count - 1; i >= 0; i--)
+    public static void BeginHit(EntityAlive target, DamageResponse response)
+    {
+        hitTarget = target;
+        hitResponse = response;
+    }
+
+    public static void EndHit()
+    {
+        hitTarget = null;
+    }
+
+    // DamageText.Create prefix: true lets the call through (ours), false replaces the vanilla number with ours
+    public static bool OnCreate(Vector3 worldPos)
+    {
+        if (ownCreate) return true;
+        if (!AposSettings.Enabled || hitTarget == null) return false;
+        EntityAlive e = hitTarget;
+        DamageResponse r = hitResponse;
+        if (e is EntityPlayer)
         {
-            if (now - popups[i].Start > AposSettings.Lifetime) popups.RemoveAt(i);
+            Show(r.Strength.ToString(), HurtColor, worldPos, 1f, false);
+            return false;
+        }
+
+        bool headshot = (r.HitBodyPart & EnumBodyPartHit.Head) != 0;
+        Color? element = TypeColor(r.Source != null ? r.Source.GetDamageType() : EnumDamageTypes.None);
+        EntityPlayerLocal player = GameManager.Instance.World.GetPrimaryPlayer();
+        bool buffed = AposSettings.BuffColor && player != null && (HasAnyBuff(player, PlayerDamageBuffs)
+            || HasAnyBuff(e, TargetDamageBuffs) || e.Buffs.GetCustomVar(SuppressedFullVar) > 0f);
+        // A buffed hit shows the buff colour; "!" still marks a headshot
+        Color c = element ?? (buffed ? BuffedColor : (headshot ? HeadshotColor : NormalColor));
+        Show(headshot ? r.Strength + "!" : r.Strength.ToString(), c, worldPos, headshot ? 1.3f : 1f, false);
+        if (r.Fatal) ShowKill(worldPos);
+        return false;
+    }
+
+    static void ShowKill(Vector3 pos)
+    {
+        if (AposSettings.KillLabel) Show(KillText(), KillColor, pos + new Vector3(0f, 0.45f, 0f), 1.1f, true);
+    }
+
+    // Spawns a game damage number; size is relative to the vanilla one
+    static void Show(string text, Color color, Vector3 worldPos, float size, bool straightUp)
+    {
+        EntityPlayerLocal player = GameManager.Instance.World.GetPrimaryPlayer();
+        if (player == null || player.cameraTransform == null) return;
+        // the same camera position the game uses for its 15 m check (logical world space)
+        Vector3 camPos = player.cameraTransform.position + Origin.position;
+        float grow = Mathf.Max(1f, Vector3.Distance(camPos, worldPos) / FullSizeDistance);
+        Vector3 velocity = straightUp ? new Vector3(0f, 0.8f, 0f)
+            : new Vector3(Random.Range(-0.7f, 0.7f), 0.8f, Random.Range(-0.7f, 0.7f));
+        ownCreate = true;
+        try
+        {
+            DamageText.Create(text, color, worldPos, velocity * grow, VanillaScale * size * AposSettings.Scale * grow);
+        }
+        finally
+        {
+            ownCreate = false;
         }
     }
 
@@ -167,7 +222,21 @@ public class AposDamageNumbers : MonoBehaviour
         return false;
     }
 
-    // Colour of damage that came without a hit (ticks, reactions), by what is on the target; null = plain hit
+    // Colour of a hit by its damage type; null = plain hit
+    static Color? TypeColor(EnumDamageTypes type)
+    {
+        switch (type)
+        {
+            case EnumDamageTypes.Heat: return FireColor;
+            case EnumDamageTypes.Electrical: return ShockColor;
+            case EnumDamageTypes.Corrosive:
+            case EnumDamageTypes.Toxic: return AcidColor;
+            case EnumDamageTypes.BloodLoss: return BleedColor;
+        }
+        return null;
+    }
+
+    // Colour of damage that came without a hit (ticks, reactions), by what is on the target; null = plain
     static Color? ElementColor(EntityAlive e)
     {
         if (e.Buffs.HasBuff("buffAposReactionHit")) return ReactionColor;
@@ -178,35 +247,7 @@ public class AposDamageNumbers : MonoBehaviour
         return null;
     }
 
-    void AddPopup(EntityAlive e, int damage, bool headshot, bool buffed, Color? element, bool kill)
-    {
-        // The game shifts the render origin around the player (floating origin): Entity.position is the
-        // logical world position, the camera works in scene space, so take the scene transform.
-        // Small sideways jitter so fast hits do not stack on one spot.
-        Vector3 pos = e.transform.position + new Vector3(Random.Range(-0.3f, 0.3f), e.height + 0.3f, Random.Range(-0.3f, 0.3f));
-
-        Popup p = new Popup();
-        p.Pos = pos;
-        p.Text = headshot ? damage + "!" : damage.ToString();
-        // A buffed hit shows the buff colour; "!" still marks a headshot
-        p.Color = element ?? (buffed ? BuffedColor : (headshot ? HeadshotColor : NormalColor));
-        p.Size = headshot ? 40 : (element.HasValue ? 26 : 30);
-        p.Start = Time.time;
-        popups.Add(p);
-
-        if (kill && AposSettings.KillLabel)
-        {
-            Popup k = new Popup();
-            k.Pos = pos + Vector3.up * 0.45f;
-            k.Text = KillText();
-            k.Color = KillColor;
-            k.Size = 34;
-            k.Start = p.Start;
-            popups.Add(k);
-        }
-    }
-
-    string KillText()
+    static string KillText()
     {
         if (killText == null)
         {
@@ -219,40 +260,8 @@ public class AposDamageNumbers : MonoBehaviour
 
     void OnGUI()
     {
-        if ((popups.Count == 0 && marked.Count == 0) || cam == null || Event.current.type != EventType.Repaint) return;
-        if (style == null)
-        {
-            style = new GUIStyle(GUI.skin.label);
-            style.alignment = TextAnchor.MiddleCenter;
-            style.fontStyle = FontStyle.Bold;
-        }
-
-        float now = Time.time;
+        if (marked.Count == 0 || cam == null || Event.current.type != EventType.Repaint) return;
         Color oldColor = GUI.color;
-        for (int i = 0; i < popups.Count; i++)
-        {
-            Popup p = popups[i];
-            float t = (now - p.Start) / AposSettings.Lifetime;
-            // Viewport (0..1) instead of camera pixels: the game may render at a lower resolution
-            // than the screen (DLSS/FSR), which shifts WorldToScreenPoint results
-            Vector3 vp = cam.WorldToViewportPoint(p.Pos + Vector3.up * (RiseHeight * t));
-            if (vp.z <= 0f) continue; // behind the camera
-            float x = vp.x * Screen.width;
-            float y = (1f - vp.y) * Screen.height;
-
-            float alpha = 1f - t * t;
-            style.fontSize = Mathf.RoundToInt(p.Size * AposSettings.Scale);
-            float w = 200f * AposSettings.Scale, h = 50f * AposSettings.Scale;
-            Rect r = new Rect(x - w / 2f, y - h / 2f, w, h);
-
-            // Dark outline for readability
-            GUI.color = new Color(0f, 0f, 0f, alpha * 0.8f);
-            GUI.Label(new Rect(r.x + 2f, r.y + 2f, r.width, r.height), p.Text, style);
-            GUI.Label(new Rect(r.x - 1f, r.y - 1f, r.width, r.height), p.Text, style);
-
-            GUI.color = new Color(p.Color.r, p.Color.g, p.Color.b, alpha);
-            GUI.Label(r, p.Text, style);
-        }
         DrawMarks();
         GUI.color = oldColor;
     }
@@ -296,5 +305,51 @@ public class AposDamageNumbers : MonoBehaviour
         }
         t.Apply();
         return t;
+    }
+}
+
+// Hits: remember the target for DamageText.Create and raise the vanilla 15 m limit (225 = 15^2) to Range
+[HarmonyLib.HarmonyPatch(typeof(EntityAlive), "ProcessDamageResponseLocal")]
+public static class AposDamageNumbersHitPatch
+{
+    static void Prefix(EntityAlive __instance, DamageResponse _dmResponse)
+    {
+        AposDamageNumbers.BeginHit(__instance, _dmResponse);
+    }
+
+    static void Postfix()
+    {
+        AposDamageNumbers.EndHit();
+    }
+
+    static IEnumerable<HarmonyLib.CodeInstruction> Transpiler(IEnumerable<HarmonyLib.CodeInstruction> code)
+    {
+        foreach (HarmonyLib.CodeInstruction ins in code)
+        {
+            if (ins.opcode == System.Reflection.Emit.OpCodes.Ldc_R4 && ins.operand is float && (float)ins.operand == 225f)
+            {
+                ins.operand = AposDamageNumbers.Range * AposDamageNumbers.Range;
+            }
+            yield return ins;
+        }
+    }
+}
+
+[HarmonyLib.HarmonyPatch(typeof(DamageText), "Create")]
+public static class AposDamageTextCreatePatch
+{
+    static bool Prefix(Vector3 _worldPos)
+    {
+        return AposDamageNumbers.OnCreate(_worldPos);
+    }
+}
+
+// Lifetime: the game counts 1.5 s down; giving back part of each frame stretches it to AposSettings.Lifetime
+[HarmonyLib.HarmonyPatch(typeof(DamageText), "LateUpdate")]
+public static class AposDamageTextLifetimePatch
+{
+    static void Prefix(DamageText __instance)
+    {
+        __instance.TimeDuration += Time.deltaTime * (1f - AposDamageNumbers.VanillaLifetime / AposSettings.Lifetime);
     }
 }

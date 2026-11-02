@@ -9,7 +9,7 @@ public static class AposSettings
 {
     public static bool Enabled = true;
     public static float Scale = 1f;       // text size multiplier
-    public static float Lifetime = 1.5f;  // seconds a number stays on screen
+    public static float Lifetime = 3f;    // seconds a number stays on screen (vanilla 1.5)
     public static bool KillLabel = true;  // red "Kill!" above killing blows
     public static bool BuffColor = true;  // cyan numbers for buffed hits
     public static bool StealthRework = true; // POI trigger/attack volumes spawn sleeping zombies (AposStealth.cs)

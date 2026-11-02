@@ -13,7 +13,7 @@
 - `Config/Localization.csv` — must be **.csv** (game 3.x ignores Localization.txt). Columns `english` and `russian`; **fill both** (the game client runs in Russian; an empty column shows a blank text).
 - `Source/*.cs` — C# part. Build: `& Source/build.ps1` → `AposMod.dll` (gitignored).
 - `Source/gen_loc.ps1` — regenerates `Config/Localization.csv` (vanilla text + trait, EN/RU). Edit trait texts there, not in the CSV. Keep it UTF-8 **with BOM**.
-- Damage numbers: draw at `entity.transform.position` (scene space). `Entity.position` is logical world space; the game uses a floating origin, so it is off by hundreds of meters on screen.
+- Damage numbers (AposMod.cs): the game's own 3D `DamageText` (world option, created in `EntityAlive.ProcessDamageResponseLocal`), restyled by Harmony: our colours, range 15 → 120 m (transpiler), size grows with distance, lifetime stretched. Damage applied with `ModifyStats Health` makes no DamageResponse, so it is found by watching health and shown with `DamageText.Create` too. `DamageText` takes logical world positions (it subtracts `Origin.position`); for IMGUI drawing use `entity.transform.position` (scene space, floating origin).
 - Perk scaling: one triggered/passive effect per perk level with `ProgressionLevel ... Equals N` (Ragdoll force/range cannot read `@cvar`; CVarCompare, ModifyStats, RandomRoll, AddBuff duration and passive values can).
 
 ## Build
