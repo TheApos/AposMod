@@ -568,6 +568,11 @@
 		</buff>
 
 		<!-- Agility Mastery 5 "Evasion" -->
+		<!-- From the Shadows 5 "Shadow Strike": ready (Source/AposShadow.cs adds and removes it, AposCombat.cs doubles the hit) -->
+		<buff name="buffAposShadow" name_key="buffAposShadowName" description_key="buffAposShadowDesc" icon="ui_game_symbol_bat" icon_color="170,120,255">
+			<stack_type value="ignore"/>
+		</buff>
+
 		<buff name="buffAposEvasion" name_key="buffAposEvasionName" description_key="buffAposEvasionDesc" icon="ui_game_symbol_run" icon_color="0,200,255">
 			<stack_type value="replace"/>
 			<duration value="5"/>

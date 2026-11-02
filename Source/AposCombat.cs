@@ -200,6 +200,10 @@ public static class AposCombatDamagePatch
         {
             _strength = Mathf.Max(1, _strength / 2);
         }
+        // From the Shadows 5 "Shadow Strike": x2 from the Shadow (AposShadow.cs)
+        EntityPlayer attacker = _damageSource != null && GameManager.Instance.World != null
+            ? GameManager.Instance.World.GetEntity(_damageSource.getEntityId()) as EntityPlayer : null;
+        if (attacker != null && attacker != __instance) _strength = AposShadow.OnPlayerHit(attacker, __instance, _damageSource, _strength);
     }
 
     static void Postfix(EntityAlive __instance, DamageSource _damageSource, ref DamageResponse __result, int __state)
@@ -207,6 +211,10 @@ public static class AposCombatDamagePatch
         try
         {
             AposCombat.OnDamaged(__instance, _damageSource, ref __result, __state);
+            if (_damageSource != null)
+            {
+                AposShadow.AfterHit(GameManager.Instance.World.GetEntity(_damageSource.getEntityId()) as EntityPlayer, __instance, __result.Fatal);
+            }
         }
         catch (Exception e)
         {
