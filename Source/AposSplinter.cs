@@ -1,6 +1,7 @@
 // Bows "Splinter": an arrow hit sets aposSplinterN (fragments) and aposSplinterDmg (negative HP) on the zombie it
-// hit (items.xml). Each fragment flies to one of the nearest other zombies within 5 m and deals the damage through
-// buffAposSplash (which reads aposSplashDmg on its owner). More Archery levels = more fragments.
+// hit (items.xml). Each fragment flies to one of the nearest other zombies within 5 m and deals that damage or half of
+// the arrow's hit (whichever is bigger) through buffAposSplash (which reads aposSplashDmg on its owner).
+// More Archery levels = more fragments.
 // Also the Explosion reaction: buffs.xml sets aposExplodeReq, the damage is a share of the last hit (aposHitDmg).
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class AposSplinter : MonoBehaviour
 {
     const float Range = 80f;
     const float SplinterRadius = 5f;
+    const float SplinterShare = 0.5f;
+    const float SplinterCap = 300f; // a sneak-attack arrow must not turn every fragment into a one-shot
     const string CountVar = "aposSplinterN";
     const string DamageVar = "aposSplinterDmg";
     const string ExplodeVar = "aposExplodeReq";
@@ -55,7 +58,9 @@ public class AposSplinter : MonoBehaviour
             int fragments = (int)hit.Buffs.GetCustomVar(CountVar);
             if (fragments <= 0) continue;
 
-            float damage = hit.Buffs.GetCustomVar(DamageVar);
+            // a fragment deals the flat value from items.xml or half of the arrow's hit (aposHitDmg, AposCombat.cs)
+            float share = Mathf.Min(SplinterCap, hit.Buffs.GetCustomVar("aposHitDmg") * SplinterShare);
+            float damage = Mathf.Min(hit.Buffs.GetCustomVar(DamageVar), -share);
             hit.Buffs.SetCustomVar(CountVar, 0f);
             Scatter(list, hit, fragments, damage);
         }

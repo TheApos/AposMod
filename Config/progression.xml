@@ -264,6 +264,13 @@
 		</effect_group>
 	</append>
 	<!-- Fortitude Mastery 5 "Second Wind": Source/AposCombat.cs -->
+	<!-- Siphoning Strikes: melee kills heal 5/10/15/20/25 HP (vanilla 2/4/6/8/10); every melee hit also heals
+	     4% of the damage per level (Source/AposCombat.cs) -->
+	<set xpath="/progression/perks/perk[@name='perkSiphoningStrikes']/effect_group/triggered_effect[requirement/@value='1']/@value">5</set>
+	<set xpath="/progression/perks/perk[@name='perkSiphoningStrikes']/effect_group/triggered_effect[requirement/@value='2']/@value">10</set>
+	<set xpath="/progression/perks/perk[@name='perkSiphoningStrikes']/effect_group/triggered_effect[requirement/@value='3']/@value">15</set>
+	<set xpath="/progression/perks/perk[@name='perkSiphoningStrikes']/effect_group/triggered_effect[requirement/@value='4']/@value">20</set>
+	<set xpath="/progression/perks/perk[@name='perkSiphoningStrikes']/effect_group/triggered_effect[requirement/@value='5']/@value">25</set>
 	<!-- Siphoning Strikes 5 "Vampire": melee kills also restore 20 stamina -->
 	<append xpath="/progression/perks/perk[@name='perkSiphoningStrikes']">
 		<effect_group name="AposMod vampire">

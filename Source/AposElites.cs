@@ -321,22 +321,27 @@ public static class AposEliteDeathPatch
     }
 }
 
-// Scrapping a weapon with affixes (or a legendary) also gives Eridium
-[HarmonyPatch(typeof(ItemActionEntryScrap), "OnActivated")]
+// Scrapping a weapon with affixes (or a legendary) also gives Eridium. Paid when the scrap finishes (the crafting
+// queue outputs the materials), so cancelling a queued scrap gives nothing. The scrap recipe keeps the weapon as
+// its only ingredient (ItemActionEntryScrap.OnActivated).
+[HarmonyPatch(typeof(XUiC_RecipeStack), "outputStack")]
 public static class AposScrapPatch
 {
-    static void Prefix(ItemActionEntryScrap __instance, out int __state)
+    static void Postfix(Recipe ___recipe, bool __result)
     {
-        __state = 0;
-        XUiC_ItemStack c = __instance.ItemController as XUiC_ItemStack;
-        if (c != null && !c.ItemStack.IsEmpty()) __state = AposElites.ScrapEridium(c.ItemStack.itemValue);
+        if (!__result || ___recipe == null || !___recipe.IsScrap || ___recipe.ingredients.Count == 0) return;
+        AposElites.GiveEridium(AposElites.ScrapEridium(___recipe.ingredients[0].itemValue));
     }
+}
 
-    static void Postfix(ItemActionEntryScrap __instance, int __state)
+// Vanilla bug: an arrow/bolt still flying when its shooter died reads the dead shooter's hand for the dismember
+// chance and throws (ProjectileMoveScript.checkCollision). No dismember for such a hit instead.
+[HarmonyPatch(typeof(ItemAction), "GetDismemberChance")]
+public static class AposDismemberGuardPatch
+{
+    static Exception Finalizer(Exception __exception, ref float __result)
     {
-        if (__state <= 0) return;
-        XUiC_ItemStack c = __instance.ItemController as XUiC_ItemStack;
-        // the scrap really started when the weapon left its slot
-        if (c == null || c.ItemStack.IsEmpty() || AposElites.ScrapEridium(c.ItemStack.itemValue) == 0) AposElites.GiveEridium(__state);
+        if (__exception is NullReferenceException) __result = 0f;
+        return __exception is NullReferenceException ? null : __exception;
     }
 }

@@ -1,5 +1,6 @@
 // Hit effects that need the real damage of a hit (Harmony on EntityAlive.damageEntityLocal, runs on the server):
 // - Leech affix: heals the attacker by a part of the damage dealt
+// - Siphoning Strikes: melee hits heal 4/8/12/16/20% of the damage dealt (kill heals: progression.xml)
 // - Strength 10 "Overkill": damage beyond a killing blow with a Strength weapon hits the nearest zombie within 4 m
 // - Penetrator 5 "Shrapnel": armor-piercing hits deal 40% of the damage to every zombie within 3 m of the target
 // - Boomstick 5 "Pump Action": a shotgun kill loads 1 shell into the magazine
@@ -21,12 +22,14 @@ public static class AposCombat
     const float OverclockShare = 0.5f;
     const float ChainRadius = 4f;
     const int ChainDamage = 250;
+    const float SiphonShare = 0.04f;
 
     static readonly FastTags<TagGroup.Global> StrengthTag = FastTags<TagGroup.Global>.Parse("attStrength");
     static readonly FastTags<TagGroup.Global> ShotgunTag = FastTags<TagGroup.Global>.Parse("shotgun");
     static readonly FastTags<TagGroup.Global> DemolitionsTag = FastTags<TagGroup.Global>.Parse("perkDemolitionsExpert");
     static readonly FastTags<TagGroup.Global> AmmoTag = FastTags<TagGroup.Global>.Parse("ammo");
     static readonly FastTags<TagGroup.Global> MolotovTag = FastTags<TagGroup.Global>.Parse("molotov");
+    static readonly FastTags<TagGroup.Global> MeleeTag = FastTags<TagGroup.Global>.Parse("melee");
 
     public static void OnDamaged(EntityAlive target, DamageSource source, ref DamageResponse response, int healthBefore)
     {
@@ -82,6 +85,11 @@ public static class AposCombat
 
         float leech = AposAffixes.StatFraction(weapon, PassiveEffects.HealthSteal);
         if (weaponClass != null && weaponClass.Properties.Contains("AposLeech")) leech += weaponClass.Properties.GetFloat("AposLeech");
+        // Siphoning Strikes: every melee weapon hit heals 4% of the damage per perk level
+        if (weaponClass != null && weaponClass.ItemTags.Test_AnySet(MeleeTag) && AposShadow.IsWeaponHit(source))
+        {
+            leech += SiphonShare * AposAffixes.Level(attacker, "perkSiphoningStrikes");
+        }
         if (leech > 0f)
         {
             int heal = Mathf.Max(1, Mathf.RoundToInt(dealt * leech));

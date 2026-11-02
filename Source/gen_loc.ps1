@@ -218,7 +218,7 @@ $perkLines = [ordered]@{
   perkGunslinger        = { param($L) "Headhunter (handguns): $(10 + 2 * $L) empowered shots with +$(25 + 10 * $L)% damage after 5 headshots in a row.", "Охотник за головами (пистолеты): $(10 + 2 * $L) усиленных выстрелов с +$(25 + 10 * $L)% урона после 5 хедшотов подряд." }
   perkDeadEye           = { param($L) "Ricochet (rifles): a headshot hurts zombies within $(5 + 2 * $L) m for $(20 + 10 * $L) HP.", "Рикошет (винтовки): хедшот ранит зомби в радиусе $(5 + 2 * $L) м на $(20 + 10 * $L) HP." }
   perkMachineGunner     = { param($L) "Suppression (machine guns): hits slow targets up to $(10 + 10 * $L)%; every 4th hit puts a round back into the magazine.", "Подавление (автоматы): попадания замедляют цель до $(10 + 10 * $L)%; каждое 4-е попадание возвращает патрон в магазин." }
-  perkArchery           = { param($L) "Splinter (bows): $(@(2,3,4,5,6,8)[$L]) fragments of $(20 + 5 * $L + $(if ($L -eq 5) { 5 } else { 0 })) HP. Mark (crossbows): your damage to marked zombies +$(20 + 20 * $L)%.", "Расщепление (луки): осколков — $(@(2,3,4,5,6,8)[$L]), по $(20 + 5 * $L + $(if ($L -eq 5) { 5 } else { 0 })) HP. Метка (арбалеты): ваш урон по помеченным зомби +$(20 + 20 * $L)%." }
+  perkArchery           = { param($L) "Splinter (bows): $(@(2,3,4,5,6,8)[$L]) fragments, each deals half of the arrow's damage, at least $(40 + 10 * $L + $(if ($L -eq 5) { 10 } else { 0 })) HP. Mark (crossbows): your damage to marked zombies +$(20 + 20 * $L)%.", "Расщепление (луки): осколков — $(@(2,3,4,5,6,8)[$L]), каждый наносит половину урона стрелы, минимум $(40 + 10 * $L + $(if ($L -eq 5) { 10 } else { 0 })) HP. Метка (арбалеты): ваш урон по помеченным зомби +$(20 + 20 * $L)%." }
   perkTurrets           = { param($L) "Guardian Protocol (robots): below 30% health your robots attack $(30 + 10 * $L)% faster and deal $(10 + 5 * $L)% more damage.", "Протокол защиты (роботы): при здоровье ниже 30% ваши роботы атакуют на $(30 + 10 * $L)% быстрее и наносят на $(10 + 5 * $L)% больше урона." }}
 # Rank 5 highlights, appended after the scaling line
 $perkFinale = @{
@@ -293,6 +293,16 @@ $perkHighlights = [ordered]@{
   perkLuckyLooter        = 5, 'Fortune: weapons you loot get +1 affix (within the quality limit).', 'Фортуна: найденное вами оружие получает +1 аффикс (в пределах лимита качества).'
 }
 [xml]$progXml = Get-Content (Join-Path $cfg 'progression.xml') -Raw -Encoding UTF8
+# Siphoning Strikes: stronger kill heal (progression.xml) + heal from every melee hit (AposCombat.cs)
+for ($L = 1; $L -le 5; $L++) {
+  $key = "perkSiphoningStrikesRank${L}LongDesc"
+  $en = $loc[$key] -replace 'Melee kills grant \d+ HP\.', "Melee kills grant $(5 * $L) HP."
+  $ru = $locRu[$key] -replace 'дают \d+ ОЖ\.', "дают $(5 * $L) ОЖ."
+  if ($en -eq $loc[$key] -or $ru -eq $locRu[$key]) { throw "Siphoning Strikes text changed: $key" }
+  $loc[$key] = $en + '\n\n[FFB400]AposMod:[-] every melee hit heals ' + (4 * $L) + '% of the damage dealt.'
+  $locRu[$key] = $ru + '\n\n[FFB400]AposMod:[-] каждый удар в ближнем бою лечит ' + (4 * $L) + '% нанесённого урона.'
+  if ($L -lt 5) { $extra[$key] = $loc[$key], $locRu[$key] }
+}
 foreach ($p in $perkHighlights.Keys) {
   $h = $perkHighlights[$p]
   # the long description key of that rank as progression.xml names it (some perks do not follow <perk>RankNLongDesc)

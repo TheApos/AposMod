@@ -113,7 +113,7 @@ public class AposShadow : MonoBehaviour
     }
 
     // Weapon damage only: burning/shock/bleeding ticks must not use up the Shadow
-    static bool IsWeaponHit(DamageSource source)
+    public static bool IsWeaponHit(DamageSource source)
     {
         switch (source.GetDamageType())
         {
