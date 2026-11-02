@@ -6,7 +6,8 @@
 // - Death (Harmony, EntityAlive.OnEntityDeath): weapon with affixes + Eridium, explosive blast.
 // - Armored / vampire damage changes: Source/AposCombat.cs. Other modifiers are plain buffs in buffs.xml.
 // - Eridium is spent in the Eridium Forge (Source/AposForge.cs).
-// - Scrapping a weapon with affixes gives Eridium (Harmony, ItemActionEntryScrap.OnActivated).
+// - Scrapping a weapon with affixes gives Eridium when the scrap finishes: open crafting window
+//   (XUiC_RecipeStack.outputStack) or a closed workstation (TileEntityWorkstation.HandleRecipeQueue).
 using System;
 using System.Collections.Generic;
 using HarmonyLib;
@@ -127,7 +128,7 @@ public class AposElites : MonoBehaviour
         if (Has(e, "Explosive")) Blast(e);
     }
 
-    static void Drop(ItemStack stack, Vector3 pos)
+    public static void Drop(ItemStack stack, Vector3 pos)
     {
         if (stack == null || stack.IsEmpty()) return;
         GameManager.Instance.ItemDropServer(stack, pos, new Vector3(0.5f, 0f, 0.5f), -1, 600f, false);
@@ -331,6 +332,63 @@ public static class AposScrapPatch
     {
         if (!__result || ___recipe == null || !___recipe.IsScrap || ___recipe.ingredients.Count == 0) return;
         AposElites.GiveEridium(AposElites.ScrapEridium(___recipe.ingredients[0].itemValue));
+    }
+}
+
+// A closed workstation finishes its queue by itself (the window path above does not run). The Eridium of every scrap
+// that finished during this tick goes into the workstation output, like the scrap materials, and waits there.
+// Finished = the scrap recipe's multiplier went down or its queue slot was cleared / moved on.
+[HarmonyPatch(typeof(TileEntityWorkstation), "HandleRecipeQueue")]
+public static class AposWorkstationScrapPatch
+{
+    static void Prefix(RecipeQueueItem[] ___queue, out Dictionary<Recipe, int> __state)
+    {
+        __state = Scraps(___queue);
+    }
+
+    static void Postfix(TileEntityWorkstation __instance, RecipeQueueItem[] ___queue, ItemStack[] ___output, Dictionary<Recipe, int> __state)
+    {
+        if (__state == null) return;
+        try
+        {
+            Dictionary<Recipe, int> left = Scraps(___queue);
+            int eridium = 0;
+            foreach (KeyValuePair<Recipe, int> kv in __state)
+            {
+                int now;
+                if (left == null || !left.TryGetValue(kv.Key, out now)) now = 0;
+                if (now < kv.Value) eridium += (kv.Value - now) * AposElites.ScrapEridium(kv.Key.ingredients[0].itemValue);
+            }
+            if (eridium <= 0) return;
+            ItemStack stack = new ItemStack(ItemClass.GetItem(AposElites.Eridium), eridium);
+            if (ItemStack.AddToItemStackArray(___output, stack, -1) < 0)
+            {
+                AposElites.Drop(stack, __instance.ToWorldPos().ToVector3() + new Vector3(0.5f, 1.5f, 0.5f));
+            }
+            Traverse.Create(__instance).Method("setModified").GetValue();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("[AposMod] Workstation scrap Eridium failed: " + e);
+        }
+    }
+
+    // queued scraps that give Eridium -> how many are still to be made
+    static Dictionary<Recipe, int> Scraps(RecipeQueueItem[] queue)
+    {
+        Dictionary<Recipe, int> d = null;
+        if (queue == null) return d;
+        for (int i = 0; i < queue.Length; i++)
+        {
+            RecipeQueueItem q = queue[i];
+            if (q == null || q.Recipe == null || !q.Recipe.IsScrap || q.Multiplier <= 0 || q.Recipe.ingredients.Count == 0) continue;
+            if (AposElites.ScrapEridium(q.Recipe.ingredients[0].itemValue) <= 0) continue;
+            if (d == null) d = new Dictionary<Recipe, int>();
+            int n;
+            d.TryGetValue(q.Recipe, out n);
+            d[q.Recipe] = n + q.Multiplier;
+        }
+        return d;
     }
 }
 

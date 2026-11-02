@@ -587,6 +587,15 @@
 			<stack_type value="ignore"/>
 			<duration value="300"/>
 		</buff>
+		<!-- Siphoning Strikes 5 "Vampire": a melee kill heals 150 HP over 15 s; another kill restarts the 15 s -->
+		<buff name="buffAposVampire" name_key="buffAposVampireName" description_key="buffAposVampireDesc" icon="ui_game_symbol_siphoning_strikes" icon_color="200,40,60">
+			<stack_type value="replace"/>
+			<duration value="15"/>
+			<update_rate value="1"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyStats" stat="Health" operation="add" value="10"/>
+			</effect_group>
+		</buff>
 		<!-- Rule 1: Cardio 5 "Second Lungs" cooldown -->
 		<buff name="buffAposSecondLungsCD" name_key="buffAposSecondLungsName" description_key="buffAposSecondLungsDesc" icon="ui_game_symbol_run" icon_color="150,150,150">
 			<stack_type value="ignore"/>

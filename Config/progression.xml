@@ -264,19 +264,15 @@
 		</effect_group>
 	</append>
 	<!-- Fortitude Mastery 5 "Second Wind": Source/AposCombat.cs -->
-	<!-- Siphoning Strikes: melee kills heal 5/10/15/20/25 HP (vanilla 2/4/6/8/10); every melee hit also heals
+	<!-- Siphoning Strikes: the vanilla kill heal (2-10 HP) is replaced by vampirism: every melee hit heals
 	     4% of the damage per level (Source/AposCombat.cs) -->
-	<set xpath="/progression/perks/perk[@name='perkSiphoningStrikes']/effect_group/triggered_effect[requirement/@value='1']/@value">5</set>
-	<set xpath="/progression/perks/perk[@name='perkSiphoningStrikes']/effect_group/triggered_effect[requirement/@value='2']/@value">10</set>
-	<set xpath="/progression/perks/perk[@name='perkSiphoningStrikes']/effect_group/triggered_effect[requirement/@value='3']/@value">15</set>
-	<set xpath="/progression/perks/perk[@name='perkSiphoningStrikes']/effect_group/triggered_effect[requirement/@value='4']/@value">20</set>
-	<set xpath="/progression/perks/perk[@name='perkSiphoningStrikes']/effect_group/triggered_effect[requirement/@value='5']/@value">25</set>
-	<!-- Siphoning Strikes 5 "Vampire": melee kills also restore 20 stamina -->
+	<remove xpath="/progression/perks/perk[@name='perkSiphoningStrikes']/effect_group/triggered_effect[@trigger='onSelfKilledOther']"/>
+	<!-- Siphoning Strikes 5 "Vampire": a melee kill heals 150 HP over 15 s (buffAposVampire) -->
 	<append xpath="/progression/perks/perk[@name='perkSiphoningStrikes']">
 		<effect_group name="AposMod vampire">
 			<requirement name="ProgressionLevel" progression_name="perkSiphoningStrikes" operation="GTE" value="5"/>
 			<requirement name="ItemHasTags" tags="melee"/>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyStats" stat="Stamina" operation="add" value="20"/>
+			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposVampire"/>
 		</effect_group>
 	</append>
 	<!-- Healing Factor 5 "Regeneration": 10 s without fighting -> +3 HP/s -->

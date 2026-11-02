@@ -189,7 +189,9 @@ $extra = [ordered]@{
   buffAposShadowDesc         = 'Your next weapon hit deals x2. A kill with it gives the Shadow back. Lost when you stand up or a zombie notices you.', 'Следующий удар оружием наносит x2. Убийство им возвращает Тень. Пропадает, если встать или вас заметили.'
   buffAposSecondWindName     = 'Second Wind (recharging)', 'Второе дыхание (перезарядка)'
   buffAposSecondWindDesc     = 'Second Wind is ready again when this ends.', 'Второе дыхание снова готово, когда это закончится.'
-  buffAposSecondLungsName    = 'Second Lungs (recharging)', 'Второе дыхание лёгких (перезарядка)'
+  buffAposVampireName        = 'Vampire', 'Вампир'
+  buffAposVampireDesc        = 'Healing 10 HP per second.', 'Лечение 10 HP в секунду.'
+  buffAposSecondLungsName   = 'Second Lungs (recharging)', 'Второе дыхание лёгких (перезарядка)'
   buffAposSecondLungsDesc    = 'Second Lungs is ready again when this ends.', 'Второе дыхание лёгких снова готово, когда это закончится.'
   # Grand Slam is replaced by Rage (full texts)
   perkGrandSlamName       = 'Rage', 'Ярость'
@@ -267,7 +269,7 @@ $perkHighlights = [ordered]@{
   perkTheHuntsman        = 5, 'Butcher: harvesting a carcass heals 30 HP (once per 5 s).', 'Мясник: разделка туши лечит 30 HP (раз в 5 с).'
   perkPainTolerance      = 5, 'Unbreakable: below 25% health you take 50% less damage.', 'Несгибаемый: при здоровье ниже 25% вы получаете на 50% меньше урона.'
   perkFortitudeMastery   = 5, 'Second Wind: once per 5 minutes, dropping below 20% health instantly heals 70% of your max health.', 'Второе дыхание: раз в 5 минут, когда здоровье падает ниже 20%, вы сразу восстанавливаете 70% максимума.'
-  perkSiphoningStrikes   = 5, 'Vampire: melee kills also restore 20 stamina.', 'Вампир: убийства в ближнем бою ещё и восстанавливают 20 выносливости.'
+  perkSiphoningStrikes   = 5, 'Vampire: a melee kill heals 150 HP over 15 s (another kill restarts the 15 s).', 'Вампир: убийство в ближнем бою лечит 150 HP за 15 с (новое убийство перезапускает 15 с).'
   perkHealingFactor      = 5, 'Regeneration: after 10 s without hitting or being hit you regenerate 3 HP/s.', 'Регенерация: через 10 с без ударов (ваших и по вам) вы восстанавливаете 3 HP/с.'
   perkSlowMetabolism     = 5, 'Iron Stomach: no food poisoning or dysentery (murky water is safe), and food and water never drop below 25%.', 'Железный желудок: никаких отравлений и дизентерии (мутная вода безопасна), а еда и вода не падают ниже 25%.'
   perkRuleOneCardio      = 5, 'Second Lungs: when your stamina runs out you instantly get 50% back (once per 60 s).', 'Второе дыхание лёгких: когда выносливость кончается, вы сразу получаете 50% обратно (раз в 60 с).'
@@ -293,11 +295,11 @@ $perkHighlights = [ordered]@{
   perkLuckyLooter        = 5, 'Fortune: weapons you loot get +1 affix (within the quality limit).', 'Фортуна: найденное вами оружие получает +1 аффикс (в пределах лимита качества).'
 }
 [xml]$progXml = Get-Content (Join-Path $cfg 'progression.xml') -Raw -Encoding UTF8
-# Siphoning Strikes: stronger kill heal (progression.xml) + heal from every melee hit (AposCombat.cs)
+# Siphoning Strikes: the vanilla kill heal is removed (progression.xml), every melee hit heals instead (AposCombat.cs)
 for ($L = 1; $L -le 5; $L++) {
   $key = "perkSiphoningStrikesRank${L}LongDesc"
-  $en = $loc[$key] -replace 'Melee kills grant \d+ HP\.', "Melee kills grant $(5 * $L) HP."
-  $ru = $locRu[$key] -replace 'дают \d+ ОЖ\.', "дают $(5 * $L) ОЖ."
+  $en = $loc[$key] -replace '\\nMelee kills grant \d+ HP\.', ''
+  $ru = $locRu[$key] -replace '\\nУбийства в ближнем бою дают \d+ ОЖ\.', ''
   if ($en -eq $loc[$key] -or $ru -eq $locRu[$key]) { throw "Siphoning Strikes text changed: $key" }
   $loc[$key] = $en + '\n\n[FFB400]AposMod:[-] every melee hit heals ' + (4 * $L) + '% of the damage dealt.'
   $locRu[$key] = $ru + '\n\n[FFB400]AposMod:[-] каждый удар в ближнем бою лечит ' + (4 * $L) + '% нанесённого урона.'

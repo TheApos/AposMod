@@ -1,6 +1,6 @@
 // Hit effects that need the real damage of a hit (Harmony on EntityAlive.damageEntityLocal, runs on the server):
 // - Leech affix: heals the attacker by a part of the damage dealt
-// - Siphoning Strikes: melee hits heal 4/8/12/16/20% of the damage dealt (kill heals: progression.xml)
+// - Siphoning Strikes: melee hits heal 4/8/12/16/20% of the damage dealt (instead of the vanilla kill heal)
 // - Strength 10 "Overkill": damage beyond a killing blow with a Strength weapon hits the nearest zombie within 4 m
 // - Penetrator 5 "Shrapnel": armor-piercing hits deal 40% of the damage to every zombie within 3 m of the target
 // - Boomstick 5 "Pump Action": a shotgun kill loads 1 shell into the magazine
