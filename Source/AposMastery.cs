@@ -29,7 +29,7 @@ public class AposMastery : MonoBehaviour
     const float SaveDelay = 10f;
 
     // kills needed for levels 1..10
-    public static readonly int[] KillsFor = { 10, 30, 60, 100, 150, 220, 300, 400, 520, 660 };
+    public static readonly int[] KillsFor = { 4, 12, 24, 40, 60, 90, 120, 160, 210, 260 };
 
     // ===== tree layout: 5 columns x 6 rows (row 0 at the bottom). Branches A (column 0), B (2), C (4) go up from the
     // root; links (columns 1 and 3) join them on rows 1 and 3. Row 3 = notable, row 5 = keystone. =====
