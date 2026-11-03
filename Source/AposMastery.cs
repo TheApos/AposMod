@@ -615,7 +615,7 @@ public class XUiC_AposMastery : XUiController
 
         for (int i = 0; i < nodes.Length; i++)
         {
-            string color = AposMastery.Has(pr, i) ? "[FFD24D]" : AposMastery.CanReach(pr, i) ? "[FFFFFF]" : "[707070]";
+            string color = AposMastery.Has(pr, i) ? "[FFD24D]" : AposMastery.CanReach(pr, i) ? "[7CFF7C]" : "[C8C8C8]";
             string text = AposMastery.NodeShort(tree[i]);
             if (AposMastery.IsBig(i)) text = "[b]" + text + "[/b]";
             if (i == selected) text = "> " + text.Replace("\n", " <\n");

@@ -194,6 +194,7 @@ public class AposElites : MonoBehaviour
         if (tick) nextTick = Time.time + 1f;
 
         List<Entity> list = gm.World.Entities.list;
+        UpdateGlows(list, tick);
         for (int i = 0; i < list.Count; i++)
         {
             EntityAlive e = list[i] as EntityAlive;
@@ -220,6 +221,70 @@ public class AposElites : MonoBehaviour
                 Summon(gm.World, e);
             }
         }
+    }
+
+    // ===== Eridium on the ground: a purple light and a Borderlands-style loot beam above the sack =====
+    const float BeamHeight = 5f;
+    static readonly Color EridiumColor = new Color(0.75f, 0.35f, 1f);
+    readonly Dictionary<int, Transform> glows = new Dictionary<int, Transform>();
+    readonly List<int> goneGlows = new List<int>();
+    static Material beamMaterial;
+    static ItemValue eridiumValue;
+
+    void UpdateGlows(List<Entity> list, bool scan)
+    {
+        if (scan)
+        {
+            if (eridiumValue == null) eridiumValue = ItemClass.GetItem(Eridium);
+            for (int i = 0; i < list.Count; i++)
+            {
+                EntityItem item = list[i] as EntityItem;
+                if (item == null || item.IsDead() || glows.ContainsKey(item.entityId) || item.itemStack == null
+                    || item.itemStack.itemValue.type != eridiumValue.type) continue;
+                glows[item.entityId] = AddGlow(item.transform);
+            }
+        }
+        // the sack rolls; keep the beam pointing straight up, forget picked up / despawned sacks
+        goneGlows.Clear();
+        foreach (KeyValuePair<int, Transform> kv in glows)
+        {
+            if (kv.Value == null) goneGlows.Add(kv.Key);
+            else kv.Value.rotation = Quaternion.identity;
+        }
+        for (int i = 0; i < goneGlows.Count; i++) glows.Remove(goneGlows[i]);
+    }
+
+    static Transform AddGlow(Transform parent)
+    {
+        GameObject go = new GameObject("AposEridiumGlow");
+        go.transform.SetParent(parent, false);
+        Light light = go.AddComponent<Light>();
+        light.type = LightType.Point;
+        light.color = EridiumColor;
+        light.range = 4f;
+        light.intensity = 3f;
+
+        if (beamMaterial == null)
+        {
+            Shader shader = Shader.Find("Sprites/Default") ?? Shader.Find("Legacy Shaders/Particles/Additive");
+            if (shader != null) beamMaterial = new Material(shader);
+        }
+        if (beamMaterial != null)
+        {
+            LineRenderer beam = go.AddComponent<LineRenderer>();
+            beam.useWorldSpace = false;
+            beam.positionCount = 2;
+            beam.SetPosition(0, Vector3.zero);
+            beam.SetPosition(1, Vector3.up * BeamHeight);
+            beam.startWidth = 0.12f;
+            beam.endWidth = 0.02f;
+            beam.material = beamMaterial;
+            beam.startColor = new Color(EridiumColor.r, EridiumColor.g, EridiumColor.b, 0.9f);
+            beam.endColor = new Color(EridiumColor.r, EridiumColor.g, EridiumColor.b, 0f);
+            beam.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            beam.receiveShadows = false;
+        }
+        return go.transform;
     }
 
     static void Summon(World world, EntityAlive caller)

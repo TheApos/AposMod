@@ -193,7 +193,7 @@
 
 		<!-- Knife: regenerates aposKnifeStacks HP/s; every knife hit resets aposKnifeTime to 5 s
 		     (same timer pattern as vanilla bleeding, so re-adding never resets the stacks) -->
-		<buff name="buffAposKnifeRegen" name_key="buffAposKnifeRegenName" description_key="buffAposKnifeRegenDesc" icon="ui_game_symbol_laceration" icon_color="200,30,30">
+		<buff name="buffAposKnifeRegen" name_key="buffAposKnifeRegenName" description_key="buffAposKnifeRegenDesc" icon="ui_game_symbol_healing_factor" icon_color="60,220,110">
 			<stack_type value="ignore"/>
 			<display_value value="aposKnifeStacks"/>
 			<effect_group>

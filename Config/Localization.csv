@@ -362,7 +362,7 @@ aposMasteryLevel,buffs,Buff,,,"Mastery {0} / {1}","Мастерство {0} / {1
 aposMasteryKills,buffs,Buff,,,"Kills: {0} / {1}","Убийств: {0} / {1}"
 aposMasteryKillsMax,buffs,Buff,,,"Kills: {0} (max level)","Убийств: {0} (максимум)"
 aposMasteryPoints,buffs,Buff,,,"Free points: {0}   (learned {1} of {2})","Свободных очков: {0}   (изучено {1} из {2})"
-aposMasteryPick,buffs,Buff,,,"Click a skill to see it. Gold = learned, white = can be learned, grey = not reachable yet.","Нажмите на навык, чтобы его увидеть. Золотой — изучен, белый — можно изучить, серый — пока недоступен."
+aposMasteryPick,buffs,Buff,,,"Click a skill to see it. Gold = learned, green = can be learned, grey = not reachable yet.","Нажмите на навык, чтобы его увидеть. Золотой — изучен, зелёный — можно изучить, серый — пока недоступен."
 aposMasteryLearn,buffs,Buff,,,"Learn","Изучить"
 aposMasteryLearned,buffs,Buff,,,"Learned.","Изучено."
 aposMasteryLocked,buffs,Buff,,,"Learn a connected skill first.","Сначала изучите соседний навык."

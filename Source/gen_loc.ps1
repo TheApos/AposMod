@@ -427,7 +427,7 @@ $extra['aposMasteryLevel']      = 'Mastery {0} / {1}', 'Мастерство {0}
 $extra['aposMasteryKills']      = 'Kills: {0} / {1}', 'Убийств: {0} / {1}'
 $extra['aposMasteryKillsMax']   = 'Kills: {0} (max level)', 'Убийств: {0} (максимум)'
 $extra['aposMasteryPoints']     = 'Free points: {0}   (learned {1} of {2})', 'Свободных очков: {0}   (изучено {1} из {2})'
-$extra['aposMasteryPick']       = 'Click a skill to see it. Gold = learned, white = can be learned, grey = not reachable yet.', 'Нажмите на навык, чтобы его увидеть. Золотой — изучен, белый — можно изучить, серый — пока недоступен.'
+$extra['aposMasteryPick']       = 'Click a skill to see it. Gold = learned, green = can be learned, grey = not reachable yet.', 'Нажмите на навык, чтобы его увидеть. Золотой — изучен, зелёный — можно изучить, серый — пока недоступен.'
 $extra['aposMasteryLearn']      = 'Learn', 'Изучить'
 $extra['aposMasteryLearned']    = 'Learned.', 'Изучено.'
 $extra['aposMasteryLocked']     = 'Learn a connected skill first.', 'Сначала изучите соседний навык.'
