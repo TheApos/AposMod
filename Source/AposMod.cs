@@ -37,6 +37,7 @@ public class AposModInit : IModApi
         go.AddComponent<AposWardrobe>();
         go.AddComponent<AposBow>();
         go.AddComponent<AposShadow>();
+        go.AddComponent<AposMastery>();
     }
 }
 

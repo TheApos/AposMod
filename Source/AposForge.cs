@@ -520,13 +520,13 @@ public class XUiC_AposForge : XUiController
     }
 
     // ===== resources from the backpack + toolbelt =====
-    static int Count(EntityPlayerLocal p, string item)
+    public static int Count(EntityPlayerLocal p, string item)
     {
         ItemValue e = ItemClass.GetItem(item);
         return p.bag.GetItemCount(e) + p.inventory.GetItemCount(e);
     }
 
-    static void Take(EntityPlayerLocal p, string item, int count)
+    public static void Take(EntityPlayerLocal p, string item, int count)
     {
         if (count <= 0) return;
         ItemValue e = ItemClass.GetItem(item);

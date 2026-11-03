@@ -420,6 +420,62 @@ $extra['aposWardrobeHint']     = 'Alt+1 / Alt+2 / Alt+3 - change outfit, Alt+0 -
 $extra['aposWardrobeChanging'] = 'Changing into outfit {0}', 'Переодевание в комплект {0}'
 $extra['aposWardrobeSwitched'] = 'Outfit {0} is on', 'Надет комплект {0}'
 
+# Weapon Mastery (Source/AposMastery.cs): window, classes, node kinds (aposMK<Kind> = description with {0}, ...Short = button)
+$extra['aposMasteryTitle']      = 'WEAPON MASTERY', 'МАСТЕРСТВО ОРУЖИЯ'
+$extra['aposMasteryNoWeapon']   = 'Take a weapon in your hands.', 'Возьмите оружие в руки.'
+$extra['aposMasteryLevel']      = 'Mastery {0} / {1}', 'Мастерство {0} / {1}'
+$extra['aposMasteryKills']      = 'Kills: {0} / {1}', 'Убийств: {0} / {1}'
+$extra['aposMasteryKillsMax']   = 'Kills: {0} (max level)', 'Убийств: {0} (максимум)'
+$extra['aposMasteryPoints']     = 'Free points: {0}   (learned {1} of {2})', 'Свободных очков: {0}   (изучено {1} из {2})'
+$extra['aposMasteryPick']       = 'Click a skill to see it. Gold = learned, white = can be learned, grey = not reachable yet.', 'Нажмите на навык, чтобы его увидеть. Золотой — изучен, белый — можно изучить, серый — пока недоступен.'
+$extra['aposMasteryLearn']      = 'Learn', 'Изучить'
+$extra['aposMasteryLearned']    = 'Learned.', 'Изучено.'
+$extra['aposMasteryLocked']     = 'Learn a connected skill first.', 'Сначала изучите соседний навык.'
+$extra['aposMasteryNoPoints']   = 'No free points: kill more with this weapon.', 'Нет свободных очков: убивайте этим оружием.'
+$extra['aposMasteryReset']      = 'Reset the tree ({0} Eridium)', 'Сбросить дерево ({0} эридия)'
+$extra['aposMasteryResetHint']  = 'Reset works within 5 m of an Eridium Forge.', 'Сброс работает в 5 м от Кузни эридия.'
+$extra['aposMasteryLevelUp']    = '{0}: mastery {1}! Alt+K - skill tree', '{0}: мастерство {1}! Alt+K - дерево навыков'
+$extra['buffAposMasteryHasteDesc'] = 'Faster attacks and reload after a kill.', 'Быстрее атаки и перезарядка после убийства.'
+$masteryClasses = [ordered]@{
+  Blades = 'Blades', 'Клинки'; Clubs = 'Clubs', 'Дубинки'; Sledges = 'Sledgehammers', 'Кувалды'; Spears = 'Spears', 'Копья'
+  Knuckles = 'Knuckles', 'Кастеты'; Batons = 'Batons', 'Жезлы'; Pistols = 'Pistols', 'Пистолеты'; Shotguns = 'Shotguns', 'Дробовики'
+  Rifles = 'Rifles', 'Винтовки'; MG = 'Machine guns', 'Автоматы'; Bows = 'Bows', 'Луки'; Crossbows = 'Crossbows', 'Арбалеты'
+  Explosives = 'Explosives', 'Взрывчатка' }
+foreach ($k in $masteryClasses.Keys) { $extra["aposMasteryClass$k"] = $masteryClasses[$k] }
+# kind = short EN, short RU, long EN, long RU
+$masteryKinds = [ordered]@{
+  Dmg       = 'Damage', 'Урон', 'Damage +{0}%.', 'Урон +{0}%.'
+  Speed     = 'Speed', 'Скорость', 'Attack / fire rate +{0}%.', 'Скорость атаки / стрельбы +{0}%.'
+  Stamina   = 'Stamina', 'Выносл.', 'Stamina cost of attacks -{0}%.', 'Расход выносливости на атаки -{0}%.'
+  Reload    = 'Reload', 'Перезар.', 'Reload speed +{0}%.', 'Скорость перезарядки +{0}%.'
+  Mag       = 'Magazine', 'Магазин', 'Magazine size +{0}%.', 'Размер магазина +{0}%.'
+  Handling  = 'Handling', 'Точность', 'Spread and recoil -{0}%.', 'Разброс и отдача -{0}%.'
+  Dismember = 'Dismember', 'Расчлен.', 'Dismember chance +{0}%.', 'Шанс расчленения +{0}%.'
+  Crit      = 'Crit', 'Крит', '{0}% chance of a critical hit: x2 damage.', 'Шанс {0}% критического удара: x2 урона.'
+  CritDmg   = 'Crit power', 'Сила крита', 'Critical hits deal +{0}% more (x2 becomes more).', 'Критические удары наносят ещё +{0}% (x2 становится больше).'
+  Execute   = 'Execute', 'Добивание', '+{0}% damage to enemies below 35% health.', '+{0}% урона по врагам с здоровьем ниже 35%.'
+  Opener    = 'First strike', 'Первый удар', '+{0}% damage to enemies at full health.', '+{0}% урона по врагам с полным здоровьем.'
+  Head      = 'Headshot', 'В голову', 'Headshot damage +{0}%.', 'Урон в голову +{0}%.'
+  Combo     = 'Combo', 'Комбо', 'Every hit within 3 s of the last one adds +{0}% damage, up to 5 stacks.', 'Каждый удар в течение 3 с после прошлого добавляет +{0}% урона, до 5 раз.'
+  Nth       = '5th hit', '5-й удар', 'Every 5th hit deals +{0}% damage.', 'Каждый 5-й удар наносит +{0}% урона.'
+  Leech     = 'Leech', 'Вампиризм', 'Hits heal you by {0}% of the damage dealt.', 'Удары лечат вас на {0}% нанесённого урона.'
+  Splash    = 'Splash', 'Осколки', '{0}% of the hit also damages every zombie within 3 m.', '{0}% удара ранят и всех зомби в радиусе 3 м.'
+  Bleed     = 'Bleeding', 'Кровотеч.', '{0}% chance to cause bleeding.', 'Шанс {0}% вызвать кровотечение.'
+  DeepBleed = 'Deep bleed', 'Глуб. кровь', '{0}% chance of deep bleeding: 15% of the hit per second for 10 s.', 'Шанс {0}% глубокого кровотечения: 15% удара в секунду 10 с.'
+  Burn      = 'Fire', 'Поджог', '{0}% chance to set the enemy on fire.', 'Шанс {0}% поджечь врага.'
+  Shock     = 'Shock', 'Шок', '{0}% chance to shock the enemy for 3 s.', 'Шанс {0}% ударить врага током на 3 с.'
+  Acid      = 'Acid', 'Кислота', '{0}% chance to corrode the enemy for 6 s (-25 armor, acid damage).', 'Шанс {0}% разъесть врага на 6 с (-25 брони, урон кислотой).'
+  Stun      = 'Stun', 'Оглушение', '{0}% chance to stun for 1.5 s.', 'Шанс {0}% оглушить на 1.5 с.'
+  Knock     = 'Knockdown', 'Сбить с ног', '{0}% chance to knock the enemy down.', 'Шанс {0}% сбить врага с ног.'
+  Haste     = 'Haste', 'Ускорение', 'A kill gives +{0}% attack / fire rate and reload speed for 6 s.', 'Убийство даёт +{0}% скорости атаки / стрельбы и перезарядки на 6 с.'
+  Ammo      = 'Ammo', 'Патроны', 'A kill puts {0} rounds into the magazine.', 'Убийство заряжает {0} патр. в магазин.'
+}
+foreach ($k in $masteryKinds.Keys) {
+  $v = $masteryKinds[$k]
+  $extra["aposMK${k}Short"] = $v[0], $v[1]
+  $extra["aposMK$k"] = $v[2], $v[3]
+}
+
 function Csv($s) { '"' + $s.Replace('"', '""') + '"' }
 $rows = @('Key,File,Type,UsedInMainMenu,NoTranslate,english,russian')
 foreach ($item in $map.Keys) {

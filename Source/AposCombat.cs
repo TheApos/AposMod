@@ -90,6 +90,9 @@ public static class AposCombat
         {
             leech += SiphonShare * AposAffixes.Level(attacker, "perkSiphoningStrikes");
         }
+        // Weapon Mastery: hit nodes and kill progress (AposMastery.cs)
+        leech += AposMastery.AfterHit(attacker, target, source, dealt, response.Fatal);
+        if (response.Fatal) AposMastery.CountKill(attacker, target);
         if (leech > 0f)
         {
             int heal = Mathf.Max(1, Mathf.RoundToInt(dealt * leech));
@@ -172,6 +175,14 @@ public static class AposCombat
         e.Buffs.AddBuff("buffAposSplash");
     }
 
+    // damage to every zombie within the radius of the center (not the center itself)
+    public static void SplashAround(EntityAlive center, float radius, int damage)
+    {
+        World world = GameManager.Instance.World;
+        if (world == null) return;
+        foreach (EntityAlive e in Around(world, center, radius)) Splash(e, damage);
+    }
+
     static IEnumerable<EntityAlive> Around(World world, EntityAlive center, float radius)
     {
         List<Entity> list = world.Entities.list;
@@ -211,7 +222,11 @@ public static class AposCombatDamagePatch
         // From the Shadows 5 "Shadow Strike": x2 from the Shadow (AposShadow.cs)
         EntityPlayer attacker = _damageSource != null && GameManager.Instance.World != null
             ? GameManager.Instance.World.GetEntity(_damageSource.getEntityId()) as EntityPlayer : null;
-        if (attacker != null && attacker != __instance) _strength = AposShadow.OnPlayerHit(attacker, __instance, _damageSource, _strength);
+        if (attacker != null && attacker != __instance)
+        {
+            _strength = AposShadow.OnPlayerHit(attacker, __instance, _damageSource, _strength);
+            _strength = AposMastery.ModifyHit(attacker, __instance, _damageSource, _strength); // Weapon Mastery
+        }
     }
 
     static void Postfix(EntityAlive __instance, DamageSource _damageSource, ref DamageResponse __result, int __state)
