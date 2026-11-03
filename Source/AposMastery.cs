@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using HarmonyLib;
 using UnityEngine;
 
 public class AposMastery : MonoBehaviour
@@ -399,7 +400,7 @@ public class AposMastery : MonoBehaviour
         LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(player);
         if (ui == null || ui.windowManager.IsInputActive()) return;
         bool alt = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
-        if (alt && Input.GetKeyDown(KeyCode.K)) ui.windowManager.Open("aposMastery", true);
+        if (alt && Input.GetKeyDown(KeyCode.K)) XUiC_AposMastery.OpenFor(ui, null);
     }
 
     static void MarkDirty()
@@ -546,11 +547,27 @@ public class XUiC_AposMastery : XUiController
         if (l != null) l.Text = text;
     }
 
+    // set by the item info window's mastery button: show that weapon's tree instead of the one in hand
+    public static ItemClass ViewItem;
+
+    public static void OpenFor(LocalPlayerUI ui, ItemClass ic)
+    {
+        ViewItem = ic;
+        ui.windowManager.Open("aposMastery", true);
+    }
+
     ItemClass Held()
     {
+        if (ViewItem != null) return AposMastery.ClassOf(ViewItem) >= 0 ? ViewItem : null;
         EntityPlayerLocal p = xui != null && xui.playerUI != null ? xui.playerUI.entityPlayer : null;
         ItemClass ic = p != null ? p.inventory.holdingItem : null;
         return AposMastery.ClassOf(ic) >= 0 ? ic : null;
+    }
+
+    public override void OnClose()
+    {
+        base.OnClose();
+        ViewItem = null;
     }
 
     static int ResetCost(ItemClass ic)
@@ -644,5 +661,32 @@ public class XUiC_AposMastery : XUiController
         SetText(reset, string.Format(Localization.Get("aposMasteryReset"), cost));
         if (reset != null) reset.Enabled = cost > 0 && nearForge && XUiC_AposForge.Count(p, AposElites.Eridium) >= cost;
         if (resetHint != null) resetHint.Text = nearForge ? "" : "[A0A0A0]" + Localization.Get("aposMasteryResetHint") + "[-]";
+    }
+}
+
+// "Mastery" button next to Stats / Description in the item info panel (Config/XUi_InGame/windows.xml):
+// visible for mastery weapons, opens the tree of the weapon shown there
+[HarmonyPatch(typeof(XUiC_ItemInfoWindow), "Init")]
+public static class AposMasteryInfoInitPatch
+{
+    static void Postfix(XUiC_ItemInfoWindow __instance)
+    {
+        XUiController button = __instance.GetChildById("aposMasteryButton");
+        if (button == null) return;
+        button.OnPress += (_sender, _mouseButton) =>
+        {
+            ItemClass ic = Traverse.Create(__instance).Field("itemClass").GetValue<ItemClass>();
+            if (AposMastery.ClassOf(ic) >= 0) XUiC_AposMastery.OpenFor(__instance.xui.playerUI, ic);
+        };
+    }
+}
+
+[HarmonyPatch(typeof(XUiC_ItemInfoWindow), "SetInfo")]
+public static class AposMasteryInfoShowPatch
+{
+    static void Postfix(XUiC_ItemInfoWindow __instance, ItemClass ___itemClass)
+    {
+        XUiController button = __instance.GetChildById("aposMasteryButton");
+        if (button != null) button.ViewComponent.IsVisible = AposMastery.ClassOf(___itemClass) >= 0;
     }
 }

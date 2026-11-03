@@ -373,4 +373,8 @@
 				</rect>				<label depth="3" name="lblResetHint" pos="590,-466" width="358" height="40" font_size="16" text="" />
 			</rect>
 		</window>	</append>
+	<!-- Weapon Mastery button in the item info panel, after Stats / Description (Source/AposMastery.cs shows it for weapons) -->
+	<append xpath="/windows/window[@name='itemInfoPanel']//rect[@name='searchControls']">
+		<button depth="4" name="aposMasteryButton" style="icon30px, press" pos="108,-22" sprite="ui_game_symbol_skills" pivot="center" tooltip_key="aposMasteryTitle" sound="[paging_click]" />
+	</append>
 </configs>
