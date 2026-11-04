@@ -3,6 +3,7 @@
 //   a bow reloads by itself here, so R is only for picking arrows (hold R, point, release).
 // - The bow nocks the next arrow by itself while in hand. Vanilla does it only when you try to shoot an empty bow
 //   (ItemActionCatapult.ExecuteAction -> GameManager.ItemReloadServer); we make the same call.
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AposBow : MonoBehaviour
@@ -24,6 +25,9 @@ public class AposBow : MonoBehaviour
     // A reload that did not nock an arrow is not retried until something changes: an endless reload would block
     // the backpack (EntityPlayerLocal.CancelInventoryActions waits while reloading) and vehicles (IsHoldingItemActionRunning).
     const float RetryDelay = 2f;
+    const float StuckReload = 3f;
+    float reloadSince = -1f;
+    public static bool AutoNock = true; // aposbow off: switch the auto-nock off to compare with vanilla
     float lastRequest = -100f;
     bool gaveUp;
     ItemClass lastBow;
@@ -35,15 +39,33 @@ public class AposBow : MonoBehaviour
         GameManager gm = GameManager.Instance;
         EntityPlayerLocal p = gm != null && gm.World != null ? gm.World.GetPrimaryPlayer() : null;
         if (p == null || p.IsDead() || p.inventory.IsHandSwitching()) return;
-        // opening the backpack / a window, sitting in a vehicle: leave the bow alone
-        if (p.CancellingInventoryActions || p.AttachedToEntity != null) return;
-        LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(p);
-        if (ui != null && ui.windowManager.IsCursorWindowOpen()) return;
 
         ItemActionData data;
         ItemActionCatapult bow = Held(p, out data);
         ItemActionRanged.ItemActionDataRanged ranged = data as ItemActionRanged.ItemActionDataRanged;
-        if (bow == null || ranged == null || bow.InfiniteAmmo) return;
+        if (bow == null || ranged == null) return;
+
+        // Watchdog: a bow reload takes about a second. Reload flags that stay up longer are stuck (the game clears
+        // them only when the first-person reload animation exits) and would block the backpack and vehicles forever.
+        // While the game waits to open the backpack, half a second is enough.
+        bool reloading = ItemActionRanged.Reloading(ranged);
+        float limit = p.CancellingInventoryActions ? 0.5f : StuckReload;
+        if (!reloading) reloadSince = -1f;
+        else if (reloadSince < 0f) reloadSince = Time.time;
+        else if (Time.time - reloadSince > limit)
+        {
+            Debug.Log("[AposMod] Bow reload was stuck for " + limit + " s, cancelled (meta " + data.invData.itemValue.Meta + ")");
+            ranged.isReloadRequested = false;
+            p.ForceCancelReload();
+            reloadSince = -1f;
+            gaveUp = true; // do not start it again until an arrow is nocked or the bow changes
+            return;
+        }
+
+        // opening the backpack / a window, sitting in a vehicle: leave the bow alone
+        if (!AutoNock || bow.InfiniteAmmo || p.CancellingInventoryActions || p.AttachedToEntity != null) return;
+        LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(p);
+        if (ui != null && ui.windowManager.IsCursorWindowOpen()) return;
         if (p.inventory.holdingItem != lastBow)
         {
             lastBow = p.inventory.holdingItem;
@@ -79,5 +101,45 @@ public static class AposBowRadialPatch
         EntityPlayerLocal p = gm != null && gm.World != null ? gm.World.GetPrimaryPlayer() : null;
         ItemActionData data;
         if (AposBow.Held(p, out data) != null) __instance.openTime = Time.time - __instance.displayDelay;
+    }
+}
+
+// aposbow          -> the held bow's reload state (for "can't open the backpack / enter a vehicle" reports)
+// aposbow off|on   -> switch the bow auto-nock off / on until the game restarts
+public class AposBowCommand : ConsoleCmdAbstract
+{
+    public override string[] getCommands()
+    {
+        return new string[] { "aposbow" };
+    }
+
+    public override string getDescription()
+    {
+        return "AposMod bow: state of the held bow's reload | aposbow off|on (auto-nock)";
+    }
+
+    public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
+    {
+        SdtdConsole console = SingletonMonoBehaviour<SdtdConsole>.Instance;
+        if (_params.Count > 0 && (_params[0] == "off" || _params[0] == "on"))
+        {
+            AposBow.AutoNock = _params[0] == "on";
+            console.Output("Bow auto-nock: " + (AposBow.AutoNock ? "on" : "off"));
+            return;
+        }
+        GameManager gm = GameManager.Instance;
+        EntityPlayerLocal p = gm != null && gm.World != null ? gm.World.GetPrimaryPlayer() : null;
+        ItemActionData data;
+        ItemActionCatapult bow = AposBow.Held(p, out data);
+        ItemActionRanged.ItemActionDataRanged r = data as ItemActionRanged.ItemActionDataRanged;
+        if (bow == null || r == null)
+        {
+            console.Output("No bow in hand.");
+            return;
+        }
+        console.Output("auto-nock " + AposBow.AutoNock + ", meta " + data.invData.itemValue.Meta
+            + ", requested " + r.isReloadRequested + ", reloading " + r.isReloading + ", weaponReloading " + r.isWeaponReloading
+            + ", actionRunning " + p.inventory.IsHoldingItemActionRunning() + ", cancellingInventory " + p.CancellingInventoryActions
+            + ", lastShot " + (Time.time - r.m_LastShotTime).ToString("0.0") + " s ago, delay " + r.Delay);
     }
 }
