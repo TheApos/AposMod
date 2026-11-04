@@ -20,10 +20,16 @@ public class AposElites : MonoBehaviour
 
     const float TagRange = 40f;
     const float RegenDelay = 3f;
-    const float RegenShare = 0.03f;
-    const float ExplosiveRadius = 3f;
-    const int ExplosivePlayerDamage = 40;
-    const int ExplosiveZombieDamage = 150;
+    // Regenerating and Explosive grow with the stars (index = stars - 1)
+    static readonly float[] RegenShare = { 0.03f, 0.045f, 0.065f };
+    static readonly float[] ExplosiveRadius = { 3f, 3.5f, 4f };
+    static readonly int[] ExplosivePlayerDamage = { 40, 70, 110 };
+    static readonly int[] ExplosiveZombieDamage = { 150, 250, 400 };
+
+    static int StarIndex(EntityAlive e)
+    {
+        return Mathf.Clamp((int)e.Buffs.GetCustomVar("aposElite"), 1, 3) - 1;
+    }
     const float GiantScale = 1.3f;
     public const string Eridium = "resourceAposEridium";
 
@@ -159,23 +165,24 @@ public class AposElites : MonoBehaviour
         return new ItemStack(iv, 1);
     }
 
-    // Explosive: 40 damage to players and 150 to zombies within 3 m, no block damage
+    // Explosive: 40/70/110 damage to players and 150/250/400 to zombies within 3/3.5/4 m by stars, no block damage
     static void Blast(EntityAlive dead)
     {
+        int s = StarIndex(dead);
         dead.Buffs.AddBuff("buffAposChainBlast"); // visual only
         List<Entity> list = GameManager.Instance.World.Entities.list;
         for (int i = 0; i < list.Count; i++)
         {
             EntityAlive e = list[i] as EntityAlive;
             if (e == null || e == dead || e.IsDead()) continue;
-            if ((e.position - dead.position).sqrMagnitude > ExplosiveRadius * ExplosiveRadius) continue;
+            if ((e.position - dead.position).sqrMagnitude > ExplosiveRadius[s] * ExplosiveRadius[s]) continue;
             if (e is EntityPlayer)
             {
-                e.DamageEntity(new DamageSource(EnumDamageSource.External, EnumDamageTypes.Heat), ExplosivePlayerDamage, false, 1f);
+                e.DamageEntity(new DamageSource(EnumDamageSource.External, EnumDamageTypes.Heat), ExplosivePlayerDamage[s], false, 1f);
             }
             else
             {
-                e.Buffs.SetCustomVar("aposSplashDmg", -ExplosiveZombieDamage);
+                e.Buffs.SetCustomVar("aposSplashDmg", -ExplosiveZombieDamage[s]);
                 e.Buffs.AddBuff("buffAposSplash");
             }
         }
@@ -217,7 +224,7 @@ public class AposElites : MonoBehaviour
             float last;
             if (Has(e, "Regen") && (!lastDamaged.TryGetValue(e.entityId, out last) || Time.time - last > RegenDelay) && e.Health < e.GetMaxHealth())
             {
-                e.AddHealth(Mathf.Max(1, Mathf.RoundToInt(e.GetMaxHealth() * RegenShare)));
+                e.AddHealth(Mathf.Max(1, Mathf.RoundToInt(e.GetMaxHealth() * RegenShare[StarIndex(e)])));
             }
             if (Has(e, "Summoner") && e.Buffs.GetCustomVar("aposSummoned") <= 0f && e.Health < e.GetMaxHealth() * 0.5f)
             {
@@ -339,7 +346,7 @@ public class AposElites : MonoBehaviour
             GUI.color = color;
             GUI.Label(r, text, style);
             DrawStars(x, r.y, stars, color);
-            DrawBadges(x, r.yMax - 6f * AposSettings.Scale, (int)e.Buffs.GetCustomVar("aposEliteMods"));
+            DrawBadges(x, r.yMax - 6f * AposSettings.Scale, (int)e.Buffs.GetCustomVar("aposEliteMods"), stars - 1);
         }
         GUI.color = oldColor;
     }
@@ -371,7 +378,15 @@ public class AposElites : MonoBehaviour
         return badgeIcons[i];
     }
 
-    void DrawBadges(float centerX, float top, int mask)
+    // Regenerating and Explosive show the value of this elite's stars
+    static string Badge(int i, int s)
+    {
+        if (Modifiers[i] == "Regen") return Mathf.RoundToInt(RegenShare[s] * 1000f) / 10f + "%";
+        if (Modifiers[i] == "Explosive") return ExplosivePlayerDamage[s].ToString();
+        return BadgeValue[i];
+    }
+
+    void DrawBadges(float centerX, float top, int mask, int s)
     {
         if (badgeStyle == null)
         {
@@ -386,7 +401,8 @@ public class AposElites : MonoBehaviour
         for (int i = 0; i < Modifiers.Length; i++)
         {
             if ((mask & (1 << i)) == 0) continue;
-            width += icon + gap + (BadgeValue[i] != "" ? badgeStyle.CalcSize(new GUIContent(BadgeValue[i])).x + 2f : 0f);
+            string value = Badge(i, s);
+            width += icon + gap + (value != "" ? badgeStyle.CalcSize(new GUIContent(value)).x + 2f : 0f);
         }
         float x = centerX - (width - gap) / 2f;
         for (int i = 0; i < Modifiers.Length; i++)
@@ -402,14 +418,15 @@ public class AposElites : MonoBehaviour
                 GUI.DrawTexture(ir, tex);
             }
             x += icon + 2f;
-            if (BadgeValue[i] != "")
+            string text = Badge(i, s);
+            if (text != "")
             {
-                float w = badgeStyle.CalcSize(new GUIContent(BadgeValue[i])).x;
+                float w = badgeStyle.CalcSize(new GUIContent(text)).x;
                 Rect tr = new Rect(x, top, w, icon);
                 GUI.color = new Color(0f, 0f, 0f, 0.85f);
-                GUI.Label(new Rect(tr.x + 2f, tr.y + 2f, w, icon), BadgeValue[i], badgeStyle);
+                GUI.Label(new Rect(tr.x + 2f, tr.y + 2f, w, icon), text, badgeStyle);
                 GUI.color = BadgeColor[i];
-                GUI.Label(tr, BadgeValue[i], badgeStyle);
+                GUI.Label(tr, text, badgeStyle);
                 x += w;
             }
             x += gap;
