@@ -153,7 +153,7 @@ public class AposDamageNumbersCommand : ConsoleCmdAbstract
 
 // aposelite on|off                 -> names above elite zombies
 // aposelite make                   -> nearest zombie within 20 m becomes an elite with 1 random modifier
-// aposelite make 2                 -> ... with 2 random modifiers
+// aposelite make 2|3               -> ... with 2 or 3 random modifiers
 // aposelite make Armored Giant     -> ... with these modifiers
 public class AposEliteCommand : ConsoleCmdAbstract
 {
@@ -164,7 +164,7 @@ public class AposEliteCommand : ConsoleCmdAbstract
 
     public override string getDescription()
     {
-        return "AposMod elites: aposelite on|off | make [1|2|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
+        return "AposMod elites: aposelite on|off | make [1|2|3|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
     }
 
     public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
@@ -182,7 +182,7 @@ public class AposEliteCommand : ConsoleCmdAbstract
             for (int i = 1; i < _params.Count; i++)
             {
                 int n;
-                if (int.TryParse(_params[i], out n)) { count = Math.Max(1, Math.Min(2, n)); continue; }
+                if (int.TryParse(_params[i], out n)) { count = Math.Max(1, Math.Min(3, n)); continue; }
                 int m = Array.FindIndex(AposElites.Modifiers, x => string.Equals(x, _params[i], StringComparison.OrdinalIgnoreCase));
                 if (m >= 0) mask |= 1 << m;
                 else console.Output("Unknown modifier: " + _params[i]);

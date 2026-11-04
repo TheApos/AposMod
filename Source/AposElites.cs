@@ -73,7 +73,10 @@ public class AposElites : MonoBehaviour
             return;
         }
 
-        Make(e, RandomMask(e, stage >= 100 ? 2 : 1));
+        // 1 modifier (1 star); 2 after gamestage 100; after gamestage 200 a quarter of them get 3
+        int count = stage >= 100 ? 2 : 1;
+        if (stage >= 200 && rand.NextDouble() < 0.25) count = 3;
+        Make(e, RandomMask(e, count));
     }
 
     public static int RandomMask(EntityAlive e, int count)
@@ -117,12 +120,13 @@ public class AposElites : MonoBehaviour
         int count = (int)e.Buffs.GetCustomVar("aposElite");
         Vector3 pos = e.GetPosition() + Vector3.up * 0.8f;
 
-        // weapon with affixes: quality 3-5 (1 modifier) or 5-6 (2 modifiers); 2% legendary from 2-modifier elites
+        // weapon with affixes: quality 3-5 (1 star), 5-6 (2 stars), 6 (3 stars); legendary 2% (2 stars) / 10% (3 stars)
         ItemStack loot = null;
-        if (count >= 2 && rand.NextDouble() < 0.02) loot = AposRewards.RandomLegendary();
-        if (loot == null) loot = RandomWeapon(count >= 2 ? rand.Next(5, 7) : rand.Next(3, 6));
+        double legendChance = count >= 3 ? 0.1 : count == 2 ? 0.02 : 0;
+        if (rand.NextDouble() < legendChance) loot = AposRewards.RandomLegendary();
+        if (loot == null) loot = RandomWeapon(count >= 3 ? 6 : count == 2 ? rand.Next(5, 7) : rand.Next(3, 6));
         if (loot != null) Drop(loot, pos);
-        int eridium = count >= 2 ? rand.Next(8, 16) : rand.Next(3, 7);
+        int eridium = count >= 3 ? rand.Next(20, 31) : count == 2 ? rand.Next(8, 16) : rand.Next(3, 7);
         Drop(new ItemStack(ItemClass.GetItem(Eridium), eridium), pos);
 
         if (Has(e, "Explosive")) Blast(e);
@@ -327,13 +331,70 @@ public class AposElites : MonoBehaviour
             if (vp.z <= 0f) continue;
             float x = vp.x * Screen.width, y = (1f - vp.y) * Screen.height;
             string text = Name(e);
+            int stars = Mathf.Clamp((int)e.Buffs.GetCustomVar("aposElite"), 1, 3);
+            Color color = stars >= 3 ? new Color(1f, 0.25f, 0.25f) : stars == 2 ? new Color(1f, 0.55f, 0.1f) : new Color(1f, 0.85f, 0.2f);
             Rect r = new Rect(x - 250f, y - 20f, 500f, 40f);
             GUI.color = new Color(0f, 0f, 0f, 0.85f);
             GUI.Label(new Rect(r.x + 2f, r.y + 2f, r.width, r.height), text, style);
-            GUI.color = e.Buffs.GetCustomVar("aposElite") >= 2f ? new Color(1f, 0.55f, 0.1f) : new Color(1f, 0.85f, 0.2f);
+            GUI.color = color;
             GUI.Label(r, text, style);
+            DrawStars(x, r.y, stars, color);
         }
         GUI.color = oldColor;
+    }
+
+    // 1-3 stars above the name: how strong the elite is (and how good its loot)
+    static Texture2D star;
+
+    static void DrawStars(float centerX, float nameTop, int count, Color color)
+    {
+        if (star == null) star = MakeStar(64);
+        float size = 26f * AposSettings.Scale, gap = 4f * AposSettings.Scale;
+        float width = count * size + (count - 1) * gap;
+        float left = centerX - width / 2f, top = nameTop - size;
+        for (int i = 0; i < count; i++)
+        {
+            Rect s = new Rect(left + i * (size + gap), top, size, size);
+            GUI.color = new Color(0f, 0f, 0f, 0.85f);
+            GUI.DrawTexture(new Rect(s.x + 2f, s.y + 2f, s.width, s.height), star);
+            GUI.color = color;
+            GUI.DrawTexture(s, star);
+        }
+    }
+
+    // a white five-pointed star with soft edges (2x2 samples per pixel)
+    static Texture2D MakeStar(int n)
+    {
+        Vector2[] poly = new Vector2[10];
+        for (int i = 0; i < 10; i++)
+        {
+            float a = Mathf.PI / 2f + i * Mathf.PI / 5f;
+            float rad = (i % 2 == 0 ? 0.48f : 0.2f) * n;
+            poly[i] = new Vector2(n / 2f + Mathf.Cos(a) * rad, n / 2f + Mathf.Sin(a) * rad - n * 0.03f);
+        }
+        Texture2D tex = new Texture2D(n, n, TextureFormat.RGBA32, false);
+        for (int y = 0; y < n; y++)
+            for (int x = 0; x < n; x++)
+            {
+                int inside = 0;
+                for (int sy = 0; sy < 2; sy++)
+                    for (int sx = 0; sx < 2; sx++)
+                        if (Inside(poly, new Vector2(x + 0.25f + sx * 0.5f, y + 0.25f + sy * 0.5f))) inside++;
+                tex.SetPixel(x, y, new Color(1f, 1f, 1f, inside / 4f));
+            }
+        tex.Apply();
+        return tex;
+    }
+
+    static bool Inside(Vector2[] poly, Vector2 p)
+    {
+        bool c = false;
+        for (int i = 0, j = poly.Length - 1; i < poly.Length; j = i++)
+        {
+            if ((poly[i].y > p.y) != (poly[j].y > p.y)
+                && p.x < (poly[j].x - poly[i].x) * (p.y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x) c = !c;
+        }
+        return c;
     }
 
     static string Name(EntityAlive e)
