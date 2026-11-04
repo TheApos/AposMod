@@ -21,6 +21,13 @@ public class AposBow : MonoBehaviour
         return data != null ? bow : null;
     }
 
+    // A reload that did not nock an arrow is not retried until something changes: an endless reload would block
+    // the backpack (EntityPlayerLocal.CancelInventoryActions waits while reloading) and vehicles (IsHoldingItemActionRunning).
+    const float RetryDelay = 2f;
+    float lastRequest = -100f;
+    bool gaveUp;
+    ItemClass lastBow;
+
     void Update()
     {
         if (Time.time < nextCheck) return;
@@ -28,12 +35,36 @@ public class AposBow : MonoBehaviour
         GameManager gm = GameManager.Instance;
         EntityPlayerLocal p = gm != null && gm.World != null ? gm.World.GetPrimaryPlayer() : null;
         if (p == null || p.IsDead() || p.inventory.IsHandSwitching()) return;
+        // opening the backpack / a window, sitting in a vehicle: leave the bow alone
+        if (p.CancellingInventoryActions || p.AttachedToEntity != null) return;
+        LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(p);
+        if (ui != null && ui.windowManager.IsCursorWindowOpen()) return;
 
         ItemActionData data;
         ItemActionCatapult bow = Held(p, out data);
         ItemActionRanged.ItemActionDataRanged ranged = data as ItemActionRanged.ItemActionDataRanged;
         if (bow == null || ranged == null || bow.InfiniteAmmo) return;
-        if (data.invData.itemValue.Meta != 0 || ItemActionRanged.Reloading(ranged) || !bow.CanReload(data)) return;
+        if (p.inventory.holdingItem != lastBow)
+        {
+            lastBow = p.inventory.holdingItem;
+            gaveUp = false;
+            lastRequest = -100f;
+        }
+        if (data.invData.itemValue.Meta != 0)
+        {
+            gaveUp = false; // nocked: the next empty bow may reload again
+            lastRequest = -100f;
+            return;
+        }
+        if (gaveUp || ItemActionRanged.Reloading(ranged) || Time.time - lastRequest < RetryDelay) return;
+        if (lastRequest > 0f && Time.time - lastRequest < RetryDelay * 2f)
+        {
+            // the last request ended without an arrow on the string
+            gaveUp = true;
+            return;
+        }
+        if (!bow.CanReload(data)) return;
+        lastRequest = Time.time;
         gm.ItemReloadServer(p.entityId);
     }
 }

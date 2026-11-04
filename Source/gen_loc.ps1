@@ -435,6 +435,8 @@ $extra['aposMasteryNoPoints']   = 'No free points: kill more with this weapon.',
 $extra['aposMasteryReset']      = 'Reset the tree ({0} Eridium)', 'Сбросить дерево ({0} эридия)'
 $extra['aposMasteryResetHint']  = 'Reset works within 5 m of an Eridium Forge.', 'Сброс работает в 5 м от Кузни эридия.'
 $extra['aposMasteryLevelUp']    = '{0}: mastery {1}! Alt+K - skill tree', '{0}: мастерство {1}! Alt+K - дерево навыков'
+$extra['aposMasteryBannerTitle'] = 'WEAPON MASTERY {0}!', 'МАСТЕРСТВО ОРУЖИЯ {0}!'
+$extra['aposMasteryBannerHint']  = 'new skill point: Alt+K or the item info panel', 'новое очко навыка: Alt+K или панель предмета'
 $extra['buffAposMasteryHasteDesc'] = 'Faster attacks and reload after a kill.', 'Быстрее атаки и перезарядка после убийства.'
 $masteryClasses = [ordered]@{
   Blades = 'Blades', 'Клинки'; Clubs = 'Clubs', 'Дубинки'; Sledges = 'Sledgehammers', 'Кувалды'; Spears = 'Spears', 'Копья'

@@ -358,9 +358,46 @@ public class AposMastery : MonoBehaviour
         if (after > before)
         {
             GameManager.ShowTooltip(attacker as EntityPlayerLocal, string.Format(Localization.Get("aposMasteryLevelUp"), ic.GetLocalizedItemName(), after));
+            Audio.Manager.PlayInsidePlayerHead("ui_challenge_complete", attacker.entityId);
+            bannerTitle = string.Format(Localization.Get("aposMasteryBannerTitle"), after);
+            bannerText = ic.GetLocalizedItemName() + "  -  " + Localization.Get("aposMasteryBannerHint");
+            bannerStart = Time.time;
             Save();
         }
         else MarkDirty();
+    }
+
+    // ===== level-up banner: big gold text in the upper middle of the screen for a few seconds =====
+    const float BannerTime = 4f;
+    static string bannerTitle, bannerText;
+    static float bannerStart = -100f;
+    GUIStyle bannerStyle, bannerSmall;
+
+    void OnGUI()
+    {
+        float t = Time.time - bannerStart;
+        if (t > BannerTime || bannerTitle == null || Event.current.type != EventType.Repaint) return;
+        if (bannerStyle == null)
+        {
+            bannerStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 44 };
+            bannerSmall = new GUIStyle(bannerStyle) { fontSize = 24 };
+        }
+        // pops in (scale 1.3 -> 1 in 0.25 s), fades out over the last second
+        float alpha = Mathf.Clamp01(BannerTime - t);
+        float pop = 1f + 0.3f * Mathf.Clamp01(1f - t / 0.25f);
+        bannerStyle.fontSize = Mathf.RoundToInt(44 * pop * Screen.height / 1080f);
+        bannerSmall.fontSize = Mathf.RoundToInt(24 * Screen.height / 1080f);
+        Rect r = new Rect(0f, Screen.height * 0.2f, Screen.width, Screen.height * 0.07f);
+        Rect r2 = new Rect(0f, r.yMax, Screen.width, Screen.height * 0.04f);
+        Color old = GUI.color;
+        GUI.color = new Color(0f, 0f, 0f, 0.8f * alpha);
+        GUI.Label(new Rect(r.x + 3f, r.y + 3f, r.width, r.height), bannerTitle, bannerStyle);
+        GUI.Label(new Rect(r2.x + 2f, r2.y + 2f, r2.width, r2.height), bannerText, bannerSmall);
+        GUI.color = new Color(1f, 0.82f, 0.3f, alpha);
+        GUI.Label(r, bannerTitle, bannerStyle);
+        GUI.color = new Color(1f, 1f, 1f, alpha);
+        GUI.Label(r2, bannerText, bannerSmall);
+        GUI.color = old;
     }
 
     // ===== Eridium Forge nearby (reset) =====
