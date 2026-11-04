@@ -34,4 +34,5 @@
 - Harmony (HarmonyX) lives in `Mods/0_TFP_Harmony/0Harmony.dll` (restored by a full Steam "verify files"; it was missing before). Reference it from there when writing Harmony patches.
 - Ranged AOE: `target="positionAOE"` hits around the impact/hit point (ammo `onProjectileImpact`, player `onSelfPrimaryActionRayHit`); arrows/bolts cannot pierce via XML (projectiles ignore EntityPenetrationCount).
 - Custom UI sprites (buff icons etc.): `UIAtlases/UIAtlas/<name>.png` (white on transparent, tinted by `icon_color`), referenced by file name, e.g. `ui_apos_bloodsucker`.
+- Pictograms drawn by C# (IMGUI): `Icons/*.png` loaded with `ImageConversion.LoadImage` from `AposSettings.ModPath` (elite modifier badges).
 - Game logs: `%APPDATA%/7DaysToDie/logs/output_log_client__*.txt`.

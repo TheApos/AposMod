@@ -339,8 +339,81 @@ public class AposElites : MonoBehaviour
             GUI.color = color;
             GUI.Label(r, text, style);
             DrawStars(x, r.y, stars, color);
+            DrawBadges(x, r.yMax - 6f * AposSettings.Scale, (int)e.Buffs.GetCustomVar("aposEliteMods"));
         }
         GUI.color = oldColor;
+    }
+
+    // ===== modifier badges under the name: pictogram (Icons/elite_<Modifier>.png) + the number that matters =====
+    static readonly string[] BadgeValue = { "x0.5", "+60%", "3%", "40", "50%", "", "", "-20", "+50%", "x3" };
+    static readonly Color[] BadgeColor =
+    {
+        new Color(0.7f, 0.8f, 0.95f), new Color(0.3f, 0.9f, 1f), new Color(0.4f, 1f, 0.45f), new Color(1f, 0.6f, 0.15f),
+        new Color(0.95f, 0.2f, 0.3f), new Color(1f, 0.45f, 0.1f), new Color(0.5f, 0.75f, 1f), new Color(0.6f, 1f, 0.2f),
+        new Color(0.8f, 0.5f, 1f), new Color(0.7f, 0.55f, 1f),
+    };
+    static Texture2D[] badgeIcons;
+    GUIStyle badgeStyle;
+
+    static Texture2D BadgeIcon(int i)
+    {
+        if (badgeIcons == null)
+        {
+            badgeIcons = new Texture2D[Modifiers.Length];
+            for (int k = 0; k < Modifiers.Length; k++)
+            {
+                string path = System.IO.Path.Combine(System.IO.Path.Combine(AposSettings.ModPath ?? "", "Icons"), "elite_" + Modifiers[k] + ".png");
+                if (!System.IO.File.Exists(path)) continue;
+                Texture2D tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                if (ImageConversion.LoadImage(tex, System.IO.File.ReadAllBytes(path))) badgeIcons[k] = tex;
+            }
+        }
+        return badgeIcons[i];
+    }
+
+    void DrawBadges(float centerX, float top, int mask)
+    {
+        if (badgeStyle == null)
+        {
+            badgeStyle = new GUIStyle(GUI.skin.label);
+            badgeStyle.alignment = TextAnchor.MiddleLeft;
+            badgeStyle.fontStyle = FontStyle.Bold;
+        }
+        badgeStyle.fontSize = Mathf.RoundToInt(17 * AposSettings.Scale);
+        float icon = 24f * AposSettings.Scale, gap = 10f * AposSettings.Scale;
+        // measure the row first to center it
+        float width = 0f;
+        for (int i = 0; i < Modifiers.Length; i++)
+        {
+            if ((mask & (1 << i)) == 0) continue;
+            width += icon + gap + (BadgeValue[i] != "" ? badgeStyle.CalcSize(new GUIContent(BadgeValue[i])).x + 2f : 0f);
+        }
+        float x = centerX - (width - gap) / 2f;
+        for (int i = 0; i < Modifiers.Length; i++)
+        {
+            if ((mask & (1 << i)) == 0) continue;
+            Texture2D tex = BadgeIcon(i);
+            Rect ir = new Rect(x, top, icon, icon);
+            if (tex != null)
+            {
+                GUI.color = new Color(0f, 0f, 0f, 0.85f);
+                GUI.DrawTexture(new Rect(ir.x + 2f, ir.y + 2f, icon, icon), tex);
+                GUI.color = BadgeColor[i];
+                GUI.DrawTexture(ir, tex);
+            }
+            x += icon + 2f;
+            if (BadgeValue[i] != "")
+            {
+                float w = badgeStyle.CalcSize(new GUIContent(BadgeValue[i])).x;
+                Rect tr = new Rect(x, top, w, icon);
+                GUI.color = new Color(0f, 0f, 0f, 0.85f);
+                GUI.Label(new Rect(tr.x + 2f, tr.y + 2f, w, icon), BadgeValue[i], badgeStyle);
+                GUI.color = BadgeColor[i];
+                GUI.Label(tr, BadgeValue[i], badgeStyle);
+                x += w;
+            }
+            x += gap;
+        }
     }
 
     // 1-3 stars above the name: how strong the elite is (and how good its loot)

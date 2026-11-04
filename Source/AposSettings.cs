@@ -17,8 +17,11 @@ public static class AposSettings
 
     static string file;
 
+    public static string ModPath;
+
     public static void Load(string modPath)
     {
+        ModPath = modPath;
         file = Path.Combine(modPath, "Settings.xml");
         if (!File.Exists(file))
         {
