@@ -96,13 +96,14 @@ li.tipped:focus-visible { box-shadow: 0 0 0 2px var(--amber); border-radius: 2px
 .searching li.tipped .more { display: inline; }
 .searching li.tipped .dots, .searching li.tipped .pop { display: none !important; }
 [data-tip] { cursor: help; }
+html, body { overflow-x: clip; }
 .formula { display: flex; align-items: center; gap: 8px; font: 400 20px var(--f-display); color: var(--muted); }
 .formula .el { display: inline-flex; width: 38px; height: 38px; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid currentColor; }
 .formula .el .hi { margin: 0; width: 22px; height: 22px; stroke: currentColor; }
 .formula .fire { color: #e8701a; } .formula .acid { color: #6cbf1f; } .formula .shock { color: #3c8dde; } .formula .res { color: var(--magenta); }
 .mil { position: relative; cursor: help; outline: none; }
 .mil:focus-visible { box-shadow: 0 0 0 2px var(--amber); }
-.mil .pop, .tile .pop { display: none; position: absolute; z-index: 6; left: 50%; transform: translateX(-50%); top: calc(100% + 6px); width: min(280px, 80vw); text-align: left; background: var(--panel); color: var(--ink); border: 1px solid var(--amber); border-radius: 4px; padding: 8px 10px; box-shadow: 0 6px 18px rgba(0,0,0,.28); font: 14px/1.45 var(--f-body); }
+.mil .pop, .tile .pop { display: none; visibility: visible; position: absolute; z-index: 6; left: 50%; transform: translateX(-50%); top: calc(100% + 6px); width: min(280px, 80vw); text-align: left; background: var(--panel); color: var(--ink); border: 1px solid var(--amber); border-radius: 4px; padding: 8px 10px; box-shadow: 0 6px 18px rgba(0,0,0,.28); font: 14px/1.45 var(--f-body); }
 .mil .pop b { color: var(--ink); font-size: 1em; }
 .mil:hover .pop, .mil:focus .pop, .tile:hover .pop, .tile:focus .pop { display: block; }
 .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; }
@@ -1021,5 +1022,16 @@ aposelite make Armored Giant  з цими модифікаторами</pre>
     li.classList.add('tipped'); li.tabIndex = 0;
   });
 
-})();
+  // keep tile hints inside the screen: shift sideways when they would cross an edge
+  function fit(e) {
+    var pop = e.currentTarget.querySelector('.pop'); if (!pop) return;
+    pop.style.transform = 'translateX(-50%)';
+    requestAnimationFrame(function () {
+      var r = pop.getBoundingClientRect(), dx = 0, pad = 8;
+      if (r.right > window.innerWidth - pad) dx = window.innerWidth - pad - r.right;
+      if (r.left + dx < pad) dx = pad - r.left;
+      pop.style.transform = 'translateX(calc(-50% + ' + Math.round(dx) + 'px))';
+    });
+  }
+  document.querySelectorAll('.tile, .mil').forEach(function (t) { t.addEventListener('mouseenter', fit); t.addEventListener('focus', fit); });})();
 </script>
