@@ -171,7 +171,7 @@ html, body { overflow-x: clip; }
     <a href="#melee">Ближній бій</a>
     <a href="#ranged">Дальній бій</a>
     <a href="#elements">Стихії</a>
-    <a href="#explosives">Вибухівка й інше</a>
+    <a href="#explosives">Вибухівка й роботи</a>
     <a href="#affixes">Афікси</a>
     <a href="#elites">Еліти й Ерідій</a>
     <a href="#mastery">Майстерність</a>
@@ -224,6 +224,15 @@ html, body { overflow-x: clip; }
       <div class="cost">Перезарядка 4 с. Силовий удар забирає на 50% більше витривалості.</div>
       <div class="five"><b>5 рівень — Aftershock:</b> збиті зомбі ще близько 3 с оглушені після того, як підведуться.</div>
     </article>
+    <article class="card">
+      <h3>Дубинки й кувалди — <span class="trait">Rage</span></h3>
+      <div class="tagline">Перк: Rage (замість Grand Slam)</div>
+      <ul>
+        <li>Вбивство дубинкою, битою чи кувалдою дає стак на 8 с: +10% шкоди, +5% швидкості атаки.</li>
+        <li>Найбільше стаків — стільки, який рівень перка (1–5).</li>
+      </ul>
+      <div class="five"><b>5 рівень — Rampage:</b> на 5 стаках удари не витрачають витривалість, а вас не можна оглушити чи збити з ніг.</div>
+    </article>
 
     <article class="card">
       <h3>Жезли — <span class="trait">Chain Lightning</span></h3>
@@ -260,15 +269,6 @@ html, body { overflow-x: clip; }
       <div class="five"><b>5 рівень — Knockout:</b> силовий удар на повних зарядах вбиває будь-якого не елітного зомбі.</div>
     </article>
 
-    <article class="card">
-      <h3>Дубинки й кувалди — <span class="trait">Rage</span></h3>
-      <div class="tagline">Перк: Rage (замість Grand Slam)</div>
-      <ul>
-        <li>Вбивство дубинкою, битою чи кувалдою дає стак на 8 с: +10% шкоди, +5% швидкості атаки.</li>
-        <li>Найбільше стаків — стільки, який рівень перка (1–5).</li>
-      </ul>
-      <div class="five"><b>5 рівень — Rampage:</b> на 5 стаках удари не витрачають витривалість, а вас не можна оглушити чи збити з ніг.</div>
-    </article>
 
   </div>
 </section>
@@ -287,6 +287,13 @@ html, body { overflow-x: clip; }
       </ul>
       <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Пострілів</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td></tr><tr><td>Шкода</td><td>+25%</td><td>+35%</td><td>+45%</td><td>+55%</td><td>+65%</td><td>+75%</td></tr></table></div>
       <div class="five"><b>5 рівень:</b> кожне вбивство <b>в голову</b> в цьому режимі додає ще 2 постріли.</div>
+    </article>
+    <article class="card">
+      <h3>Дробовики — <span class="trait">Slug Knockback</span></h3>
+      <ul>
+        <li>Куля (Slug і Breaching Slug) відкидає зомбі й валить його з ніг. Дріб працює як раніше.</li>
+        <li>Breaching Slug б'є лише до 4 м — так задумано в самій грі.</li>
+      </ul>
     </article>
 
     <article class="card">
@@ -342,13 +349,6 @@ html, body { overflow-x: clip; }
       <div class="five"><b>5 рівень — Hunting Party:</b> болт позначає всіх зомбі в радіусі 4 м від влучання.</div>
     </article>
 
-    <article class="card">
-      <h3>Роботи — <span class="trait">Guardian Protocol</span></h3>
-      <div class="tagline">Перк: Robotics Inventor · турель і робо-кувалда</div>
-      <ul><li>Коли ваше здоров'я нижче 30%, роботи атакують швидше й сильніше. З'являється бафф-індикатор.</li></ul>
-      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Швидкість</td><td>+30%</td><td>+40%</td><td>+50%</td><td>+60%</td><td>+70%</td><td>+80%</td></tr><tr><td>Шкода</td><td>+10%</td><td>+15%</td><td>+20%</td><td>+25%</td><td>+30%</td><td>+35%</td></tr></table></div>
-      <div class="five"><b>5 рівень:</b> вмикається вже при здоров'ї нижче 50%.</div>
-    </article>
 
   </div>
 </section>
@@ -381,15 +381,8 @@ html, body { overflow-x: clip; }
 </section>
 
 <section id="explosives" data-sec>
-  <h2>Вибухівка, дробовики та інше</h2>
+  <h2>Вибухівка, саморобки й роботи</h2>
   <div class="grid">
-    <article class="card">
-      <h3>Дробовики — <span class="trait">Slug Knockback</span></h3>
-      <ul>
-        <li>Куля (Slug і Breaching Slug) відкидає зомбі й валить його з ніг. Дріб працює як раніше.</li>
-        <li>Breaching Slug б'є лише до 4 м — так задумано в самій грі.</li>
-      </ul>
-    </article>
     <article class="card">
       <h3>Гранати — <span class="trait">Wide Blast</span></h3>
       <ul><li>Граната, контактна граната й саморобна бомба: радіус ураження зомбі збільшено втричі. Руйнування блоків не змінилося.</li></ul>
@@ -406,6 +399,13 @@ html, body { overflow-x: clip; }
     <article class="card">
       <h3>Саморобна зброя — <span class="trait">Veteran Junk</span></h3>
       <ul><li>Кожне вбивство саморобною зброєю: +2% шкоди всій саморобній зброї, до +1000%. Поточний бонус видно на баффі.</li><li>Ремонтується брухтом заліза.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Роботи — <span class="trait">Guardian Protocol</span></h3>
+      <div class="tagline">Перк: Robotics Inventor · турель і робо-кувалда</div>
+      <ul><li>Коли ваше здоров'я нижче 30%, роботи атакують швидше й сильніше. З'являється бафф-індикатор.</li></ul>
+      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Швидкість</td><td>+30%</td><td>+40%</td><td>+50%</td><td>+60%</td><td>+70%</td><td>+80%</td></tr><tr><td>Шкода</td><td>+10%</td><td>+15%</td><td>+20%</td><td>+25%</td><td>+30%</td><td>+35%</td></tr></table></div>
+      <div class="five"><b>5 рівень:</b> вмикається вже при здоров'ї нижче 50%.</div>
     </article>
   </div>
 </section>
@@ -742,7 +742,6 @@ html, body { overflow-x: clip; }
         <li><b>Lucky Looter 5 — Fortune:</b> знайдена зброя отримує +1 афікс у межах ліміту якості.</li>
       </ul>
     </article>
-    <article class="card"><h3>Пташині гнізда</h3><ul><li>Утричі більше пір'я: з вмісту гнізда (3 + 3–15 замість 1 + 1–5) і при зборі самого гнізда.</li></ul></article>
     <article class="card"><h3>Grand Slam → <span class="trait">Rage</span></h3><ul><li>Збиття з ніг на бігу прибрано. Опис Rage — у розділі «Ближній бій».</li></ul></article>
     <article class="card"><h3>Intellect Mastery 4–5</h3><ul><li><b>4 — Field Repair:</b> уся зброя, інструменти й броня зношуються на 30% повільніше.</li><li><b>5 — Inventor:</b> усе, що ви створюєте, виходить на рівень якості вище.</li><li>Колишні бонуси жезла (заряд за 2 удари, +300% шкоди струмом) прибрано.</li></ul></article>
     <article class="card"><h3>Pummel Pete</h3><ul><li>Прибрано: силовий удар по оглушеному клав його «назавжди».</li><li>Натомість: силовий удар по оглушеному +10…50% шкоди.</li></ul></article>
@@ -896,6 +895,7 @@ aposelite make Armored Giant  з цими модифікаторами</pre>
         <li>Перезарядка Second Wind (5 хв) і Second Lungs (60 с)</li>
       </ul>
     </article>
+    <article class="card"><h3>Пташині гнізда</h3><ul><li>Утричі більше пір'я: з вмісту гнізда (3 + 3–15 замість 1 + 1–5) і при зборі самого гнізда.</li></ul></article>
     <article class="card">
       <h3>Запуск</h3>
       <ul>
