@@ -54,28 +54,6 @@ public class AposBow : MonoBehaviour
             + ", windowOpen " + LocalPlayerUI.GetUIForPlayer(p).windowManager.IsCursorWindowOpen();
     }
 
-    // Tab / E with a bow in hand: write the state to the game log now and half a second later
-    float logAt = -1f;
-
-    void LateUpdate()
-    {
-        GameManager gm = GameManager.Instance;
-        EntityPlayerLocal p = gm != null && gm.World != null ? gm.World.GetPrimaryPlayer() : null;
-        if (p == null) return;
-        ItemActionData data;
-        if (Held(p, out data) == null) return;
-        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.I))
-        {
-            Debug.Log("[AposMod] Bow key " + (Input.GetKeyDown(KeyCode.E) ? "E" : "Tab/I") + ": " + State(p));
-            logAt = Time.time + 0.5f;
-        }
-        else if (logAt > 0f && Time.time >= logAt)
-        {
-            logAt = -1f;
-            Debug.Log("[AposMod] Bow +0.5 s: " + State(p));
-        }
-    }
-
     void Update()
     {
         if (Time.time < nextCheck) return;
@@ -135,16 +113,14 @@ public class AposBow : MonoBehaviour
     }
 }
 
-// Arrow wheel without the hold delay while a bow is in hand
-[HarmonyLib.HarmonyPatch(typeof(XUiC_Radial), "Open")]
+// Arrow wheel without the hold delay. Only the ammo wheel (R): Tab and E open the same radial window, where a short tap
+// is the normal action (backpack, enter a vehicle) - skipping the delay there broke them while a bow was in hand.
+[HarmonyLib.HarmonyPatch(typeof(ItemActionAttack), "SetupRadial")]
 public static class AposBowRadialPatch
 {
-    static void Postfix(XUiC_Radial __instance)
+    static void Postfix(ItemActionAttack __instance, XUiC_Radial _xuiRadialWindow)
     {
-        GameManager gm = GameManager.Instance;
-        EntityPlayerLocal p = gm != null && gm.World != null ? gm.World.GetPrimaryPlayer() : null;
-        ItemActionData data;
-        if (AposBow.Held(p, out data) != null) __instance.openTime = Time.time - __instance.displayDelay;
+        if (__instance is ItemActionCatapult && _xuiRadialWindow != null) _xuiRadialWindow.openTime = Time.time - _xuiRadialWindow.displayDelay;
     }
 }
 

@@ -35,4 +35,5 @@
 - Ranged AOE: `target="positionAOE"` hits around the impact/hit point (ammo `onProjectileImpact`, player `onSelfPrimaryActionRayHit`); arrows/bolts cannot pierce via XML (projectiles ignore EntityPenetrationCount).
 - Custom UI sprites (buff icons etc.): `UIAtlases/UIAtlas/<name>.png` (white on transparent, tinted by `icon_color`), referenced by file name, e.g. `ui_apos_bloodsucker`.
 - Pictograms drawn by C# (IMGUI): `Icons/*.png` loaded with `ImageConversion.LoadImage` from `AposSettings.ModPath` (elite modifier badges).
+- Tab (backpack) and E (activate) open the same `XUiC_Radial` as the R ammo wheel: a short tap is the normal action, holding past `displayDelay` shows the wheel. Never shorten the delay in `XUiC_Radial.Open` (that broke Tab/E with a bow); the bow patch is on `ItemActionAttack.SetupRadial`.
 - Game logs: `%APPDATA%/7DaysToDie/logs/output_log_client__*.txt`.
