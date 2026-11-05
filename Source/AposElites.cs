@@ -514,6 +514,9 @@ public class AposElites : MonoBehaviour
         EntityPlayerLocal p = AposRewards.Player();
         if (p == null || count <= 0) return;
         ItemStack stack = new ItemStack(ItemClass.GetItem(Eridium), count);
+        // the "+N item" line in the lower right corner, like any picked up loot
+        LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(p);
+        if (ui != null && ui.xui != null && ui.xui.CollectedItemList != null) ui.xui.CollectedItemList.AddItemStack(stack.Clone(), false);
         if (!p.bag.AddItem(stack) && !p.inventory.AddItem(stack)) Drop(stack, p.GetPosition() + Vector3.up);
     }
 }

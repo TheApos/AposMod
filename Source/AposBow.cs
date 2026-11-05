@@ -32,6 +32,50 @@ public class AposBow : MonoBehaviour
     bool gaveUp;
     ItemClass lastBow;
 
+    // One line with everything that can block the backpack (reload, holster) or a vehicle (an action running)
+    public static string State(EntityPlayerLocal p)
+    {
+        ItemActionData data;
+        ItemActionCatapult bow = Held(p, out data);
+        ItemActionRanged.ItemActionDataRanged r = data as ItemActionRanged.ItemActionDataRanged;
+        if (bow == null || r == null) return "no bow in hand";
+        string running = "";
+        ItemClass ic = p.inventory.holdingItem;
+        for (int i = 0; i < ic.Actions.Length && i < p.inventory.holdingItemData.actionData.Count; i++)
+        {
+            if (ic.Actions[i] != null) running += " a" + i + "=" + ic.Actions[i].IsActionRunning(p.inventory.holdingItemData.actionData[i]);
+        }
+        HarmonyLib.Traverse tr = HarmonyLib.Traverse.Create(p);
+        return "bow " + ic.Name + ": auto-nock " + AutoNock + ", meta " + data.invData.itemValue.Meta
+            + ", requested " + r.isReloadRequested + ", reloading " + r.isReloading + ", weaponReloading " + r.isWeaponReloading
+            + ", running" + running + ", cancellingInventory " + p.CancellingInventoryActions
+            + ", holster " + tr.Method("getCurrentHolsterState").GetValue() + " -> " + tr.Field("desiredHolsterState").GetValue()
+            + ", lastShot " + (Time.time - r.m_LastShotTime).ToString("0.0") + " s ago, delay " + r.Delay
+            + ", windowOpen " + LocalPlayerUI.GetUIForPlayer(p).windowManager.IsCursorWindowOpen();
+    }
+
+    // Tab / E with a bow in hand: write the state to the game log now and half a second later
+    float logAt = -1f;
+
+    void LateUpdate()
+    {
+        GameManager gm = GameManager.Instance;
+        EntityPlayerLocal p = gm != null && gm.World != null ? gm.World.GetPrimaryPlayer() : null;
+        if (p == null) return;
+        ItemActionData data;
+        if (Held(p, out data) == null) return;
+        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.I))
+        {
+            Debug.Log("[AposMod] Bow key " + (Input.GetKeyDown(KeyCode.E) ? "E" : "Tab/I") + ": " + State(p));
+            logAt = Time.time + 0.5f;
+        }
+        else if (logAt > 0f && Time.time >= logAt)
+        {
+            logAt = -1f;
+            Debug.Log("[AposMod] Bow +0.5 s: " + State(p));
+        }
+    }
+
     void Update()
     {
         if (Time.time < nextCheck) return;
@@ -137,9 +181,6 @@ public class AposBowCommand : ConsoleCmdAbstract
             console.Output("No bow in hand.");
             return;
         }
-        console.Output("auto-nock " + AposBow.AutoNock + ", meta " + data.invData.itemValue.Meta
-            + ", requested " + r.isReloadRequested + ", reloading " + r.isReloading + ", weaponReloading " + r.isWeaponReloading
-            + ", actionRunning " + p.inventory.IsHoldingItemActionRunning() + ", cancellingInventory " + p.CancellingInventoryActions
-            + ", lastShot " + (Time.time - r.m_LastShotTime).ToString("0.0") + " s ago, delay " + r.Delay);
+        console.Output(AposBow.State(p));
     }
 }
