@@ -198,9 +198,9 @@ $extra = [ordered]@{
   perkGrandSlamDesc       = 'Every kill with a club, bat or sledgehammer fuels your rage: more damage and faster attacks for a short time.', 'Каждое убийство дубинкой, битой или кувалдой разжигает ярость: больше урона и быстрее атаки на короткое время.'
   # Intellect Mastery 4-5 are replaced (full texts)
   perkIntellectMasteryRank4Desc     = 'Field Repair', 'Полевой ремонт'
-  perkIntellectMasteryRank4LongDesc = 'Field Repair: all your weapons, tools and armor wear 30% slower.', 'Полевой ремонт: всё ваше оружие, инструменты и броня изнашиваются на 30% медленнее.'
+  perkIntellectMasteryRank4LongDesc = '[FFB400]AposMod — Level 4: Field Repair[-]\nAll your weapons, tools and armor wear 30% slower.', '[FFB400]AposMod — Уровень 4: Полевой ремонт[-]\nВсё ваше оружие, инструменты и броня изнашиваются на 30% медленнее.'
   perkIntellectMasteryRank5Desc     = 'Inventor', 'Изобретатель'
-  perkIntellectMasteryRank5LongDesc = 'Inventor: everything you craft comes out one quality level higher.', 'Изобретатель: всё, что вы создаёте, получается на один уровень качества выше.'
+  perkIntellectMasteryRank5LongDesc = '[FFB400]AposMod — Level 5: Inventor[-]\nEverything you craft comes out one quality level higher. Weapons, tools and armor that come out at quality 6 become forge tier 7 (as if sharpened once in the Eridium Forge).\nField Repair stays: everything wears 30% slower.', '[FFB400]AposMod — Уровень 5: Изобретатель[-]\nВсё, что вы создаёте, получается на один уровень качества выше. Оружие, инструменты и броня, вышедшие с качеством 6, сразу получают 7-й уровень кузни (как после одной заточки в Кузне эридия).\nПолевой ремонт остаётся: всё изнашивается на 30% медленнее.'
 }
 for ($L = 1; $L -le 5; $L++) {
   $extra["perkGrandSlamRank${L}Desc"] = "Rage $L", "Ярость $L"

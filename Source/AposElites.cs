@@ -547,9 +547,15 @@ public static class AposEliteDeathPatch
 [HarmonyPatch(typeof(XUiC_RecipeStack), "outputStack")]
 public static class AposScrapPatch
 {
-    static void Postfix(Recipe ___recipe, bool __result)
+    static void Postfix(XUiC_RecipeStack __instance, Recipe ___recipe, ItemValue ___outputItemValue, bool __result)
     {
-        if (!__result || ___recipe == null || !___recipe.IsScrap || ___recipe.ingredients.Count == 0) return;
+        if (!__result || ___recipe == null) return;
+        if (!___recipe.IsScrap)
+        {
+            AposInventor.Apply(___outputItemValue, __instance.xui.playerUI.entityPlayer);
+            return;
+        }
+        if (___recipe.ingredients.Count == 0) return;
         AposElites.GiveEridium(AposElites.ScrapEridium(___recipe.ingredients[0].itemValue));
     }
 }
@@ -563,10 +569,14 @@ public static class AposWorkstationScrapPatch
     static void Prefix(RecipeQueueItem[] ___queue, out Dictionary<Recipe, int> __state)
     {
         __state = Scraps(___queue);
+        // Intellect Mastery 5 "Inventor" for items this workstation finishes (AposInventorStackPatch)
+        RecipeQueueItem active = ___queue != null && ___queue.Length > 0 ? ___queue[___queue.Length - 1] : null;
+        AposInventor.Crafter = active != null && active.Recipe != null && !active.Recipe.IsScrap ? active.StartingEntityId : -1;
     }
 
     static void Postfix(TileEntityWorkstation __instance, RecipeQueueItem[] ___queue, ItemStack[] ___output, Dictionary<Recipe, int> __state)
     {
+        AposInventor.Crafter = -1;
         if (__state == null) return;
         try
         {
@@ -620,5 +630,31 @@ public static class AposDismemberGuardPatch
     {
         if (__exception is NullReferenceException) __result = 0f;
         return __exception is NullReferenceException ? null : __exception;
+    }
+}
+
+// Intellect Mastery 5 "Inventor": crafting already gives +1 quality (progression.xml, CraftingTier); an item that
+// comes out at quality 6 (the crafting cap) and has values growing with quality becomes forge tier 7 instead.
+public static class AposInventor
+{
+    public static int Crafter = -1; // set while a closed workstation finishes its queue
+
+    public static void Apply(ItemValue iv, EntityAlive crafter)
+    {
+        if (iv == null || crafter == null || iv.ItemClass == null || !iv.ItemClass.HasQuality || iv.Quality < 6) return;
+        if (AposAffixes.Level(crafter, "perkIntellectMastery") < 5 || AposTiers.Tier(iv) >= 7) return;
+        if (!AposTiers.HasTieredValues(iv.ItemClass)) return;
+        AposTiers.SetTier(iv, 7);
+    }
+}
+
+// A closed workstation puts finished items into its output with ItemStack.AddToItemStackArray
+[HarmonyPatch(typeof(ItemStack), "AddToItemStackArray")]
+public static class AposInventorStackPatch
+{
+    static void Prefix(ItemStack _itemStack)
+    {
+        if (AposInventor.Crafter < 0 || _itemStack == null || GameManager.Instance.World == null) return;
+        AposInventor.Apply(_itemStack.itemValue, GameManager.Instance.World.GetEntity(AposInventor.Crafter) as EntityAlive);
     }
 }
