@@ -1,0 +1,763 @@
+<header class="top">
+  <div class="wrap">
+    <div class="stripe" aria-hidden="true"></div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.0</div>
+    <h1>AposMod Reference</h1>
+    <p class="sub">Weapon traits, affixes, perks and attributes, elements, mods, legendary weapons and settings in one place. Numbers like "0 → 5" depend on the level of the matching perk.</p>
+  </div>
+</header>
+
+<nav class="bar" aria-label="Sections">
+  <div class="wrap">
+    <a href="#melee">Melee</a>
+    <a href="#ranged">Ranged</a>
+    <a href="#elements">Elements</a>
+    <a href="#explosives">Explosives &amp; robots</a>
+    <a href="#affixes">Affixes</a>
+    <a href="#elites">Elites &amp; Eridium</a>
+    <a href="#mastery">Mastery</a>
+    <a href="#perks">Perks &amp; attributes</a>
+    <a href="#sets">Sets &amp; wardrobe</a>
+    <a href="#systems">Systems</a>
+    <input id="q" type="search" placeholder="Search: sledgehammer, Brawler, acid…" aria-label="Search the reference">
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section id="melee" data-sec>
+  <h2>Melee <small>LMB — normal attack, RMB — power attack</small></h2>
+  <p class="lead">A normal attack gives a small bonus, a power attack triggers the class's main trait.</p>
+  <div class="grid">
+
+    <article class="card">
+      <h3>Knives &amp; machetes — <span class="trait">Bloodsucker</span></h3>
+      <div class="tagline">Perk: Deep Cuts</div>
+      <ul>
+        <li>Each hit adds a regeneration stack (power attack — two): +1 HP/s per stack, each hit extends it to 5 s.</li>
+        <li>A power attack causes bleeding.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Max stacks</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr></table></div>
+      <div class="five"><b>Level 5 — Blood Feast:</b> a knife kill at max stacks instantly heals 25 HP.</div>
+    </article>
+
+    <article class="card">
+      <h3>Clubs &amp; bats — <span class="trait">Home Run</span></h3>
+      <div class="tagline">Perk: Pummel Pete</div>
+      <ul>
+        <li>A normal attack can stun the target for 1 s.</li>
+        <li>A power attack to the head launches the zombie and knocks it down.</li>
+        <li>A power attack on a stunned target deals extra damage.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Stun</td><td>15%</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td></tr><tr><td>Knockback force</td><td>800</td><td>950</td><td>1100</td><td>1250</td><td>1400</td><td>1550</td></tr><tr><td>Power vs stunned</td><td>—</td><td>+10%</td><td>+20%</td><td>+30%</td><td>+40%</td><td>+50%</td></tr></table></div>
+      <div class="cost">Power attack costs 30% more stamina.</div>
+      <div class="five"><b>Level 5:</b> Home Run triggers on a power attack to any body part, and <b>every 3rd normal attack</b> launches the zombie too.</div>
+    </article>
+
+    <article class="card">
+      <h3>Sledgehammers — <span class="trait">Earthquake</span></h3>
+      <div class="tagline">Perk: Skull Crusher</div>
+      <ul>
+        <li>A normal attack can knock the target down.</li>
+        <li>A power attack knocks down every zombie around and damages each one.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Knockdown (normal)</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td><td>45%</td></tr><tr><td>Radius</td><td>3 m</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Damage to knocked down</td><td>—</td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr></table></div>
+      <div class="cost">4 s cooldown. Power attack costs 50% more stamina.</div>
+      <div class="five"><b>Level 5 — Aftershock:</b> knocked-down zombies stay stunned for about 3 s after they get up.</div>
+    </article>
+    <article class="card">
+      <h3>Clubs &amp; sledgehammers — <span class="trait">Rage</span></h3>
+      <div class="tagline">Perk: Rage (replaces Grand Slam)</div>
+      <ul>
+        <li>A kill with a club, bat or sledgehammer gives a stack for 8 s: +10% damage, +5% attack speed.</li>
+        <li>Max stacks equal the perk level (1–5).</li>
+      </ul>
+      <div class="five"><b>Level 5 — Rampage:</b> at 5 stacks attacks cost no stamina, and you can't be stunned or knocked down.</div>
+    </article>
+
+    <article class="card">
+      <h3>Batons — <span class="trait">Chain Lightning</span></h3>
+      <div class="tagline">Perk: Calculated Attack · batons and the pipe baton</div>
+      <ul>
+        <li>A normal attack briefly shocks the target.</li>
+        <li>A power attack shocks every zombie around.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Shock (normal)</td><td>0.5 s</td><td>0.6</td><td>0.7</td><td>0.8</td><td>0.9</td><td>1.0</td></tr><tr><td>Power radius</td><td>3 m</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Shock (power)</td><td>2 s</td><td>2.4</td><td>2.8</td><td>3.2</td><td>3.6</td><td>4.0</td></tr></table></div>
+      <div class="cost">3 s cooldown. Power attack costs 50% more stamina.</div>
+      <div class="five"><b>Level 5:</b> every 4th normal attack also triggers Chain Lightning.</div>
+    </article>
+
+    <article class="card">
+      <h3>Spears — <span class="trait">Battering Ram</span></h3>
+      <div class="tagline">Perk: Spear Master</div>
+      <ul>
+        <li>A normal attack pushes the target back.</li>
+        <li>A power attack pierces the zombies behind and knocks each one back.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Power pierce</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr><tr><td>Push force</td><td>120</td><td>160</td><td>200</td><td>240</td><td>280</td><td>320</td></tr></table></div>
+      <div class="five"><b>Level 5 — Skewer:</b> every zombie hit by a power attack is knocked down.</div>
+    </article>
+
+    <article class="card">
+      <h3>Knuckles — <span class="trait">Counter Punch</span></h3>
+      <div class="tagline">Perk: The Brawler</div>
+      <ul>
+        <li>Taking a hit fills charges. No timer.</li>
+        <li>Normal attack: +25% damage, uses 1 charge; can grant a new charge.</li>
+        <li>Power attack: uses all charges, +50% damage per charge, knocks down.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Charges</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>Chance of +1 charge</td><td>—</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td></tr></table></div>
+      <div class="five"><b>Level 5 — Knockout:</b> a power attack at full charges kills any non-elite zombie.</div>
+    </article>
+
+
+  </div>
+</section>
+
+<section id="ranged" data-sec>
+  <h2>Ranged</h2>
+  <p class="lead">Each trait grows with its weapon's perk.</p>
+  <div class="grid">
+
+    <article class="card">
+      <h3>Pistols &amp; SMGs — <span class="trait">Headhunter</span></h3>
+      <div class="tagline">Perk: Gunslinger</div>
+      <ul>
+        <li>5 headshots in a row (4 with the full Gunslinger set) activate empowered shots. A miss or a body hit resets the streak.</li>
+        <li>Empowered shots hit harder with almost no spread.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Shots</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td></tr><tr><td>Damage</td><td>+25%</td><td>+35%</td><td>+45%</td><td>+55%</td><td>+65%</td><td>+75%</td></tr></table></div>
+      <div class="five"><b>Level 5:</b> each <b>headshot</b> kill in this mode adds 2 more shots.</div>
+    </article>
+    <article class="card">
+      <h3>Shotguns — <span class="trait">Slug Knockback</span></h3>
+      <ul>
+        <li>Slugs (Slug and Breaching Slug) knock the zombie back and down. Buckshot works as before.</li>
+        <li>Breaching Slug only reaches 4 m — that's how the base game designed it.</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <h3>Rifles — <span class="trait">Ricochet</span></h3>
+      <div class="tagline">Perk: Dead Eye</div>
+      <ul><li>A headshot damages every zombie near the impact point.</li></ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Radius</td><td>5 m</td><td>7</td><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>Damage</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td></tr></table></div>
+      <div class="five"><b>Level 5:</b> the ricochet also stuns everyone it hits for 2 s.</div>
+    </article>
+
+    <article class="card">
+      <h3>Assault rifles &amp; machine guns — <span class="trait">Suppression</span></h3>
+      <div class="tagline">Perk: Machine Gunner</div>
+      <ul>
+        <li>Each hit slows the target by 5% for 8 s — up to the max in the table.</li>
+        <li>Every 4th hit returns 1 round to the magazine (every 3rd with the full Commando set).</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Max slow</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td><td>60%</td></tr></table></div>
+      <div class="five"><b>Level 5:</b> +25% damage to fully slowed targets, and each kill gives 5 rounds of the loaded ammo type.</div>
+    </article>
+
+    <article class="card">
+      <h3>Bows — <span class="trait">Splinter</span></h3>
+      <div class="tagline">Perk: Archery</div>
+      <ul><li>An arrow shatters into splinters on hit. Each splinter flies at the nearest other zombie within 5 m.</li></ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Splinters</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>8</td></tr><tr><td>Splinter damage, minimum</td><td>40</td><td>50</td><td>60</td><td>70</td><td>80</td><td>100</td></tr></table></div>
+      <ul><li>If the arrow hit harder, a splinter deals <b>half its damage</b> (up to 300).</li></ul>
+      <div class="five"><b>Level 5:</b> an arrow to the head sets the target on fire.</div>
+      <ul>
+        <li><b>Controls:</b> the bow nocks the next arrow by itself while in hand. <b>R</b> opens the arrow wheel instantly with no delay: hold, aim, release.</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <h3>Special arrows</h3>
+      <div class="tagline">Bows only · crafted in the backpack, 3 per craft</div>
+      <ul>
+        <li><b>Acid</b> (+1 rotting flesh): corrodes (−25% physical armor, acid damage every second) and <b>slows by 90%</b>. Duration by Archery: 5 s (0–1), 6 / 7 / 8 s (2 / 3 / 4), 10 s (5).</li>
+        <li><b>Electric</b> (+1 electrical parts): shock for 4 s, damage per second scales with the hit.</li>
+        <li><b>Barbed</b> (+1 forged steel): deep bleeding for 10 s, 15% of the hit per second (min. 12), plus normal bleeding. About 1.5 extra hits in total: shoot and keep your distance.</li>
+        <li>Acid and shock trigger elemental reactions.</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <h3>Crossbows — <span class="trait">Mark · Pin</span></h3>
+      <div class="tagline">Perk: Archery</div>
+      <ul>
+        <li><b>Mark:</b> a bolt marks the zombie for 10 s. All your damage to it, with any weapon, is increased. A red crosshair ring glows above the marked zombie, visible even through walls.</li>
+        <li><b>Pin</b> (crossbows only, not bows): if there's a wall within 3 m behind the zombie, the bolt pins it until it dies. An elite — for 10 s.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Mark bonus</td><td>+20%</td><td>+40%</td><td>+60%</td><td>+80%</td><td>+100%</td><td>+120%</td></tr></table></div>
+      <div class="five"><b>Level 5 — Hunting Party:</b> a bolt marks every zombie within 4 m of the impact.</div>
+    </article>
+
+
+  </div>
+</section>
+
+<section id="elements" data-sec>
+  <h2>Elements &amp; reactions</h2>
+  <p class="lead">Three elements: fire, shock and acid. Two elements on one zombie trigger a reaction. After that the zombie has a 3 s reaction cooldown.</p>
+  <div class="grid">
+    <article class="card reaction">
+      <h3>Fire + acid = <span class="trait">Explosion</span></h3><div class="formula" aria-hidden="true"><span class="el fire"><svg class="hi"><use href="#i-fire"/></svg></span>+<span class="el acid"><svg class="hi"><use href="#i-drop"/></svg></span>=<span class="el res"><svg class="hi"><use href="#i-bomb"/></svg></span></div>
+      <ul><li>Explosion: 50% of your last hit's damage (at least 60) to the target and every zombie within 4 m. It doesn't hurt you.</li></ul>
+    </article>
+    <article class="card reaction">
+      <h3>Fire + shock = <span class="trait">Confusion</span></h3><div class="formula" aria-hidden="true"><span class="el fire"><svg class="hi"><use href="#i-fire"/></svg></span>+<span class="el shock"><svg class="hi"><use href="#i-bolt"/></svg></span>=<span class="el res"><svg class="hi"><use href="#i-eye"/></svg></span></div>
+      <ul><li>5 s: the zombie is 60% slower, takes more damage (−30 resistance) and is briefly stunned.</li></ul>
+    </article>
+    <article class="card reaction">
+      <h3>Shock + acid = <span class="trait">Miasma</span></h3><div class="formula" aria-hidden="true"><span class="el shock"><svg class="hi"><use href="#i-bolt"/></svg></span>+<span class="el acid"><svg class="hi"><use href="#i-drop"/></svg></span>=<span class="el res"><svg class="hi"><use href="#i-flask"/></svg></span></div>
+      <ul><li>6 s: the zombie's max health drops by 20%, and current health drops with it. Plus bleeding.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Where elements come from</h3>
+      <ul>
+        <li><b>Fire:</b> Incendiary mod, molotov, flaming arrows, Splinter at level 5, legendaries Dragon's Breath, Storm Fist, Artemis.</li>
+        <li><b>Shock:</b> Tesla mod, batons (Chain Lightning), legendaries Thunderclap, Storm Fist.</li>
+        <li><b>Acid:</b> Corrosive mod, legendary Hornet.</li><li><b>Bleeding</b> from your hits (knives, serrated blade, barbed wire, Ripper): 5% of the last hit's damage per second (at least 5).</li><li>The vanilla <b>Burning Shaft</b> mod now ignites with a 5–30% chance instead of 10–60%: its fire also scales with hit damage now.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="explosives" data-sec>
+  <h2>Explosives, pipe weapons &amp; robots</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Grenades — <span class="trait">Wide Blast</span></h3>
+      <ul><li>Grenade, contact grenade and pipe bomb: radius of damage to zombies tripled. Block destruction is unchanged.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Molotov — <span class="trait">Busy Burning</span></h3>
+      <ul><li>A burning zombie moves 70% slower and loses 4% of max health per second (at least 15) on top of normal fire.</li><li>The fire pool burns twice as long. Fire doesn't slow you.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Rocket launcher — <span class="trait">Early Artillery</span></h3>
+      <ul><li>Sold by traders and found in loot from the start of the game.</li><li>Every POI's final loot chest has rockets:</li></ul>
+      <div class="scale"><table><tr><th>Tier</th><th>★1</th><th>★2</th><th>★3</th><th>★4</th><th>★5</th></tr><tr><td>Rockets</td><td>1</td><td>1–2</td><td>2–3</td><td>3–4</td><td>4–6</td></tr></table></div>
+    </article>
+    <article class="card">
+      <h3>Pipe weapons — <span class="trait">Veteran Junk</span></h3>
+      <ul><li>Each pipe weapon kill: +2% damage to all pipe weapons, up to +1000%. The current bonus shows on the buff.</li><li>Repaired with scrap iron.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Robots — <span class="trait">Guardian Protocol</span></h3>
+      <div class="tagline">Perk: Robotics Inventor · turret and robotic sledge</div>
+      <ul><li>When your health is below 30%, robots attack faster and harder. An indicator buff appears.</li></ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Speed</td><td>+30%</td><td>+40%</td><td>+50%</td><td>+60%</td><td>+70%</td><td>+80%</td></tr><tr><td>Damage</td><td>+10%</td><td>+15%</td><td>+20%</td><td>+25%</td><td>+30%</td><td>+35%</td></tr></table></div>
+      <div class="five"><b>Level 5:</b> kicks in already below 50% health.</div>
+    </article>
+  </div>
+</section>
+
+<section id="affixes" data-sec>
+  <h2>Affixes</h2>
+  <p class="lead">Weapons from loot, zombies and traders get random affixes — stat bonuses, like in Borderlands. Crafted weapons have none. The higher the quality, the more affixes and the stronger they are.</p>
+  <div class="grid">
+    <article class="card">
+      <h3>How many affixes</h3>
+      <ul>
+        <li><b>Quality 1:</b> no affixes.</li>
+        <li><b>Quality 2–3:</b> up to 1 (50% chance).</li>
+        <li><b>Quality 4–5:</b> up to 2 (75% / 35%).</li>
+        <li><b>Quality 6:</b> up to 3 (100% / 60% / 30%), values at max.</li>
+        <li>A weapon never has the same affix twice. After combining two guns, extra affixes are removed.</li>
+        <li>Affixes show at the top of the item tooltip, and the icon has a star badge.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Firearms, bows, rocket launcher</h3>
+      <div class="tagline">Values: quality 2 → quality 6</div>
+      <ul>
+        <li><b>Fire rate</b> +5% → +25%</li>
+        <li><b>Spread</b> −10% → −40%</li>
+        <li><b>Range</b> +10% → +60%</li>
+        <li><b>Damage</b> +5% → +35%</li>
+        <li><b>Reload speed</b> +10% → +40%</li>
+        <li><b>Pellets</b> (shotguns) +10% → +35%</li>
+        <li><b>Second bullet</b> (pistols, rifles, assault rifles, quality 6 only): 2 bullets per shot, each −40% damage</li>
+        <li><b>Headshot damage</b> +10% → +60%</li>
+        <li><b>Magazine size</b> +10% → +60%</li>
+        <li><b>Movement speed</b> with the weapon in hand +2% → +10%</li>
+        <li><b>Recoil</b> −10% → −50%</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Melee</h3>
+      <div class="tagline">Values: quality 2 → quality 6</div>
+      <ul>
+        <li><b>Damage</b> +5% → +35%</li>
+        <li><b>Attack speed</b> +4% → +20%</li>
+        <li><b>Stamina per hit</b> −10% → −40%</li>
+        <li><b>Headshot damage</b> +10% → +60%</li>
+        <li><b>Attack range</b> +5% → +20%</li>
+        <li><b>Movement speed</b> +2% → +10%</li>
+        <li><b>Life steal</b> 1% → 6% of damage dealt</li>
+        <li><b>Dismember chance</b> +5% → +30%</li>
+        <li><b>Durability</b> +20% → +80%</li>
+        <li><b>Block damage</b> +10% → +60%</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="elites" data-sec>
+  <h2>Elite zombies &amp; Eridium</h2>
+  <p class="lead">Sometimes a zombie spawns as an elite: its name with modifiers floats above its head, like in Borderlands. It's tougher, but always drops a weapon with affixes and Eridium, and Eridium lets you perfect your gun.</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>Elites</h3>
+      <div class="tagline">2% chance early → 5% late game · ★ = 1 modifier, ★★ after gamestage 100, ★★★ (25% of them) after gamestage 200</div>
+      <ul>
+        <li>Twice the health. Stars above the name: <b>★</b> yellow, <b>★★</b> orange, <b>★★★</b> red. Visible up to 40 m, not through walls.</li>
+        <li>Eridium on the ground glows purple and has a beam going up, like Borderlands loot — you can see it from afar.</li>
+        <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Modifier badges</h3>
+      <div class="tagline">This is how they look under an elite's name in game</div>
+      <div class="milegend">
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#b3cdf2;--m:url(DATAURI_0)" aria-hidden="true"></span><b>Armored</b><small>×0.5 to body</small><span class="pop" role="tooltip"><b>Armored:</b> Body hits deal half damage, headshots deal full damage.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#4de6ff;--m:url(DATAURI_1)" aria-hidden="true"></span><b>Fast</b><small>+60% run</small><span class="pop" role="tooltip"><b>Fast:</b> Always runs, and 60% faster.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#66ff73;--m:url(DATAURI_2)" aria-hidden="true"></span><b>Regenerating</b><small>3–6.5% HP/s (stars)</small><span class="pop" role="tooltip"><b>Regenerating:</b> After 3 s without damage restores 3% (★) / 4.5% (★★) / 6.5% (★★★) health per second.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff9926;--m:url(DATAURI_3)" aria-hidden="true"></span><b>Explosive</b><small>40–110 to you (stars)</small><span class="pop" role="tooltip"><b>Explosive:</b> Explodes on death: ★ — 40 damage to you and 150 to zombies within 3 m; ★★ — 70 and 250 within 3.5 m; ★★★ — 110 and 400 within 4 m.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#f2334d;--m:url(DATAURI_4)" aria-hidden="true"></span><b>Vampiric</b><small>heals 50%</small><span class="pop" role="tooltip"><b>Vampiric:</b> Its hits heal it for half the damage dealt.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff7319;--m:url(DATAURI_5)" aria-hidden="true"></span><b>Burning</b><small>sets on fire</small><span class="pop" role="tooltip"><b>Burning:</b> Its hits set you on fire, and it's immune to fire.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#80bfff;--m:url(DATAURI_6)" aria-hidden="true"></span><b>Electric</b><small>shocks</small><span class="pop" role="tooltip"><b>Electric:</b> Its hits shock you, and it's immune to shock.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#99ff33;--m:url(DATAURI_7)" aria-hidden="true"></span><b>Acidic</b><small>−20 armor</small><span class="pop" role="tooltip"><b>Acidic:</b> Its hits remove 20 physical armor for 10 s.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#cc80ff;--m:url(DATAURI_8)" aria-hidden="true"></span><b>Giant</b><small>+50% HP &amp; damage</small><span class="pop" role="tooltip"><b>Giant:</b> Bigger, +50% health and damage.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#b38cff;--m:url(DATAURI_9)" aria-hidden="true"></span><b>Summoner</b><small>×3 zombies</small><span class="pop" role="tooltip"><b>Summoner:</b> At half health calls 3 zombies (once).</span></div>
+      </div>
+    </article>
+<article class="card">
+      <h3>Eridium</h3>
+      <div class="tagline">Purple crystal · stacks to 500 · can't be sold to traders</div>
+      <ul>
+        <li><b>Sources:</b> elites; scrapping weapons with affixes (2 per affix, ×2 at quality 6); scrapping a legendary (50). Eridium arrives when scrapping has <b>finished</b> (cancelling in the queue gives nothing). In a closed workstation Eridium waits in the output slots along with the materials.</li>
+        <li><b>Eridium Forge</b> — a separate workstation (recipe at a regular workbench). Hold a weapon, open the forge, and each affix gets buttons:</li>
+        <li><b>Reroll</b> (10): this affix gets a new type and value.</li>
+        <li><b>Lock</b> (25): this affix no longer changes. A weapon can have one locked affix. <b>Unlock</b> is free.</li>
+        <li><b>Add</b> (20): a new affix in an empty row, if the quality allows more.</li>
+        <li><b>Scrap</b>: turns the weapon into Eridium.</li>
+        <li><b>Legendary of your choice</b> (300): any of the ten, quality 6.</li>
+        <li><b>Sharpening</b> ("Weapon" and "Apparel" tabs): +1 quality at a time, up to 10, for weapons (and legendaries) and any worn clothing with stats that grow with quality. Up to 6 — always succeeds (5×N Eridium and forged steel). 7–10 — 35→50, success 65%→30%, <b>failure breaks the item</b> (you get back 30% of the scrap value). <b>"Safe"</b> (×5): failure only lowers quality by 1, not below 6. Each level above 6 gives as much as a quality step in vanilla.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="mastery" data-sec>
+  <h2>Weapon mastery</h2>
+  <p class="lead">Each weapon (any quality: a quality 2 and quality 6 machete are the same) levels up from kills while it's in your hands. 10 levels = 10 points in a tree of 20 skills, so you can only take half. <b>Alt+K</b> — tree window for the weapon in hand; or in the inventory click a weapon → the third button next to "Stats / Description".</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>How it works</h3>
+      <ul>
+        <li><b>Levels:</b> 4 / 12 / 24 / 40 / 60 / 90 / 120 / 160 / 210 / 260 kills. An elite counts as 5.</li>
+        <li><b>Tree:</b> three branches going up from the root; each skill unlocks only next to a learned one. Mid-branch is a strong node, at the top a keystone (bold). Bridges connect the branches.</li>
+        <li>Reaching one branch's keystone takes 6 points, so you can't finish two branches.</li>
+        <li>The tree layout is shared per weapon class, points are separate for each weapon.</li>
+        <li><b>Reset:</b> 5 Eridium per spent point, only within 5 m of the Eridium Forge.</li>
+        <li>"Crit" — chance to double a hit; "Crit power" makes it even bigger. Elements and crowd control — chance per hit.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Blades (knives, machetes)</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Speed +5% → Speed +6% → <b>Kill: speed +20% 6 s</b> → Stamina cost −15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
+        <li>Damage +6% → Bleeding 20% → <b>Execute (&lt;35% HP) +30%</b> → Bleeding 20% → <b class="trait">Deep bleed 35%</b></li>
+        <li>Crit 5% (×2) → Leech 3% → <b>First strike (full HP) +60%</b> → Leech 4% → <b class="trait">Crit power +100%</b></li>
+        <li><small>Bridges: Stamina cost −10% · Dismember +10% · Damage +6% · Crit 5% (×2)</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Clubs &amp; bats</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Stun 8% → Stun 8% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Every 5th hit +150%</b></li>
+        <li>Damage +6% → Dismember +15% → <b>Knockdown 10%</b> → Damage +8% → <b class="trait">Splash 30% within 3 m</b></li>
+        <li>Speed +5% → Stamina cost −10% → <b>Kill: speed +20% 6 s</b> → Speed +6% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
+        <li><small>Bridges: Damage +5% · Stamina cost −10% · Crit 5% (×2) · Speed +5%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Sledgehammers</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Knockdown 8% → Knockdown 8% → <b>Splash 25% within 3 m</b> → Splash 15% within 3 m → <b class="trait">Every 5th hit +200%</b></li>
+        <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +35%</b> → Damage +10% → <b class="trait">First strike (full HP) +100%</b></li>
+        <li>Speed +5% → Stamina cost −12% → <b>Kill: speed +25% 6 s</b> → Speed +6% → <b class="trait">Combo +10%/hit (up to 5)</b></li>
+        <li><small>Bridges: Stamina cost −10% · Dismember +15% · Damage +6% · Stun 8%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Spears</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Speed +5% → Speed +5% → <b>Kill: speed +20% 6 s</b> → Stamina cost −15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
+        <li>Damage +6% → Bleeding 15% → <b>Splash 20% within 3 m</b> → Damage +8% → <b class="trait">Splash 35% within 3 m</b></li>
+        <li>Crit 5% (×2) → Crit 5% (×2) → <b>Headshot +40%</b> → Crit 6% (×2) → <b class="trait">Crit power +100%</b></li>
+        <li><small>Bridges: Dismember +10% · Stamina cost −10% · Damage +6% · Knockdown 8%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Knuckles</h3>
+      <div class="tagline">Root: Speed +5%</div>
+      <ul>
+        <li>Speed +5% → Combo +4%/hit (up to 5) → <b>Kill: speed +25% 6 s</b> → Speed +6% → <b class="trait">Combo +10%/hit (up to 5)</b></li>
+        <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Every 5th hit +150%</b></li>
+        <li>Stun 6% → Stun 6% → <b>Knockdown 10%</b> → Stamina cost −15% → <b class="trait">Leech 8%</b></li>
+        <li><small>Bridges: Stamina cost −10% · Leech 3% · Crit 5% (×2) · Leech 3%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Batons</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Shock 10% → Shock 10% → <b>Splash 20% within 3 m</b> → Shock 15% → <b class="trait">Splash 40% within 3 m</b></li>
+        <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Every 5th hit +150%</b></li>
+        <li>Stun 6% → Stun 6% → <b>Knockdown 10%</b> → Stamina cost −15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
+        <li><small>Bridges: Speed +5% · Stamina cost −10% · Crit 5% (×2) · Speed +5%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Pistols &amp; SMGs</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Headshot +15% → Headshot +15% → <b>Crit 8% (×2)</b> → Headshot +20% → <b class="trait">Crit power +100%</b></li>
+        <li>Reload +10% → Reload +10% → <b>Kill: +2 rounds</b> → Magazine +20% → <b class="trait">Combo +6%/hit (up to 5)</b></li>
+        <li>Speed +5% → Speed +6% → <b>Kill: speed +20% 6 s</b> → Damage +8% → <b class="trait">Every 5th hit +150%</b></li>
+        <li><small>Bridges: Spread and recoil −10% · Magazine +15% · Damage +6% · Spread and recoil −10%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Shotguns</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Dismember +15% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Fire 25%</b></li>
+        <li>Reload +10% → Reload +10% → <b>Kill: +1 round</b> → Magazine +25% → <b class="trait">Reload +25%</b></li>
+        <li>Knockdown 6% → Knockdown 6% → <b>First strike (full HP) +50%</b> → Splash 15% within 3 m → <b class="trait">Splash 30% within 3 m</b></li>
+        <li><small>Bridges: Spread and recoil −10% · Magazine +20% · Damage +6% · Stun 6%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Rifles</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Headshot +15% → Headshot +15% → <b>Crit 8% (×2)</b> → Headshot +25% → <b class="trait">Crit power +150%</b></li>
+        <li>Reload +10% → Reload +10% → <b>Kill: +1 round</b> → Speed +10% → <b class="trait">Splash 40% within 3 m</b></li>
+        <li>First strike (full HP) +30% → First strike (full HP) +30% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">First strike (full HP) +100%</b></li>
+        <li><small>Bridges: Spread and recoil −15% · Damage +5% · Spread and recoil −10% · Magazine +20%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Assault rifles &amp; machine guns</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Spread and recoil −10% → Spread and recoil −10% → <b>Combo +3%/hit (up to 5)</b> → Spread and recoil −15% → <b class="trait">Combo +5%/hit (up to 5)</b></li>
+        <li>Magazine +15% → Magazine +15% → <b>Kill: +3 rounds</b> → Reload +15% → <b class="trait">Magazine +40%</b></li>
+        <li>Damage +5% → Speed +5% → <b>Shock 8%</b> → Speed +6% → <b class="trait">Fire 15%</b></li>
+        <li><small>Bridges: Speed +5% · Reload +10% · Damage +5% · Crit 5% (×2)</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Bows</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Headshot +15% → Headshot +15% → <b>Crit 8% (×2)</b> → Headshot +20% → <b class="trait">Crit power +150%</b></li>
+        <li>Damage +6% → Damage +6% → <b>Splash 20% within 3 m</b> → Damage +8% → <b class="trait">Splash 40% within 3 m</b></li>
+        <li>Bleeding 15% → Bleeding 15% → <b>Acid 15%</b> → Fire 15% → <b class="trait">Deep bleed 30%</b></li>
+        <li><small>Bridges: Speed +5% · Spread and recoil −10% · First strike (full HP) +50% · Speed +5%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Crossbows</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Headshot +15% → Headshot +15% → <b>Crit 8% (×2)</b> → Headshot +25% → <b class="trait">Crit power +150%</b></li>
+        <li>Damage +6% → Damage +6% → <b>Knockdown 10%</b> → Damage +10% → <b class="trait">Splash 40% within 3 m</b></li>
+        <li>Reload +10% → Reload +15% → <b>Kill: speed +20% 6 s</b> → Shock 15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
+        <li><small>Bridges: Reload +10% · Spread and recoil −10% · First strike (full HP) +60% · Stun 8%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Explosives</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +10% → <b class="trait">First strike (full HP) +60%</b></li>
+        <li>Fire 10% → Fire 10% → <b>Shock 15%</b> → Acid 15% → <b class="trait">Splash 20% within 3 m</b></li>
+        <li>Reload +10% → Stun 8% → <b>Kill: +1 round</b> → Reload +20% → <b class="trait">Reload +40%</b></li>
+        <li><small>Bridges: Reload +10% · Knockdown 8% · Damage +6% · Knockdown 8%</small></li>
+      </ul>
+    </article>
+  </div>
+</section>
+<section id="perks" data-sec>
+  <h2>Perks &amp; attributes</h2>
+  <p class="lead">Every perk has its own trait at max level, and every attribute at level 10. Vanilla effects that duplicated the mod's traits have been replaced. The level description in game has a yellow AposMod line with exact numbers.</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>Attributes — <span class="trait">level 10</span></h3>
+      <ul>
+        <li><b>Perception — Executioner:</b> rifles, spears and explosives deal +100% damage to targets below 30% health.</li>
+        <li><b>Strength — Overkill:</b> excess damage from a killing blow with a shotgun, club or sledgehammer carries over to the nearest zombie within 4 m.</li>
+        <li><b>Fortitude — Iron Body:</b> no bleeding, no infection, and an existing infection is cured.</li>
+        <li><b>Agility — Adrenaline:</b> kills with a pistol, bow or knife give +10% run speed for 15 s, up to 3 stacks.</li>
+        <li><b>Intellect — Charged Chain Lightning:</b> each kill gives a lightning charge. At 10 charges your next hit with any weapon releases Chain Lightning around you that also deals damage: 4 s of shock and 200 damage to every zombie within 8 m.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Perception — <span class="trait">level 5</span></h3>
+      <ul>
+        <li><b>Flurry of Perception — Frenzy:</b> a spear kill gives +25% attack speed for 5 s.</li>
+        <li><b>Demolitions Expert — Chain Reaction:</b> a zombie killed by your explosives explodes itself: 250 damage within 4 m.</li>
+        <li><b>Penetrator — Shrapnel:</b> armor-piercing rounds deal 40% of the shot's damage to everyone within 3 m of the target.</li>
+        <li><b>Infiltrator — Ghost:</b> while crouched you're twice as hard to spot, hits on a zombie that can't see you deal ×2, and mines and traps don't hurt you.</li>
+        <li><b>Animal Tracker — Hunter's Mark:</b> hitting an animal puts a Mark on it.</li>
+        <li><b>Treasure Hunter — X Marks the Spot:</b> the treasure search circle shrinks almost to a point, and the chest holds a quality 5–6 weapon with affixes.</li>
+        <li><b>Salvage Operations — Junk Genius:</b> salvage tools wear out 90% slower.</li>
+        <li><b>Perception Mastery — Lucky Shot:</b> 10% chance that a hit with a Perception weapon deals +100% damage.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Strength — <span class="trait">level 5</span></h3>
+      <ul>
+        <li><b>Flurry of Strength — Frenzy:</b> a club or sledgehammer kill gives +25% attack speed for 5 s.</li>
+        <li><b>Boomstick — Pump Action:</b> a shotgun kill loads 1 shell into the magazine.</li>
+        <li><b>Pack Mule — Beast of Burden:</b> being encumbered no longer slows you.</li>
+        <li><b>Strength Mastery — Crippling Blows:</b> a club or sledgehammer power attack breaks the zombie's legs, and it crawls.</li>
+        <li><b>Miner 69'er — Tunnel Rat:</b> mining tools use 50% less stamina.</li>
+        <li><b>Mother Lode — Jackpot:</b> hitting ore or wood has a 5% chance to give ×5 harvest for 2 s.</li>
+        <li><b>Junk Miner — Scrap King:</b> +50% from junk piles and salvaging.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Fortitude — <span class="trait">level 5</span></h3>
+      <ul>
+        <li><b>Flurry of Fortitude — Frenzy:</b> a knuckles kill gives +25% attack speed for 5 s.</li>
+        <li><b>The Huntsman — Butcher:</b> harvesting a carcass heals 30 HP.</li>
+        <li><b>Pain Tolerance — Unbreakable:</b> below 25% health you take 50% less damage.</li>
+        <li><b>Fortitude Mastery — Second Wind:</b> once every 5 min, when your health drops below 20%, you instantly restore 70%.</li>
+        <li><b>Siphoning Strikes</b> (all levels): instead of the vanilla 2–10 HP per kill — life steal: every melee hit heals 4/8/12/16/20% of damage dealt. <b>Vampire</b> (5): a melee kill gives +50 max health for 15 s (doesn't heal — fill it with life steal). Each kill during that time adds another +50 and restarts the 15 s — no cap. When the buff ends, the bonus is gone.</li>
+        <li><b>Healing Factor — Regeneration:</b> 10 s out of combat and you regenerate 3 HP/s.</li>
+        <li><b>Slow Metabolism — Iron Stomach:</b> no food poisoning, no dysentery (you can drink murky water), and food and water never drop below 25%.</li>
+        <li><b>Rule 1: Cardio — Second Lungs:</b> when stamina runs out you instantly get +50% (once per 60 s).</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Agility — <span class="trait">level 5</span></h3>
+      <ul>
+        <li><b>Flurry of Agility — Frenzy:</b> a knife kill gives +25% attack speed for 5 s.</li>
+        <li><b>Run and Gun — Gun Kata:</b> hip fire on the move has no spread and +30% damage.</li>
+        <li><b>Hard Target — Blur:</b> while running you take 50% less damage.</li>
+        <li><b>Parkour — Cat Landing:</b> falls deal 99% less damage.</li>
+        <li><b>Agility Mastery — Evasion:</b> after taking a hit you run 30% faster for 5 s.</li>
+        <li><b>Hidden Strike — Shadow Strike:</b> 3 s crouched, unnoticed and without attacking — the "Shadow" buff, your next weapon hit deals ×2; if it kills, "Shadow" comes back right away, so you can clear a room one by one. Lost if you stand up or get noticed.</li>
+        <li><b>From the Shadows — Silent Shadow:</b> crouching doesn't slow you: you sneak at walking speed, and crouch-running is as fast as normal running. <b>Hunter in the Dark:</b> at night and in dark places you sense zombies within 20 m through walls — a dim red glow that pulses like a heartbeat (sleepers — pale blue). Zombies that lose you give up the search almost at once.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Intellect — <span class="trait">level 5</span></h3>
+      <ul>
+        <li><b>Electrocutioner — Overcharge:</b> any of your weapons deals +25% damage to shocked zombies.</li>
+        <li><b>Better Barter — Black Market:</b> after each stock refresh there's a 25% chance a trader has a legendary.</li>
+        <li><b>Daring Adventurer — Big Score:</b> a weapon reward for a ★5+ quest is always quality 6 with 3 affixes.</li>
+        <li><b>Charismatic Nature — Leader:</b> your charisma bonuses affect you twice as strongly.</li>
+        <li><b>Physician — Field Medic:</b> +50% healing, and a first aid kit also stops bleeding.</li>
+        <li><b>Advanced Engineering — Overclock:</b> your traps and turret blocks deal +50% damage.</li>
+        <li><b>Grease Monkey — Mechanic:</b> vehicles use 50% less fuel.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>General perks — <span class="trait">max level</span></h3>
+      <ul>
+        <li><b>Light Armor 4 — Nimble:</b> +15% movement speed.</li>
+        <li><b>Medium Armor 4 — Balanced:</b> attacks use 20% less stamina.</li>
+        <li><b>Heavy Armor 4 — Fortress:</b> you can't be stunned or knocked down.</li>
+        <li><b>Master Chef 3 — Gourmet:</b> food and drink effects last three times longer.</li>
+        <li><b>Living Off the Land 3 — Green Thumb:</b> harvesting crops has a 50% chance to return a seed.</li>
+        <li><b>Lock Picking 3 — Safecracker:</b> lockpicks almost never break.</li>
+        <li><b>Lucky Looter 5 — Fortune:</b> found weapons get +1 affix within the quality limit.</li>
+      </ul>
+    </article>
+    <article class="card"><h3>Grand Slam → <span class="trait">Rage</span></h3><ul><li>The running knockdown is removed. Rage is described in the "Melee" section.</li></ul></article>
+    <article class="card"><h3>Intellect Mastery 4–5</h3><ul><li><b>4 — Field Repair:</b> all weapons, tools and armor wear out 30% slower.</li><li><b>5 — Inventor:</b> crafted weapons get random affixes, like looted weapons of the same quality. Everything crafted is one quality level higher; at quality 6, weapons, tools and armor come out at forge tier 7.</li><li>The old baton bonuses (charge in 2 hits, +300% shock damage) are removed.</li></ul></article>
+    <article class="card"><h3>Pummel Pete</h3><ul><li>Removed: a power attack on a stunned target kept it stunned "forever".</li><li>Instead: a power attack on a stunned target deals +10…50% damage.</li></ul></article>
+    <article class="card"><h3>Skull Crusher</h3><ul><li>Removed: power attack knockdown chances.</li><li>Instead: Earthquake deals 10…50 damage to each knocked-down zombie.</li></ul></article>
+    <article class="card"><h3>The Brawler</h3><ul><li>Removed: power attack stuns, and to the head knocks down.</li><li>Instead: a normal attack has a 10…50% chance to give a Counter Punch charge.</li></ul></article>
+  </div>
+</section>
+
+<section id="sets" data-sec>
+  <h2>Armor sets &amp; wardrobe</h2>
+  <p class="lead">Combat sets are now tied to playstyles: pieces give bonuses on one theme, and the full set boosts a mod trait. Piece numbers grow with quality, as in vanilla, and further up to 10 through sharpening. Percentage full-set bonuses at quality 7–10 grow by 5% for each level above 6 (the worst piece counts).</p>
+  <div class="grid">
+    <article class="card">
+      <h3>Combat sets</h3>
+      <ul>
+        <li><b>Bruiser</b> (was Biker) — clubs and sledgehammers: damage, cheaper power attacks, HP, running. <b>Set:</b> Earthquake reaches 1 m farther, Home Run knocks back farther, Rage holds 1 more stack.</li>
+        <li><b>Gunslinger</b> (was Enforcer) — pistols: accuracy, damage, reload, running. <b>Set:</b> Headhunter after 4 headshots instead of 5 and +30% damage while it's active.</li>
+        <li><b>Ranger</b> — rifles: recoil, HP, damage, stamina. <b>Set:</b> Ricochet reaches 3 m farther and is 20% stronger.</li>
+        <li><b>Commando</b> — assault rifles: magazine, recoil, damage, running. <b>Set:</b> Suppression slows 20% more, every 3rd hit returns a round.</li>
+        <li><b>Hunter</b> (was Farmer) — bows and crossbows: damage, stealth, draw and reload speed, running. <b>Set:</b> Splinter +2 splinters, +20% to marked zombies.</li>
+        <li><b>Preacher</b> — elements: fire and shock resistance, HP, gloves raise the chance of elemental mods. <b>Set:</b> fire, shock, acid and bleeding +50%, reactions recharge in 1.5 s.</li>
+        <li><b>Nerd</b> — batons and robots. <b>Set:</b> Chain Lightning reaches 1 m farther, lightning charges build up twice as fast.</li>
+        <li><b>Assassin</b> and <b>Raider</b> — as in vanilla, plus: Assassin +2 Bloodsucker stacks and ×1.5 to zombies that can't see you; Raider +2 Counter Punch charges and −15% damage taken at full charges.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Utility sets</h3>
+      <ul>
+        <li>Lumberjack, Miner, Scavenger, Rogue, Athletic — as in vanilla.</li>
+        <li><b>Nomad</b> — plus −50% fuel and +10% vehicle speed (moved over from Biker).</li>
+        <li><b>Primitive</b> — got the farming bonuses (seeds, harvest).</li>
+        <li>DLC sets — cosmetic, no bonuses.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Wardrobe — <span class="trait">3 outfits</span></h3>
+      <ul>
+        <li><b>Alt+1 / Alt+2 / Alt+3</b> — change into an outfit in 1.5 s. Your current clothes go into the wardrobe and don't take backpack space.</li>
+        <li><b>Alt+0</b> — wardrobe window with three tabs: what's in each outfit, "Put on" and "Take to backpack" buttons.</li>
+        <li>How to fill it: put on the first set, press Alt+2, put on the second set from the backpack, press Alt+3 and put on the third.</li>
+        <li>The wardrobe is saved with the world and isn't dropped on death.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+<section id="gear" data-sec>
+  <h2>Mods &amp; legendary weapons</h2>
+  <div class="grid">
+    <article class="card">
+      <h3><span class="trait">Energy Shield</span> mod</h3>
+      <div class="tagline">Chest armor · workbench, armor mod loot, traders</div>
+      <ul>
+        <li>While the shield is charged, ranged attacks (bullets, arrows, spit) don't hurt you.</li>
+        <li>Any hit drains the shield. It recharges after 5 s without damage.</li>
+      </ul>
+      <div class="k">Recipe</div>
+      <div>6 electrical parts, 4 mechanical parts, 10 polymers, 10 forged iron, 2 duct tape.</div>
+    </article>
+    <article class="card">
+      <h3>Elemental mods</h3>
+      <div class="tagline">Any weapon · one elemental mod per weapon · workbench</div>
+      <ul>
+        <li><b>Incendiary:</b> 30% chance to ignite for 10 s: 10% of your last hit's damage per second (at least 10). (4 oil)</li>
+        <li><b>Tesla</b> (can't go on batons — they already shock): 20% chance to shock for 1.5 s: 15% of the last hit's damage per second (at least 10). (5 electrical parts)</li>
+        <li><b>Corrosive:</b> 25% chance to corrode for 6 s: −25 physical resistance, 8% of the last hit's damage per second (at least 8). (2 acid)</li>
+      </ul>
+      <div class="tagline">Plus 3 mechanical parts and 6 polymers in every recipe</div>
+    </article>
+    <article class="card legendary">
+      <h3><span class="trait">Legendary weapons</span></h3>
+      <div class="tagline">Gold name · trophy badge · always quality 6 · 4% in ★4 final chests, 10% in ★5 · Black Market</div>
+      <p>Each legendary has 3 fixed affixes at quality 6 max and its own trait, so it's always at least as good as the best weapon with random affixes.</p>
+      <ul>
+        <li><b>Unkempt Harold</b> (.44 Desert Vulture): 3 bullets per shot in a fan. <i>Damage +35%, fire rate +25%, magazine +60%.</i></li>
+        <li><b>Lady Fist</b> (9mm pistol): +50% damage, a headshot heals 5 HP. <i>Headshot damage +60%, spread −40%, reload +40%.</i></li>
+        <li><b>Dragon's Breath</b> (pump shotgun): +20%, every hit ignites. <i>Pellets +35%, damage +35%, reload +40%.</i></li>
+        <li><b>The Ripper</b> (machete): +40%, every hit causes bleeding, +50% more to targets already bleeding; a kill heals 20 HP. <i>Damage +35%, attack speed +20%, life steal 6% of damage.</i></li>
+        <li><b>Thunderclap</b> (steel sledgehammer): +25%, a power attack shocks everyone within 4 m. Each kill gives a storm charge; at 3 charges a power attack calls down lightning: 150 damage and 3 s of shock to everyone within 6 m. <i>Damage +35%, stamina per hit −40%, headshot damage +60%.</i></li>
+        <li><b>Hornet</b> (SMG-5): +15%, hits have a 30% chance to corrode with acid. <i>Magazine +60%, fire rate +25%, recoil −50%.</i></li>
+        <li><b>Storm Fist</b> (steel knuckles): +20%, hits have a 25% chance to ignite and a 25% chance to shock, so Confusion triggers on its own. <i>Attack speed +20%, damage +35%, movement speed +10%.</i></li>
+        <li><b>Artemis</b> (compound bow): every arrow ignites and shatters into 8 splinters of 50 each. <i>Damage +35%, headshot damage +60%, reload +40%.</i></li>
+        <li><b>Big Boom</b> (rocket launcher): 50% chance the next rocket is free. <i>Damage +35%, reload +40%, range +60%.</i></li>
+        <li><b>Predator</b> (sniper rifle): +25%, every headshot ricochets within 15 m: 100 damage and 2 s of stun. <i>Headshot damage +60%, range +60%, recoil −50%.</i></li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="systems" data-sec>
+  <h2>Systems</h2>
+  <div class="k" style="margin-bottom:8px">Damage number colors</div>
+  <div class="legend">
+    <div class="dmg"><span class="num n-white">45</span><span>Normal hit</span></div>
+    <div class="dmg"><span class="num n-yellow">90!</span><span>Headshot</span></div>
+    <div class="dmg"><span class="num n-cyan">120</span><span>Hit boosted by a buff: Headhunter, Rage, Counter Punch, Mark, Suppression, acid</span></div>
+    <div class="dmg"><span class="num n-red">Kill!</span><span>Killing blow (text above the number)</span></div>
+    <div class="dmg"><span class="num n-magenta">60</span><span>Elemental reaction</span></div>
+    <div class="dmg"><span class="num n-orange">8</span><span>Burning</span></div>
+    <div class="dmg"><span class="num n-green">3</span><span>Acid</span></div>
+    <div class="dmg"><span class="num n-blue">5</span><span>Shock</span></div>
+    <div class="dmg"><span class="num n-pink">4</span><span>Bleeding</span></div>
+    <div class="dmg"><span class="num" style="color:#ff7373">25</span><span>Damage to you</span></div>
+  </div>
+  <p class="tagline" style="margin-top:8px">These are the game's own 3D numbers (they fan out from the head), just in the mod's colors. Visible up to 120 m, distant numbers get bigger, they stay for 3 s. The mod turns them on even if the world option is off.</p>
+
+  <div class="grid" style="margin-top:14px">
+    <article class="card">
+      <h3>Damage number settings — <span class="trait">aposdmg</span></h3>
+      <div class="tagline">F1 console · saved in Mods/AposMod/Settings.xml</div>
+      <pre>aposdmg              show status
+aposdmg on | off     turn on / off
+aposdmg size 1.5     size 0.5–3
+aposdmg time 3       seconds visible (0.5–5)
+aposdmg kill off     no "Kill!" text
+aposdmg color off    no cyan color</pre>
+    </article>
+    <article class="card">
+      <h3>Affix testing — <span class="trait">aposaffix</span></h3>
+      <div class="tagline">F1 console · weapon in hand</div>
+      <pre>aposaffix            new affixes, max for the quality
+aposaffix 6          set quality 6 first, then 3 affixes</pre>
+    </article>
+    <article class="card">
+      <h3>Elites — <span class="trait">aposelite</span></h3>
+      <div class="tagline">F1 console</div>
+      <pre>aposelite on | off           names above elites
+aposelite make               nearest zombie becomes an elite
+aposelite make Armored Giant  with these modifiers</pre>
+    </article>
+    <article class="card">
+      <h3>Bow — <span class="trait">aposbow</span></h3>
+      <div class="tagline">F1 console · if the backpack or a vehicle won't open with a bow</div>
+      <pre>aposbow          reload state of the bow in hand
+aposbow off | on  turn off / on arrow auto-nock</pre>
+    </article>
+    <article class="card">
+      <h3>Stealth</h3>
+      <ul>
+        <li>Zombies in POIs that used to rush out in a wave after a trigger or attack right away now spawn asleep in their spots as you approach. Triggers (doors, loot, walls) don't wake them. Zombies spawn in advance: 12 m away and from the neighboring floor (the base game uses 8 m and only your floor), so they don't pop in right in front of you.</li>
+        <li>They wake up from noise or when they see you, so you can sneak up on them.</li>
+        <li>To turn off: <code>&lt;Stealth rework="false"/&gt;</code> in Settings.xml and restart the game.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Indicator buffs</h3>
+      <ul>
+        <li>Bloodsucker — knife regeneration stacks</li>
+        <li>Counter Punch — knuckles charges</li>
+        <li>Veteran Junk — pipe weapon bonus, %</li>
+        <li>Headhunter — empowered shots left</li>
+        <li>Rage — stacks</li>
+        <li>Guardian Protocol, Energy Shield</li>
+        <li>Earthquake and Chain Lightning cooldown</li>
+        <li>Thunderclap storm charges, Big Boom free rocket</li>
+        <li>Red ring above a zombie — it has a crossbow Mark</li>
+        <li>Frenzy, Adrenaline (stacks), lightning charges, Jackpot, Evasion</li>
+        <li>Second Wind (5 min) and Second Lungs (60 s) cooldown</li>
+      </ul>
+    </article>
+    <article class="card"><h3>Bird nests</h3><ul><li>Three times more feathers: from the nest's contents (3 + 3–15 instead of 1 + 1–5) and when picking up the nest itself.</li></ul></article>
+    <article class="card">
+      <h3>Launching</h3>
+      <ul>
+        <li>Launch the game <b>without EasyAntiCheat</b>, otherwise the mod won't load.</li>
+        <li>The log should show <code>Loaded Mod: AposMod</code>.</li>
+        <li>The game can be in Russian or English: the mod's texts are in both languages.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<p class="empty hide" id="none">Nothing found. Try another weapon or perk name.</p>
+</main>
+
+<footer>
+  <div class="wrap">AposMod 1.6.0 for 7 Days to Die 3.4.</div>
+</footer>
+

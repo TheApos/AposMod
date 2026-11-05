@@ -1,4 +1,4 @@
-<title>Довідник AposMod</title>
+<title>AposMod Reference</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -157,7 +157,1544 @@ html, body { overflow-x: clip; }
     <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></symbol>
     <symbol id="i-pick" viewBox="0 0 24 24"><path d="M4 20l9-9M5 7c4-4 10-4 14 0-4-1-8-1-12 3"/></symbol>
   </defs>
-</svg><header class="top">
+</svg><style>
+.langs { display: inline-flex; gap: 4px; margin-left: 12px; vertical-align: middle; }
+.langs button { font: 600 11px var(--f-mono); letter-spacing: 1px; padding: 2px 7px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); color: var(--ink); cursor: pointer; }
+.langs button[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); }
+.langs button:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+</style><div id="app"></div>
+<template id="lang-en">
+<header class="top">
+  <div class="wrap">
+    <div class="stripe" aria-hidden="true"></div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.0</div>
+    <h1>AposMod Reference</h1>
+    <p class="sub">Weapon traits, affixes, perks and attributes, elements, mods, legendary weapons and settings in one place. Numbers like "0 → 5" depend on the level of the matching perk.</p>
+  </div>
+</header>
+
+<nav class="bar" aria-label="Sections">
+  <div class="wrap">
+    <a href="#melee">Melee</a>
+    <a href="#ranged">Ranged</a>
+    <a href="#elements">Elements</a>
+    <a href="#explosives">Explosives &amp; robots</a>
+    <a href="#affixes">Affixes</a>
+    <a href="#elites">Elites &amp; Eridium</a>
+    <a href="#mastery">Mastery</a>
+    <a href="#perks">Perks &amp; attributes</a>
+    <a href="#sets">Sets &amp; wardrobe</a>
+    <a href="#systems">Systems</a>
+    <input id="q" type="search" placeholder="Search: sledgehammer, Brawler, acid…" aria-label="Search the reference">
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section id="melee" data-sec>
+  <h2>Melee <small>LMB — normal attack, RMB — power attack</small></h2>
+  <p class="lead">A normal attack gives a small bonus, a power attack triggers the class's main trait.</p>
+  <div class="grid">
+
+    <article class="card">
+      <h3>Knives &amp; machetes — <span class="trait">Bloodsucker</span></h3>
+      <div class="tagline">Perk: Deep Cuts</div>
+      <ul>
+        <li>Each hit adds a regeneration stack (power attack — two): +1 HP/s per stack, each hit extends it to 5 s.</li>
+        <li>A power attack causes bleeding.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Max stacks</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr></table></div>
+      <div class="five"><b>Level 5 — Blood Feast:</b> a knife kill at max stacks instantly heals 25 HP.</div>
+    </article>
+
+    <article class="card">
+      <h3>Clubs &amp; bats — <span class="trait">Home Run</span></h3>
+      <div class="tagline">Perk: Pummel Pete</div>
+      <ul>
+        <li>A normal attack can stun the target for 1 s.</li>
+        <li>A power attack to the head launches the zombie and knocks it down.</li>
+        <li>A power attack on a stunned target deals extra damage.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Stun</td><td>15%</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td></tr><tr><td>Knockback force</td><td>800</td><td>950</td><td>1100</td><td>1250</td><td>1400</td><td>1550</td></tr><tr><td>Power vs stunned</td><td>—</td><td>+10%</td><td>+20%</td><td>+30%</td><td>+40%</td><td>+50%</td></tr></table></div>
+      <div class="cost">Power attack costs 30% more stamina.</div>
+      <div class="five"><b>Level 5:</b> Home Run triggers on a power attack to any body part, and <b>every 3rd normal attack</b> launches the zombie too.</div>
+    </article>
+
+    <article class="card">
+      <h3>Sledgehammers — <span class="trait">Earthquake</span></h3>
+      <div class="tagline">Perk: Skull Crusher</div>
+      <ul>
+        <li>A normal attack can knock the target down.</li>
+        <li>A power attack knocks down every zombie around and damages each one.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Knockdown (normal)</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td><td>45%</td></tr><tr><td>Radius</td><td>3 m</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Damage to knocked down</td><td>—</td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr></table></div>
+      <div class="cost">4 s cooldown. Power attack costs 50% more stamina.</div>
+      <div class="five"><b>Level 5 — Aftershock:</b> knocked-down zombies stay stunned for about 3 s after they get up.</div>
+    </article>
+    <article class="card">
+      <h3>Clubs &amp; sledgehammers — <span class="trait">Rage</span></h3>
+      <div class="tagline">Perk: Rage (replaces Grand Slam)</div>
+      <ul>
+        <li>A kill with a club, bat or sledgehammer gives a stack for 8 s: +10% damage, +5% attack speed.</li>
+        <li>Max stacks equal the perk level (1–5).</li>
+      </ul>
+      <div class="five"><b>Level 5 — Rampage:</b> at 5 stacks attacks cost no stamina, and you can't be stunned or knocked down.</div>
+    </article>
+
+    <article class="card">
+      <h3>Batons — <span class="trait">Chain Lightning</span></h3>
+      <div class="tagline">Perk: Calculated Attack · batons and the pipe baton</div>
+      <ul>
+        <li>A normal attack briefly shocks the target.</li>
+        <li>A power attack shocks every zombie around.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Shock (normal)</td><td>0.5 s</td><td>0.6</td><td>0.7</td><td>0.8</td><td>0.9</td><td>1.0</td></tr><tr><td>Power radius</td><td>3 m</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Shock (power)</td><td>2 s</td><td>2.4</td><td>2.8</td><td>3.2</td><td>3.6</td><td>4.0</td></tr></table></div>
+      <div class="cost">3 s cooldown. Power attack costs 50% more stamina.</div>
+      <div class="five"><b>Level 5:</b> every 4th normal attack also triggers Chain Lightning.</div>
+    </article>
+
+    <article class="card">
+      <h3>Spears — <span class="trait">Battering Ram</span></h3>
+      <div class="tagline">Perk: Spear Master</div>
+      <ul>
+        <li>A normal attack pushes the target back.</li>
+        <li>A power attack pierces the zombies behind and knocks each one back.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Power pierce</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr><tr><td>Push force</td><td>120</td><td>160</td><td>200</td><td>240</td><td>280</td><td>320</td></tr></table></div>
+      <div class="five"><b>Level 5 — Skewer:</b> every zombie hit by a power attack is knocked down.</div>
+    </article>
+
+    <article class="card">
+      <h3>Knuckles — <span class="trait">Counter Punch</span></h3>
+      <div class="tagline">Perk: The Brawler</div>
+      <ul>
+        <li>Taking a hit fills charges. No timer.</li>
+        <li>Normal attack: +25% damage, uses 1 charge; can grant a new charge.</li>
+        <li>Power attack: uses all charges, +50% damage per charge, knocks down.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Charges</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>Chance of +1 charge</td><td>—</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td></tr></table></div>
+      <div class="five"><b>Level 5 — Knockout:</b> a power attack at full charges kills any non-elite zombie.</div>
+    </article>
+
+
+  </div>
+</section>
+
+<section id="ranged" data-sec>
+  <h2>Ranged</h2>
+  <p class="lead">Each trait grows with its weapon's perk.</p>
+  <div class="grid">
+
+    <article class="card">
+      <h3>Pistols &amp; SMGs — <span class="trait">Headhunter</span></h3>
+      <div class="tagline">Perk: Gunslinger</div>
+      <ul>
+        <li>5 headshots in a row (4 with the full Gunslinger set) activate empowered shots. A miss or a body hit resets the streak.</li>
+        <li>Empowered shots hit harder with almost no spread.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Shots</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td></tr><tr><td>Damage</td><td>+25%</td><td>+35%</td><td>+45%</td><td>+55%</td><td>+65%</td><td>+75%</td></tr></table></div>
+      <div class="five"><b>Level 5:</b> each <b>headshot</b> kill in this mode adds 2 more shots.</div>
+    </article>
+    <article class="card">
+      <h3>Shotguns — <span class="trait">Slug Knockback</span></h3>
+      <ul>
+        <li>Slugs (Slug and Breaching Slug) knock the zombie back and down. Buckshot works as before.</li>
+        <li>Breaching Slug only reaches 4 m — that's how the base game designed it.</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <h3>Rifles — <span class="trait">Ricochet</span></h3>
+      <div class="tagline">Perk: Dead Eye</div>
+      <ul><li>A headshot damages every zombie near the impact point.</li></ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Radius</td><td>5 m</td><td>7</td><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>Damage</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td></tr></table></div>
+      <div class="five"><b>Level 5:</b> the ricochet also stuns everyone it hits for 2 s.</div>
+    </article>
+
+    <article class="card">
+      <h3>Assault rifles &amp; machine guns — <span class="trait">Suppression</span></h3>
+      <div class="tagline">Perk: Machine Gunner</div>
+      <ul>
+        <li>Each hit slows the target by 5% for 8 s — up to the max in the table.</li>
+        <li>Every 4th hit returns 1 round to the magazine (every 3rd with the full Commando set).</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Max slow</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td><td>60%</td></tr></table></div>
+      <div class="five"><b>Level 5:</b> +25% damage to fully slowed targets, and each kill gives 5 rounds of the loaded ammo type.</div>
+    </article>
+
+    <article class="card">
+      <h3>Bows — <span class="trait">Splinter</span></h3>
+      <div class="tagline">Perk: Archery</div>
+      <ul><li>An arrow shatters into splinters on hit. Each splinter flies at the nearest other zombie within 5 m.</li></ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Splinters</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>8</td></tr><tr><td>Splinter damage, minimum</td><td>40</td><td>50</td><td>60</td><td>70</td><td>80</td><td>100</td></tr></table></div>
+      <ul><li>If the arrow hit harder, a splinter deals <b>half its damage</b> (up to 300).</li></ul>
+      <div class="five"><b>Level 5:</b> an arrow to the head sets the target on fire.</div>
+      <ul>
+        <li><b>Controls:</b> the bow nocks the next arrow by itself while in hand. <b>R</b> opens the arrow wheel instantly with no delay: hold, aim, release.</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <h3>Special arrows</h3>
+      <div class="tagline">Bows only · crafted in the backpack, 3 per craft</div>
+      <ul>
+        <li><b>Acid</b> (+1 rotting flesh): corrodes (−25% physical armor, acid damage every second) and <b>slows by 90%</b>. Duration by Archery: 5 s (0–1), 6 / 7 / 8 s (2 / 3 / 4), 10 s (5).</li>
+        <li><b>Electric</b> (+1 electrical parts): shock for 4 s, damage per second scales with the hit.</li>
+        <li><b>Barbed</b> (+1 forged steel): deep bleeding for 10 s, 15% of the hit per second (min. 12), plus normal bleeding. About 1.5 extra hits in total: shoot and keep your distance.</li>
+        <li>Acid and shock trigger elemental reactions.</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <h3>Crossbows — <span class="trait">Mark · Pin</span></h3>
+      <div class="tagline">Perk: Archery</div>
+      <ul>
+        <li><b>Mark:</b> a bolt marks the zombie for 10 s. All your damage to it, with any weapon, is increased. A red crosshair ring glows above the marked zombie, visible even through walls.</li>
+        <li><b>Pin</b> (crossbows only, not bows): if there's a wall within 3 m behind the zombie, the bolt pins it until it dies. An elite — for 10 s.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Mark bonus</td><td>+20%</td><td>+40%</td><td>+60%</td><td>+80%</td><td>+100%</td><td>+120%</td></tr></table></div>
+      <div class="five"><b>Level 5 — Hunting Party:</b> a bolt marks every zombie within 4 m of the impact.</div>
+    </article>
+
+
+  </div>
+</section>
+
+<section id="elements" data-sec>
+  <h2>Elements &amp; reactions</h2>
+  <p class="lead">Three elements: fire, shock and acid. Two elements on one zombie trigger a reaction. After that the zombie has a 3 s reaction cooldown.</p>
+  <div class="grid">
+    <article class="card reaction">
+      <h3>Fire + acid = <span class="trait">Explosion</span></h3><div class="formula" aria-hidden="true"><span class="el fire"><svg class="hi"><use href="#i-fire"/></svg></span>+<span class="el acid"><svg class="hi"><use href="#i-drop"/></svg></span>=<span class="el res"><svg class="hi"><use href="#i-bomb"/></svg></span></div>
+      <ul><li>Explosion: 50% of your last hit's damage (at least 60) to the target and every zombie within 4 m. It doesn't hurt you.</li></ul>
+    </article>
+    <article class="card reaction">
+      <h3>Fire + shock = <span class="trait">Confusion</span></h3><div class="formula" aria-hidden="true"><span class="el fire"><svg class="hi"><use href="#i-fire"/></svg></span>+<span class="el shock"><svg class="hi"><use href="#i-bolt"/></svg></span>=<span class="el res"><svg class="hi"><use href="#i-eye"/></svg></span></div>
+      <ul><li>5 s: the zombie is 60% slower, takes more damage (−30 resistance) and is briefly stunned.</li></ul>
+    </article>
+    <article class="card reaction">
+      <h3>Shock + acid = <span class="trait">Miasma</span></h3><div class="formula" aria-hidden="true"><span class="el shock"><svg class="hi"><use href="#i-bolt"/></svg></span>+<span class="el acid"><svg class="hi"><use href="#i-drop"/></svg></span>=<span class="el res"><svg class="hi"><use href="#i-flask"/></svg></span></div>
+      <ul><li>6 s: the zombie's max health drops by 20%, and current health drops with it. Plus bleeding.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Where elements come from</h3>
+      <ul>
+        <li><b>Fire:</b> Incendiary mod, molotov, flaming arrows, Splinter at level 5, legendaries Dragon's Breath, Storm Fist, Artemis.</li>
+        <li><b>Shock:</b> Tesla mod, batons (Chain Lightning), legendaries Thunderclap, Storm Fist.</li>
+        <li><b>Acid:</b> Corrosive mod, legendary Hornet.</li><li><b>Bleeding</b> from your hits (knives, serrated blade, barbed wire, Ripper): 5% of the last hit's damage per second (at least 5).</li><li>The vanilla <b>Burning Shaft</b> mod now ignites with a 5–30% chance instead of 10–60%: its fire also scales with hit damage now.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="explosives" data-sec>
+  <h2>Explosives, pipe weapons &amp; robots</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Grenades — <span class="trait">Wide Blast</span></h3>
+      <ul><li>Grenade, contact grenade and pipe bomb: radius of damage to zombies tripled. Block destruction is unchanged.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Molotov — <span class="trait">Busy Burning</span></h3>
+      <ul><li>A burning zombie moves 70% slower and loses 4% of max health per second (at least 15) on top of normal fire.</li><li>The fire pool burns twice as long. Fire doesn't slow you.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Rocket launcher — <span class="trait">Early Artillery</span></h3>
+      <ul><li>Sold by traders and found in loot from the start of the game.</li><li>Every POI's final loot chest has rockets:</li></ul>
+      <div class="scale"><table><tr><th>Tier</th><th>★1</th><th>★2</th><th>★3</th><th>★4</th><th>★5</th></tr><tr><td>Rockets</td><td>1</td><td>1–2</td><td>2–3</td><td>3–4</td><td>4–6</td></tr></table></div>
+    </article>
+    <article class="card">
+      <h3>Pipe weapons — <span class="trait">Veteran Junk</span></h3>
+      <ul><li>Each pipe weapon kill: +2% damage to all pipe weapons, up to +1000%. The current bonus shows on the buff.</li><li>Repaired with scrap iron.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Robots — <span class="trait">Guardian Protocol</span></h3>
+      <div class="tagline">Perk: Robotics Inventor · turret and robotic sledge</div>
+      <ul><li>When your health is below 30%, robots attack faster and harder. An indicator buff appears.</li></ul>
+      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Speed</td><td>+30%</td><td>+40%</td><td>+50%</td><td>+60%</td><td>+70%</td><td>+80%</td></tr><tr><td>Damage</td><td>+10%</td><td>+15%</td><td>+20%</td><td>+25%</td><td>+30%</td><td>+35%</td></tr></table></div>
+      <div class="five"><b>Level 5:</b> kicks in already below 50% health.</div>
+    </article>
+  </div>
+</section>
+
+<section id="affixes" data-sec>
+  <h2>Affixes</h2>
+  <p class="lead">Weapons from loot, zombies and traders get random affixes — stat bonuses, like in Borderlands. Crafted weapons have none. The higher the quality, the more affixes and the stronger they are.</p>
+  <div class="grid">
+    <article class="card">
+      <h3>How many affixes</h3>
+      <ul>
+        <li><b>Quality 1:</b> no affixes.</li>
+        <li><b>Quality 2–3:</b> up to 1 (50% chance).</li>
+        <li><b>Quality 4–5:</b> up to 2 (75% / 35%).</li>
+        <li><b>Quality 6:</b> up to 3 (100% / 60% / 30%), values at max.</li>
+        <li>A weapon never has the same affix twice. After combining two guns, extra affixes are removed.</li>
+        <li>Affixes show at the top of the item tooltip, and the icon has a star badge.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Firearms, bows, rocket launcher</h3>
+      <div class="tagline">Values: quality 2 → quality 6</div>
+      <ul>
+        <li><b>Fire rate</b> +5% → +25%</li>
+        <li><b>Spread</b> −10% → −40%</li>
+        <li><b>Range</b> +10% → +60%</li>
+        <li><b>Damage</b> +5% → +35%</li>
+        <li><b>Reload speed</b> +10% → +40%</li>
+        <li><b>Pellets</b> (shotguns) +10% → +35%</li>
+        <li><b>Second bullet</b> (pistols, rifles, assault rifles, quality 6 only): 2 bullets per shot, each −40% damage</li>
+        <li><b>Headshot damage</b> +10% → +60%</li>
+        <li><b>Magazine size</b> +10% → +60%</li>
+        <li><b>Movement speed</b> with the weapon in hand +2% → +10%</li>
+        <li><b>Recoil</b> −10% → −50%</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Melee</h3>
+      <div class="tagline">Values: quality 2 → quality 6</div>
+      <ul>
+        <li><b>Damage</b> +5% → +35%</li>
+        <li><b>Attack speed</b> +4% → +20%</li>
+        <li><b>Stamina per hit</b> −10% → −40%</li>
+        <li><b>Headshot damage</b> +10% → +60%</li>
+        <li><b>Attack range</b> +5% → +20%</li>
+        <li><b>Movement speed</b> +2% → +10%</li>
+        <li><b>Life steal</b> 1% → 6% of damage dealt</li>
+        <li><b>Dismember chance</b> +5% → +30%</li>
+        <li><b>Durability</b> +20% → +80%</li>
+        <li><b>Block damage</b> +10% → +60%</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="elites" data-sec>
+  <h2>Elite zombies &amp; Eridium</h2>
+  <p class="lead">Sometimes a zombie spawns as an elite: its name with modifiers floats above its head, like in Borderlands. It's tougher, but always drops a weapon with affixes and Eridium, and Eridium lets you perfect your gun.</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>Elites</h3>
+      <div class="tagline">2% chance early → 5% late game · ★ = 1 modifier, ★★ after gamestage 100, ★★★ (25% of them) after gamestage 200</div>
+      <ul>
+        <li>Twice the health. Stars above the name: <b>★</b> yellow, <b>★★</b> orange, <b>★★★</b> red. Visible up to 40 m, not through walls.</li>
+        <li>Eridium on the ground glows purple and has a beam going up, like Borderlands loot — you can see it from afar.</li>
+        <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Modifier badges</h3>
+      <div class="tagline">This is how they look under an elite's name in game</div>
+      <div class="milegend">
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#b3cdf2;--m:url(data:image/png;base64,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)" aria-hidden="true"></span><b>Armored</b><small>×0.5 to body</small><span class="pop" role="tooltip"><b>Armored:</b> Body hits deal half damage, headshots deal full damage.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#4de6ff;--m:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANESURBVHhe7dwhbFVBFIThyspKJBKJRCKRSCQSWYmsQyKRSCQSiUQikUgkEjdLNrnqmHv78vbmn5P5kur9GUHhccrNTURERERERERERERERERERERExM0Y4/kY4+GEr9f17SPofS1I+jzO8ba+fQS9rwX6yPS+FiR9rWssctFvt/Q+e2OMW0nf6hrXJumfpFf1/T30vhboI9P7WthG/llHubY58vxTfn1/D72vhTHG3Ukj/71kZHpfC/SR6X0tjDGeSPpdR7k2SX/GGE/r+3vofS3MX/hJI883Hj0yva8F+sj0vhbm98Ht++FS2/f1u/r+HnpfC/SR6X0t0Eem97UwPyXbPihZavvU77a+v4fe1wJ9ZHpfC3PkOsgKc+T69hH0vhbmv6HXQVaYNwH17SPofS3QR6b3tSDpXR1kBUmf6ttH0Pta2A4sz/BQ3z6C3tcCfWR6XwuSPtY1VpB0X98+gt7XAv2Sl97XAn1kel8L9HNuep89+iUvva8F+sj0vhbo59z0vhbol7z0vhboI9P7WqCfc9P7WqBf8tL7WqCPTO9rgX7ESe9rgT4yva8F+sj0vhbol7z0vhboI9P7WqCfc9P7WqBf8tL7WqCPTO9rgX7OTe9rgX7JS+9rgT4yva8FSV/qGitIelPfPoLeZ43+9296nzX6uPQ+a5JenDTuj0vGpfdZo/8DDL3PGn1cep+17RLnjHHnJc6jx6X3WaOfYdH7rNHHpfdZ2+7xf9Uxrm37rftZfX8Pvc8a/Ycx6H3W6OPS+6xtP5D5vY5xbdsHNS/r+3vofdboP5JN77NGH5feZ4/+f/PQ+6zRx6X3WaOPS++zRj+ZovdZo49L77M2xnhfV1hB0of69hH0Pmv0H5yg91mjj0vvszbPlusQK8wz7Pr2EfQ+a/QLWXqfNfq49D5r9PNoep81+oUsvc8afVx6nzX6eTS9zxr9QpbeZ40+Lr3PGv08mt5njX4hS++zRh+X3meNfh5N77NGv5Cl91mjj0vvs0c/kqT3WaOPS++zRh+X3meNfiFL77NGH5feZ41+Hk3vs0a/kKX3WaOPS++zNj8/376vLv2SdF/fPoLeFxERERERERERERERERERERGxxH8a5IA3pBT2VgAAAABJRU5ErkJggg==)" aria-hidden="true"></span><b>Fast</b><small>+60% run</small><span class="pop" role="tooltip"><b>Fast:</b> Always runs, and 60% faster.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#66ff73;--m:url(data:image/png;base64,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)" aria-hidden="true"></span><b>Regenerating</b><small>3–6.5% HP/s (stars)</small><span class="pop" role="tooltip"><b>Regenerating:</b> After 3 s without damage restores 3% (★) / 4.5% (★★) / 6.5% (★★★) health per second.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff9926;--m:url(data:image/png;base64,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)" aria-hidden="true"></span><b>Explosive</b><small>40–110 to you (stars)</small><span class="pop" role="tooltip"><b>Explosive:</b> Explodes on death: ★ — 40 damage to you and 150 to zombies within 3 m; ★★ — 70 and 250 within 3.5 m; ★★★ — 110 and 400 within 4 m.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#f2334d;--m:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAUKSURBVHhe7d0hsBRHEAZgZCQyMhKJRCKRyEhkJBKJIw5JXCQSGRkZGYlEIpG4Hqqpvqqrrrf1bvfvmZ353/9VPcnt/bt3e7vTvc2jRyIiIiIiIiIiIiJ0WmtPW2vPt/7M7Fn+N7IAP3CttVettbdm9m/8/dcKmNn/V6/5zsz+iA/ML/l9SGfxDX4ZB/ofM/ucD9hIZvbFPxj+fvwDqDNIsdbar7FjP5nZ93wAZhUfztettd9yJrlHfMvf+Kk379gV+Vkqfjp0dthiZi/M7IOfUvMOZGJmX83sbzP7Pe+DB8cvouL0Tn3Qt8SHwX8mHud9Q80Dxyn+a94pD5GZffOfCL/eyfuKigc0s/ceOO8E+flB+O4/D3QXjnHgP+TAss3veig+CP4bp2/8MXHb6+sL6y04+a0cy23c2eIi+Xnex9PypdKVFm0W8jbv66n41b2ZfczvWupEfWO+u4W40NMpf4D4SXiaj8FpWmtPHupizlli7eD8peU4+LrKP0FcZ513cRinfX3zTxRfvvHrBX5vWtVwIZj4Eo6tJ8TatUzC777yMeom2q9kMkNKzHHqP7UNS+4W1dW+awTReCnz6rtaqMWeucVZoE/xyNu28gZlPl6LyceuhGr6a/CO5HzsSmjRZw2xQlj7M+BLvnlDMi//uc7HEBKPQsk6XuVjCNHt33JqbwfjaR3vT7v178/8jnoys7/ueA89/2bPd16V8GJw33/tRc8N2PPBorW5O1+cytsegT0fbFTFcGgl7Ap7Plg8x9+dP3uQtz0Cez7YqLWD8nveG7HnKzGoX3BsN8wV9nyw3m1jvjydtzkSez6YPw2cQ1XyK/G8zZHY88EGrCDWrnjtxJ4PFiuIPb3M2xyJPR8segh7Pig6vif+Cnu+Er3ayPwKPG/rDOz5YDH2pJwPaMzbOgN7PlhMwirnV+B5W2dgzwfr2ExS2/RwEHs+WIyF62GKZ+TZ85Wobij1K++8jTOx54NV185nq5Gz54P5ZNAcEuHPKORtnIk9H6y6dj5bjZw9Hyzm/peZYj7OFfZ8JYpr59PVyNnzwfyZtZzyCJ9PkF97Buz5YFW181lr5Oz5YD7CJIc96E1+7Rmw54NV1c5nbZJkz1eiqHbedw4OgD0fDG2i9Mex8mvOhD0fDJ0y0m36RRH2fLD4b1cP88ex8mvOhD0fDB0yOWQYIoA9Hyz+r0DEk/yaM2HPV+LopNFVauTs+WBH/1sZv8LOrzUj9nywo7XzVZok2fPBjk4c7TYBsxh7PhjQRLlEkyR7vhIHBywtMyiJPR9sbxPlak2S7PlgewcsrTYoiT0fbG8T5WpNkuz5YHsHLK1WI2fPV2JnE+VyTZLs+WC31s5XHZTEng92axPlqk2S7PlgOwYsLTkoiT0fbEcT5ZKDktjzwXYMWFpyUBJ7vhL3DVhafVASez7YfQOWVh+UxJ4Pdt+ApdVr5Oz5YDcMWFp6UBJ7PtgNtfOla+Ts+UpsDVhiaZJkzwfbqp2z1MjZ88G2mihZBiWx54Nt1c5ZauTs+WBbA5ZYBiWx5yuxUTunqZGz54PlAUtsg5LY88Fy7ZytRs6eD3bHgCWqQUns+WC5ds7WJMmer0SqndMNSmLPB7s0UbIOSmLPB7sMWGIdlMSeD3YZsMQ6KIk9H+wyYIl1UBJ7PtjVgCXKQUns+Uqwl0jZ88HYK2Ts+WDsBRL2fCIiIiIiIiIiIiIiIiIiMoUfzBqsatRJrV0AAAAASUVORK5CYII=)" aria-hidden="true"></span><b>Vampiric</b><small>heals 50%</small><span class="pop" role="tooltip"><b>Vampiric:</b> Its hits heal it for half the damage dealt.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff7319;--m:url(data:image/png;base64,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)" aria-hidden="true"></span><b>Burning</b><small>sets on fire</small><span class="pop" role="tooltip"><b>Burning:</b> Its hits set you on fire, and it's immune to fire.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#80bfff;--m:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARYSURBVHhe7d0vcBUxEMfxykpkZWUlEolEIpFIJBJZh0QikUgkEolEIpFIJG7DZCbMdPb+vLtcct3Nfj8ztXnDy+P1svvL9uoKAAAAF4nIi5TS/Y6f53oNOJVSuhORv2mfp3odOJRSuhaRn3p314jIN70OnBKRT3qDN3ip14FDIvJG7+wlIvJLrwOHRORZxe/9/AF4q9eCMymlJ/l/st7cS8oH5lqvB2dE5Ive3C1E5INeC87kr3C9sTvc6fXgSC7e6B3dKn9r6PXgSErpRkR+643dKlcK9ZpwJBdv9KZuJSI/9HpwpNTuq+V6gV4TTuSqnd7QPcqvDY5+HqWUbkXkj97UPTj6OVWaPN/1hu5RCj83em04kP/n6g3di6OfUyLySm9mJXr+3lSGOyY4+jlUE+5Ykr9F9PowrjLcMcHRz6GacMeKd3p9GFYb7pjD0c+Z2nDHEhH5qF8DhtWGO1Zw9PPiYLhjgri3I0fCHSuIe3twNNwxh7i3I0fCHUuIeztxNNwxh7i3E0fDHUvo+TvQItyxgri3ZS3CHUvo+TvQItyxhLi3cQ3DHRP0/I1rFe5YQtzbsJbhjjn0/I1rFe5YwtHPsMbhjgl6/oa1DHcs4ehnVOtwxwp6/hZ1CHdMcPQzqnW4Ywlxb4M6hTsmOPoZ1CPcsYK4tzU9wh1zOPoZ1CPcsaRUFfXE70f7ycdd/X6E0ivc4UE+iYR+Fukc7jCt/Ltv9XsSRs9wh3XlOST2H5roGe6wLnzyuGe4w7rwdw57hzssK7/yQj/0dQ13WFaaW7HrD73DHVblb7zw5/3e4Q7Lwjeezgh3WBU+cnZiuMMc5gycFO6wqHzon+j3I5Szwh3WlF93se8ZnhXuMCr2hJGTwx3W3Ov3I5yzwh3WEDM/OdxhSalwxi3zZlHDHeF7+1nkcEf43n7wcEfs3n4WNdwhIp/1exFOrnbppOtj/Jx98gjf27fmzJJzqXHEfuiz5qwHUHr7BuUN0RvVC/OEDCrPAd2F7+1bdcYDYHkNHvqsKTWIrmkjevuG9S4/lw8Xo2Ss6l2ECh/otK7csO1CRN7r14MhuRijN60VEfmqXw/GpJRe641rofT2eeizrsdNo1JRjB3o9KJH7pC/G+BEPprpzWuA6WFetL5zQG/fmfyUrjexVvhhTd60LP8S6HSo1a0jhjU51ar9S6DTqRbl3/DDmrwqIdRDCHQ6drT9y7Am546Ufwl0DuDIuBl6+84daf8S6BxA7ag5hjUNoub2D4HOgey9/cOwpoFU3v6JPaxpJBXlX4Y1jWTP7R+GNQ1mT/uXYU0D2lr+pbc/qB23f+jtj2hL+5fe/qC2lH8JdA7s0u0fevuDW2v/MqwpgKXbP/T2A1i7/cOwpgCWbv/Q2w9i7vYPw5qCmCv/0tsPRN/+YVhTMLr9S6AzmIflX4Y1BfPw9g/DmgL63/5lWFNQufzLsKbA8nGPYU1BlfYvw5qi4uYuAABN/APzWkJKhhBGOgAAAABJRU5ErkJggg==)" aria-hidden="true"></span><b>Electric</b><small>shocks</small><span class="pop" role="tooltip"><b>Electric:</b> Its hits shock you, and it's immune to shock.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#99ff33;--m:url(data:image/png;base64,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)" aria-hidden="true"></span><b>Acidic</b><small>−20 armor</small><span class="pop" role="tooltip"><b>Acidic:</b> Its hits remove 20 physical armor for 10 s.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#cc80ff;--m:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAT2SURBVHhe7d0vkNRQDAZwJBKJRCKRSCQSiTyJRJ48h0QikUgkEolEIpEnkbiEyU12phMue932vZfX5PvNrDmW2/75tknfa3uPHgEAAAAAAEAgZn5qfwZFMPNzIvpDRC/tv0FyzPyYiH4xMxPRb2Z+Yt8DiRHRZ9n5J0T01b4HkmLmq+XOPyGi9/a9kIzW/b925wv5OfqBxJZ134N+IDFb9z3oBxLy6r4H/UAi5+q+B/1AEmvqvgf9QAJr674H/cCBXVr3PegHDmhL3fegHziYPXXfg37gQPbWfQ/6gQNoVfc96Acm1rLue9APTKpH3fegH5hQr7rvQT8wkd5134N+YAIj6r4H/UCwkXXfg34g0Oi670nbD8jhjZlfLV/2PVGi6r4nRT8gN0kQ0Tsi+mZXcImIfjDzNTM/s79jhMi67zl0PyA1jJlvtmxUIvo08u6aGeq+55D9gBzW5e4YuzKX0PS/tb+7h1nqvudQ/YDU0S3f+jNu7Ge0NFvd9xyiH+i1MYnoo/2sFmas+57p+wE97HfbmNJI2s/cY+a675m2H9BOf1fNf4iG64X97K1mr/ueKfsBOUTbBe2h1cpLYKW32Poiou922S6h//+/33vBK+RU+V767e926L9Hs6PAVroT9uja2A6lgzfDyBiBXYbREIAFHcEbhohu7TKMhgAoHe2LEFoGEAClEzvDjRoh9CAAipnf2DUbIXpUDAFQMjhj12yQ0A2IACg5FNs1G+TaLstICIDSCzoiXNllGQkBUDqiNlz0pAgCsKATFMPoqONjuxwjIQALo+YBTlrNB+yBACzIoIxdu87e2GUYDQEw5Ftp17AHIvppPzsCAmAMPAqEf/sFAnCP3rOCM8wCniAADiL6Yte0BZ1xDO38lxAAh15n1zQEuvOnug4OAXhAgw10R28Qmeabf9Jg/XIHQOhVwpuundOrdado+O6DAFxAdqSUhTXXDer9g6Hj/GsgABvp5JGcLcgGXL7k59Md6j0IQHEIwA722QAzPR9gLQRgBR0dvLuJYu2MobxP3/8xesr3HATAoZ2/7LxVO/whcgm4ngpOdUaAABj6BJBbu5Yt6b2H0kCGN4sIgCKi16PvsNWjAi4LjyT1fesgTysyNRzVQJYOgFyTb9cmUq+HR5xTMgA60SMN2XR0BHHYhFG5AMjGjT7kP0R7ked22XsoFQB5GEGr07re9Eyhe19QJgD6zT/Ezj/REHQ9EpQIgNb8qQ/7nt4PUyoRgFkbvrU0vF0GjdIHYLZTva16nSKmDsDAS7xHaT6PkDoAOsKWhs5RNC0FaQMQ9cSP3lo/USRlAI746NS19CjQ7PHzKQOQpfHztGwI0wVAv/1d5/Oj6VXJTY4C6QIg8/p2CTNq9cTxjAE45JOzLyWDQ3bdt8gYgNSH/xMtA7uHiFMFIPBJX1F233mUKgBE9MEuXWZym5rdBpfSL42EYOur+5T1alnP/T0yXWy3QWm9/9TLpJoODR+WbAi7ZYqY50+uRJINYbdMEfPU4EgFzwDuRN9YMo3Ap32Haj07eFjZJ4DOmOc8PJKek1aEAAgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoLgGT7s66gtPCAEAgAz+ATO2M2fqSagTAAAAAElFTkSuQmCC)" aria-hidden="true"></span><b>Giant</b><small>+50% HP &amp; damage</small><span class="pop" role="tooltip"><b>Giant:</b> Bigger, +50% health and damage.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#b38cff;--m:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAVWSURBVHhe7d0tdNRAEAfwSmQlEolEIpHISmQlsrKyrrKyjuKQvIdBgkMikchKJOpmeQNzvLtJctlsZj+y8/+9d6a9XnK7k81+zKZnZwAAAAAAAAAAAAAAAAAAAP0gopchhFeHL/0e6EgI4SkRvSWiz+EEIvoWQrgOITzTnwEbFEI4DyHcENFvXdlziOieA0d/JmwEN+tE9EtX7BIcOET0Rn82NC6EcJly1Z9wo48BjeLK17VngYju9LGgMdLsW175R7gjqY8JjZCe/qp7/hwJrhf62NAAbqJ1heVARB/1saEyufqzNf0j0Aq0RCZviuE5An0OUJHM4BVDRI/6HKASme2rAbeBFsjCTnGYIWxECOFCV04JRHSlzwUq4MkZXTmFYHq4BdwU65op5FqfC1QgCR01XOpzgQp4EkjXTAnc+dTnApUQ0U9dQTnJrOMTfR5QSal1gD2sBzSGJ2V0JWV2oc8BKuOrUtdSDkT0XR8bGlCwFcDV36rcq4JYBVyoxgYMIvqgK86CrDhm7fnXKC9z/CWI6GEqPUtSrbmSsjSlXEnWQSCVf66PZaF2eZmRrJxFHTEi+pJrWZXn6vXxUsgGEfMrv7XyWkWi+FGfcIycmy8kS5gLbTEi+pHrqmu1vJJYzcXn/FJckdyMxuQNyv7BbPP8WyivaLyJMjWStVIp11IBPFrgW8Thi39u3tQf2mJ5nbT0Hjan90mWrsrLqikbka35ram78rIeau3xkEsfy1qN8faWy2tAxtqzHaoVTB7QIPfcK+7YcXOpDzKGe/8ycuB+wnP9mSm2Ul7RcmfirunhypoAPxSCh3GrSUDcrUkAabm8kuTOxE3JuJUxf9RVnkoSTxbPDbRYXqsUyMSNzrjlK37u2T/WZGo4ut/QUnmZKJCJO5txK1OpD/oPS5LAm+0ntFBepjIOafZODm3kqjeZUFlLOncnbwu1y8tcgf14kzNcfDVl7lGnmrwKa5ZXNqmLLHO4o6WPtWe1wpeLjPVHp5NrlFdWuTo2RHSrj8Vq3+9jTSWOlC6vIqyHXXJfHyu8W/3elk2ljZcqr2IydG4GnZkCPehcBkOzEuVVHE9C6LNKMfYcPkmcaLHDF2swOshZXtWszcYdy7a1XDuvRYJ3ME+Qo7yqk6nYRRXGiZBTD1+0XjuvZWrN3rq8msAdEo7uuc2a/MVlP99opm3BTR6lDG4FzKq8miSVOEi9illVKz23n5v0/k/21teUV1dyr5zVUnzFrgUpmTfWY+VWxIzZU8qrGQeJGFEVuE+0OPySGcbJrfk/brcor+pkqHY/14mZI73bh91u907/rie73e6TZXlVWQRi3BuVNKktT9J0QRagyv1vIxm2jG5khDpkuxivl5zsY6wiV31Xw7PeSH/CvjWQe31UZwXqkkkju7kDSb9Ck78hZjuI5cpH5W+QdNDTh4xyzzfZXAF1yMU7WI2Mgg5fH2TOYdki0tr1amjLVIraqAr/gQvKiJs1LP3cXSgjqhXgDgOu/n4R0Wtd50e2knsPaXhziq7zI0tz1GBbpHUfHxE4WIuHf8b3Emxt9w2k4eVjXfd/YdbPB5kdHC4b6zdC144fKsU/0O+Arh0vEuV+ihW0ZbBU3GsuPowb7FGw2rEKm3G8db31R6+AOQSAcwgA5xAAziEAnEMAOIcAcA4B4BwCwDkEgHMIAOcQAM4hAJxDADiHAHAOAeAcAsA5BIBzCADnEADOIQCcQwA4hwBwDgHgHALAOQSAcwgA5xAAziEAnEMAOIcAcA4B4BwCwLlBAPBDIjkIar3ehxC+rnjx3+vPzPna2vnqV/p/EgEAgB78Ae63Hj3TerkZAAAAAElFTkSuQmCC)" aria-hidden="true"></span><b>Summoner</b><small>×3 zombies</small><span class="pop" role="tooltip"><b>Summoner:</b> At half health calls 3 zombies (once).</span></div>
+      </div>
+    </article>
+<article class="card">
+      <h3>Eridium</h3>
+      <div class="tagline">Purple crystal · stacks to 500 · can't be sold to traders</div>
+      <ul>
+        <li><b>Sources:</b> elites; scrapping weapons with affixes (2 per affix, ×2 at quality 6); scrapping a legendary (50). Eridium arrives when scrapping has <b>finished</b> (cancelling in the queue gives nothing). In a closed workstation Eridium waits in the output slots along with the materials.</li>
+        <li><b>Eridium Forge</b> — a separate workstation (recipe at a regular workbench). Hold a weapon, open the forge, and each affix gets buttons:</li>
+        <li><b>Reroll</b> (10): this affix gets a new type and value.</li>
+        <li><b>Lock</b> (25): this affix no longer changes. A weapon can have one locked affix. <b>Unlock</b> is free.</li>
+        <li><b>Add</b> (20): a new affix in an empty row, if the quality allows more.</li>
+        <li><b>Scrap</b>: turns the weapon into Eridium.</li>
+        <li><b>Legendary of your choice</b> (300): any of the ten, quality 6.</li>
+        <li><b>Sharpening</b> ("Weapon" and "Apparel" tabs): +1 quality at a time, up to 10, for weapons (and legendaries) and any worn clothing with stats that grow with quality. Up to 6 — always succeeds (5×N Eridium and forged steel). 7–10 — 35→50, success 65%→30%, <b>failure breaks the item</b> (you get back 30% of the scrap value). <b>"Safe"</b> (×5): failure only lowers quality by 1, not below 6. Each level above 6 gives as much as a quality step in vanilla.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="mastery" data-sec>
+  <h2>Weapon mastery</h2>
+  <p class="lead">Each weapon (any quality: a quality 2 and quality 6 machete are the same) levels up from kills while it's in your hands. 10 levels = 10 points in a tree of 20 skills, so you can only take half. <b>Alt+K</b> — tree window for the weapon in hand; or in the inventory click a weapon → the third button next to "Stats / Description".</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>How it works</h3>
+      <ul>
+        <li><b>Levels:</b> 4 / 12 / 24 / 40 / 60 / 90 / 120 / 160 / 210 / 260 kills. An elite counts as 5.</li>
+        <li><b>Tree:</b> three branches going up from the root; each skill unlocks only next to a learned one. Mid-branch is a strong node, at the top a keystone (bold). Bridges connect the branches.</li>
+        <li>Reaching one branch's keystone takes 6 points, so you can't finish two branches.</li>
+        <li>The tree layout is shared per weapon class, points are separate for each weapon.</li>
+        <li><b>Reset:</b> 5 Eridium per spent point, only within 5 m of the Eridium Forge.</li>
+        <li>"Crit" — chance to double a hit; "Crit power" makes it even bigger. Elements and crowd control — chance per hit.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Blades (knives, machetes)</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Speed +5% → Speed +6% → <b>Kill: speed +20% 6 s</b> → Stamina cost −15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
+        <li>Damage +6% → Bleeding 20% → <b>Execute (&lt;35% HP) +30%</b> → Bleeding 20% → <b class="trait">Deep bleed 35%</b></li>
+        <li>Crit 5% (×2) → Leech 3% → <b>First strike (full HP) +60%</b> → Leech 4% → <b class="trait">Crit power +100%</b></li>
+        <li><small>Bridges: Stamina cost −10% · Dismember +10% · Damage +6% · Crit 5% (×2)</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Clubs &amp; bats</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Stun 8% → Stun 8% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Every 5th hit +150%</b></li>
+        <li>Damage +6% → Dismember +15% → <b>Knockdown 10%</b> → Damage +8% → <b class="trait">Splash 30% within 3 m</b></li>
+        <li>Speed +5% → Stamina cost −10% → <b>Kill: speed +20% 6 s</b> → Speed +6% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
+        <li><small>Bridges: Damage +5% · Stamina cost −10% · Crit 5% (×2) · Speed +5%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Sledgehammers</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Knockdown 8% → Knockdown 8% → <b>Splash 25% within 3 m</b> → Splash 15% within 3 m → <b class="trait">Every 5th hit +200%</b></li>
+        <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +35%</b> → Damage +10% → <b class="trait">First strike (full HP) +100%</b></li>
+        <li>Speed +5% → Stamina cost −12% → <b>Kill: speed +25% 6 s</b> → Speed +6% → <b class="trait">Combo +10%/hit (up to 5)</b></li>
+        <li><small>Bridges: Stamina cost −10% · Dismember +15% · Damage +6% · Stun 8%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Spears</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Speed +5% → Speed +5% → <b>Kill: speed +20% 6 s</b> → Stamina cost −15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
+        <li>Damage +6% → Bleeding 15% → <b>Splash 20% within 3 m</b> → Damage +8% → <b class="trait">Splash 35% within 3 m</b></li>
+        <li>Crit 5% (×2) → Crit 5% (×2) → <b>Headshot +40%</b> → Crit 6% (×2) → <b class="trait">Crit power +100%</b></li>
+        <li><small>Bridges: Dismember +10% · Stamina cost −10% · Damage +6% · Knockdown 8%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Knuckles</h3>
+      <div class="tagline">Root: Speed +5%</div>
+      <ul>
+        <li>Speed +5% → Combo +4%/hit (up to 5) → <b>Kill: speed +25% 6 s</b> → Speed +6% → <b class="trait">Combo +10%/hit (up to 5)</b></li>
+        <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Every 5th hit +150%</b></li>
+        <li>Stun 6% → Stun 6% → <b>Knockdown 10%</b> → Stamina cost −15% → <b class="trait">Leech 8%</b></li>
+        <li><small>Bridges: Stamina cost −10% · Leech 3% · Crit 5% (×2) · Leech 3%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Batons</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Shock 10% → Shock 10% → <b>Splash 20% within 3 m</b> → Shock 15% → <b class="trait">Splash 40% within 3 m</b></li>
+        <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Every 5th hit +150%</b></li>
+        <li>Stun 6% → Stun 6% → <b>Knockdown 10%</b> → Stamina cost −15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
+        <li><small>Bridges: Speed +5% · Stamina cost −10% · Crit 5% (×2) · Speed +5%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Pistols &amp; SMGs</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Headshot +15% → Headshot +15% → <b>Crit 8% (×2)</b> → Headshot +20% → <b class="trait">Crit power +100%</b></li>
+        <li>Reload +10% → Reload +10% → <b>Kill: +2 rounds</b> → Magazine +20% → <b class="trait">Combo +6%/hit (up to 5)</b></li>
+        <li>Speed +5% → Speed +6% → <b>Kill: speed +20% 6 s</b> → Damage +8% → <b class="trait">Every 5th hit +150%</b></li>
+        <li><small>Bridges: Spread and recoil −10% · Magazine +15% · Damage +6% · Spread and recoil −10%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Shotguns</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Dismember +15% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Fire 25%</b></li>
+        <li>Reload +10% → Reload +10% → <b>Kill: +1 round</b> → Magazine +25% → <b class="trait">Reload +25%</b></li>
+        <li>Knockdown 6% → Knockdown 6% → <b>First strike (full HP) +50%</b> → Splash 15% within 3 m → <b class="trait">Splash 30% within 3 m</b></li>
+        <li><small>Bridges: Spread and recoil −10% · Magazine +20% · Damage +6% · Stun 6%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Rifles</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Headshot +15% → Headshot +15% → <b>Crit 8% (×2)</b> → Headshot +25% → <b class="trait">Crit power +150%</b></li>
+        <li>Reload +10% → Reload +10% → <b>Kill: +1 round</b> → Speed +10% → <b class="trait">Splash 40% within 3 m</b></li>
+        <li>First strike (full HP) +30% → First strike (full HP) +30% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">First strike (full HP) +100%</b></li>
+        <li><small>Bridges: Spread and recoil −15% · Damage +5% · Spread and recoil −10% · Magazine +20%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Assault rifles &amp; machine guns</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Spread and recoil −10% → Spread and recoil −10% → <b>Combo +3%/hit (up to 5)</b> → Spread and recoil −15% → <b class="trait">Combo +5%/hit (up to 5)</b></li>
+        <li>Magazine +15% → Magazine +15% → <b>Kill: +3 rounds</b> → Reload +15% → <b class="trait">Magazine +40%</b></li>
+        <li>Damage +5% → Speed +5% → <b>Shock 8%</b> → Speed +6% → <b class="trait">Fire 15%</b></li>
+        <li><small>Bridges: Speed +5% · Reload +10% · Damage +5% · Crit 5% (×2)</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Bows</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Headshot +15% → Headshot +15% → <b>Crit 8% (×2)</b> → Headshot +20% → <b class="trait">Crit power +150%</b></li>
+        <li>Damage +6% → Damage +6% → <b>Splash 20% within 3 m</b> → Damage +8% → <b class="trait">Splash 40% within 3 m</b></li>
+        <li>Bleeding 15% → Bleeding 15% → <b>Acid 15%</b> → Fire 15% → <b class="trait">Deep bleed 30%</b></li>
+        <li><small>Bridges: Speed +5% · Spread and recoil −10% · First strike (full HP) +50% · Speed +5%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Crossbows</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Headshot +15% → Headshot +15% → <b>Crit 8% (×2)</b> → Headshot +25% → <b class="trait">Crit power +150%</b></li>
+        <li>Damage +6% → Damage +6% → <b>Knockdown 10%</b> → Damage +10% → <b class="trait">Splash 40% within 3 m</b></li>
+        <li>Reload +10% → Reload +15% → <b>Kill: speed +20% 6 s</b> → Shock 15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
+        <li><small>Bridges: Reload +10% · Spread and recoil −10% · First strike (full HP) +60% · Stun 8%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Explosives</h3>
+      <div class="tagline">Root: Damage +5%</div>
+      <ul>
+        <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +10% → <b class="trait">First strike (full HP) +60%</b></li>
+        <li>Fire 10% → Fire 10% → <b>Shock 15%</b> → Acid 15% → <b class="trait">Splash 20% within 3 m</b></li>
+        <li>Reload +10% → Stun 8% → <b>Kill: +1 round</b> → Reload +20% → <b class="trait">Reload +40%</b></li>
+        <li><small>Bridges: Reload +10% · Knockdown 8% · Damage +6% · Knockdown 8%</small></li>
+      </ul>
+    </article>
+  </div>
+</section>
+<section id="perks" data-sec>
+  <h2>Perks &amp; attributes</h2>
+  <p class="lead">Every perk has its own trait at max level, and every attribute at level 10. Vanilla effects that duplicated the mod's traits have been replaced. The level description in game has a yellow AposMod line with exact numbers.</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>Attributes — <span class="trait">level 10</span></h3>
+      <ul>
+        <li><b>Perception — Executioner:</b> rifles, spears and explosives deal +100% damage to targets below 30% health.</li>
+        <li><b>Strength — Overkill:</b> excess damage from a killing blow with a shotgun, club or sledgehammer carries over to the nearest zombie within 4 m.</li>
+        <li><b>Fortitude — Iron Body:</b> no bleeding, no infection, and an existing infection is cured.</li>
+        <li><b>Agility — Adrenaline:</b> kills with a pistol, bow or knife give +10% run speed for 15 s, up to 3 stacks.</li>
+        <li><b>Intellect — Charged Chain Lightning:</b> each kill gives a lightning charge. At 10 charges your next hit with any weapon releases Chain Lightning around you that also deals damage: 4 s of shock and 200 damage to every zombie within 8 m.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Perception — <span class="trait">level 5</span></h3>
+      <ul>
+        <li><b>Flurry of Perception — Frenzy:</b> a spear kill gives +25% attack speed for 5 s.</li>
+        <li><b>Demolitions Expert — Chain Reaction:</b> a zombie killed by your explosives explodes itself: 250 damage within 4 m.</li>
+        <li><b>Penetrator — Shrapnel:</b> armor-piercing rounds deal 40% of the shot's damage to everyone within 3 m of the target.</li>
+        <li><b>Infiltrator — Ghost:</b> while crouched you're twice as hard to spot, hits on a zombie that can't see you deal ×2, and mines and traps don't hurt you.</li>
+        <li><b>Animal Tracker — Hunter's Mark:</b> hitting an animal puts a Mark on it.</li>
+        <li><b>Treasure Hunter — X Marks the Spot:</b> the treasure search circle shrinks almost to a point, and the chest holds a quality 5–6 weapon with affixes.</li>
+        <li><b>Salvage Operations — Junk Genius:</b> salvage tools wear out 90% slower.</li>
+        <li><b>Perception Mastery — Lucky Shot:</b> 10% chance that a hit with a Perception weapon deals +100% damage.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Strength — <span class="trait">level 5</span></h3>
+      <ul>
+        <li><b>Flurry of Strength — Frenzy:</b> a club or sledgehammer kill gives +25% attack speed for 5 s.</li>
+        <li><b>Boomstick — Pump Action:</b> a shotgun kill loads 1 shell into the magazine.</li>
+        <li><b>Pack Mule — Beast of Burden:</b> being encumbered no longer slows you.</li>
+        <li><b>Strength Mastery — Crippling Blows:</b> a club or sledgehammer power attack breaks the zombie's legs, and it crawls.</li>
+        <li><b>Miner 69'er — Tunnel Rat:</b> mining tools use 50% less stamina.</li>
+        <li><b>Mother Lode — Jackpot:</b> hitting ore or wood has a 5% chance to give ×5 harvest for 2 s.</li>
+        <li><b>Junk Miner — Scrap King:</b> +50% from junk piles and salvaging.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Fortitude — <span class="trait">level 5</span></h3>
+      <ul>
+        <li><b>Flurry of Fortitude — Frenzy:</b> a knuckles kill gives +25% attack speed for 5 s.</li>
+        <li><b>The Huntsman — Butcher:</b> harvesting a carcass heals 30 HP.</li>
+        <li><b>Pain Tolerance — Unbreakable:</b> below 25% health you take 50% less damage.</li>
+        <li><b>Fortitude Mastery — Second Wind:</b> once every 5 min, when your health drops below 20%, you instantly restore 70%.</li>
+        <li><b>Siphoning Strikes</b> (all levels): instead of the vanilla 2–10 HP per kill — life steal: every melee hit heals 4/8/12/16/20% of damage dealt. <b>Vampire</b> (5): a melee kill gives +50 max health for 15 s (doesn't heal — fill it with life steal). Each kill during that time adds another +50 and restarts the 15 s — no cap. When the buff ends, the bonus is gone.</li>
+        <li><b>Healing Factor — Regeneration:</b> 10 s out of combat and you regenerate 3 HP/s.</li>
+        <li><b>Slow Metabolism — Iron Stomach:</b> no food poisoning, no dysentery (you can drink murky water), and food and water never drop below 25%.</li>
+        <li><b>Rule 1: Cardio — Second Lungs:</b> when stamina runs out you instantly get +50% (once per 60 s).</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Agility — <span class="trait">level 5</span></h3>
+      <ul>
+        <li><b>Flurry of Agility — Frenzy:</b> a knife kill gives +25% attack speed for 5 s.</li>
+        <li><b>Run and Gun — Gun Kata:</b> hip fire on the move has no spread and +30% damage.</li>
+        <li><b>Hard Target — Blur:</b> while running you take 50% less damage.</li>
+        <li><b>Parkour — Cat Landing:</b> falls deal 99% less damage.</li>
+        <li><b>Agility Mastery — Evasion:</b> after taking a hit you run 30% faster for 5 s.</li>
+        <li><b>Hidden Strike — Shadow Strike:</b> 3 s crouched, unnoticed and without attacking — the "Shadow" buff, your next weapon hit deals ×2; if it kills, "Shadow" comes back right away, so you can clear a room one by one. Lost if you stand up or get noticed.</li>
+        <li><b>From the Shadows — Silent Shadow:</b> crouching doesn't slow you: you sneak at walking speed, and crouch-running is as fast as normal running. <b>Hunter in the Dark:</b> at night and in dark places you sense zombies within 20 m through walls — a dim red glow that pulses like a heartbeat (sleepers — pale blue). Zombies that lose you give up the search almost at once.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Intellect — <span class="trait">level 5</span></h3>
+      <ul>
+        <li><b>Electrocutioner — Overcharge:</b> any of your weapons deals +25% damage to shocked zombies.</li>
+        <li><b>Better Barter — Black Market:</b> after each stock refresh there's a 25% chance a trader has a legendary.</li>
+        <li><b>Daring Adventurer — Big Score:</b> a weapon reward for a ★5+ quest is always quality 6 with 3 affixes.</li>
+        <li><b>Charismatic Nature — Leader:</b> your charisma bonuses affect you twice as strongly.</li>
+        <li><b>Physician — Field Medic:</b> +50% healing, and a first aid kit also stops bleeding.</li>
+        <li><b>Advanced Engineering — Overclock:</b> your traps and turret blocks deal +50% damage.</li>
+        <li><b>Grease Monkey — Mechanic:</b> vehicles use 50% less fuel.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>General perks — <span class="trait">max level</span></h3>
+      <ul>
+        <li><b>Light Armor 4 — Nimble:</b> +15% movement speed.</li>
+        <li><b>Medium Armor 4 — Balanced:</b> attacks use 20% less stamina.</li>
+        <li><b>Heavy Armor 4 — Fortress:</b> you can't be stunned or knocked down.</li>
+        <li><b>Master Chef 3 — Gourmet:</b> food and drink effects last three times longer.</li>
+        <li><b>Living Off the Land 3 — Green Thumb:</b> harvesting crops has a 50% chance to return a seed.</li>
+        <li><b>Lock Picking 3 — Safecracker:</b> lockpicks almost never break.</li>
+        <li><b>Lucky Looter 5 — Fortune:</b> found weapons get +1 affix within the quality limit.</li>
+      </ul>
+    </article>
+    <article class="card"><h3>Grand Slam → <span class="trait">Rage</span></h3><ul><li>The running knockdown is removed. Rage is described in the "Melee" section.</li></ul></article>
+    <article class="card"><h3>Intellect Mastery 4–5</h3><ul><li><b>4 — Field Repair:</b> all weapons, tools and armor wear out 30% slower.</li><li><b>5 — Inventor:</b> crafted weapons get random affixes, like looted weapons of the same quality. Everything crafted is one quality level higher; at quality 6, weapons, tools and armor come out at forge tier 7.</li><li>The old baton bonuses (charge in 2 hits, +300% shock damage) are removed.</li></ul></article>
+    <article class="card"><h3>Pummel Pete</h3><ul><li>Removed: a power attack on a stunned target kept it stunned "forever".</li><li>Instead: a power attack on a stunned target deals +10…50% damage.</li></ul></article>
+    <article class="card"><h3>Skull Crusher</h3><ul><li>Removed: power attack knockdown chances.</li><li>Instead: Earthquake deals 10…50 damage to each knocked-down zombie.</li></ul></article>
+    <article class="card"><h3>The Brawler</h3><ul><li>Removed: power attack stuns, and to the head knocks down.</li><li>Instead: a normal attack has a 10…50% chance to give a Counter Punch charge.</li></ul></article>
+  </div>
+</section>
+
+<section id="sets" data-sec>
+  <h2>Armor sets &amp; wardrobe</h2>
+  <p class="lead">Combat sets are now tied to playstyles: pieces give bonuses on one theme, and the full set boosts a mod trait. Piece numbers grow with quality, as in vanilla, and further up to 10 through sharpening. Percentage full-set bonuses at quality 7–10 grow by 5% for each level above 6 (the worst piece counts).</p>
+  <div class="grid">
+    <article class="card">
+      <h3>Combat sets</h3>
+      <ul>
+        <li><b>Bruiser</b> (was Biker) — clubs and sledgehammers: damage, cheaper power attacks, HP, running. <b>Set:</b> Earthquake reaches 1 m farther, Home Run knocks back farther, Rage holds 1 more stack.</li>
+        <li><b>Gunslinger</b> (was Enforcer) — pistols: accuracy, damage, reload, running. <b>Set:</b> Headhunter after 4 headshots instead of 5 and +30% damage while it's active.</li>
+        <li><b>Ranger</b> — rifles: recoil, HP, damage, stamina. <b>Set:</b> Ricochet reaches 3 m farther and is 20% stronger.</li>
+        <li><b>Commando</b> — assault rifles: magazine, recoil, damage, running. <b>Set:</b> Suppression slows 20% more, every 3rd hit returns a round.</li>
+        <li><b>Hunter</b> (was Farmer) — bows and crossbows: damage, stealth, draw and reload speed, running. <b>Set:</b> Splinter +2 splinters, +20% to marked zombies.</li>
+        <li><b>Preacher</b> — elements: fire and shock resistance, HP, gloves raise the chance of elemental mods. <b>Set:</b> fire, shock, acid and bleeding +50%, reactions recharge in 1.5 s.</li>
+        <li><b>Nerd</b> — batons and robots. <b>Set:</b> Chain Lightning reaches 1 m farther, lightning charges build up twice as fast.</li>
+        <li><b>Assassin</b> and <b>Raider</b> — as in vanilla, plus: Assassin +2 Bloodsucker stacks and ×1.5 to zombies that can't see you; Raider +2 Counter Punch charges and −15% damage taken at full charges.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Utility sets</h3>
+      <ul>
+        <li>Lumberjack, Miner, Scavenger, Rogue, Athletic — as in vanilla.</li>
+        <li><b>Nomad</b> — plus −50% fuel and +10% vehicle speed (moved over from Biker).</li>
+        <li><b>Primitive</b> — got the farming bonuses (seeds, harvest).</li>
+        <li>DLC sets — cosmetic, no bonuses.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Wardrobe — <span class="trait">3 outfits</span></h3>
+      <ul>
+        <li><b>Alt+1 / Alt+2 / Alt+3</b> — change into an outfit in 1.5 s. Your current clothes go into the wardrobe and don't take backpack space.</li>
+        <li><b>Alt+0</b> — wardrobe window with three tabs: what's in each outfit, "Put on" and "Take to backpack" buttons.</li>
+        <li>How to fill it: put on the first set, press Alt+2, put on the second set from the backpack, press Alt+3 and put on the third.</li>
+        <li>The wardrobe is saved with the world and isn't dropped on death.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+<section id="gear" data-sec>
+  <h2>Mods &amp; legendary weapons</h2>
+  <div class="grid">
+    <article class="card">
+      <h3><span class="trait">Energy Shield</span> mod</h3>
+      <div class="tagline">Chest armor · workbench, armor mod loot, traders</div>
+      <ul>
+        <li>While the shield is charged, ranged attacks (bullets, arrows, spit) don't hurt you.</li>
+        <li>Any hit drains the shield. It recharges after 5 s without damage.</li>
+      </ul>
+      <div class="k">Recipe</div>
+      <div>6 electrical parts, 4 mechanical parts, 10 polymers, 10 forged iron, 2 duct tape.</div>
+    </article>
+    <article class="card">
+      <h3>Elemental mods</h3>
+      <div class="tagline">Any weapon · one elemental mod per weapon · workbench</div>
+      <ul>
+        <li><b>Incendiary:</b> 30% chance to ignite for 10 s: 10% of your last hit's damage per second (at least 10). (4 oil)</li>
+        <li><b>Tesla</b> (can't go on batons — they already shock): 20% chance to shock for 1.5 s: 15% of the last hit's damage per second (at least 10). (5 electrical parts)</li>
+        <li><b>Corrosive:</b> 25% chance to corrode for 6 s: −25 physical resistance, 8% of the last hit's damage per second (at least 8). (2 acid)</li>
+      </ul>
+      <div class="tagline">Plus 3 mechanical parts and 6 polymers in every recipe</div>
+    </article>
+    <article class="card legendary">
+      <h3><span class="trait">Legendary weapons</span></h3>
+      <div class="tagline">Gold name · trophy badge · always quality 6 · 4% in ★4 final chests, 10% in ★5 · Black Market</div>
+      <p>Each legendary has 3 fixed affixes at quality 6 max and its own trait, so it's always at least as good as the best weapon with random affixes.</p>
+      <ul>
+        <li><b>Unkempt Harold</b> (.44 Desert Vulture): 3 bullets per shot in a fan. <i>Damage +35%, fire rate +25%, magazine +60%.</i></li>
+        <li><b>Lady Fist</b> (9mm pistol): +50% damage, a headshot heals 5 HP. <i>Headshot damage +60%, spread −40%, reload +40%.</i></li>
+        <li><b>Dragon's Breath</b> (pump shotgun): +20%, every hit ignites. <i>Pellets +35%, damage +35%, reload +40%.</i></li>
+        <li><b>The Ripper</b> (machete): +40%, every hit causes bleeding, +50% more to targets already bleeding; a kill heals 20 HP. <i>Damage +35%, attack speed +20%, life steal 6% of damage.</i></li>
+        <li><b>Thunderclap</b> (steel sledgehammer): +25%, a power attack shocks everyone within 4 m. Each kill gives a storm charge; at 3 charges a power attack calls down lightning: 150 damage and 3 s of shock to everyone within 6 m. <i>Damage +35%, stamina per hit −40%, headshot damage +60%.</i></li>
+        <li><b>Hornet</b> (SMG-5): +15%, hits have a 30% chance to corrode with acid. <i>Magazine +60%, fire rate +25%, recoil −50%.</i></li>
+        <li><b>Storm Fist</b> (steel knuckles): +20%, hits have a 25% chance to ignite and a 25% chance to shock, so Confusion triggers on its own. <i>Attack speed +20%, damage +35%, movement speed +10%.</i></li>
+        <li><b>Artemis</b> (compound bow): every arrow ignites and shatters into 8 splinters of 50 each. <i>Damage +35%, headshot damage +60%, reload +40%.</i></li>
+        <li><b>Big Boom</b> (rocket launcher): 50% chance the next rocket is free. <i>Damage +35%, reload +40%, range +60%.</i></li>
+        <li><b>Predator</b> (sniper rifle): +25%, every headshot ricochets within 15 m: 100 damage and 2 s of stun. <i>Headshot damage +60%, range +60%, recoil −50%.</i></li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="systems" data-sec>
+  <h2>Systems</h2>
+  <div class="k" style="margin-bottom:8px">Damage number colors</div>
+  <div class="legend">
+    <div class="dmg"><span class="num n-white">45</span><span>Normal hit</span></div>
+    <div class="dmg"><span class="num n-yellow">90!</span><span>Headshot</span></div>
+    <div class="dmg"><span class="num n-cyan">120</span><span>Hit boosted by a buff: Headhunter, Rage, Counter Punch, Mark, Suppression, acid</span></div>
+    <div class="dmg"><span class="num n-red">Kill!</span><span>Killing blow (text above the number)</span></div>
+    <div class="dmg"><span class="num n-magenta">60</span><span>Elemental reaction</span></div>
+    <div class="dmg"><span class="num n-orange">8</span><span>Burning</span></div>
+    <div class="dmg"><span class="num n-green">3</span><span>Acid</span></div>
+    <div class="dmg"><span class="num n-blue">5</span><span>Shock</span></div>
+    <div class="dmg"><span class="num n-pink">4</span><span>Bleeding</span></div>
+    <div class="dmg"><span class="num" style="color:#ff7373">25</span><span>Damage to you</span></div>
+  </div>
+  <p class="tagline" style="margin-top:8px">These are the game's own 3D numbers (they fan out from the head), just in the mod's colors. Visible up to 120 m, distant numbers get bigger, they stay for 3 s. The mod turns them on even if the world option is off.</p>
+
+  <div class="grid" style="margin-top:14px">
+    <article class="card">
+      <h3>Damage number settings — <span class="trait">aposdmg</span></h3>
+      <div class="tagline">F1 console · saved in Mods/AposMod/Settings.xml</div>
+      <pre>aposdmg              show status
+aposdmg on | off     turn on / off
+aposdmg size 1.5     size 0.5–3
+aposdmg time 3       seconds visible (0.5–5)
+aposdmg kill off     no "Kill!" text
+aposdmg color off    no cyan color</pre>
+    </article>
+    <article class="card">
+      <h3>Affix testing — <span class="trait">aposaffix</span></h3>
+      <div class="tagline">F1 console · weapon in hand</div>
+      <pre>aposaffix            new affixes, max for the quality
+aposaffix 6          set quality 6 first, then 3 affixes</pre>
+    </article>
+    <article class="card">
+      <h3>Elites — <span class="trait">aposelite</span></h3>
+      <div class="tagline">F1 console</div>
+      <pre>aposelite on | off           names above elites
+aposelite make               nearest zombie becomes an elite
+aposelite make Armored Giant  with these modifiers</pre>
+    </article>
+    <article class="card">
+      <h3>Bow — <span class="trait">aposbow</span></h3>
+      <div class="tagline">F1 console · if the backpack or a vehicle won't open with a bow</div>
+      <pre>aposbow          reload state of the bow in hand
+aposbow off | on  turn off / on arrow auto-nock</pre>
+    </article>
+    <article class="card">
+      <h3>Stealth</h3>
+      <ul>
+        <li>Zombies in POIs that used to rush out in a wave after a trigger or attack right away now spawn asleep in their spots as you approach. Triggers (doors, loot, walls) don't wake them. Zombies spawn in advance: 12 m away and from the neighboring floor (the base game uses 8 m and only your floor), so they don't pop in right in front of you.</li>
+        <li>They wake up from noise or when they see you, so you can sneak up on them.</li>
+        <li>To turn off: <code>&lt;Stealth rework="false"/&gt;</code> in Settings.xml and restart the game.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Indicator buffs</h3>
+      <ul>
+        <li>Bloodsucker — knife regeneration stacks</li>
+        <li>Counter Punch — knuckles charges</li>
+        <li>Veteran Junk — pipe weapon bonus, %</li>
+        <li>Headhunter — empowered shots left</li>
+        <li>Rage — stacks</li>
+        <li>Guardian Protocol, Energy Shield</li>
+        <li>Earthquake and Chain Lightning cooldown</li>
+        <li>Thunderclap storm charges, Big Boom free rocket</li>
+        <li>Red ring above a zombie — it has a crossbow Mark</li>
+        <li>Frenzy, Adrenaline (stacks), lightning charges, Jackpot, Evasion</li>
+        <li>Second Wind (5 min) and Second Lungs (60 s) cooldown</li>
+      </ul>
+    </article>
+    <article class="card"><h3>Bird nests</h3><ul><li>Three times more feathers: from the nest's contents (3 + 3–15 instead of 1 + 1–5) and when picking up the nest itself.</li></ul></article>
+    <article class="card">
+      <h3>Launching</h3>
+      <ul>
+        <li>Launch the game <b>without EasyAntiCheat</b>, otherwise the mod won't load.</li>
+        <li>The log should show <code>Loaded Mod: AposMod</code>.</li>
+        <li>The game can be in Russian or English: the mod's texts are in both languages.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<p class="empty hide" id="none">Nothing found. Try another weapon or perk name.</p>
+</main>
+
+<footer>
+  <div class="wrap">AposMod 1.6.0 for 7 Days to Die 3.4.</div>
+</footer>
+
+</template>
+<template id="lang-ru">
+<header class="top">
+  <div class="wrap">
+    <div class="stripe" aria-hidden="true"></div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.0</div>
+    <h1>Справочник AposMod</h1>
+    <p class="sub">Фишки оружия, аффиксы, перки и атрибуты, стихии, моды, легендарное оружие и настройки в одном месте. Числа «0 → 5» зависят от уровня соответствующего перка.</p>
+  </div>
+</header>
+
+<nav class="bar" aria-label="Разделы">
+  <div class="wrap">
+    <a href="#melee">Ближний бой</a>
+    <a href="#ranged">Дальний бой</a>
+    <a href="#elements">Стихии</a>
+    <a href="#explosives">Взрывчатка и роботы</a>
+    <a href="#affixes">Аффиксы</a>
+    <a href="#elites">Элиты и Эридий</a>
+    <a href="#mastery">Мастерство</a>
+    <a href="#perks">Перки и атрибуты</a>
+    <a href="#sets">Сеты и гардероб</a>
+    <a href="#systems">Системы</a>
+    <input id="q" type="search" placeholder="Поиск: кувалда, Brawler, кислота…" aria-label="Поиск по справочнику">
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section id="melee" data-sec>
+  <h2>Ближний бой <small>ЛКМ — обычный удар, ПКМ — силовой</small></h2>
+  <p class="lead">Обычный удар даёт небольшой бонус, силовой — главную фишку класса.</p>
+  <div class="grid">
+
+    <article class="card">
+      <h3>Ножи и мачете — <span class="trait">Bloodsucker</span></h3>
+      <div class="tagline">Перк: Deep Cuts</div>
+      <ul>
+        <li>Каждый удар добавляет стак регенерации (силовой — два): +1 HP/с за стак, каждый удар продлевает действие до 5 с.</li>
+        <li>Силовой удар вызывает кровотечение.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Макс. стаков</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr></table></div>
+      <div class="five"><b>5 уровень — Blood Feast:</b> убийство ножом на максимуме стаков сразу лечит 25 HP.</div>
+    </article>
+
+    <article class="card">
+      <h3>Дубинки и биты — <span class="trait">Home Run</span></h3>
+      <div class="tagline">Перк: Pummel Pete</div>
+      <ul>
+        <li>Обычный удар может оглушить цель на 1 с.</li>
+        <li>Силовой удар в голову подбрасывает зомби и сбивает его с ног.</li>
+        <li>Силовой удар по оглушённому наносит дополнительный урон.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Оглушение</td><td>15%</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td></tr><tr><td>Сила отбрасывания</td><td>800</td><td>950</td><td>1100</td><td>1250</td><td>1400</td><td>1550</td></tr><tr><td>Силовой по оглушённым</td><td>—</td><td>+10%</td><td>+20%</td><td>+30%</td><td>+40%</td><td>+50%</td></tr></table></div>
+      <div class="cost">Силовой удар тратит на 30% больше выносливости.</div>
+      <div class="five"><b>5 уровень:</b> Home Run срабатывает от силового удара в любую часть тела, а <b>каждый 3-й обычный удар</b> тоже подбрасывает зомби.</div>
+    </article>
+
+    <article class="card">
+      <h3>Кувалды — <span class="trait">Earthquake</span></h3>
+      <div class="tagline">Перк: Skull Crusher</div>
+      <ul>
+        <li>Обычный удар может сбить цель с ног.</li>
+        <li>Силовой удар сбивает с ног всех зомби вокруг и наносит каждому урон.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Сбить обычным</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td><td>45%</td></tr><tr><td>Радиус</td><td>3 м</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Урон сбитым</td><td>—</td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr></table></div>
+      <div class="cost">Перезарядка 4 с. Силовой удар тратит на 50% больше выносливости.</div>
+      <div class="five"><b>5 уровень — Aftershock:</b> сбитые зомби ещё около 3 с оглушены после того, как поднимутся.</div>
+    </article>
+    <article class="card">
+      <h3>Дубинки и кувалды — <span class="trait">Rage</span></h3>
+      <div class="tagline">Перк: Rage (вместо Grand Slam)</div>
+      <ul>
+        <li>Убийство дубинкой, битой или кувалдой даёт стак на 8 с: +10% урона, +5% скорости атаки.</li>
+        <li>Максимум стаков равен уровню перка (1–5).</li>
+      </ul>
+      <div class="five"><b>5 уровень — Rampage:</b> на 5 стаках удары не тратят выносливость, а вас нельзя оглушить или сбить с ног.</div>
+    </article>
+
+    <article class="card">
+      <h3>Жезлы — <span class="trait">Chain Lightning</span></h3>
+      <div class="tagline">Перк: Calculated Attack · жезлы и дубинка из трубы</div>
+      <ul>
+        <li>Обычный удар ненадолго шокирует цель.</li>
+        <li>Силовой удар шокирует всех зомби вокруг.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Шок обычным</td><td>0.5 с</td><td>0.6</td><td>0.7</td><td>0.8</td><td>0.9</td><td>1.0</td></tr><tr><td>Радиус силового</td><td>3 м</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Шок силовым</td><td>2 с</td><td>2.4</td><td>2.8</td><td>3.2</td><td>3.6</td><td>4.0</td></tr></table></div>
+      <div class="cost">Перезарядка 3 с. Силовой удар тратит на 50% больше выносливости.</div>
+      <div class="five"><b>5 уровень:</b> каждый 4-й обычный удар тоже запускает Chain Lightning.</div>
+    </article>
+
+    <article class="card">
+      <h3>Копья — <span class="trait">Battering Ram</span></h3>
+      <div class="tagline">Перк: Spear Master</div>
+      <ul>
+        <li>Обычный удар отталкивает цель.</li>
+        <li>Силовой удар пробивает зомби позади и отбрасывает каждого.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Пробитие силовым</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr><tr><td>Сила толчка</td><td>120</td><td>160</td><td>200</td><td>240</td><td>280</td><td>320</td></tr></table></div>
+      <div class="five"><b>5 уровень — Skewer:</b> все зомби, которых задел силовой удар, падают с ног.</div>
+    </article>
+
+    <article class="card">
+      <h3>Кастеты — <span class="trait">Counter Punch</span></h3>
+      <div class="tagline">Перк: The Brawler</div>
+      <ul>
+        <li>Полученный удар заполняет заряды. Таймера нет.</li>
+        <li>Обычный удар: +25% урона, минус 1 заряд; может дать новый заряд.</li>
+        <li>Силовой удар: тратит все заряды, +50% урона за каждый, сбивает с ног.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Заряды</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>Шанс +1 заряд</td><td>—</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td></tr></table></div>
+      <div class="five"><b>5 уровень — Knockout:</b> силовой удар на полных зарядах убивает любого не элитного зомби.</div>
+    </article>
+
+
+  </div>
+</section>
+
+<section id="ranged" data-sec>
+  <h2>Дальний бой</h2>
+  <p class="lead">Каждая фишка растёт вместе с перком своего оружия.</p>
+  <div class="grid">
+
+    <article class="card">
+      <h3>Пистолеты и ПП — <span class="trait">Headhunter</span></h3>
+      <div class="tagline">Перк: Gunslinger</div>
+      <ul>
+        <li>5 хедшотов подряд (4 в полном сете Gunslinger) включают режим усиленных выстрелов. Промах или попадание в тело обнуляет серию.</li>
+        <li>Усиленные выстрелы бьют сильнее и почти без разброса.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Выстрелов</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td></tr><tr><td>Урон</td><td>+25%</td><td>+35%</td><td>+45%</td><td>+55%</td><td>+65%</td><td>+75%</td></tr></table></div>
+      <div class="five"><b>5 уровень:</b> каждое убийство <b>в голову</b> в этом режиме добавляет ещё 2 выстрела.</div>
+    </article>
+    <article class="card">
+      <h3>Дробовики — <span class="trait">Slug Knockback</span></h3>
+      <ul>
+        <li>Пуля (Slug и Breaching Slug) отбрасывает зомби и сбивает его с ног. Дробь работает как раньше.</li>
+        <li>Breaching Slug бьёт только до 4 м — так задумано в самой игре.</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <h3>Винтовки — <span class="trait">Ricochet</span></h3>
+      <div class="tagline">Перк: Dead Eye</div>
+      <ul><li>Хедшот ранит всех зомби рядом с местом попадания.</li></ul>
+      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Радиус</td><td>5 м</td><td>7</td><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>Урон</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td></tr></table></div>
+      <div class="five"><b>5 уровень:</b> рикошет ещё и оглушает всех, кого задел, на 2 с.</div>
+    </article>
+
+    <article class="card">
+      <h3>Автоматы и пулемёты — <span class="trait">Suppression</span></h3>
+      <div class="tagline">Перк: Machine Gunner</div>
+      <ul>
+        <li>Каждое попадание добавляет цели 5% замедления на 8 с — до максимума из таблицы.</li>
+        <li>Каждое 4-е попадание возвращает 1 патрон в магазин (каждое 3-е в полном сете Commando).</li>
+      </ul>
+      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Макс. замедление</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td><td>60%</td></tr></table></div>
+      <div class="five"><b>5 уровень:</b> +25% урона по полностью замедленным, а каждое убийство приносит 5 патронов того типа, что заряжен.</div>
+    </article>
+
+    <article class="card">
+      <h3>Луки — <span class="trait">Splinter</span></h3>
+      <div class="tagline">Перк: Archery</div>
+      <ul><li>Стрела при попадании разлетается на осколки. Каждый осколок летит в ближайшего другого зомби в радиусе 5 м.</li></ul>
+      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Осколков</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>8</td></tr><tr><td>Урон осколка, минимум</td><td>40</td><td>50</td><td>60</td><td>70</td><td>80</td><td>100</td></tr></table></div>
+      <ul><li>Если стрела попала сильнее, осколок берёт <b>половину её урона</b> (до 300).</li></ul>
+      <div class="five"><b>5 уровень:</b> стрела в голову поджигает цель.</div>
+      <ul>
+        <li><b>Управление:</b> лук сам накладывает следующую стрелу, пока он в руках. <b>R</b> сразу открывает колесо стрел без задержки: зажмите, наведите, отпустите.</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <h3>Особые стрелы</h3>
+      <div class="tagline">Только луки · крафт в рюкзаке, 3 шт.</div>
+      <ul>
+        <li><b>Кислотная</b> (+1 гнилая плоть): разъедает (−25% физзащиты, кислота каждую секунду) и <b>замедляет на 90%</b>. Длительность по Archery: 5 с (0–1), 6 / 7 / 8 с (2 / 3 / 4), 10 с (5).</li>
+        <li><b>Электрическая</b> (+1 электродеталь): ток на 4 с, урон каждую секунду растёт от попадания.</li>
+        <li><b>Зазубренная</b> (+1 кованая сталь): глубокое кровотечение на 10 с, 15% от попадания каждую секунду (мин. 12), плюс обычное кровотечение. В сумме ещё ≈1,5 попадания: выстрелил и держи дистанцию.</li>
+        <li>Кислота и ток запускают реакции стихий.</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <h3>Арбалеты — <span class="trait">Mark · Pin</span></h3>
+      <div class="tagline">Перк: Archery</div>
+      <ul>
+        <li><b>Mark:</b> болт помечает зомби на 10 с. Весь ваш урон по нему, любым оружием, растёт. Над помеченным зомби светится красное кольцо-прицел, видно даже сквозь стены.</li>
+        <li><b>Pin</b> (только арбалеты, не луки): если за зомби до 3 м стена, болт прибивает его до самой смерти. Элитного — на 10 с.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Бонус Mark</td><td>+20%</td><td>+40%</td><td>+60%</td><td>+80%</td><td>+100%</td><td>+120%</td></tr></table></div>
+      <div class="five"><b>5 уровень — Hunting Party:</b> болт помечает всех зомби в радиусе 4 м от попадания.</div>
+    </article>
+
+
+  </div>
+</section>
+
+<section id="elements" data-sec>
+  <h2>Стихии и реакции</h2>
+  <p class="lead">Три стихии: огонь, ток и кислота. Две стихии на одном зомби запускают реакцию. После неё у зомби 3 с перезарядки реакций.</p>
+  <div class="grid">
+    <article class="card reaction">
+      <h3>Огонь + кислота = <span class="trait">Explosion</span></h3><div class="formula" aria-hidden="true"><span class="el fire"><svg class="hi"><use href="#i-fire"/></svg></span>+<span class="el acid"><svg class="hi"><use href="#i-drop"/></svg></span>=<span class="el res"><svg class="hi"><use href="#i-bomb"/></svg></span></div>
+      <ul><li>Взрыв: 50% урона вашего последнего удара (минимум 60) цели и всем зомби в радиусе 4 м. Вас не задевает.</li></ul>
+    </article>
+    <article class="card reaction">
+      <h3>Огонь + ток = <span class="trait">Confusion</span></h3><div class="formula" aria-hidden="true"><span class="el fire"><svg class="hi"><use href="#i-fire"/></svg></span>+<span class="el shock"><svg class="hi"><use href="#i-bolt"/></svg></span>=<span class="el res"><svg class="hi"><use href="#i-eye"/></svg></span></div>
+      <ul><li>5 с: зомби медленнее на 60%, получает больше урона (−30 сопротивления), на миг оглушён.</li></ul>
+    </article>
+    <article class="card reaction">
+      <h3>Ток + кислота = <span class="trait">Miasma</span></h3><div class="formula" aria-hidden="true"><span class="el shock"><svg class="hi"><use href="#i-bolt"/></svg></span>+<span class="el acid"><svg class="hi"><use href="#i-drop"/></svg></span>=<span class="el res"><svg class="hi"><use href="#i-flask"/></svg></span></div>
+      <ul><li>6 с: максимальное здоровье зомби падает на 20%, вместе с ним падает и текущее. Плюс кровотечение.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Откуда берутся стихии</h3>
+      <ul>
+        <li><b>Огонь:</b> мод Incendiary, молотов, огненные стрелы, Splinter на 5 уровне, легендарки Dragon's Breath, Storm Fist, Artemis.</li>
+        <li><b>Ток:</b> мод Tesla, жезлы (Chain Lightning), легендарки Thunderclap, Storm Fist.</li>
+        <li><b>Кислота:</b> мод Corrosive, легендарка Hornet.</li><li><b>Кровотечение</b> от ваших ударов (ножи, зубчатое лезвие, колючая проволока, Ripper): каждую секунду 5% урона последнего удара (минимум 5).</li><li>Ванильный мод <b>Burning Shaft</b> (горящее древко) поджигает с шансом 5–30% вместо 10–60%: его огонь теперь тоже зависит от урона удара.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="explosives" data-sec>
+  <h2>Взрывчатка, самоделки и роботы</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Гранаты — <span class="trait">Wide Blast</span></h3>
+      <ul><li>Граната, контактная граната и самодельная бомба: радиус поражения зомби увеличен втрое. Разрушение блоков не изменилось.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Молотов — <span class="trait">Busy Burning</span></h3>
+      <ul><li>Горящий зомби двигается на 70% медленнее и каждую секунду теряет 4% максимального здоровья (минимум 15) сверх обычного огня.</li><li>Лужа горит вдвое дольше. Вас огонь не замедляет.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Ракетница — <span class="trait">Early Artillery</span></h3>
+      <ul><li>Продаётся у торговцев и попадается в луте с начала игры.</li><li>В финальном сундуке каждого здания есть ракеты:</li></ul>
+      <div class="scale"><table><tr><th>Звёзды</th><th>★1</th><th>★2</th><th>★3</th><th>★4</th><th>★5</th></tr><tr><td>Ракет</td><td>1</td><td>1–2</td><td>2–3</td><td>3–4</td><td>4–6</td></tr></table></div>
+    </article>
+    <article class="card">
+      <h3>Самодельное оружие — <span class="trait">Veteran Junk</span></h3>
+      <ul><li>Каждое убийство самодельным оружием: +2% урона всему самодельному оружию, до +1000%. Текущий бонус виден на баффе.</li><li>Ремонтируется железным ломом.</li></ul>
+    </article>
+    <article class="card">
+      <h3>Роботы — <span class="trait">Guardian Protocol</span></h3>
+      <div class="tagline">Перк: Robotics Inventor · турель и робо-кувалда</div>
+      <ul><li>Когда ваше здоровье ниже 30%, роботы атакуют быстрее и сильнее. Появляется бафф-индикатор.</li></ul>
+      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Скорость</td><td>+30%</td><td>+40%</td><td>+50%</td><td>+60%</td><td>+70%</td><td>+80%</td></tr><tr><td>Урон</td><td>+10%</td><td>+15%</td><td>+20%</td><td>+25%</td><td>+30%</td><td>+35%</td></tr></table></div>
+      <div class="five"><b>5 уровень:</b> включается уже при здоровье ниже 50%.</div>
+    </article>
+  </div>
+</section>
+
+<section id="affixes" data-sec>
+  <h2>Аффиксы</h2>
+  <p class="lead">Оружие из лута, с зомби и у торговцев получает случайные аффиксы — бонусы к характеристикам, как в Borderlands. Скрафченное оружие их не имеет. Чем выше качество, тем больше аффиксов и тем они сильнее.</p>
+  <div class="grid">
+    <article class="card">
+      <h3>Сколько аффиксов</h3>
+      <ul>
+        <li><b>Качество 1:</b> без аффиксов.</li>
+        <li><b>Качество 2–3:</b> до 1 (шанс 50%).</li>
+        <li><b>Качество 4–5:</b> до 2 (75% / 35%).</li>
+        <li><b>Качество 6:</b> до 3 (100% / 60% / 30%), значения на максимуме.</li>
+        <li>Одинаковых аффиксов на одном оружии не бывает. После объединения двух стволов лишние аффиксы исчезают.</li>
+        <li>Аффиксы видны вверху подсказки предмета, а на иконке есть значок-звёздочка.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Огнестрельное оружие, луки, ракетница</h3>
+      <div class="tagline">Значения: качество 2 → качество 6</div>
+      <ul>
+        <li><b>Скорострельность</b> +5% → +25%</li>
+        <li><b>Разброс</b> −10% → −40%</li>
+        <li><b>Дальность</b> +10% → +60%</li>
+        <li><b>Урон</b> +5% → +35%</li>
+        <li><b>Скорость перезарядки</b> +10% → +40%</li>
+        <li><b>Дробины</b> (дробовики) +10% → +35%</li>
+        <li><b>Вторая пуля</b> (пистолеты, винтовки, автоматы, только качество 6): 2 пули за выстрел, каждая −40% урона</li>
+        <li><b>Урон в голову</b> +10% → +60%</li>
+        <li><b>Размер магазина</b> +10% → +60%</li>
+        <li><b>Скорость передвижения</b> с оружием в руках +2% → +10%</li>
+        <li><b>Отдача</b> −10% → −50%</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Ближний бой</h3>
+      <div class="tagline">Значения: качество 2 → качество 6</div>
+      <ul>
+        <li><b>Урон</b> +5% → +35%</li>
+        <li><b>Скорость атаки</b> +4% → +20%</li>
+        <li><b>Выносливость на удар</b> −10% → −40%</li>
+        <li><b>Урон в голову</b> +10% → +60%</li>
+        <li><b>Дальность удара</b> +5% → +20%</li>
+        <li><b>Скорость передвижения</b> +2% → +10%</li>
+        <li><b>Лечение от урона</b> 1% → 6% от нанесённого урона</li>
+        <li><b>Шанс отрубить конечность</b> +5% → +30%</li>
+        <li><b>Прочность</b> +20% → +80%</li>
+        <li><b>Урон по блокам</b> +10% → +60%</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="elites" data-sec>
+  <h2>Элитные зомби и Эридий</h2>
+  <p class="lead">Иногда зомби появляется элитным: над головой его имя с модификаторами, как в Borderlands. Он сильнее, но гарантированно даёт оружие с аффиксами и Эридий, а за Эридий можно довести свой ствол до идеала.</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>Элиты</h3>
+      <div class="tagline">Шанс 2% в начале → 5% в поздней игре · ★ = 1 модификатор, ★★ после gamestage 100, ★★★ (25% из них) после gamestage 200</div>
+      <ul>
+        <li>Здоровья вдвое больше. Над именем звёзды: <b>★</b> жёлтая, <b>★★</b> оранжевые, <b>★★★</b> красные. Видно до 40 м, сквозь стены — нет.</li>
+        <li>Эридий на земле светится фиолетовым и имеет луч вверх, как лут в Borderlands, — его видно издалека.</li>
+        <li><b>Награда:</b> ★ — оружие с аффиксами качества 3–5 и 3–6 Эридия; ★★ — качество 5–6, 8–15 Эридия, 2% легендарка; ★★★ — качество 6, 20–30 Эридия, 10% легендарка. Для мастерства оружия элита = 5 убийств.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Значки модификаторов</h3>
+      <div class="tagline">Так они выглядят под именем элиты в игре</div>
+      <div class="milegend">
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#b3cdf2;--m:url(data:image/png;base64,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)" aria-hidden="true"></span><b>Бронированный</b><small>×0.5 в тело</small><span class="pop" role="tooltip"><b>Бронированный:</b> Удары в тело наносят половину урона, хедшоты — полный.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#4de6ff;--m:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANESURBVHhe7dwhbFVBFIThyspKJBKJRCKRSCQSWYmsQyKRSCQSiUQikUgkEjdLNrnqmHv78vbmn5P5kur9GUHhccrNTURERERERERERERERERERERExM0Y4/kY4+GEr9f17SPofS1I+jzO8ba+fQS9rwX6yPS+FiR9rWssctFvt/Q+e2OMW0nf6hrXJumfpFf1/T30vhboI9P7WthG/llHubY58vxTfn1/D72vhTHG3Ukj/71kZHpfC/SR6X0tjDGeSPpdR7k2SX/GGE/r+3vofS3MX/hJI883Hj0yva8F+sj0vhbm98Ht++FS2/f1u/r+HnpfC/SR6X0t0Eem97UwPyXbPihZavvU77a+v4fe1wJ9ZHpfC3PkOsgKc+T69hH0vhbmv6HXQVaYNwH17SPofS3QR6b3tSDpXR1kBUmf6ttH0Pta2A4sz/BQ3z6C3tcCfWR6XwuSPtY1VpB0X98+gt7XAv2Sl97XAn1kel8L9HNuep89+iUvva8F+sj0vhbo59z0vhbol7z0vhboI9P7WqCfc9P7WqBf8tL7WqCPTO9rgX7ESe9rgT4yva8F+sj0vhbol7z0vhboI9P7WqCfc9P7WqBf8tL7WqCPTO9rgX7OTe9rgX7JS+9rgT4yva8FSV/qGitIelPfPoLeZ43+9296nzX6uPQ+a5JenDTuj0vGpfdZo/8DDL3PGn1cep+17RLnjHHnJc6jx6X3WaOfYdH7rNHHpfdZ2+7xf9Uxrm37rftZfX8Pvc8a/Ycx6H3W6OPS+6xtP5D5vY5xbdsHNS/r+3vofdboP5JN77NGH5feZ4/+f/PQ+6zRx6X3WaOPS++zRj+ZovdZo49L77M2xnhfV1hB0of69hH0Pmv0H5yg91mjj0vvszbPlusQK8wz7Pr2EfQ+a/QLWXqfNfq49D5r9PNoep81+oUsvc8afVx6nzX6eTS9zxr9QpbeZ40+Lr3PGv08mt5njX4hS++zRh+X3meNfh5N77NGv5Cl91mjj0vvs0c/kqT3WaOPS++zRh+X3meNfiFL77NGH5feZ41+Hk3vs0a/kKX3WaOPS++zNj8/376vLv2SdF/fPoLeFxERERERERERERERERERERGxxH8a5IA3pBT2VgAAAABJRU5ErkJggg==)" aria-hidden="true"></span><b>Быстрый</b><small>+60% бег</small><span class="pop" role="tooltip"><b>Быстрый:</b> Всегда бежит, и на 60% быстрее.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#66ff73;--m:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAW0SURBVHhe7d0hkB1FEIDhSGRkJBKJREYikUgkEhkZh4xERiKRyJNIJBKJROJ6qK6apC5/be696+menentryou1bP99t6+3tnp2RcvSimllFJKKaWUUkoppZRSSillmtba64N/X/D/re4ghy3zCNNaeyUiP4rI7yLyT7uDiPwrIg8i8lNr7SvGPEOWPKZorX2pSYvIH/xQLETkr9ba29kfYpY8pukf2Hsm7km/Ua21rzm2pyx5TNMvj+9E5D8mGkVEftMTxWMZkSWPqfSSpr91TGwWEfnFo+jKksc0rbWX/a/3dCLyp/VblCWPqfpvpBY0y9DKXES+4bE+JUseU+l97pmXyqfob7eIfM9jPpIlj6n6JMfybn14WfKYql8ul/zGUP8GHV5Gs+QxVS+UlvqtvKXP1n1SUGXJYzqd/uSB7aBX1R9vrbLkMZWI/MwD2omI/Jopj6n6zNi0WbEoIvJthjymTx3rtCiPYEdJTr7m8cBzFEafWGX54JL5jucqxCrTo+VTWhDyXLnTbz8HLkuJvQr0RQtlUeF3BP2+cxs8fgvGXFmfyYyZF9BZJw64OuZgwZir01tb5uCitfaGg62OOVgw5up0AQlzcOG1AHIm5mDBmKvTZwTMwcUuT8oeYw4WjLmJl8xjiBYWHGEHzMOCMTfhu7x8xwJQMQ8LxtzEa+YxZJeVMsQ8LBhzEz8wjyG6BIkj7IB5WDDmJt4wjyHa+8YRdsA8LBhzE2+ZxxC9pHCEHTAPC8bchPsfQNUAe/GtAXZ9Csg8LBhzB+7TwTqxwEF2wDwsGHMT/kvEdlwFxBwsGHMTr5jHsN3WzSvmYMGYq9MvKnNwsePyaeZgwZir0yV7zMHFjncCzMGCMTfgewfw2L2bII3iuBkwx0C+TwIf67tVhOO4GTDHCOH9AbN+BjhuBswxiO8zgCMzFoZyzAyYo7e+YMf/9o907TkH98YxM2CO3nTfQo4ZJvoqwPEyYI6eenEesxz8iE418iA8cbwMmKOzuFu/z4nsEeRYGTBHL1N6Ao/0PQL+5gF54FgZMEcPvfDzXQD6HPpTEPGQiONkwBw9uD/2tYi4K+AYGTDHUVOr/lu828YYPwPmOCKs/WuEZ+s4Y2fAHK2WPPkf6M+BR03AuBkwR4ulLvuf0wvDobsDxsyAOT5Hf8XM+QXfvfrOm+ZuYsbLgDneq6/EOu9Wz0qnJq1TxoyVAXO8R7+Sxj/giXL2Bsw8HgvGnGWZDaFHzVpDcITHYsGYE82f34/S3483HY/DgjFn0J1YeRzb0y3MmGg0HoMFY0YLX9Z1ll4Umu8MLHgMFowZqRd9cYs6z9aLwikrixXHt2DMKH0Czb+lazX9pUzDs4X34NgWjBllqfcARZu14QTHtWDMCNp1xXHTm9FjwDEtGNObvq6GY17CjKKQY1owpqf0Rd8tfVlZWFHI8SwY08vpy7lWodOdUUUhx7JgTEexe/vvJGoTKo5jwZhOfDdxyiDiRVQcw4IxR4X17++uF4UP/MBGcAwLxhzRn+1ft+i7pS8kGVpN9BjjWzCmVS/6zn3V6w48ew0Y24IxrbZa0nU2r72JGdeCMY3i+/aziSgKzxD+Jq/Mdn2r9wenvt07A++icKYq+pxs/K5i37d2XFlEA2qkLTp4duPZexhJRN7z2IuTyF1JPPTH21X0RelF4ZKbVvfH2lX0RetF4WndRkfSdPHsQqdVeRLOpGsceYwlmPeuJFZLb9iQ3dlFYRV9JxtpQR+1fet2Fme0oFfRt5gTWtDztG5nMasFPWXrdhbRLehpW7eziOw2unwXzy4iWtAv07qdhXcL+qVat7PwakG/ZOt2FqMt6Jdt3c5ipCisoi8JSwt6tW4nY2hBr9btbJ7Rgl6t21nd6jaq1u3knmpBr9btizjqNqounothC3q1bl/Qoxb0at2+qrrdK6WUUkoppZRSSimX8D96HWq0NwKUWAAAAABJRU5ErkJggg==)" aria-hidden="true"></span><b>Регенерирующий</b><small>3–6.5% HP/с (звёзды)</small><span class="pop" role="tooltip"><b>Регенерирующий:</b> Через 3 с без урона восстанавливает 3% (★) / 4.5% (★★) / 6.5% (★★★) здоровья в секунду.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff9926;--m:url(data:image/png;base64,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)" aria-hidden="true"></span><b>Взрывной</b><small>40–110 вам (звёзды)</small><span class="pop" role="tooltip"><b>Взрывной:</b> После смерти взрывается: ★ — 40 урона вам и 150 зомби в 3 м; ★★ — 70 и 250 в 3.5 м; ★★★ — 110 и 400 в 4 м.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#f2334d;--m:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAUKSURBVHhe7d0hsBRHEAZgZCQyMhKJRCKRyEhkJBKJIw5JXCQSGRkZGYlEIpG4Hqqpvqqrrrf1bvfvmZ353/9VPcnt/bt3e7vTvc2jRyIiIiIiIiIiIiJ0WmtPW2vPt/7M7Fn+N7IAP3CttVettbdm9m/8/dcKmNn/V6/5zsz+iA/ML/l9SGfxDX4ZB/ofM/ucD9hIZvbFPxj+fvwDqDNIsdbar7FjP5nZ93wAZhUfztettd9yJrlHfMvf+Kk379gV+Vkqfjp0dthiZi/M7IOfUvMOZGJmX83sbzP7Pe+DB8cvouL0Tn3Qt8SHwX8mHud9Q80Dxyn+a94pD5GZffOfCL/eyfuKigc0s/ceOO8E+flB+O4/D3QXjnHgP+TAss3veig+CP4bp2/8MXHb6+sL6y04+a0cy23c2eIi+Xnex9PypdKVFm0W8jbv66n41b2ZfczvWupEfWO+u4W40NMpf4D4SXiaj8FpWmtPHupizlli7eD8peU4+LrKP0FcZ513cRinfX3zTxRfvvHrBX5vWtVwIZj4Eo6tJ8TatUzC777yMeom2q9kMkNKzHHqP7UNS+4W1dW+awTReCnz6rtaqMWeucVZoE/xyNu28gZlPl6LyceuhGr6a/CO5HzsSmjRZw2xQlj7M+BLvnlDMi//uc7HEBKPQsk6XuVjCNHt33JqbwfjaR3vT7v178/8jnoys7/ueA89/2bPd16V8GJw33/tRc8N2PPBorW5O1+cytsegT0fbFTFcGgl7Ap7Plg8x9+dP3uQtz0Cez7YqLWD8nveG7HnKzGoX3BsN8wV9nyw3m1jvjydtzkSez6YPw2cQ1XyK/G8zZHY88EGrCDWrnjtxJ4PFiuIPb3M2xyJPR8segh7Pig6vif+Cnu+Er3ayPwKPG/rDOz5YDH2pJwPaMzbOgN7PlhMwirnV+B5W2dgzwfr2ExS2/RwEHs+WIyF62GKZ+TZ85Wobij1K++8jTOx54NV185nq5Gz54P5ZNAcEuHPKORtnIk9H6y6dj5bjZw9Hyzm/peZYj7OFfZ8JYpr59PVyNnzwfyZtZzyCJ9PkF97Buz5YFW181lr5Oz5YD7CJIc96E1+7Rmw54NV1c5nbZJkz1eiqHbedw4OgD0fDG2i9Mex8mvOhD0fDJ0y0m36RRH2fLD4b1cP88ex8mvOhD0fDB0yOWQYIoA9Hyz+r0DEk/yaM2HPV+LopNFVauTs+WBH/1sZv8LOrzUj9nywo7XzVZok2fPBjk4c7TYBsxh7PhjQRLlEkyR7vhIHBywtMyiJPR9sbxPlak2S7PlgewcsrTYoiT0fbG8T5WpNkuz5YHsHLK1WI2fPV2JnE+VyTZLs+WC31s5XHZTEng92axPlqk2S7PlgOwYsLTkoiT0fbEcT5ZKDktjzwXYMWFpyUBJ7vhL3DVhafVASez7YfQOWVh+UxJ4Pdt+ApdVr5Oz5YDcMWFp6UBJ7PtgNtfOla+Ts+UpsDVhiaZJkzwfbqp2z1MjZ88G2mihZBiWx54Nt1c5ZauTs+WBbA5ZYBiWx5yuxUTunqZGz54PlAUtsg5LY88Fy7ZytRs6eD3bHgCWqQUns+WC5ds7WJMmer0SqndMNSmLPB7s0UbIOSmLPB7sMWGIdlMSeD3YZsMQ6KIk9H+wyYIl1UBJ7PtjVgCXKQUns+Uqwl0jZ88HYK2Ts+WDsBRL2fCIiIiIiIiIiIiIiIiIiMoUfzBqsatRJrV0AAAAASUVORK5CYII=)" aria-hidden="true"></span><b>Вампирский</b><small>лечится 50%</small><span class="pop" role="tooltip"><b>Вампирский:</b> Его удары лечат его на половину нанесённого урона.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff7319;--m:url(data:image/png;base64,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)" aria-hidden="true"></span><b>Горящий</b><small>поджигает</small><span class="pop" role="tooltip"><b>Горящий:</b> Его удары поджигают вас, а сам он к огню невосприимчив.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#80bfff;--m:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARYSURBVHhe7d0vcBUxEMfxykpkZWUlEolEIpFIJBJZh0QikUgkEolEIpFIJG7DZCbMdPb+vLtcct3Nfj8ztXnDy+P1svvL9uoKAAAAF4nIi5TS/Y6f53oNOJVSuhORv2mfp3odOJRSuhaRn3p314jIN70OnBKRT3qDN3ip14FDIvJG7+wlIvJLrwOHRORZxe/9/AF4q9eCMymlJ/l/st7cS8oH5lqvB2dE5Ive3C1E5INeC87kr3C9sTvc6fXgSC7e6B3dKn9r6PXgSErpRkR+643dKlcK9ZpwJBdv9KZuJSI/9HpwpNTuq+V6gV4TTuSqnd7QPcqvDY5+HqWUbkXkj97UPTj6OVWaPN/1hu5RCj83em04kP/n6g3di6OfUyLySm9mJXr+3lSGOyY4+jlUE+5Ykr9F9PowrjLcMcHRz6GacMeKd3p9GFYb7pjD0c+Z2nDHEhH5qF8DhtWGO1Zw9PPiYLhjgri3I0fCHSuIe3twNNwxh7i3I0fCHUuIeztxNNwxh7i3E0fDHUvo+TvQItyxgri3ZS3CHUvo+TvQItyxhLi3cQ3DHRP0/I1rFe5YQtzbsJbhjjn0/I1rFe5YwtHPsMbhjgl6/oa1DHcs4ehnVOtwxwp6/hZ1CHdMcPQzqnW4Ywlxb4M6hTsmOPoZ1CPcsYK4tzU9wh1zOPoZ1CPcsaRUFfXE70f7ycdd/X6E0ivc4UE+iYR+Fukc7jCt/Ltv9XsSRs9wh3XlOST2H5roGe6wLnzyuGe4w7rwdw57hzssK7/yQj/0dQ13WFaaW7HrD73DHVblb7zw5/3e4Q7Lwjeezgh3WBU+cnZiuMMc5gycFO6wqHzon+j3I5Szwh3WlF93se8ZnhXuMCr2hJGTwx3W3Ov3I5yzwh3WEDM/OdxhSalwxi3zZlHDHeF7+1nkcEf43n7wcEfs3n4WNdwhIp/1exFOrnbppOtj/Jx98gjf27fmzJJzqXHEfuiz5qwHUHr7BuUN0RvVC/OEDCrPAd2F7+1bdcYDYHkNHvqsKTWIrmkjevuG9S4/lw8Xo2Ss6l2ECh/otK7csO1CRN7r14MhuRijN60VEfmqXw/GpJRe641rofT2eeizrsdNo1JRjB3o9KJH7pC/G+BEPprpzWuA6WFetL5zQG/fmfyUrjexVvhhTd60LP8S6HSo1a0jhjU51ar9S6DTqRbl3/DDmrwqIdRDCHQ6drT9y7Am546Ufwl0DuDIuBl6+84daf8S6BxA7ag5hjUNoub2D4HOgey9/cOwpoFU3v6JPaxpJBXlX4Y1jWTP7R+GNQ1mT/uXYU0D2lr+pbc/qB23f+jtj2hL+5fe/qC2lH8JdA7s0u0fevuDW2v/MqwpgKXbP/T2A1i7/cOwpgCWbv/Q2w9i7vYPw5qCmCv/0tsPRN/+YVhTMLr9S6AzmIflX4Y1BfPw9g/DmgL63/5lWFNQufzLsKbA8nGPYU1BlfYvw5qi4uYuAABN/APzWkJKhhBGOgAAAABJRU5ErkJggg==)" aria-hidden="true"></span><b>Электрический</b><small>шокирует</small><span class="pop" role="tooltip"><b>Электрический:</b> Его удары шокируют вас, а сам он к току невосприимчив.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#99ff33;--m:url(data:image/png;base64,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)" aria-hidden="true"></span><b>Кислотный</b><small>−20 защиты</small><span class="pop" role="tooltip"><b>Кислотный:</b> Его удары на 10 с снимают 20 физической защиты.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#cc80ff;--m:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAT2SURBVHhe7d0vkNRQDAZwJBKJRCKRSCQSiTyJRJ48h0QikUgkEolEIpEnkbiEyU12phMue932vZfX5PvNrDmW2/75tknfa3uPHgEAAAAAAEAgZn5qfwZFMPNzIvpDRC/tv0FyzPyYiH4xMxPRb2Z+Yt8DiRHRZ9n5J0T01b4HkmLmq+XOPyGi9/a9kIzW/b925wv5OfqBxJZ134N+IDFb9z3oBxLy6r4H/UAi5+q+B/1AEmvqvgf9QAJr674H/cCBXVr3PegHDmhL3fegHziYPXXfg37gQPbWfQ/6gQNoVfc96Acm1rLue9APTKpH3fegH5hQr7rvQT8wkd5134N+YAIj6r4H/UCwkXXfg34g0Oi670nbD8jhjZlfLV/2PVGi6r4nRT8gN0kQ0Tsi+mZXcImIfjDzNTM/s79jhMi67zl0PyA1jJlvtmxUIvo08u6aGeq+55D9gBzW5e4YuzKX0PS/tb+7h1nqvudQ/YDU0S3f+jNu7Ge0NFvd9xyiH+i1MYnoo/2sFmas+57p+wE97HfbmNJI2s/cY+a675m2H9BOf1fNf4iG64X97K1mr/ueKfsBOUTbBe2h1cpLYKW32Poiou922S6h//+/33vBK+RU+V767e926L9Hs6PAVroT9uja2A6lgzfDyBiBXYbREIAFHcEbhohu7TKMhgAoHe2LEFoGEAClEzvDjRoh9CAAipnf2DUbIXpUDAFQMjhj12yQ0A2IACg5FNs1G+TaLstICIDSCzoiXNllGQkBUDqiNlz0pAgCsKATFMPoqONjuxwjIQALo+YBTlrNB+yBACzIoIxdu87e2GUYDQEw5Ftp17AHIvppPzsCAmAMPAqEf/sFAnCP3rOCM8wCniAADiL6Yte0BZ1xDO38lxAAh15n1zQEuvOnug4OAXhAgw10R28Qmeabf9Jg/XIHQOhVwpuundOrdado+O6DAFxAdqSUhTXXDer9g6Hj/GsgABvp5JGcLcgGXL7k59Md6j0IQHEIwA722QAzPR9gLQRgBR0dvLuJYu2MobxP3/8xesr3HATAoZ2/7LxVO/whcgm4ngpOdUaAABj6BJBbu5Yt6b2H0kCGN4sIgCKi16PvsNWjAi4LjyT1fesgTysyNRzVQJYOgFyTb9cmUq+HR5xTMgA60SMN2XR0BHHYhFG5AMjGjT7kP0R7ked22XsoFQB5GEGr07re9Eyhe19QJgD6zT/Ezj/REHQ9EpQIgNb8qQ/7nt4PUyoRgFkbvrU0vF0GjdIHYLZTva16nSKmDsDAS7xHaT6PkDoAOsKWhs5RNC0FaQMQ9cSP3lo/USRlAI746NS19CjQ7PHzKQOQpfHztGwI0wVAv/1d5/Oj6VXJTY4C6QIg8/p2CTNq9cTxjAE45JOzLyWDQ3bdt8gYgNSH/xMtA7uHiFMFIPBJX1F233mUKgBE9MEuXWZym5rdBpfSL42EYOur+5T1alnP/T0yXWy3QWm9/9TLpJoODR+WbAi7ZYqY50+uRJINYbdMEfPU4EgFzwDuRN9YMo3Ap32Haj07eFjZJ4DOmOc8PJKek1aEAAgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoDgEoLgGT7s66gtPCAEAgAz+ATO2M2fqSagTAAAAAElFTkSuQmCC)" aria-hidden="true"></span><b>Гигантский</b><small>+50% HP и урона</small><span class="pop" role="tooltip"><b>Гигантский:</b> Крупнее, +50% здоровья и урона.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#b38cff;--m:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAVWSURBVHhe7d0tdNRAEAfwSmQlEolEIpHISmQlsrKyrrKyjuKQvIdBgkMikchKJOpmeQNzvLtJctlsZj+y8/+9d6a9XnK7k81+zKZnZwAAAAAAAAAAAAAAAAAAAP0gopchhFeHL/0e6EgI4SkRvSWiz+EEIvoWQrgOITzTnwEbFEI4DyHcENFvXdlziOieA0d/JmwEN+tE9EtX7BIcOET0Rn82NC6EcJly1Z9wo48BjeLK17VngYju9LGgMdLsW175R7gjqY8JjZCe/qp7/hwJrhf62NAAbqJ1heVARB/1saEyufqzNf0j0Aq0RCZviuE5An0OUJHM4BVDRI/6HKASme2rAbeBFsjCTnGYIWxECOFCV04JRHSlzwUq4MkZXTmFYHq4BdwU65op5FqfC1QgCR01XOpzgQp4EkjXTAnc+dTnApUQ0U9dQTnJrOMTfR5QSal1gD2sBzSGJ2V0JWV2oc8BKuOrUtdSDkT0XR8bGlCwFcDV36rcq4JYBVyoxgYMIvqgK86CrDhm7fnXKC9z/CWI6GEqPUtSrbmSsjSlXEnWQSCVf66PZaF2eZmRrJxFHTEi+pJrWZXn6vXxUsgGEfMrv7XyWkWi+FGfcIycmy8kS5gLbTEi+pHrqmu1vJJYzcXn/FJckdyMxuQNyv7BbPP8WyivaLyJMjWStVIp11IBPFrgW8Thi39u3tQf2mJ5nbT0Hjan90mWrsrLqikbka35ram78rIeau3xkEsfy1qN8faWy2tAxtqzHaoVTB7QIPfcK+7YcXOpDzKGe/8ycuB+wnP9mSm2Ul7RcmfirunhypoAPxSCh3GrSUDcrUkAabm8kuTOxE3JuJUxf9RVnkoSTxbPDbRYXqsUyMSNzrjlK37u2T/WZGo4ut/QUnmZKJCJO5txK1OpD/oPS5LAm+0ntFBepjIOafZODm3kqjeZUFlLOncnbwu1y8tcgf14kzNcfDVl7lGnmrwKa5ZXNqmLLHO4o6WPtWe1wpeLjPVHp5NrlFdWuTo2RHSrj8Vq3+9jTSWOlC6vIqyHXXJfHyu8W/3elk2ljZcqr2IydG4GnZkCPehcBkOzEuVVHE9C6LNKMfYcPkmcaLHDF2swOshZXtWszcYdy7a1XDuvRYJ3ME+Qo7yqk6nYRRXGiZBTD1+0XjuvZWrN3rq8msAdEo7uuc2a/MVlP99opm3BTR6lDG4FzKq8miSVOEi9illVKz23n5v0/k/21teUV1dyr5zVUnzFrgUpmTfWY+VWxIzZU8qrGQeJGFEVuE+0OPySGcbJrfk/brcor+pkqHY/14mZI73bh91u907/rie73e6TZXlVWQRi3BuVNKktT9J0QRagyv1vIxm2jG5khDpkuxivl5zsY6wiV31Xw7PeSH/CvjWQe31UZwXqkkkju7kDSb9Ck78hZjuI5cpH5W+QdNDTh4xyzzfZXAF1yMU7WI2Mgg5fH2TOYdki0tr1amjLVIraqAr/gQvKiJs1LP3cXSgjqhXgDgOu/n4R0Wtd50e2knsPaXhziq7zI0tz1GBbpHUfHxE4WIuHf8b3Emxt9w2k4eVjXfd/YdbPB5kdHC4b6zdC144fKsU/0O+Arh0vEuV+ihW0ZbBU3GsuPowb7FGw2rEKm3G8db31R6+AOQSAcwgA5xAAziEAnEMAOIcAcA4B4BwCwDkEgHMIAOcQAM4hAJxDADiHAHAOAeAcAsA5BIBzCADnEADOIQCcQwA4hwBwDgHgHALAOQSAcwgA5xAAziEAnEMAOIcAcA4B4BwCwLlBAPBDIjkIar3ehxC+rnjx3+vPzPna2vnqV/p/EgEAgB78Ae63Hj3TerkZAAAAAElFTkSuQmCC)" aria-hidden="true"></span><b>Призыватель</b><small>×3 зомби</small><span class="pop" role="tooltip"><b>Призыватель:</b> На половине здоровья зовёт 3 зомби (один раз).</span></div>
+      </div>
+    </article>
+<article class="card">
+      <h3>Эридий</h3>
+      <div class="tagline">Фиолетовый кристалл · стопка 500 · торговцам не продаётся</div>
+      <ul>
+        <li><b>Откуда:</b> элиты; разборка оружия с аффиксами (2 за аффикс, ×2 на качестве 6); разборка легендарки (50). Эридий приходит, когда разборка <b>завершилась</b> (отмена в очереди ничего не даёт). В закрытом верстаке Эридий ждёт в выходных слотах вместе с материалами.</li>
+        <li><b>Кузня эридия</b> — отдельный верстак (рецепт на обычном верстаке). Возьмите оружие в руки, откройте кузню, и возле каждого аффикса будут кнопки:</li>
+        <li><b>Перебрать</b> (10): этот аффикс получает новый тип и значение.</li>
+        <li><b>Зафиксировать</b> (25): этот аффикс больше не меняется. На оружии может быть один защищённый аффикс. <b>Снять фиксацию</b> — бесплатно.</li>
+        <li><b>Добавить</b> (20): новый аффикс в пустую строку, если качество позволяет больше.</li>
+        <li><b>Разобрать</b>: оружие превращается в Эридий.</li>
+        <li><b>Легендарка на выбор</b> (300): любая из десяти, качество 6.</li>
+        <li><b>Заточка</b> (вкладки «Оружие» и «Одежда»): +1 качество за раз, до 10, для оружия (и легендарок) и любой надетой одежды с характеристиками, растущими с качеством. До 6 — всегда успешно (5×N Эридия и кованой стали). 7–10 — 35→50, успех 65%→30%, <b>неудача ломает предмет</b> (возвращается 30% от разборки). <b>«Безопасно»</b> (×5): неудача лишь снижает качество на 1, не ниже 6. Каждый уровень выше 6 даёт столько же, сколько шаг качества в ванили.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="mastery" data-sec>
+  <h2>Мастерство оружия</h2>
+  <p class="lead">Каждое оружие (любого качества: мачете 2 и 6 уровня — одно и то же) растёт от убийств, пока оно в руках. 10 уровней = 10 очков в дерево из 20 навыков, так что взять можно лишь половину. <b>Alt+K</b> — окно дерева оружия в руках; или в инвентаре клик по оружию → третья кнопка рядом со «Статистика / Описание».</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>Как работает</h3>
+      <ul>
+        <li><b>Уровни:</b> 4 / 12 / 24 / 40 / 60 / 90 / 120 / 160 / 210 / 260 убийств. Элита считается за 5.</li>
+        <li><b>Дерево:</b> три ветки вверх от корня; каждый навык открывается только рядом с изученным. В середине ветки — сильный узел, наверху — ключевой (жирные). Перемычки соединяют ветки.</li>
+        <li>До ключевого узла одной ветки — 6 очков, так что две ветки до конца не пройти.</li>
+        <li>Форма дерева общая для класса оружия, очки — отдельные для каждого оружия.</li>
+        <li><b>Сброс:</b> 5 Эридия за каждое вложенное очко, только в пределах 5 м от Кузни эридия.</li>
+        <li>«Крит» — шанс удвоить удар; «Сила крита» делает его ещё больше. Стихии и контроль — шанс на каждый удар.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Клинки (ножи, мачете)</h3>
+      <div class="tagline">Корень: Урон +5%</div>
+      <ul>
+        <li>Скорость +5% → Скорость +6% → <b>Убийство: скорость +20% 6 с</b> → Расход выносливости −15% → <b class="trait">Комбо +8%/удар (до 5)</b></li>
+        <li>Урон +6% → Кровотечение 20% → <b>Добивание (&lt;35% HP) +30%</b> → Кровотечение 20% → <b class="trait">Глубокое кровотечение 35%</b></li>
+        <li>Крит 5% (×2) → Вампиризм 3% → <b>Первый удар (полное HP) +60%</b> → Вампиризм 4% → <b class="trait">Сила крита +100%</b></li>
+        <li><small>Перемычки: Расход выносливости −10% · Расчленение +10% · Урон +6% · Крит 5% (×2)</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Дубинки и биты</h3>
+      <div class="tagline">Корень: Урон +5%</div>
+      <ul>
+        <li>Оглушение 8% → Оглушение 8% → <b>Добивание (&lt;35% HP) +30%</b> → Урон +8% → <b class="trait">Каждый 5-й удар +150%</b></li>
+        <li>Урон +6% → Расчленение +15% → <b>Сбить с ног 10%</b> → Урон +8% → <b class="trait">Осколки 30% в 3 м</b></li>
+        <li>Скорость +5% → Расход выносливости −10% → <b>Убийство: скорость +20% 6 с</b> → Скорость +6% → <b class="trait">Комбо +8%/удар (до 5)</b></li>
+        <li><small>Перемычки: Урон +5% · Расход выносливости −10% · Крит 5% (×2) · Скорость +5%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Кувалды</h3>
+      <div class="tagline">Корень: Урон +5%</div>
+      <ul>
+        <li>Сбить с ног 8% → Сбить с ног 8% → <b>Осколки 25% в 3 м</b> → Осколки 15% в 3 м → <b class="trait">Каждый 5-й удар +200%</b></li>
+        <li>Урон +6% → Урон +6% → <b>Добивание (&lt;35% HP) +35%</b> → Урон +10% → <b class="trait">Первый удар (полное HP) +100%</b></li>
+        <li>Скорость +5% → Расход выносливости −12% → <b>Убийство: скорость +25% 6 с</b> → Скорость +6% → <b class="trait">Комбо +10%/удар (до 5)</b></li>
+        <li><small>Перемычки: Расход выносливости −10% · Расчленение +15% · Урон +6% · Оглушение 8%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Копья</h3>
+      <div class="tagline">Корень: Урон +5%</div>
+      <ul>
+        <li>Скорость +5% → Скорость +5% → <b>Убийство: скорость +20% 6 с</b> → Расход выносливости −15% → <b class="trait">Комбо +8%/удар (до 5)</b></li>
+        <li>Урон +6% → Кровотечение 15% → <b>Осколки 20% в 3 м</b> → Урон +8% → <b class="trait">Осколки 35% в 3 м</b></li>
+        <li>Крит 5% (×2) → Крит 5% (×2) → <b>В голову +40%</b> → Крит 6% (×2) → <b class="trait">Сила крита +100%</b></li>
+        <li><small>Перемычки: Расчленение +10% · Расход выносливости −10% · Урон +6% · Сбить с ног 8%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Кастеты</h3>
+      <div class="tagline">Корень: Скорость +5%</div>
+      <ul>
+        <li>Скорость +5% → Комбо +4%/удар (до 5) → <b>Убийство: скорость +25% 6 с</b> → Скорость +6% → <b class="trait">Комбо +10%/удар (до 5)</b></li>
+        <li>Урон +6% → Урон +6% → <b>Добивание (&lt;35% HP) +30%</b> → Урон +8% → <b class="trait">Каждый 5-й удар +150%</b></li>
+        <li>Оглушение 6% → Оглушение 6% → <b>Сбить с ног 10%</b> → Расход выносливости −15% → <b class="trait">Вампиризм 8%</b></li>
+        <li><small>Перемычки: Расход выносливости −10% · Вампиризм 3% · Крит 5% (×2) · Вампиризм 3%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Жезлы</h3>
+      <div class="tagline">Корень: Урон +5%</div>
+      <ul>
+        <li>Шок 10% → Шок 10% → <b>Осколки 20% в 3 м</b> → Шок 15% → <b class="trait">Осколки 40% в 3 м</b></li>
+        <li>Урон +6% → Урон +6% → <b>Добивание (&lt;35% HP) +30%</b> → Урон +8% → <b class="trait">Каждый 5-й удар +150%</b></li>
+        <li>Оглушение 6% → Оглушение 6% → <b>Сбить с ног 10%</b> → Расход выносливости −15% → <b class="trait">Комбо +8%/удар (до 5)</b></li>
+        <li><small>Перемычки: Скорость +5% · Расход выносливости −10% · Крит 5% (×2) · Скорость +5%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Пистолеты и SMG</h3>
+      <div class="tagline">Корень: Урон +5%</div>
+      <ul>
+        <li>В голову +15% → В голову +15% → <b>Крит 8% (×2)</b> → В голову +20% → <b class="trait">Сила крита +100%</b></li>
+        <li>Перезарядка +10% → Перезарядка +10% → <b>Убийство: +2 патрона</b> → Магазин +20% → <b class="trait">Комбо +6%/удар (до 5)</b></li>
+        <li>Скорость +5% → Скорость +6% → <b>Убийство: скорость +20% 6 с</b> → Урон +8% → <b class="trait">Каждый 5-й удар +150%</b></li>
+        <li><small>Перемычки: Разброс и отдача −10% · Магазин +15% · Урон +6% · Разброс и отдача −10%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Дробовики</h3>
+      <div class="tagline">Корень: Урон +5%</div>
+      <ul>
+        <li>Расчленение +15% → Урон +6% → <b>Добивание (&lt;35% HP) +30%</b> → Урон +8% → <b class="trait">Поджог 25%</b></li>
+        <li>Перезарядка +10% → Перезарядка +10% → <b>Убийство: +1 патрон</b> → Магазин +25% → <b class="trait">Перезарядка +25%</b></li>
+        <li>Сбить с ног 6% → Сбить с ног 6% → <b>Первый удар (полное HP) +50%</b> → Осколки 15% в 3 м → <b class="trait">Осколки 30% в 3 м</b></li>
+        <li><small>Перемычки: Разброс и отдача −10% · Магазин +20% · Урон +6% · Оглушение 6%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Винтовки</h3>
+      <div class="tagline">Корень: Урон +5%</div>
+      <ul>
+        <li>В голову +15% → В голову +15% → <b>Крит 8% (×2)</b> → В голову +25% → <b class="trait">Сила крита +150%</b></li>
+        <li>Перезарядка +10% → Перезарядка +10% → <b>Убийство: +1 патрон</b> → Скорость +10% → <b class="trait">Осколки 40% в 3 м</b></li>
+        <li>Первый удар (полное HP) +30% → Первый удар (полное HP) +30% → <b>Добивание (&lt;35% HP) +30%</b> → Урон +8% → <b class="trait">Первый удар (полное HP) +100%</b></li>
+        <li><small>Перемычки: Разброс и отдача −15% · Урон +5% · Разброс и отдача −10% · Магазин +20%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Автоматы и пулемёты</h3>
+      <div class="tagline">Корень: Урон +5%</div>
+      <ul>
+        <li>Разброс и отдача −10% → Разброс и отдача −10% → <b>Комбо +3%/удар (до 5)</b> → Разброс и отдача −15% → <b class="trait">Комбо +5%/удар (до 5)</b></li>
+        <li>Магазин +15% → Магазин +15% → <b>Убийство: +3 патрона</b> → Перезарядка +15% → <b class="trait">Магазин +40%</b></li>
+        <li>Урон +5% → Скорость +5% → <b>Шок 8%</b> → Скорость +6% → <b class="trait">Поджог 15%</b></li>
+        <li><small>Перемычки: Скорость +5% · Перезарядка +10% · Урон +5% · Крит 5% (×2)</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Луки</h3>
+      <div class="tagline">Корень: Урон +5%</div>
+      <ul>
+        <li>В голову +15% → В голову +15% → <b>Крит 8% (×2)</b> → В голову +20% → <b class="trait">Сила крита +150%</b></li>
+        <li>Урон +6% → Урон +6% → <b>Осколки 20% в 3 м</b> → Урон +8% → <b class="trait">Осколки 40% в 3 м</b></li>
+        <li>Кровотечение 15% → Кровотечение 15% → <b>Кислота 15%</b> → Поджог 15% → <b class="trait">Глубокое кровотечение 30%</b></li>
+        <li><small>Перемычки: Скорость +5% · Разброс и отдача −10% · Первый удар (полное HP) +50% · Скорость +5%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Арбалеты</h3>
+      <div class="tagline">Корень: Урон +5%</div>
+      <ul>
+        <li>В голову +15% → В голову +15% → <b>Крит 8% (×2)</b> → В голову +25% → <b class="trait">Сила крита +150%</b></li>
+        <li>Урон +6% → Урон +6% → <b>Сбить с ног 10%</b> → Урон +10% → <b class="trait">Осколки 40% в 3 м</b></li>
+        <li>Перезарядка +10% → Перезарядка +15% → <b>Убийство: скорость +20% 6 с</b> → Шок 15% → <b class="trait">Комбо +8%/удар (до 5)</b></li>
+        <li><small>Перемычки: Перезарядка +10% · Разброс и отдача −10% · Первый удар (полное HP) +60% · Оглушение 8%</small></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Взрывчатка</h3>
+      <div class="tagline">Корень: Урон +5%</div>
+      <ul>
+        <li>Урон +6% → Урон +6% → <b>Добивание (&lt;35% HP) +30%</b> → Урон +10% → <b class="trait">Первый удар (полное HP) +60%</b></li>
+        <li>Поджог 10% → Поджог 10% → <b>Шок 15%</b> → Кислота 15% → <b class="trait">Осколки 20% в 3 м</b></li>
+        <li>Перезарядка +10% → Оглушение 8% → <b>Убийство: +1 патрон</b> → Перезарядка +20% → <b class="trait">Перезарядка +40%</b></li>
+        <li><small>Перемычки: Перезарядка +10% · Сбить с ног 8% · Урон +6% · Сбить с ног 8%</small></li>
+      </ul>
+    </article>
+  </div>
+</section>
+<section id="perks" data-sec>
+  <h2>Перки и атрибуты</h2>
+  <p class="lead">Каждый перк на максимальном уровне имеет свою фишку, а каждый атрибут — на 10 уровне. Ванильные эффекты, дублировавшие фишки мода, заменены. В описании уровня в игре есть жёлтая строка AposMod с точными числами.</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>Атрибуты — <span class="trait">уровень 10</span></h3>
+      <ul>
+        <li><b>Perception — Executioner:</b> винтовки, копья и взрывчатка наносят +100% урона целям, у которых меньше 30% здоровья.</li>
+        <li><b>Strength — Overkill:</b> лишний урон от добивающего удара дробовиком, дубинкой или кувалдой переходит на ближайшего зомби в 4 м.</li>
+        <li><b>Fortitude — Iron Body:</b> ни кровотечения, ни инфекции, а имеющаяся инфекция вылечивается.</li>
+        <li><b>Agility — Adrenaline:</b> убийства пистолетом, луком или ножом дают +10% скорости бега на 15 с, до 3 стаков.</li>
+        <li><b>Intellect — Charged Chain Lightning:</b> каждое убийство даёт заряд молнии. На 10 зарядах следующий удар любым оружием выпускает вокруг вас Chain Lightning, которая ещё и наносит урон: 4 с шока и 200 урона всем зомби в 8 м.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Perception — <span class="trait">уровень 5</span></h3>
+      <ul>
+        <li><b>Flurry of Perception — Frenzy:</b> убийство копьём даёт +25% скорости атак на 5 с.</li>
+        <li><b>Demolitions Expert — Chain Reaction:</b> зомби, убитый вашей взрывчаткой, сам взрывается: 250 урона в 4 м.</li>
+        <li><b>Penetrator — Shrapnel:</b> бронебойные патроны наносят 40% урона выстрела всем в 3 м от цели.</li>
+        <li><b>Infiltrator — Ghost:</b> в присяде вас вдвое сложнее заметить, удар по зомби, который вас не видит, ×2, а мины и ловушки вам не вредят.</li>
+        <li><b>Animal Tracker — Hunter's Mark:</b> попадание по животному ставит на него Mark.</li>
+        <li><b>Treasure Hunter — X Marks the Spot:</b> круг поиска клада сжимается почти до точки, а в сундуке лежит оружие качества 5–6 с аффиксами.</li>
+        <li><b>Salvage Operations — Junk Genius:</b> инструменты для разборки изнашиваются на 90% медленнее.</li>
+        <li><b>Perception Mastery — Lucky Shot:</b> 10% шанс, что попадание оружием Perception нанесёт +100% урона.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Strength — <span class="trait">уровень 5</span></h3>
+      <ul>
+        <li><b>Flurry of Strength — Frenzy:</b> убийство дубинкой или кувалдой даёт +25% скорости атак на 5 с.</li>
+        <li><b>Boomstick — Pump Action:</b> убийство из дробовика заряжает 1 патрон в магазин.</li>
+        <li><b>Pack Mule — Beast of Burden:</b> перегруз больше не замедляет.</li>
+        <li><b>Strength Mastery — Crippling Blows:</b> силовой удар дубинкой или кувалдой ломает зомби ноги, и он ползёт.</li>
+        <li><b>Miner 69'er — Tunnel Rat:</b> инструменты для добычи тратят на 50% меньше выносливости.</li>
+        <li><b>Mother Lode — Jackpot:</b> удар по руде или дереву с шансом 5% даёт ×5 добычи на 2 с.</li>
+        <li><b>Junk Miner — Scrap King:</b> +50% с куч мусора и разборки.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Fortitude — <span class="trait">уровень 5</span></h3>
+      <ul>
+        <li><b>Flurry of Fortitude — Frenzy:</b> убийство кастетами даёт +25% скорости атак на 5 с.</li>
+        <li><b>The Huntsman — Butcher:</b> разделка туши лечит 30 HP.</li>
+        <li><b>Pain Tolerance — Unbreakable:</b> когда здоровье ниже 25%, вы получаете на 50% меньше урона.</li>
+        <li><b>Fortitude Mastery — Second Wind:</b> раз в 5 мин, когда здоровье падает ниже 20%, вы сразу восстанавливаете 70%.</li>
+        <li><b>Siphoning Strikes</b> (все уровни): вместо ванильных 2–10 HP за убийство — вампиризм: каждый удар в ближнем бою лечит 4/8/12/16/20% нанесённого урона. <b>Vampire</b> (5): убийство в ближнем бою даёт +50 к максимуму здоровья на 15 с (не лечит — заполняйте вампиризмом). Каждое убийство за это время добавляет ещё +50 и перезапускает 15 с — без предела. Когда бафф спадает, бонус исчезает.</li>
+        <li><b>Healing Factor — Regeneration:</b> 10 с без боя — и вы восстанавливаете 3 HP/с.</li>
+        <li><b>Slow Metabolism — Iron Stomach:</b> ни отравления, ни дизентерии (грязную воду можно пить), а еда и вода не падают ниже 25%.</li>
+        <li><b>Rule 1: Cardio — Second Lungs:</b> когда выносливость заканчивается, вы сразу получаете +50% (раз в 60 с).</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Agility — <span class="trait">уровень 5</span></h3>
+      <ul>
+        <li><b>Flurry of Agility — Frenzy:</b> убийство ножом даёт +25% скорости атак на 5 с.</li>
+        <li><b>Run and Gun — Gun Kata:</b> на ходу стрельба от бедра без разброса и с +30% урона.</li>
+        <li><b>Hard Target — Blur:</b> на бегу вы получаете на 50% меньше урона.</li>
+        <li><b>Parkour — Cat Landing:</b> падение наносит на 99% меньше урона.</li>
+        <li><b>Agility Mastery — Evasion:</b> после полученного удара вы бегаете на 30% быстрее 5 с.</li>
+        <li><b>Hidden Strike — Shadow Strike:</b> 3 с в присяде, незамеченным и без атак — бафф «Тень», следующий удар оружием ×2; если он убивает, «Тень» сразу возвращается, так что комнату можно зачистить по одному. Пропадает, если встать или вас заметили.</li>
+        <li><b>From the Shadows — Silent Shadow:</b> присед не замедляет: крадётесь со скоростью ходьбы, а бег в присяде такой же, как обычный. <b>Охотник во тьме:</b> ночью и в тёмных местах вы чувствуете зомби в радиусе 20 м сквозь стены — тусклое красное свечение, пульсирующее как сердце (спящие — бледно-синие). Зомби, потерявшие вас, почти сразу бросают поиск.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Intellect — <span class="trait">уровень 5</span></h3>
+      <ul>
+        <li><b>Electrocutioner — Overcharge:</b> по шокированным зомби любое ваше оружие наносит +25% урона.</li>
+        <li><b>Better Barter — Black Market:</b> после каждого обновления ассортимента с шансом 25% у торговца появляется легендарка.</li>
+        <li><b>Daring Adventurer — Big Score:</b> оружие в награду за квест ★5+ всегда качества 6 с 3 аффиксами.</li>
+        <li><b>Charismatic Nature — Leader:</b> бонусы вашей харизмы действуют на вас вдвое сильнее.</li>
+        <li><b>Physician — Field Medic:</b> лечение +50%, а аптечка ещё и останавливает кровотечение.</li>
+        <li><b>Advanced Engineering — Overclock:</b> ваши ловушки и турели-блоки наносят +50% урона.</li>
+        <li><b>Grease Monkey — Mechanic:</b> транспорт тратит на 50% меньше топлива.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Общие перки — <span class="trait">максимум</span></h3>
+      <ul>
+        <li><b>Light Armor 4 — Nimble:</b> +15% скорости передвижения.</li>
+        <li><b>Medium Armor 4 — Balanced:</b> атаки тратят на 20% меньше выносливости.</li>
+        <li><b>Heavy Armor 4 — Fortress:</b> вас нельзя оглушить или сбить с ног.</li>
+        <li><b>Master Chef 3 — Gourmet:</b> эффекты еды и напитков действуют втрое дольше.</li>
+        <li><b>Living Off the Land 3 — Green Thumb:</b> урожай с шансом 50% возвращает семена.</li>
+        <li><b>Lock Picking 3 — Safecracker:</b> отмычки почти не ломаются.</li>
+        <li><b>Lucky Looter 5 — Fortune:</b> найденное оружие получает +1 аффикс в пределах лимита качества.</li>
+      </ul>
+    </article>
+    <article class="card"><h3>Grand Slam → <span class="trait">Rage</span></h3><ul><li>Сбивание с ног на бегу убрано. Описание Rage — в разделе «Ближний бой».</li></ul></article>
+    <article class="card"><h3>Intellect Mastery 4–5</h3><ul><li><b>4 — Field Repair:</b> всё оружие, инструменты и броня изнашиваются на 30% медленнее.</li><li><b>5 — Inventor:</b> скрафченное оружие получает случайные аффиксы, как оружие из лута того же качества. Всё скрафченное — на уровень качества выше; на качестве 6 оружие, инструменты и броня сразу 7-го уровня кузни.</li><li>Прежние бонусы жезла (заряд за 2 удара, +300% урона током) убраны.</li></ul></article>
+    <article class="card"><h3>Pummel Pete</h3><ul><li>Убрано: силовой удар по оглушённому оглушал его «навсегда».</li><li>Взамен: силовой удар по оглушённому +10…50% урона.</li></ul></article>
+    <article class="card"><h3>Skull Crusher</h3><ul><li>Убрано: шансы сбить с ног силовым ударом.</li><li>Взамен: Earthquake наносит 10…50 урона каждому сбитому.</li></ul></article>
+    <article class="card"><h3>The Brawler</h3><ul><li>Убрано: силовой удар оглушает, а в голову — сбивает с ног.</li><li>Взамен: обычный удар с шансом 10…50% даёт заряд Counter Punch.</li></ul></article>
+  </div>
+</section>
+
+<section id="sets" data-sec>
+  <h2>Сеты брони и гардероб</h2>
+  <p class="lead">Боевые сеты теперь привязаны к стилям игры: части дают бонусы на одну тему, а полный сет усиливает фишку мода. Числа частей растут с качеством, как в ванили, и дальше до 10 через заточку. Процентные бонусы полного сета на качестве 7–10 растут на 5% за каждый уровень выше 6 (считается худшая часть).</p>
+  <div class="grid">
+    <article class="card">
+      <h3>Боевые сеты</h3>
+      <ul>
+        <li><b>Bruiser</b> (был Biker) — дубинки и кувалды: урон, более дешёвые силовые удары, HP, бег. <b>Сет:</b> Earthquake на 1 м дальше, Home Run отбрасывает дальше, Rage держит на 1 стак больше.</li>
+        <li><b>Gunslinger</b> (был Enforcer) — пистолеты: точность, урон, перезарядка, бег. <b>Сет:</b> Headhunter после 4 хедшотов вместо 5 и +30% урона, пока он действует.</li>
+        <li><b>Ranger</b> — винтовки: отдача, HP, урон, выносливость. <b>Сет:</b> Ricochet на 3 м дальше и на 20% сильнее.</li>
+        <li><b>Commando</b> — автоматы: магазин, отдача, урон, бег. <b>Сет:</b> Suppression замедляет ещё на 20%, каждое 3-е попадание возвращает патрон.</li>
+        <li><b>Hunter</b> (был Farmer) — луки и арбалеты: урон, тишина, скорость натяжения и перезарядки, бег. <b>Сет:</b> Splinter +2 осколка, по помеченным зомби +20%.</li>
+        <li><b>Preacher</b> — стихии: сопротивление огню и току, HP, перчатки повышают шанс стихийных модов. <b>Сет:</b> огонь, ток, кислота и кровотечение +50%, реакции перезаряжаются за 1.5 с.</li>
+        <li><b>Nerd</b> — жезлы и роботы. <b>Сет:</b> Chain Lightning на 1 м дальше, заряды молнии копятся вдвое быстрее.</li>
+        <li><b>Assassin</b> и <b>Raider</b> — как в ванили, плюс: Assassin +2 стака Bloodsucker и ×1.5 по зомби, которые вас не видят; Raider +2 заряда Counter Punch и −15% получаемого урона при полных зарядах.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Хозяйственные сеты</h3>
+      <ul>
+        <li>Lumberjack, Miner, Scavenger, Rogue, Athletic — как в ванили.</li>
+        <li><b>Nomad</b> — плюс −50% топлива и +10% скорости транспорта (переехало из Biker).</li>
+        <li><b>Primitive</b> — получил фермерские бонусы (семена, урожай).</li>
+        <li>DLC-сеты — косметика, без бонусов.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Гардероб — <span class="trait">3 комплекта</span></h3>
+      <ul>
+        <li><b>Alt+1 / Alt+2 / Alt+3</b> — переодеться в комплект за 1.5 с. Текущая одежда убирается в гардероб, рюкзак не занимает.</li>
+        <li><b>Alt+0</b> — окно гардероба с тремя вкладками: что в каждом комплекте, кнопки «Надеть» и «Забрать в рюкзак».</li>
+        <li>Как заполнить: наденьте первый сет, нажмите Alt+2, наденьте второй сет из рюкзака, нажмите Alt+3 и наденьте третий.</li>
+        <li>Гардероб сохраняется вместе с миром и не выпадает после смерти.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+<section id="gear" data-sec>
+  <h2>Моды и легендарное оружие</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Мод <span class="trait">Energy Shield</span></h3>
+      <div class="tagline">Нагрудник · верстак, лут модов брони, торговцы</div>
+      <ul>
+        <li>Пока щит заряжен, дальние атаки (пули, стрелы, плевки) вам не вредят.</li>
+        <li>Любое попадание разряжает щит. Он заряжается снова через 5 с без урона.</li>
+      </ul>
+      <div class="k">Рецепт</div>
+      <div>6 электродеталей, 4 механические детали, 10 полимеров, 10 кованого железа, 2 рулона изоленты.</div>
+    </article>
+    <article class="card">
+      <h3>Стихийные моды</h3>
+      <div class="tagline">Любое оружие · один стихийный мод на оружие · верстак</div>
+      <ul>
+        <li><b>Incendiary:</b> с шансом 30% поджигает на 10 с: каждую секунду 10% урона вашего последнего удара (минимум 10). (4 масла)</li>
+        <li><b>Tesla</b> (не ставится на жезлы — они и так шокируют): с шансом 20% шокирует на 1.5 с: каждую секунду 15% урона последнего удара (минимум 10). (5 электродеталей)</li>
+        <li><b>Corrosive:</b> с шансом 25% разъедает на 6 с: −25 физического сопротивления, каждую секунду 8% урона последнего удара (минимум 8). (2 кислоты)</li>
+      </ul>
+      <div class="tagline">Плюс 3 механические детали и 6 полимеров в каждом рецепте</div>
+    </article>
+    <article class="card legendary">
+      <h3><span class="trait">Легендарное оружие</span></h3>
+      <div class="tagline">Золотое название · значок-трофей · всегда качество 6 · 4% в финальных сундуках ★4, 10% в ★5 · Black Market</div>
+      <p>Каждая легендарка имеет 3 постоянных аффикса на максимуме качества 6 и собственную фишку, поэтому она всегда не хуже лучшего оружия со случайными аффиксами.</p>
+      <ul>
+        <li><b>Unkempt Harold</b> (.44 Desert Vulture): 3 пули за выстрел веером. <i>Урон +35%, скорострельность +25%, магазин +60%.</i></li>
+        <li><b>Lady Fist</b> (9-мм пистолет): +50% урона, хедшот лечит 5 HP. <i>Урон в голову +60%, разброс −40%, перезарядка +40%.</i></li>
+        <li><b>Dragon's Breath</b> (помповый дробовик): +20%, каждое попадание поджигает. <i>Дробины +35%, урон +35%, перезарядка +40%.</i></li>
+        <li><b>The Ripper</b> (мачете): +40%, каждый удар вызывает кровотечение, по тем, кто уже истекает кровью, ещё +50%; убийство лечит 20 HP. <i>Урон +35%, скорость атаки +20%, лечение 6% от урона.</i></li>
+        <li><b>Thunderclap</b> (стальная кувалда): +25%, силовой удар шокирует всех в 4 м. Каждое убийство даёт грозовой заряд, на 3 зарядах силовой удар вызывает молнию: 150 урона и 3 с шока всем в 6 м. <i>Урон +35%, выносливость на удар −40%, урон в голову +60%.</i></li>
+        <li><b>Hornet</b> (SMG-5): +15%, попадание с шансом 30% разъедает кислотой. <i>Магазин +60%, скорострельность +25%, отдача −50%.</i></li>
+        <li><b>Storm Fist</b> (стальные кастеты): +20%, удар с шансом 25% поджигает и с шансом 25% шокирует, так что Confusion включается сама. <i>Скорость атаки +20%, урон +35%, скорость передвижения +10%.</i></li>
+        <li><b>Artemis</b> (блочный лук): каждая стрела поджигает и разлетается на 8 осколков по 50. <i>Урон +35%, урон в голову +60%, перезарядка +40%.</i></li>
+        <li><b>Big Boom</b> (ракетница): с шансом 50% следующая ракета бесплатная. <i>Урон +35%, перезарядка +40%, дальность +60%.</i></li>
+        <li><b>Predator</b> (снайперская винтовка): +25%, каждый хедшот рикошетит на 15 м: 100 урона и 2 с оглушения. <i>Урон в голову +60%, дальность +60%, отдача −50%.</i></li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="systems" data-sec>
+  <h2>Системы</h2>
+  <div class="k" style="margin-bottom:8px">Цвета цифр урона</div>
+  <div class="legend">
+    <div class="dmg"><span class="num n-white">45</span><span>Обычный удар</span></div>
+    <div class="dmg"><span class="num n-yellow">90!</span><span>Хедшот</span></div>
+    <div class="dmg"><span class="num n-cyan">120</span><span>Удар, усиленный баффом: Headhunter, Rage, Counter Punch, Mark, Suppression, кислота</span></div>
+    <div class="dmg"><span class="num n-red">Труп!</span><span>Смертельный удар (надпись над цифрой)</span></div>
+    <div class="dmg"><span class="num n-magenta">60</span><span>Реакция стихий</span></div>
+    <div class="dmg"><span class="num n-orange">8</span><span>Горение</span></div>
+    <div class="dmg"><span class="num n-green">3</span><span>Кислота</span></div>
+    <div class="dmg"><span class="num n-blue">5</span><span>Ток</span></div>
+    <div class="dmg"><span class="num n-pink">4</span><span>Кровотечение</span></div>
+    <div class="dmg"><span class="num" style="color:#ff7373">25</span><span>Урон по вам</span></div>
+  </div>
+  <p class="tagline" style="margin-top:8px">Цифры — игровые 3D-цифры (разлетаются веером от головы), только в цветах мода. Видны до 120 м, дальние цифры увеличиваются, держатся 3 с. Включаются модом, даже если опция мира выключена.</p>
+
+  <div class="grid" style="margin-top:14px">
+    <article class="card">
+      <h3>Настройки цифр — <span class="trait">aposdmg</span></h3>
+      <div class="tagline">Консоль F1 · сохраняется в Mods/AposMod/Settings.xml</div>
+      <pre>aposdmg              показать состояние
+aposdmg on | off     включить / выключить
+aposdmg size 1.5     размер 0.5–3
+aposdmg time 3       сколько секунд видно (0.5–5)
+aposdmg kill off     без надписи «Труп!»
+aposdmg color off    без голубого цвета</pre>
+    </article>
+    <article class="card">
+      <h3>Проверка аффиксов — <span class="trait">aposaffix</span></h3>
+      <div class="tagline">Консоль F1 · оружие в руках</div>
+      <pre>aposaffix            новые аффиксы, максимум для качества
+aposaffix 6          сначала качество 6, потом 3 аффикса</pre>
+    </article>
+    <article class="card">
+      <h3>Элиты — <span class="trait">aposelite</span></h3>
+      <div class="tagline">Консоль F1</div>
+      <pre>aposelite on | off           имена над элитами
+aposelite make               ближайший зомби становится элитой
+aposelite make Armored Giant  с этими модификаторами</pre>
+    </article>
+    <article class="card">
+      <h3>Лук — <span class="trait">aposbow</span></h3>
+      <div class="tagline">Консоль F1 · если с луком не открывается рюкзак или машина</div>
+      <pre>aposbow          состояние перезарядки лука в руках
+aposbow off | on  выключить / включить автоналожение стрелы</pre>
+    </article>
+    <article class="card">
+      <h3>Стелс</h3>
+      <ul>
+        <li>Зомби в зданиях, которые раньше выбегали волной после триггера или сразу бросались в атаку, теперь появляются спящими на своих местах, когда вы подходите. Триггеры (двери, лут, стены) их не будят. Зомби появляются заранее: за 12 м и с соседнего этажа (в игре за 8 м и только на вашем этаже), так что не возникают прямо у вас на глазах.</li>
+        <li>Просыпаются от шума или когда вас увидят, так что можно подкрасться.</li>
+        <li>Отключить: <code>&lt;Stealth rework="false"/&gt;</code> в Settings.xml и перезапустить игру.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3>Индикаторы-баффы</h3>
+      <ul>
+        <li>Bloodsucker — стаки регенерации ножа</li>
+        <li>Counter Punch — заряды кастетов</li>
+        <li>Veteran Junk — бонус самодельного оружия, %</li>
+        <li>Headhunter — остаток усиленных выстрелов</li>
+        <li>Rage — стаки</li>
+        <li>Guardian Protocol, Energy Shield</li>
+        <li>Перезарядка Earthquake и Chain Lightning</li>
+        <li>Грозовые заряды Thunderclap, бесплатная ракета Big Boom</li>
+        <li>Красное кольцо над зомби — на нём Mark арбалета</li>
+        <li>Frenzy, Adrenaline (стаки), заряды молнии, Jackpot, Evasion</li>
+        <li>Перезарядка Second Wind (5 мин) и Second Lungs (60 с)</li>
+      </ul>
+    </article>
+    <article class="card"><h3>Птичьи гнёзда</h3><ul><li>Втрое больше перьев: из содержимого гнезда (3 + 3–15 вместо 1 + 1–5) и при сборе самого гнезда.</li></ul></article>
+    <article class="card">
+      <h3>Запуск</h3>
+      <ul>
+        <li>Запускайте игру <b>без EasyAntiCheat</b>, иначе мод не загрузится.</li>
+        <li>В логе должно появиться <code>Loaded Mod: AposMod</code>.</li>
+        <li>Игра может быть на русском или английском: тексты мода есть на обоих языках.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<p class="empty hide" id="none">Ничего не найдено. Попробуйте другое название оружия или перка.</p>
+</main>
+
+<footer>
+  <div class="wrap">AposMod 1.6.0 для 7 Days to Die 3.4.</div>
+</footer>
+
+</template>
+<template id="lang-uk">
+<header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
     <div class="meta">7 Days to Die 3.4 · AposMod 1.6.0</div>
@@ -764,7 +2301,7 @@ html, body { overflow-x: clip; }
         <li><b>Hunter</b> (був Farmer) — луки й арбалети: шкода, тиша, швидкість натягу й перезарядки, біг. <b>Сет:</b> Splinter +2 уламки, по позначених зомбі +20%.</li>
         <li><b>Preacher</b> — стихії: опір вогню й струму, HP, рукавиці підвищують шанс стихійних модів. <b>Сет:</b> вогонь, струм, кислота й кровотеча +50%, реакції перезаряджаються за 1.5 с.</li>
         <li><b>Nerd</b> — жезли й роботи. <b>Сет:</b> Chain Lightning на 1 м далі, заряди блискавки накопичуються вдвічі швидше.</li>
-        <li><b>Assassin</b> і <b>Raider</b> — як у ванілі, плюс: Assassin +2 стаки Bloodsucker і ×1.5 по зомбі, що вас не бачать; Raider +2 заряди Counter Punch і −15% шкоди при повних зарядах.</li>
+        <li><b>Assassin</b> і <b>Raider</b> — як у ванілі, плюс: Assassin +2 стаки Bloodsucker і ×1.5 по зомбі, що вас не бачать; Raider +2 заряди Counter Punch і −15% отриманої шкоди при повних зарядах.</li>
       </ul>
     </article>
     <article class="card">
@@ -917,127 +2454,172 @@ aposbow off | on  вимкнути / увімкнути автонабій ст�
 </main>
 
 <footer>
-  <div class="wrap">AposMod 0.9.0 для 7 Days to Die 3.4. Автонаведення пістолета відкладено на пізніше.</div>
+  <div class="wrap">AposMod 1.6.0 для 7 Days to Die 3.4.</div>
 </footer>
 
+</template>
 <script>
 (function () {
-  var q = document.getElementById('q');
-  var none = document.getElementById('none');
-  var cards = Array.prototype.slice.call(document.querySelectorAll('.card, .dmg'));
-  var secs = Array.prototype.slice.call(document.querySelectorAll('[data-sec]'));
-  function apply() {
-    var term = q.value.trim().toLowerCase();
-    document.body.classList.toggle('searching', !!term);
-    var shown = 0;
-    cards.forEach(function (c) {
-      var hit = !term || c.textContent.toLowerCase().indexOf(term) !== -1;
-      c.classList.toggle('hide', !hit);
-      if (hit) shown++;
-    });
-    secs.forEach(function (s) {
-      var any = s.querySelector('.card:not(.hide), .dmg:not(.hide)');
-      s.classList.toggle('hide', !!term && !any);
-    });
-    none.classList.toggle('hide', shown > 0);
-  }
-  q.addEventListener('input', apply);
-})();
-</script>
-<script>
-(function () {
-  // heading icons: first keyword that matches the heading text
+  var LANGS = ['en', 'ru', 'uk'], KEY = 'aposRefLang';
+  var app = document.getElementById('app');
+
+  // heading icons: first keyword (any of the three languages) that matches the heading text
   var map = [
-    [/ерідій|eridium/i, 'gem'], [/значки|модифікатор|еліт/i, 'star'], [/майстерн|як працює/i, 'cap'],
-    [/клинк|ніж|мачете/i, 'knife'], [/кувалд/i, 'sledge'], [/дубин|біт|бити|pummel|grand slam/i, 'club'], [/спис/i, 'spear'],
-    [/кастет|brawler/i, 'fist'], [/жезл|струм|chain lightning/i, 'bolt'], [/пістолет|пп\b|smg/i, 'pistol'],
-    [/дробовик/i, 'shotgun'], [/гвинтів/i, 'rifle'], [/автомат|кулемет/i, 'mg'], [/арбалет/i, 'crossbow'],
-    [/лук|стріл/i, 'bow'], [/робот/i, 'robot'], [/гранат|ракет|вибух|молотов/i, 'bomb'], [/вогонь|стихі/i, 'fire'],
-    [/саморобн/i, 'gear'], [/афікс/i, 'dice'], [/легенд/i, 'crown'], [/energy shield|мод/i, 'shield'],
-    [/сет|гардероб/i, 'shirt'], [/стелс/i, 'eye'], [/перк|атрибут|perception|strength|fortitude|agility|intellect|skull crusher|mastery/i, 'book'],
-    [/гнізд/i, 'feather'], [/цифр|aposdmg/i, 'target'], [/aposaffix|aposelite|налашт|систем/i, 'terminal'],
-    [/баф/i, 'skull'], [/запуск/i, 'play'], [/ближній бій/i, 'knife'], [/дальній бій/i, 'rifle']
+    [/ерідій|эридий|eridium/i, 'gem'], [/значки|модифікатор|модификатор|modifier|еліт|элит|elite/i, 'star'],
+    [/майстерн|як працює|мастерство оружия|как работает|weapon mastery|how it works/i, 'cap'],
+    [/клинк|ніж|нож|мачете|machete|knives|blade/i, 'knife'], [/кувалд|sledge/i, 'sledge'],
+    [/дубин|біт|бити|бит|\bclubs?\b|\bbats?\b|pummel|grand slam/i, 'club'], [/спис|копь|копья|spear/i, 'spear'],
+    [/кастет|knuckle|brawler/i, 'fist'], [/жезл|baton|струм|электр|(^|\s)ток(\s|$)|shock|chain lightning/i, 'bolt'],
+    [/пістолет|пистолет|pistol|пп\b|smg/i, 'pistol'], [/дробовик|shotgun/i, 'shotgun'], [/гвинтів|винтов|rifle/i, 'rifle'],
+    [/автомат|кулемет|пулемет|machine gun/i, 'mg'], [/арбалет|crossbow/i, 'crossbow'], [/лук|стріл|стрел|\bbows?\b|arrow/i, 'bow'],
+    [/гранат|grenade|ракет|rocket|вибух|взрыв|explos|молотов|molotov/i, 'bomb'], [/робот|robot/i, 'robot'],
+    [/вогонь|огонь|\bfire\b|стихі|стихи|element/i, 'fire'], [/саморобн|самодел|pipe weapon|junk/i, 'gear'],
+    [/афікс|аффикс|affix/i, 'dice'], [/легенд|legend/i, 'crown'], [/energy shield|мод|\bmods?\b/i, 'shield'],
+    [/сет|гардероб|wardrobe|\bsets?\b|outfit/i, 'shirt'], [/стелс|stealth/i, 'eye'],
+    [/перк|perk|атрибут|attribute|perception|strength|fortitude|agility|intellect|skull crusher|mastery/i, 'book'],
+    [/гнізд|гнезд|гнёзд|nest/i, 'feather'], [/цифр|damage number|aposdmg/i, 'target'],
+    [/aposaffix|aposelite|aposbow|налашт|настрой|систем|system|setting/i, 'terminal'],
+    [/баф|buff/i, 'skull'], [/запуск|launch/i, 'play'], [/ближній бій|ближний бой|melee/i, 'knife'], [/дальній бій|дальний бой|ranged/i, 'rifle']
   ];
+  var tileMap = map.concat([
+    [/здоров|лікув|леч|health|heal|hp\b/i, 'heart'], [/швидк|скорост|біг|бег|рух|speed|\brun|move/i, 'run'],
+    [/торгов|trader|ціна|цен|price|знижк|скидк|discount|bartering/i, 'coin'], [/секунд|second|час|время|перезаряд|reload/i, 'clock'],
+    [/відмичк|отмычк|lock|замок|сейф|safe/i, 'key'], [/руд|ore|копа|добич|добыч|mining|miner/i, 'pick'],
+    [/шкод|урон|damage/i, 'target']
+  ]);
+
   function icon(name) {
     var ns = 'http://www.w3.org/2000/svg';
     var s = document.createElementNS(ns, 'svg'); s.setAttribute('class', 'hi'); s.setAttribute('aria-hidden', 'true');
     var u = document.createElementNS(ns, 'use'); u.setAttribute('href', '#i-' + name); s.appendChild(u); return s;
   }
-  document.querySelectorAll('h2, .card h3').forEach(function (h) {
-    var t = h.textContent;
-    for (var i = 0; i < map.length; i++) if (map[i][0].test(t)) { h.insertBefore(icon(map[i][1]), h.firstChild); return; }
-  });
-
-  // lists of named things (legendaries, sets, perks, mods, affix stats) -> tile grid; full text on hover / tap
-  var tileMap = map.concat([
-    [/здоров|лікув|hp\b/i, 'heart'], [/швидк|біг|рух/i, 'run'], [/торгов|ціна|знижк|bartering/i, 'coin'],
-    [/секунд|час|перезаряд/i, 'clock'], [/відмичк|замок|сейф/i, 'key'], [/руд|копа|добич|mining|miner/i, 'pick'],
-    [/шкод|урон|damage/i, 'target']
-  ]);
   function pick(text, fallback) {
     for (var i = 0; i < tileMap.length; i++) if (tileMap[i][0].test(text)) return tileMap[i][1];
     return fallback;
   }
-  document.querySelectorAll('.card > ul').forEach(function (ul) {
-    var items = Array.prototype.slice.call(ul.children);
-    if (items.length < 4) return;
-    var named = items.every(function (li) { var f = li.firstElementChild; return f && f.tagName === 'B' && li.textContent.trim().indexOf(f.textContent.trim()) === 0; });
-    if (!named) return;
-    var card = ul.closest('.card'), headUse = card.querySelector('h3 .hi use');
-    var fallback = headUse ? headUse.getAttribute('href').slice(3) : 'star';
-    var grid = document.createElement('div'); grid.className = 'tiles';
-    items.forEach(function (li) {
-      var label = li.firstElementChild.textContent.replace(/[:\s]+$/, '');
-      var parts = label.split(/\s+[—→]\s+/), main = parts[parts.length - 1], sub = parts.length > 1 ? parts.slice(0, -1).join(' — ') : '';
-      var tile = document.createElement('div'); tile.className = 'tile'; tile.tabIndex = 0;
-      tile.appendChild(icon(pick(li.textContent, fallback)));
-      var m = document.createElement('span'); m.className = 't-main'; m.textContent = main; tile.appendChild(m);
-      if (sub) { var s = document.createElement('span'); s.className = 't-sub'; s.textContent = sub; tile.appendChild(s); }
-      var code = li.querySelector('code');
-      if (code && code.textContent.length <= 14) { var v = document.createElement('span'); v.className = 't-val'; v.textContent = code.textContent; tile.appendChild(v); }
-      var pop = document.createElement('span'); pop.className = 'pop'; pop.setAttribute('role', 'tooltip');
-      Array.prototype.forEach.call(li.childNodes, function (n) { if (!(n.classList && (n.classList.contains('dots') || n.classList.contains('pop')))) pop.appendChild(n.cloneNode(true)); });
-      pop.querySelectorAll('.more').forEach(function (x) { x.className = ''; });
-      tile.appendChild(pop);
-      grid.appendChild(tile);
-    });
-    ul.parentNode.replaceChild(grid, ul);
-  });  // long bullets: keep the first sentence, the rest goes into a hover / tap hint (still searchable)
-  var LIMIT = 80;
-  document.querySelectorAll('.card li').forEach(function (li) {
-    if (li.textContent.length <= LIMIT || li.querySelector('ul, .mi, table')) return;
-    var walker = document.createTreeWalker(li, NodeFilter.SHOW_TEXT), node, seen = 0, cut = null;
-    while ((node = walker.nextNode())) {
-      var m = /[.;!?](\s)/g, r, txt = node.nodeValue;
-      while ((r = m.exec(txt))) {
-        if (seen + r.index >= 25 && node.parentNode === li) { cut = { node: node, at: r.index + 1 }; break; }
-      }
-      if (cut) break;
-      seen += txt.length;
-    }
-    if (!cut || li.textContent.length - (seen + cut.at) < 20) return;
-    var rest = cut.node.splitText(cut.at);
-    var more = document.createElement('span'); more.className = 'more';
-    while (rest) { var next = rest.nextSibling; more.appendChild(rest); rest = next; }
-    li.appendChild(more);
-    var dots = document.createElement('span'); dots.className = 'dots'; dots.textContent = 'i'; li.appendChild(dots);
-    var pop = document.createElement('span'); pop.className = 'pop'; pop.setAttribute('role', 'tooltip'); pop.innerHTML = li.innerHTML.replace(/<span class="(more|dots)">|<\/span>$/g, '');
-    pop.innerHTML = ''; Array.prototype.forEach.call(li.childNodes, function (n) { if (n !== dots) pop.appendChild(n.cloneNode(true)); });
-    pop.querySelectorAll('.more').forEach(function (m) { m.className = ''; });
-    li.appendChild(pop);
-    li.classList.add('tipped'); li.tabIndex = 0;
-  });
 
-  // keep tile hints inside the screen: shift sideways when they would cross an edge
-  function fit(e) {
-    var pop = e.currentTarget.querySelector('.pop'); if (!pop) return;
-    pop.style.transform = 'translateX(-50%)';
-    requestAnimationFrame(function () {
-      var r = pop.getBoundingClientRect(), dx = 0, pad = 8;
-      if (r.right > window.innerWidth - pad) dx = window.innerWidth - pad - r.right;
-      if (r.left + dx < pad) dx = pad - r.left;
-      pop.style.transform = 'translateX(calc(-50% + ' + Math.round(dx) + 'px))';
+  function setup() {
+    // search
+    var q = document.getElementById('q'), none = document.getElementById('none');
+    var cards = Array.prototype.slice.call(app.querySelectorAll('.card, .dmg'));
+    var secs = Array.prototype.slice.call(app.querySelectorAll('[data-sec]'));
+    function apply() {
+      var term = q.value.trim().toLowerCase();
+      document.body.classList.toggle('searching', !!term);
+      var shown = 0;
+      cards.forEach(function (c) {
+        var hit = !term || c.textContent.toLowerCase().indexOf(term) !== -1;
+        c.classList.toggle('hide', !hit);
+        if (hit) shown++;
+      });
+      secs.forEach(function (s) {
+        var any = s.querySelector('.card:not(.hide), .dmg:not(.hide)');
+        s.classList.toggle('hide', !!term && !any);
+      });
+      if (none) none.classList.toggle('hide', shown > 0);
+    }
+    if (q) q.addEventListener('input', apply);
+    document.body.classList.remove('searching');
+
+    app.querySelectorAll('h2, .card h3').forEach(function (h) {
+      var t = h.textContent;
+      for (var i = 0; i < map.length; i++) if (map[i][0].test(t)) { h.insertBefore(icon(map[i][1]), h.firstChild); return; }
     });
+
+    // lists of named things (legendaries, sets, perks, affix stats) -> tile grid; full text on hover / tap
+    app.querySelectorAll('.card > ul').forEach(function (ul) {
+      var items = Array.prototype.slice.call(ul.children);
+      if (items.length < 4) return;
+      var named = items.every(function (li) { var f = li.firstElementChild; return f && f.tagName === 'B' && li.textContent.trim().indexOf(f.textContent.trim()) === 0; });
+      if (!named) return;
+      var card = ul.closest('.card'), headUse = card.querySelector('h3 .hi use');
+      var fallback = headUse ? headUse.getAttribute('href').slice(3) : 'star';
+      var grid = document.createElement('div'); grid.className = 'tiles';
+      items.forEach(function (li) {
+        var label = li.firstElementChild.textContent.replace(/[:\s]+$/, '');
+        var parts = label.split(/\s+[—→]\s+/), main = parts[parts.length - 1], sub = parts.length > 1 ? parts.slice(0, -1).join(' — ') : '';
+        var tile = document.createElement('div'); tile.className = 'tile'; tile.tabIndex = 0;
+        tile.appendChild(icon(pick(li.textContent, fallback)));
+        var m = document.createElement('span'); m.className = 't-main'; m.textContent = main; tile.appendChild(m);
+        if (sub) { var s = document.createElement('span'); s.className = 't-sub'; s.textContent = sub; tile.appendChild(s); }
+        var code = li.querySelector('code');
+        if (code && code.textContent.length <= 14) { var v = document.createElement('span'); v.className = 't-val'; v.textContent = code.textContent; tile.appendChild(v); }
+        var pop = document.createElement('span'); pop.className = 'pop'; pop.setAttribute('role', 'tooltip');
+        Array.prototype.forEach.call(li.childNodes, function (n) { pop.appendChild(n.cloneNode(true)); });
+        tile.appendChild(pop);
+        grid.appendChild(tile);
+      });
+      ul.parentNode.replaceChild(grid, ul);
+    });
+
+    // long bullets: keep the first sentence, the rest goes into a hover / tap hint (still searchable)
+    var LIMIT = 80;
+    app.querySelectorAll('.card li').forEach(function (li) {
+      if (li.textContent.length <= LIMIT || li.querySelector('ul, .mi, table')) return;
+      var walker = document.createTreeWalker(li, NodeFilter.SHOW_TEXT), node, seen = 0, cut = null;
+      while ((node = walker.nextNode())) {
+        var re = /[.;!?](\s)/g, r, txt = node.nodeValue;
+        while ((r = re.exec(txt))) {
+          if (seen + r.index >= 25 && node.parentNode === li) { cut = { node: node, at: r.index + 1 }; break; }
+        }
+        if (cut) break;
+        seen += txt.length;
+      }
+      if (!cut || li.textContent.length - (seen + cut.at) < 20) return;
+      var rest = cut.node.splitText(cut.at);
+      var more = document.createElement('span'); more.className = 'more';
+      while (rest) { var next = rest.nextSibling; more.appendChild(rest); rest = next; }
+      li.appendChild(more);
+      var dots = document.createElement('span'); dots.className = 'dots'; dots.textContent = 'i'; li.appendChild(dots);
+      var pop = document.createElement('span'); pop.className = 'pop'; pop.setAttribute('role', 'tooltip');
+      Array.prototype.forEach.call(li.childNodes, function (n) { if (n !== dots) pop.appendChild(n.cloneNode(true)); });
+      pop.querySelectorAll('.more').forEach(function (x) { x.className = ''; });
+      li.appendChild(pop);
+      li.classList.add('tipped'); li.tabIndex = 0;
+    });
+
+    // keep tile hints inside the screen: shift sideways when they would cross an edge
+    function fit(e) {
+      var pop = e.currentTarget.querySelector('.pop'); if (!pop) return;
+      pop.style.transform = 'translateX(-50%)';
+      requestAnimationFrame(function () {
+        var r = pop.getBoundingClientRect(), dx = 0, pad = 8;
+        if (r.right > window.innerWidth - pad) dx = window.innerWidth - pad - r.right;
+        if (r.left + dx < pad) dx = pad - r.left;
+        pop.style.transform = 'translateX(calc(-50% + ' + Math.round(dx) + 'px))';
+      });
+    }
+    app.querySelectorAll('.tile, .mil').forEach(function (t) { t.addEventListener('mouseenter', fit); t.addEventListener('focus', fit); });
+
+    // language switch in the header line
+    var meta = app.querySelector('.meta');
+    if (meta) {
+      var box = document.createElement('span'); box.className = 'langs'; box.setAttribute('role', 'group'); box.setAttribute('aria-label', 'Language');
+      LANGS.forEach(function (l) {
+        var b = document.createElement('button'); b.type = 'button'; b.textContent = l.toUpperCase();
+        b.setAttribute('aria-pressed', l === current ? 'true' : 'false');
+        b.addEventListener('click', function () { show(l); });
+        box.appendChild(b);
+      });
+      meta.appendChild(box);
+    }
   }
-  document.querySelectorAll('.tile, .mil').forEach(function (t) { t.addEventListener('mouseenter', fit); t.addEventListener('focus', fit); });})();
+
+  var current = null;
+  function show(lang) {
+    if (LANGS.indexOf(lang) < 0) lang = 'en';
+    if (lang === current) return;
+    var tpl = document.getElementById('lang-' + lang);
+    current = lang;
+    app.innerHTML = '';
+    app.appendChild(tpl.content.cloneNode(true));
+    document.documentElement.lang = lang;
+    try { localStorage.setItem(KEY, lang); } catch (e) { }
+    setup();
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) { }
+  show(saved || 'en');
+})();
 </script>
