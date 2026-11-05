@@ -633,18 +633,19 @@ public static class AposDismemberGuardPatch
     }
 }
 
-// Intellect Mastery 5 "Inventor": crafting already gives +1 quality (progression.xml, CraftingTier); an item that
-// comes out at quality 6 (the crafting cap) and has values growing with quality becomes forge tier 7 instead.
+// Intellect Mastery 5 "Inventor": crafted weapons roll affixes like loot; crafting gives +1 quality (progression.xml,
+// CraftingTier), and an item that comes out at quality 6 (the crafting cap) with values growing with quality is forge tier 7.
 public static class AposInventor
 {
     public static int Crafter = -1; // set while a closed workstation finishes its queue
 
     public static void Apply(ItemValue iv, EntityAlive crafter)
     {
-        if (iv == null || crafter == null || iv.ItemClass == null || !iv.ItemClass.HasQuality || iv.Quality < 6) return;
-        if (AposAffixes.Level(crafter, "perkIntellectMastery") < 5 || AposTiers.Tier(iv) >= 7) return;
-        if (!AposTiers.HasTieredValues(iv.ItemClass)) return;
-        AposTiers.SetTier(iv, 7);
+        if (iv == null || crafter == null || iv.ItemClass == null || !iv.ItemClass.HasQuality) return;
+        if (AposAffixes.Level(crafter, "perkIntellectMastery") < 5) return;
+        // crafted weapons never get affixes in vanilla; the Inventor's do, rolled like loot of that quality
+        if (AposAffixes.Kind(iv.ItemClass) != 0 && AposAffixes.Decompose(iv).Count == 0) AposAffixes.Roll(iv, false);
+        if (iv.Quality >= 6 && AposTiers.Tier(iv) < 7 && AposTiers.HasTieredValues(iv.ItemClass)) AposTiers.SetTier(iv, 7);
     }
 }
 

@@ -331,16 +331,7 @@
 			<triggered_effect trigger="onOtherDamagedSelf" action="AddBuff" buff="buffAposEvasion"/>
 		</effect_group>
 	</append>
-	<!-- Hidden Strike 5 "Assassinate": a sneak attack kills any non-elite zombie -->
-	<append xpath="/progression/perks/perk[@name='perkHiddenStrike']">
-		<effect_group name="AposMod assassinate">
-			<requirement name="ProgressionLevel" progression_name="perkHiddenStrike" operation="GTE" value="5"/>
-			<requirement name="CVarCompare" cvar="_crouching" operation="Equals" value="1"/>
-			<requirement name="CVarCompare" cvar="_notAlerted" operation="GT" value="0" target="other"/>
-			<requirement name="!EntityTagCompare" target="other" tags="feral,radiated,infernal,charged,special,boss"/>
-			<passive_effect name="EntityDamage" operation="perc_add" value="10"/>
-		</effect_group>
-	</append>
+	<!-- Hidden Strike 5 "Shadow Strike": Source/AposShadow.cs (x2 hit after 3 s crouched unnoticed, a kill restores it) -->
 	<!-- From the Shadows 5 "Silent Shadow": zombies that lost you give up the search almost at once; crouching costs no speed (Source/AposSurvival.cs) -->
 	<append xpath="/progression/perks/perk[@name='perkFromTheShadows']">
 		<effect_group name="AposMod vanish">
