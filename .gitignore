@@ -4,3 +4,6 @@
 
 # Player settings, created by the mod on first run
 Settings.xml
+
+# Nexus upload packages
+release/
