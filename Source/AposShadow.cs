@@ -21,6 +21,7 @@ public class AposShadow : MonoBehaviour
     static float calmSince;
     static int strikeTarget = -1;
 
+    static AposShadow instance;
     readonly List<EntityAlive> hunted = new List<EntityAlive>();
     float nextScan;
     bool noticed;
@@ -41,6 +42,11 @@ public class AposShadow : MonoBehaviour
     static bool HasHunter(EntityAlive p)
     {
         return AposAffixes.Level(p, "perkFromTheShadows") >= 5;
+    }
+
+    void Awake()
+    {
+        instance = this;
     }
 
     void Update()
@@ -133,6 +139,26 @@ public class AposShadow : MonoBehaviour
         return false;
     }
 
+    public static string Report()
+    {
+        EntityPlayerLocal p = Player();
+        if (p == null) return "No player.";
+        World world = GameManager.Instance.World;
+        int enemies = 0, sleeping = 0;
+        List<Entity> list = world.Entities.list;
+        for (int i = 0; i < list.Count; i++)
+        {
+            EntityEnemy e = list[i] as EntityEnemy;
+            if (e == null || e.IsDead() || (e.position - p.position).sqrMagnitude > HunterRange * HunterRange) continue;
+            enemies++;
+            if (e.sleepingOrWakingUp) sleeping++;
+        }
+        return string.Format("From the Shadows {0}, Hidden Strike {1}; world dark {2}, light level {3:0} (dark <= {4:0}); zombies within {5:0} m: {6} ({7} asleep); glowing now: {8}",
+            AposAffixes.Level(p, "perkFromTheShadows"), AposAffixes.Level(p, "perkHiddenStrike"), world.IsDark(),
+            p.Buffs.GetCustomVar("_lightlevel"), DarkLight, HunterRange, enemies, sleeping,
+            instance != null ? instance.hunted.Count : -1);
+    }
+
     // Soft elliptical glow, bright in the middle and fading to nothing at the edge (like a heat haze)
     static Texture2D MakeGlow(int w, int h)
     {
@@ -170,12 +196,32 @@ public class AposShadow : MonoBehaviour
             float h = (yBottom - yTop) * 1.25f;
             if (h < 6f) continue;
             float w = h * 0.55f, cx = feet.x * Screen.width, cy = (yTop + yBottom) / 2f;
-            // farther = fainter
-            float near = Mathf.Clamp01(1.15f - Mathf.Sqrt((e.position - cam.transform.position).sqrMagnitude) / HunterRange);
-            if (e.sleepingOrWakingUp) GUI.color = new Color(0.35f, 0.55f, 0.85f, 0.22f * near);
-            else GUI.color = new Color(0.85f, 0.12f, 0.08f, (0.28f + 0.22f * beat) * near);
+            // farther = fainter, but still visible at the edge of the range (scene space on both sides)
+            float near = 0.5f + 0.5f * Mathf.Clamp01(1f - Vector3.Distance(e.transform.position, cam.transform.position) / HunterRange);
+            if (e.sleepingOrWakingUp) GUI.color = new Color(0.4f, 0.65f, 1f, 0.45f * near);
+            else GUI.color = new Color(1f, 0.15f, 0.1f, (0.5f + 0.3f * beat) * near);
             GUI.DrawTexture(new Rect(cx - w / 2f, cy - h / 2f, w, h), glow);
         }
         GUI.color = old;
+    }
+}
+
+// "aposshadow": what Hunter in the Dark sees right now (for bug reports)
+public class AposShadowCommand : ConsoleCmdAbstract
+{
+    public override string[] getCommands()
+    {
+        return new string[] { "aposshadow" };
+    }
+
+    public override string getDescription()
+    {
+        return "AposMod: Hunter in the Dark state (perk, darkness, zombies within 20 m)";
+    }
+
+    public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
+    {
+        SdtdConsole console = SingletonMonoBehaviour<SdtdConsole>.Instance;
+        console.Output(AposShadow.Report());
     }
 }
