@@ -259,8 +259,9 @@
 	<append xpath="/progression/perks/perk[@name='perkPainTolerance']">
 		<effect_group name="AposMod unbreakable">
 			<requirement name="ProgressionLevel" progression_name="perkPainTolerance" operation="GTE" value="5"/>
-			<requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".25"/>
-			<passive_effect name="GeneralDamageResist" operation="base_add" value=".5"/>
+			<!-- the health check sits on the passive: a group-level one runs for every passive lookup, also while a
+			     joining multiplayer player's stats are created (Health is still null there -> NullReferenceException) -->
+			<passive_effect name="GeneralDamageResist" operation="base_add" value=".5"><requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".25"/></passive_effect>
 		</effect_group>
 	</append>
 	<!-- Fortitude Mastery 5 "Second Wind": Source/AposCombat.cs -->

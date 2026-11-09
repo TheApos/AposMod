@@ -546,3 +546,8 @@ giveself thrownAmmoMolotovCocktail 1 10
 - [ ] Hidden Strike 5: 3 с у присіді незамеченим — бафф «Тінь», наступний удар x2; вбивство повертає Тінь. Миттєвого вбивства з присіду більше немає.
 - [ ] From the Shadows 5 (без Hidden Strike 5): бафа «Тінь» немає; присід без сповільнення; уночі зомбі в 20 м — тьмяне червоне пульсуюче свічення крізь стіни, сплячі — бліді сині, без рамок.
 - [ ] Intellect Mastery 5: скрафчена зброя має афікси (видно в підказці); на якості 6 — 7-й рівень кузні.
+
+## 17.7. Мультиплеєр (1.6.1)
+- [ ] Dedicated server або гра друга з AposMod (EAC вимкнено в усіх): гравець, що підключається, проходить «Creating player…» і з'являється у світі; у лозі хоста немає NullReferenceException у StatComparePercCurrentToMax / EntityAlive.LateUpdate.
+- [ ] Guardian Protocol: з турелю, здоров'я нижче 30% (50% на Robotics Inventor 5) → турель стріляє швидше, як і раніше.
+- [ ] Pain Tolerance 5 (Unbreakable): здоров'я нижче 25% → шкода по вам удвічі менша, як і раніше.
