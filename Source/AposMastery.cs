@@ -321,7 +321,7 @@ public class AposMastery : MonoBehaviour
         if (Sum(Kind.Splash) > 0 && dealt > 0)
         {
             int share = Mathf.RoundToInt(dealt * Sum(Kind.Splash) / 100f);
-            if (share > 0) AposCombat.SplashAround(target, SplashRadius, share);
+            if (share > 0) AposCombat.SplashAround(target, SplashRadius, share, attacker.entityId);
         }
         if (fatal) OnKill(attacker as EntityPlayerLocal, target);
         return Sum(Kind.Leech) / 100f;

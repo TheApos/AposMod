@@ -28,6 +28,7 @@
 - `Config/blocks.xml`: crop seed return (Living Off the Land 3). Perk/attribute highlights: `progression.xml` (+ buffs in buffs.xml).
 
 ## Gotchas found the hard way
+- A zombie killed by `ModifyStats Health` has no killer: no XP, no quest/challenge credit (vanilla then shows a "1"). Area damage (splinters, Ricochet, reactions, Overkill, Shrapnel...) goes through `AposSplash.Deal` (AposCombat.cs) as a real hit in the player's name; XML effects set `aposSplashDmg` + the marker buff `buffAposSplash`, and `AposSplash.ProcessXml` deals it with the buff instigator as the attacker.
 - A lootgroup must be **defined before it is referenced**; otherwise loot.xml fails to load and world generation breaks (player falls through the ground).
 - A mod with a DLL is skipped entirely (XML too) when the game runs with EasyAntiCheat. Launch `7DaysToDie.exe -noeac`. The log shows `Loaded Mod: AposMod` when it worked.
 - Ammo item effect groups fire together with the weapon's events (ItemValue.FireEvent forwards to the loaded ammo) — that is how the slug-only knockback works.

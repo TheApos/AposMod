@@ -182,8 +182,7 @@ public class AposElites : MonoBehaviour
             }
             else
             {
-                e.Buffs.SetCustomVar("aposSplashDmg", -ExplosiveZombieDamage[s]);
-                e.Buffs.AddBuff("buffAposSplash");
+                AposSplash.Deal(e, ExplosiveZombieDamage[s], -1, EnumDamageTypes.Heat);
             }
         }
     }

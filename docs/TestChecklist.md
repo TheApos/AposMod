@@ -551,3 +551,8 @@ giveself thrownAmmoMolotovCocktail 1 10
 - [ ] Dedicated server або гра друга з AposMod (EAC вимкнено в усіх): гравець, що підключається, проходить «Creating player…» і з'являється у світі; у лозі хоста немає NullReferenceException у StatComparePercCurrentToMax / EntityAlive.LateUpdate.
 - [ ] Guardian Protocol: з турелю, здоров'я нижче 30% (50% на Robotics Inventor 5) → турель стріляє швидше, як і раніше.
 - [ ] Pain Tolerance 5 (Unbreakable): здоров'я нижче 25% → шкода по вам удвічі менша, як і раніше.
+
+## 17.8. Досвід за шкоду по площі (1.6.2)
+- [ ] Лук зі стелсу в групу сплячих: сусідні зомбі гинуть від уламків з нормальною цифрою шкоди (не «1»), за кожного нараховується досвід.
+- [ ] Те саме для Ricochet (гвинтівки), реакції Explosion, Overkill (Сила 10), Shrapnel (Penetrator 5), Chain Reaction: вбивства дають досвід і зараховуються в Mastery зброї в руках.
+- [ ] Уламки й рикошети не запускають ланцюг (немає нескінченних вибухів), не знімають «Тінь» і не лікують через Leech.

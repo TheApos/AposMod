@@ -27,7 +27,9 @@ public class AposSplinter : MonoBehaviour
     void Update()
     {
         GameManager gm = GameManager.Instance;
-        EntityPlayerLocal player = (gm != null && gm.World != null) ? gm.World.GetPrimaryPlayer() : null;
+        if (gm == null || gm.World == null) return;
+        AposSplash.ProcessXml(gm.World); // Ricochet and other XML area damage
+        EntityPlayerLocal player = gm.World.GetPrimaryPlayer();
         if (player == null) return;
 
         List<Entity> list = gm.World.Entities.list;
@@ -43,8 +45,10 @@ public class AposSplinter : MonoBehaviour
             {
                 hit.Buffs.SetCustomVar(ExplodeVar, 0f);
                 float blast = -Mathf.Max(ExplodeMin, hit.Buffs.GetCustomVar("aposHitDmg") * ExplodeShare);
-                Splash(hit, blast);
-                foreach (EntityAlive e in Near(list, hit, ExplodeRadius)) Splash(e, blast);
+                int by = HitBy(hit);
+                // copy: dealing damage can change the shared list
+                foreach (EntityAlive e in Near(list, hit, ExplodeRadius).ToArray()) Splash(e, blast, by, EnumDamageTypes.Heat);
+                Splash(hit, blast, by, EnumDamageTypes.Heat);
             }
 
             // Molotov burn (buffs.xml counts the buff's 1 s updates): 4% of max health per tick, at least 15
@@ -52,7 +56,8 @@ public class AposSplinter : MonoBehaviour
             if (ticks > 0)
             {
                 hit.Buffs.SetCustomVar(MolotovVar, 0f);
-                Splash(hit, -ticks * Mathf.Max(MolotovMin, hit.GetMaxHealth() * MolotovShare));
+                Splash(hit, -ticks * Mathf.Max(MolotovMin, hit.GetMaxHealth() * MolotovShare), HitBy(hit), EnumDamageTypes.Heat);
+                if (hit.IsDead()) continue;
             }
 
             int fragments = (int)hit.Buffs.GetCustomVar(CountVar);
@@ -72,7 +77,16 @@ public class AposSplinter : MonoBehaviour
         sorted.Sort((a, b) => (a.position - hit.position).sqrMagnitude.CompareTo((b.position - hit.position).sqrMagnitude));
 
         int n = Mathf.Min(fragments, sorted.Count);
-        for (int i = 0; i < n; i++) Splash(sorted[i], damage);
+        EntityAlive[] targets = sorted.GetRange(0, n).ToArray(); // dealing damage can change the shared list
+        int by = HitBy(hit);
+        for (int i = 0; i < n; i++) Splash(targets[i], damage, by, EnumDamageTypes.Piercing);
+    }
+
+    // the player whose hit started it (AposCombat.cs sets aposHitBy), so kills give XP
+    static int HitBy(EntityAlive hit)
+    {
+        float id = hit.Buffs.GetCustomVar("aposHitBy");
+        return id > 0f ? (int)id : -1;
     }
 
     List<EntityAlive> Near(List<Entity> list, EntityAlive center, float radius)
@@ -88,9 +102,8 @@ public class AposSplinter : MonoBehaviour
         return near;
     }
 
-    static void Splash(EntityAlive e, float damage)
+    static void Splash(EntityAlive e, float damage, int attackerId, EnumDamageTypes type)
     {
-        e.Buffs.SetCustomVar("aposSplashDmg", damage);
-        e.Buffs.AddBuff("buffAposSplash");
+        AposSplash.Deal(e, Mathf.RoundToInt(-damage), attackerId, type);
     }
 }

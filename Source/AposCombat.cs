@@ -8,7 +8,7 @@
 // - Advanced Engineering 5 "Overclock": your traps and turret blocks deal +50%
 // - Strength Mastery 5 "Crippling Blows": the flagged target becomes a crawler
 // - Fortitude Mastery 5 "Second Wind" (damage to the player)
-// Extra damage goes through buffAposSplash (reads the cvar aposSplashDmg), like bow splinters.
+// Extra damage is real damage in the player's name (AposSplash.Deal), so kills give XP and count for quests.
 using System;
 using System.Collections.Generic;
 using HarmonyLib;
@@ -52,13 +52,20 @@ public static class AposCombat
         if (dealt <= 0) return;
         AposElites.NoteDamaged(target); // Regenerator elites wait 3 s after damage
 
+        // area damage from our own effects: only the kill counts, no leech and no chained splashes
+        if (AposSplash.Depth > 0)
+        {
+            if (response.Fatal) AposMastery.CountKill(world.GetEntity(source.getEntityId()) as EntityPlayer, target);
+            return;
+        }
+
         // traps and turret blocks: the damage carries the block position and its owner
         if (source.BlockPosition != Vector3i.zero)
         {
             EntityPlayer owner = world.GetEntity(source.CreatorEntityId) as EntityPlayer ?? world.GetEntity(source.ownerEntityId) as EntityPlayer;
             if (owner != null && AposAffixes.Level(owner, "perkAdvancedEngineering") >= 5)
             {
-                Splash(target, Mathf.RoundToInt(dealt * OverclockShare)); // Overclock
+                Splash(target, Mathf.RoundToInt(dealt * OverclockShare), owner.entityId); // Overclock
             }
             return;
         }
@@ -72,6 +79,7 @@ public static class AposCombat
         float elemMult = preacher ? 1.5f + attacker.Buffs.GetCustomVar("aposSetExtra5") : 1f;
         target.Buffs.SetCustomVar("aposHitDmg", response.Strength * elemMult);
         target.Buffs.SetCustomVar("aposPreacher", preacher ? 1f : 0f);
+        target.Buffs.SetCustomVar("aposHitBy", attacker.entityId); // splinters and reactions deal damage in this name
 
         // Strength Mastery 5 "Crippling Blows": a club/sledge power hit flagged the target (progression.xml)
         if (!response.Fatal && target.Buffs.GetCustomVar("aposCripple") > 0f)
@@ -105,7 +113,7 @@ public static class AposCombat
             if (excess > 0 && weaponClass.ItemTags.Test_AnySet(StrengthTag) && AposAffixes.Level(attacker, "attStrength") >= 10)
             {
                 EntityAlive next = Nearest(world, target, OverkillRadius);
-                if (next != null) Splash(next, excess);
+                if (next != null) Splash(next, excess, attacker.entityId);
             }
             if (weaponClass.ItemTags.Test_AnySet(ShotgunTag) && AposAffixes.Level(attacker, "perkBoomstick") >= 5
                 && attacker.inventory.holdingItem == weaponClass)
@@ -122,7 +130,7 @@ public static class AposCombat
             if (IsExplosive(weaponClass) && AposAffixes.Level(attacker, "perkDemolitionsExpert") >= 5)
             {
                 target.Buffs.AddBuff("buffAposChainBlast"); // visual only
-                foreach (EntityAlive e in Around(world, target, ChainRadius)) Splash(e, ChainDamage);
+                foreach (EntityAlive e in Around(world, target, ChainRadius)) Splash(e, ChainDamage, attacker.entityId);
             }
         }
 
@@ -131,7 +139,7 @@ public static class AposCombat
             int share = Mathf.RoundToInt(dealt * ShrapnelShare);
             if (share > 0)
             {
-                foreach (EntityAlive e in Around(world, target, ShrapnelRadius)) Splash(e, share);
+                foreach (EntityAlive e in Around(world, target, ShrapnelRadius)) Splash(e, share, attacker.entityId);
             }
         }
     }
@@ -169,18 +177,17 @@ public static class AposCombat
         return name.StartsWith("ammo") && name.EndsWith("AP");
     }
 
-    static void Splash(EntityAlive e, int damage)
+    static void Splash(EntityAlive e, int damage, int attackerId)
     {
-        e.Buffs.SetCustomVar("aposSplashDmg", -damage);
-        e.Buffs.AddBuff("buffAposSplash");
+        AposSplash.Deal(e, damage, attackerId, EnumDamageTypes.Piercing);
     }
 
     // damage to every zombie within the radius of the center (not the center itself)
-    public static void SplashAround(EntityAlive center, float radius, int damage)
+    public static void SplashAround(EntityAlive center, float radius, int damage, int attackerId)
     {
         World world = GameManager.Instance.World;
         if (world == null) return;
-        foreach (EntityAlive e in Around(world, center, radius)) Splash(e, damage);
+        foreach (EntityAlive e in Around(world, center, radius)) Splash(e, damage, attackerId);
     }
 
     static IEnumerable<EntityAlive> Around(World world, EntityAlive center, float radius)
@@ -222,7 +229,7 @@ public static class AposCombatDamagePatch
         // From the Shadows 5 "Shadow Strike": x2 from the Shadow (AposShadow.cs)
         EntityPlayer attacker = _damageSource != null && GameManager.Instance.World != null
             ? GameManager.Instance.World.GetEntity(_damageSource.getEntityId()) as EntityPlayer : null;
-        if (attacker != null && attacker != __instance)
+        if (attacker != null && attacker != __instance && AposSplash.Depth == 0)
         {
             _strength = AposShadow.OnPlayerHit(attacker, __instance, _damageSource, _strength);
             _strength = AposMastery.ModifyHit(attacker, __instance, _damageSource, _strength); // Weapon Mastery
@@ -242,6 +249,47 @@ public static class AposCombatDamagePatch
         catch (Exception e)
         {
             Debug.LogError("[AposMod] Combat hook failed: " + e);
+        }
+    }
+}
+
+// Area damage from AposMod effects (splinters, Ricochet, reactions, Overkill...). It used to be ModifyStats Health:
+// a zombie killed that way had no killer, so the player got no XP and no quest/challenge credit.
+// Now it is a real hit in the attacker's name; Depth tells our own damage hook that this is such a hit.
+public static class AposSplash
+{
+    public static int Depth;
+
+    public static void Deal(EntityAlive target, int damage, int attackerId, EnumDamageTypes type)
+    {
+        if (target == null || damage <= 0 || target.IsDead()) return;
+        Depth++;
+        try
+        {
+            target.DamageEntity(new DamageSourceEntity(EnumDamageSource.External, type, attackerId), damage, false, 1f);
+        }
+        finally
+        {
+            Depth--;
+        }
+    }
+
+    // XML effects still set aposSplashDmg (negative) and add buffAposSplash; the buff's instigator is the player
+    // whose effect fired. Runs where the zombies live (single player / host / dedicated server).
+    public static void ProcessXml(World world)
+    {
+        ConnectionManager cm = SingletonMonoBehaviour<ConnectionManager>.Instance;
+        if (cm == null || !cm.IsServer) return;
+        List<Entity> list = world.Entities.list;
+        for (int i = list.Count - 1; i >= 0; i--)
+        {
+            EntityAlive e = list[i] as EntityAlive;
+            if (e == null || e is EntityPlayer) continue;
+            float dmg = e.Buffs.GetCustomVar("aposSplashDmg");
+            if (dmg >= 0f) continue;
+            e.Buffs.SetCustomVar("aposSplashDmg", 0f);
+            BuffValue b = e.Buffs.GetBuff("buffAposSplash");
+            Deal(e, Mathf.RoundToInt(-dmg), b != null ? b.InstigatorId : -1, EnumDamageTypes.Piercing);
         }
     }
 }

@@ -334,14 +334,12 @@
 				<passive_effect name="RunSpeed" operation="perc_add" value="-1"/>
 			</effect_group>
 		</buff>
-		<!-- Area damage for Ricochet (rifles) and Splinter (bows): the target loses its own aposSplashDmg (negative) HP.
-		     stack_type ignore + short duration: a second application in the same moment does nothing. -->
+		<!-- Area damage from XML effects (Ricochet, legendaries...): they set aposSplashDmg (negative) on the zombie and
+		     add this marker buff. AposSplash.ProcessXml (Source/AposCombat.cs) deals that damage as a real hit in the
+		     name of the buff's instigator, so the kill gives XP (ModifyStats Health gave no killer and no XP). -->
 		<buff name="buffAposSplash" hidden="true">
 			<stack_type value="ignore"/>
 			<duration value=".3"/>
-			<effect_group>
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="@aposSplashDmg"/>
-			</effect_group>
 		</buff>
 
 		<!-- Robots "Guardian Protocol": display only; the bonus itself lives in entityclasses.xml -->
