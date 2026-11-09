@@ -69,6 +69,7 @@ public static class AposAffixes
     static readonly FastTags<TagGroup.Global> NoAffixTag = FastTags<TagGroup.Global>.Parse("tool,turretRanged");
     static readonly FastTags<TagGroup.Global> ShotgunTag = FastTags<TagGroup.Global>.Parse("shotgun");
     static readonly FastTags<TagGroup.Global> GunTag = FastTags<TagGroup.Global>.Parse("gun");
+    static readonly FastTags<TagGroup.Global> ArcheryTag = FastTags<TagGroup.Global>.Parse("perkArchery");
 
     static readonly Random rand = new Random();
 
@@ -102,6 +103,8 @@ public static class AposAffixes
     static bool Fits(AposAffix a, ItemClass ic, int kind, int quality)
     {
         if (a.Melee != (kind == 1)) return false;
+        // bows and crossbows hold one arrow: a bigger "magazine" means nothing there
+        if (a.Types[0] == PassiveEffects.MagazineSize && ic.ItemTags.Test_AnySet(ArcheryTag)) return false;
         bool shotgun = ic.ItemTags.Test_AnySet(ShotgunTag);
         if (a.Only == 1) return shotgun;
         if (a.Only == 2) return quality >= 6 && !shotgun && ic.ItemTags.Test_AnySet(GunTag);

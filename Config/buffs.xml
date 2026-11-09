@@ -631,10 +631,10 @@
 			<duration value="60"/>
 		</buff>
 
-		<!-- Healing Factor 5: "in combat" for 10 s after any hit given or taken -->
+		<!-- Healing Factor 5: "in combat" for 6 s after any hit given or taken -->
 		<buff name="buffAposInCombat" hidden="true">
 			<stack_type value="replace"/>
-			<duration value="10"/>
+			<duration value="6"/>
 		</buff>
 		<buff name="buffAposButcherCD" hidden="true">
 			<stack_type value="ignore"/>

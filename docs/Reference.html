@@ -400,7 +400,7 @@ html, body { overflow-x: clip; }
     </article>
     <article class="card">
       <h3>Rocket launcher — <span class="trait">Early Artillery</span></h3>
-      <ul><li>Sold by traders and found in loot from the start of the game.</li><li>Every POI's final loot chest has rockets:</li></ul>
+      <ul><li>Sold by traders and found in loot from the start of the game.</li><li>The final loot chest can also hold the launcher itself: 6% at ★2, 10% at ★3, 15% at ★4, 20% at ★5.</li><li>Every POI's final loot chest has rockets:</li></ul>
       <div class="scale"><table><tr><th>Tier</th><th>★1</th><th>★2</th><th>★3</th><th>★4</th><th>★5</th></tr><tr><td>Rockets</td><td>1</td><td>1–2</td><td>2–3</td><td>3–4</td><td>4–6</td></tr></table></div>
     </article>
     <article class="card">
@@ -444,7 +444,7 @@ html, body { overflow-x: clip; }
         <li><b>Pellets</b> (shotguns) +10% → +35%</li>
         <li><b>Second bullet</b> (pistols, rifles, assault rifles, quality 6 only): 2 bullets per shot, each −40% damage</li>
         <li><b>Headshot damage</b> +10% → +60%</li>
-        <li><b>Magazine size</b> +10% → +60%</li>
+        <li><b>Magazine size</b> +10% → +60% (not on bows and crossbows)</li>
         <li><b>Movement speed</b> with the weapon in hand +2% → +10%</li>
         <li><b>Recoil</b> −10% → −50%</li>
       </ul>
@@ -708,7 +708,7 @@ html, body { overflow-x: clip; }
         <li><b>Pain Tolerance — Unbreakable:</b> below 25% health you take 50% less damage.</li>
         <li><b>Fortitude Mastery — Second Wind:</b> once every 5 min, when your health drops below 20%, you instantly restore 70%.</li>
         <li><b>Siphoning Strikes</b> (all levels): instead of the vanilla 2–10 HP per kill — life steal: every melee hit heals 4/8/12/16/20% of damage dealt. <b>Vampire</b> (5): a melee kill gives +50 max health for 15 s (doesn't heal — fill it with life steal). Each kill during that time adds another +50 and restarts the 15 s — no cap. When the buff ends, the bonus is gone.</li>
-        <li><b>Healing Factor — Regeneration:</b> 10 s out of combat and you regenerate 3 HP/s.</li>
+        <li><b>Healing Factor:</b> natural regeneration 0.2 / 0.4 / 0.6 / 1 / 1.5 HP/s by level (vanilla 0.01–0.16). <b>Regeneration</b> (level 5): 6 s out of combat and you regenerate 4 HP/s more.</li>
         <li><b>Slow Metabolism — Iron Stomach:</b> no food poisoning, no dysentery (you can drink murky water), and food and water never drop below 25%.</li>
         <li><b>Rule 1: Cardio — Second Lungs:</b> when stamina runs out you instantly get +50% (once per 60 s).</li>
       </ul>
@@ -823,13 +823,13 @@ html, body { overflow-x: clip; }
       <p>Each legendary has 3 fixed affixes at quality 6 max and its own trait, so it's always at least as good as the best weapon with random affixes.</p>
       <ul>
         <li><b>Unkempt Harold</b> (.44 Desert Vulture): 3 bullets per shot in a fan. <i>Damage +35%, fire rate +25%, magazine +60%.</i></li>
-        <li><b>Lady Fist</b> (9mm pistol): +50% damage, a headshot heals 5 HP. <i>Headshot damage +60%, spread −40%, reload +40%.</i></li>
+        <li><b>Lady Fist</b> (9mm pistol): +50% damage, every hit heals 5 HP, a headshot 25 HP. <i>Headshot damage +60%, spread −40%, reload +40%.</i></li>
         <li><b>Dragon's Breath</b> (pump shotgun): +20%, every hit ignites. <i>Pellets +35%, damage +35%, reload +40%.</i></li>
         <li><b>The Ripper</b> (machete): +40%, every hit causes bleeding, +50% more to targets already bleeding; a kill heals 20 HP. <i>Damage +35%, attack speed +20%, life steal 6% of damage.</i></li>
         <li><b>Thunderclap</b> (steel sledgehammer): +25%, a power attack shocks everyone within 4 m. Each kill gives a storm charge; at 3 charges a power attack calls down lightning: 150 damage and 3 s of shock to everyone within 6 m. <i>Damage +35%, stamina per hit −40%, headshot damage +60%.</i></li>
-        <li><b>Hornet</b> (SMG-5): +15%, hits have a 30% chance to corrode with acid. <i>Magazine +60%, fire rate +25%, recoil −50%.</i></li>
+        <li><b>Hornet</b> (SMG-5): +40% damage, hits have a 50% chance to corrode with acid, +25% more against corroded targets. <i>Magazine +60%, fire rate +25%, recoil −50%.</i></li>
         <li><b>Storm Fist</b> (steel knuckles): +20%, hits have a 25% chance to ignite and a 25% chance to shock, so Confusion triggers on its own. <i>Attack speed +20%, damage +35%, movement speed +10%.</i></li>
-        <li><b>Artemis</b> (compound bow): every arrow ignites and shatters into 8 splinters of 50 each. <i>Damage +35%, headshot damage +60%, reload +40%.</i></li>
+        <li><b>Artemis</b> (compound bow): +40% damage, every arrow ignites and shatters into 10 splinters of 100 each (or half the arrow's hit). <i>Damage +35%, headshot damage +60%, reload +40%.</i></li>
         <li><b>Big Boom</b> (rocket launcher): 50% chance the next rocket is free. <i>Damage +35%, reload +40%, range +60%.</i></li>
         <li><b>Predator</b> (sniper rifle): +25%, every headshot ricochets within 15 m: 100 damage and 2 s of stun. <i>Headshot damage +60%, range +60%, recoil −50%.</i></li>
       </ul>
@@ -1165,7 +1165,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
     </article>
     <article class="card">
       <h3>Ракетница — <span class="trait">Early Artillery</span></h3>
-      <ul><li>Продаётся у торговцев и попадается в луте с начала игры.</li><li>В финальном сундуке каждого здания есть ракеты:</li></ul>
+      <ul><li>Продаётся у торговцев и попадается в луте с начала игры.</li><li>В финальном сундуке может лежать и сама ракетница: 6% на ★2, 10% на ★3, 15% на ★4, 20% на ★5.</li><li>В финальном сундуке каждого здания есть ракеты:</li></ul>
       <div class="scale"><table><tr><th>Звёзды</th><th>★1</th><th>★2</th><th>★3</th><th>★4</th><th>★5</th></tr><tr><td>Ракет</td><td>1</td><td>1–2</td><td>2–3</td><td>3–4</td><td>4–6</td></tr></table></div>
     </article>
     <article class="card">
@@ -1209,7 +1209,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
         <li><b>Дробины</b> (дробовики) +10% → +35%</li>
         <li><b>Вторая пуля</b> (пистолеты, винтовки, автоматы, только качество 6): 2 пули за выстрел, каждая −40% урона</li>
         <li><b>Урон в голову</b> +10% → +60%</li>
-        <li><b>Размер магазина</b> +10% → +60%</li>
+        <li><b>Размер магазина</b> +10% → +60% (не на луках и арбалетах)</li>
         <li><b>Скорость передвижения</b> с оружием в руках +2% → +10%</li>
         <li><b>Отдача</b> −10% → −50%</li>
       </ul>
@@ -1473,7 +1473,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
         <li><b>Pain Tolerance — Unbreakable:</b> когда здоровье ниже 25%, вы получаете на 50% меньше урона.</li>
         <li><b>Fortitude Mastery — Second Wind:</b> раз в 5 мин, когда здоровье падает ниже 20%, вы сразу восстанавливаете 70%.</li>
         <li><b>Siphoning Strikes</b> (все уровни): вместо ванильных 2–10 HP за убийство — вампиризм: каждый удар в ближнем бою лечит 4/8/12/16/20% нанесённого урона. <b>Vampire</b> (5): убийство в ближнем бою даёт +50 к максимуму здоровья на 15 с (не лечит — заполняйте вампиризмом). Каждое убийство за это время добавляет ещё +50 и перезапускает 15 с — без предела. Когда бафф спадает, бонус исчезает.</li>
-        <li><b>Healing Factor — Regeneration:</b> 10 с без боя — и вы восстанавливаете 3 HP/с.</li>
+        <li><b>Healing Factor:</b> естественная регенерация 0,2 / 0,4 / 0,6 / 1 / 1,5 HP/с по уровням (в ванилле 0,01–0,16). <b>Regeneration</b> (5 уровень): 6 с без боя — и вы восстанавливаете ещё 4 HP/с.</li>
         <li><b>Slow Metabolism — Iron Stomach:</b> ни отравления, ни дизентерии (грязную воду можно пить), а еда и вода не падают ниже 25%.</li>
         <li><b>Rule 1: Cardio — Second Lungs:</b> когда выносливость заканчивается, вы сразу получаете +50% (раз в 60 с).</li>
       </ul>
@@ -1588,13 +1588,13 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
       <p>Каждая легендарка имеет 3 постоянных аффикса на максимуме качества 6 и собственную фишку, поэтому она всегда не хуже лучшего оружия со случайными аффиксами.</p>
       <ul>
         <li><b>Unkempt Harold</b> (.44 Desert Vulture): 3 пули за выстрел веером. <i>Урон +35%, скорострельность +25%, магазин +60%.</i></li>
-        <li><b>Lady Fist</b> (9-мм пистолет): +50% урона, хедшот лечит 5 HP. <i>Урон в голову +60%, разброс −40%, перезарядка +40%.</i></li>
+        <li><b>Lady Fist</b> (9-мм пистолет): +50% урона, каждое попадание лечит 5 HP, хедшот — 25 HP. <i>Урон в голову +60%, разброс −40%, перезарядка +40%.</i></li>
         <li><b>Dragon's Breath</b> (помповый дробовик): +20%, каждое попадание поджигает. <i>Дробины +35%, урон +35%, перезарядка +40%.</i></li>
         <li><b>The Ripper</b> (мачете): +40%, каждый удар вызывает кровотечение, по тем, кто уже истекает кровью, ещё +50%; убийство лечит 20 HP. <i>Урон +35%, скорость атаки +20%, лечение 6% от урона.</i></li>
         <li><b>Thunderclap</b> (стальная кувалда): +25%, силовой удар шокирует всех в 4 м. Каждое убийство даёт грозовой заряд, на 3 зарядах силовой удар вызывает молнию: 150 урона и 3 с шока всем в 6 м. <i>Урон +35%, выносливость на удар −40%, урон в голову +60%.</i></li>
-        <li><b>Hornet</b> (SMG-5): +15%, попадание с шансом 30% разъедает кислотой. <i>Магазин +60%, скорострельность +25%, отдача −50%.</i></li>
+        <li><b>Hornet</b> (SMG-5): +40% урона, попадание с шансом 50% разъедает кислотой, по разъеденным целям ещё +25%. <i>Магазин +60%, скорострельность +25%, отдача −50%.</i></li>
         <li><b>Storm Fist</b> (стальные кастеты): +20%, удар с шансом 25% поджигает и с шансом 25% шокирует, так что Confusion включается сама. <i>Скорость атаки +20%, урон +35%, скорость передвижения +10%.</i></li>
-        <li><b>Artemis</b> (блочный лук): каждая стрела поджигает и разлетается на 8 осколков по 50. <i>Урон +35%, урон в голову +60%, перезарядка +40%.</i></li>
+        <li><b>Artemis</b> (блочный лук): +40% урона, каждая стрела поджигает и разлетается на 10 осколков по 100 (или половине урона стрелы). <i>Урон +35%, урон в голову +60%, перезарядка +40%.</i></li>
         <li><b>Big Boom</b> (ракетница): с шансом 50% следующая ракета бесплатная. <i>Урон +35%, перезарядка +40%, дальность +60%.</i></li>
         <li><b>Predator</b> (снайперская винтовка): +25%, каждый хедшот рикошетит на 15 м: 100 урона и 2 с оглушения. <i>Урон в голову +60%, дальность +60%, отдача −50%.</i></li>
       </ul>
@@ -1930,7 +1930,7 @@ aposbow off | on  выключить / включить автоналожени
     </article>
     <article class="card">
       <h3>Ракетниця — <span class="trait">Early Artillery</span></h3>
-      <ul><li>Продається в торговців і трапляється в луті від початку гри.</li><li>У фінальній скрині кожного будинку є ракети:</li></ul>
+      <ul><li>Продається в торговців і трапляється в луті від початку гри.</li><li>У фінальній скрині може лежати й сама ракетниця: 6% на ★2, 10% на ★3, 15% на ★4, 20% на ★5.</li><li>У фінальній скрині кожного будинку є ракети:</li></ul>
       <div class="scale"><table><tr><th>Зірки</th><th>★1</th><th>★2</th><th>★3</th><th>★4</th><th>★5</th></tr><tr><td>Ракет</td><td>1</td><td>1–2</td><td>2–3</td><td>3–4</td><td>4–6</td></tr></table></div>
     </article>
     <article class="card">
@@ -1974,7 +1974,7 @@ aposbow off | on  выключить / включить автоналожени
         <li><b>Дробини</b> (дробовики) +10% → +35%</li>
         <li><b>Друга куля</b> (пістолети, гвинтівки, автомати, лише якість 6): 2 кулі за постріл, кожна −40% шкоди</li>
         <li><b>Шкода в голову</b> +10% → +60%</li>
-        <li><b>Розмір магазину</b> +10% → +60%</li>
+        <li><b>Розмір магазину</b> +10% → +60% (не на луках і арбалетах)</li>
         <li><b>Швидкість руху</b> зі зброєю в руках +2% → +10%</li>
         <li><b>Віддача</b> −10% → −50%</li>
       </ul>
@@ -2238,7 +2238,7 @@ aposbow off | on  выключить / включить автоналожени
         <li><b>Pain Tolerance — Unbreakable:</b> коли здоров'я нижче 25%, ви отримуєте на 50% менше шкоди.</li>
         <li><b>Fortitude Mastery — Second Wind:</b> раз на 5 хв, коли здоров'я падає нижче 20%, ви одразу відновлюєте 70%.</li>
         <li><b>Siphoning Strikes</b> (усі рівні): замість ванільних 2–10 HP за вбивство — вампіризм: кожен удар у ближньому бою лікує 4/8/12/16/20% завданої шкоди. <b>Vampire</b> (5): вбивство в ближньому бою дає +50 до максимуму здоров'я на 15 с (не лікує — заповнюйте вампіризмом). Кожне вбивство за цей час додає ще +50 і перезапускає 15 с — без межі. Коли бафф спадає, бонус зникає.</li>
-        <li><b>Healing Factor — Regeneration:</b> 10 с без бою — і ви відновлюєте 3 HP/с.</li>
+        <li><b>Healing Factor:</b> природна регенерація 0,2 / 0,4 / 0,6 / 1 / 1,5 HP/с за рівнями (у ванілі 0,01–0,16). <b>Regeneration</b> (5 рівень): 6 с без бою — і ви відновлюєте ще 4 HP/с.</li>
         <li><b>Slow Metabolism — Iron Stomach:</b> ні отруєння, ні дизентерії (брудну воду можна пити), а їжа й вода не падають нижче 25%.</li>
         <li><b>Rule 1: Cardio — Second Lungs:</b> коли витривалість закінчується, ви одразу отримуєте +50% (раз на 60 с).</li>
       </ul>
@@ -2353,13 +2353,13 @@ aposbow off | on  выключить / включить автоналожени
       <p>Кожна легендарка має 3 постійні афікси на максимумі якості 6 і власну фішку, тому вона завжди не гірша за найкращу зброю з випадковими афіксами.</p>
       <ul>
         <li><b>Unkempt Harold</b> (.44 Desert Vulture): 3 кулі за постріл віялом. <i>Шкода +35%, скорострільність +25%, магазин +60%.</i></li>
-        <li><b>Lady Fist</b> (9-мм пістолет): +50% шкоди, хедшот лікує 5 HP. <i>Шкода в голову +60%, розкид −40%, перезарядка +40%.</i></li>
+        <li><b>Lady Fist</b> (9-мм пістолет): +50% шкоди, кожне влучання лікує 5 HP, хедшот — 25 HP. <i>Шкода в голову +60%, розкид −40%, перезарядка +40%.</i></li>
         <li><b>Dragon's Breath</b> (помповий дробовик): +20%, кожне влучання підпалює. <i>Дробини +35%, шкода +35%, перезарядка +40%.</i></li>
         <li><b>The Ripper</b> (мачете): +40%, кожен удар спричиняє кровотечу, по тих, хто вже стікає кров'ю, ще +50%; вбивство лікує 20 HP. <i>Шкода +35%, швидкість атаки +20%, лікування 6% від шкоди.</i></li>
         <li><b>Thunderclap</b> (сталева кувалда): +25%, силовий удар шокує всіх у 4 м. Кожне вбивство дає грозовий заряд, на 3 зарядах силовий удар кличе блискавку: 150 шкоди й 3 с шоку всім у 6 м. <i>Шкода +35%, витривалість на удар −40%, шкода в голову +60%.</i></li>
-        <li><b>Hornet</b> (SMG-5): +15%, влучання з шансом 30% роз'їдає кислотою. <i>Магазин +60%, скорострільність +25%, віддача −50%.</i></li>
+        <li><b>Hornet</b> (SMG-5): +40% шкоди, влучання з шансом 50% роз'їдає кислотою, по роз'їдених цілях ще +25%. <i>Магазин +60%, скорострільність +25%, віддача −50%.</i></li>
         <li><b>Storm Fist</b> (сталеві кастети): +20%, удар з шансом 25% підпалює і з шансом 25% шокує, тож Confusion вмикається сама. <i>Швидкість атаки +20%, шкода +35%, швидкість руху +10%.</i></li>
-        <li><b>Artemis</b> (блочний лук): кожна стріла підпалює й розлітається на 8 уламків по 50. <i>Шкода +35%, шкода в голову +60%, перезарядка +40%.</i></li>
+        <li><b>Artemis</b> (блочний лук): +40% шкоди, кожна стріла підпалює й розлітається на 10 уламків по 100 (або половині шкоди стріли). <i>Шкода +35%, шкода в голову +60%, перезарядка +40%.</i></li>
         <li><b>Big Boom</b> (ракетниця): з шансом 50% наступна ракета безкоштовна. <i>Шкода +35%, перезарядка +40%, дальність +60%.</i></li>
         <li><b>Predator</b> (снайперська гвинтівка): +25%, кожен хедшот рикошетить на 15 м: 100 шкоди й 2 с оглушення. <i>Шкода в голову +60%, дальність +60%, віддача −50%.</i></li>
       </ul>

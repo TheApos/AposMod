@@ -18,7 +18,11 @@ $legends = [ordered]@{
   aposLegendLadyFist = @{ Base = 'gunHandgunT1Pistol'; Effect = @'
 <effect_group name="AposMod legendary" tiered="false">
 	<passive_effect name="EntityDamage" operation="perc_add" value=".5"/>
+	<!-- every hit heals 5, a headshot 20 more (25 in total) -->
 	<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyStats" stat="Health" operation="add" value="5">
+		<requirement name="IsAlive" target="other"/>
+	</triggered_effect>
+	<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyStats" stat="Health" operation="add" value="20">
 		<requirement name="HitLocation" body_parts="Head"/>
 		<requirement name="IsAlive" target="other"/>
 	</triggered_effect>
@@ -72,10 +76,13 @@ $legends = [ordered]@{
 '@ }
   aposLegendHornet = @{ Base = 'gunHandgunT3SMG5'; Effect = @'
 <effect_group name="AposMod legendary" tiered="false">
-	<passive_effect name="EntityDamage" operation="perc_add" value=".15"/>
+	<passive_effect name="EntityDamage" operation="perc_add" value=".4"/>
+	<passive_effect name="EntityDamage" operation="perc_add" value=".25">
+		<requirement name="HasBuff" target="other" buff="buffAposCorroded"/>
+	</passive_effect>
 	<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" target="other" cvar="aposCorrodeTime" operation="set" value="6">
 		<requirement name="IsAlive" target="other"/>
-		<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="30"/>
+		<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="50"/>
 	</triggered_effect>
 	<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffAposCorroded">
 		<requirement name="IsAlive" target="other"/>
@@ -99,9 +106,10 @@ $legends = [ordered]@{
 '@ }
   aposLegendArtemis = @{ Base = 'gunBowT3CompoundBow'; Effect = @'
 <effect_group name="AposMod legendary" tiered="false">
-	<!-- every arrow: 8 fragments of 50 (as Archery 5) and fire -->
-	<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar="aposSplinterN" operation="set" value="8"/>
-	<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar="aposSplinterDmg" operation="set" value="-50"/>
+	<passive_effect name="EntityDamage" operation="perc_add" value=".4"/>
+	<!-- every arrow: 10 fragments of 100 (or half the arrow's hit, Source/AposSplinter.cs) and fire -->
+	<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar="aposSplinterN" operation="set" value="10"/>
+	<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="other" cvar="aposSplinterDmg" operation="set" value="-100"/>
 	<triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="other" buff="buffBurningFlamingArrow">
 		<requirement name="CVarCompare" target="other" cvar="_underwater" operation="LT" value="0.3"/>
 	</triggered_effect>

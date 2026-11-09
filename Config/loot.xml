@@ -94,6 +94,20 @@
 	<append xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT5']">
 		<item group="groupAmmoRocket" count="4,6"/>
 	</append>
+	<!-- ===== Rocket launcher (+1 rocket) in final chests: 6% T2, 10% T3, 15% T4, 20% T5 (otherwise only the
+	     Demolitionist loot gave it, and rockets piled up with nothing to fire them) ===== -->
+	<append xpath="/lootcontainers/lootgroup[@name='groupReinforcedChestT2']">
+		<item group="groupAposEarlyRocketLauncher" prob="0.06"/>
+	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='groupReinforcedChestT3']">
+		<item group="groupWeaponsT3_Demolitionist01" prob="0.1"/>
+	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT4']">
+		<item group="groupWeaponsT3_Demolitionist01" prob="0.15"/>
+	</append>
+	<append xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT5']">
+		<item group="groupWeaponsT3_Demolitionist01" prob="0.2"/>
+	</append>
 	<!-- ===== Bird nests: x3 feathers (vanilla 1 + 1-5) ===== -->
 	<set xpath="/lootcontainers/lootgroup[@name='groupBirdNest01']/item[@name='resourceFeather']/@count">3</set>
 	<set xpath="/lootcontainers/lootgroup[@name='groupBirdNest02']/item[@name='resourceFeather']/@count">3,15</set>

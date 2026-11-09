@@ -278,14 +278,16 @@
 			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposVampire"/>
 		</effect_group>
 	</append>
-	<!-- Healing Factor 5 "Regeneration": 10 s without fighting -> +3 HP/s -->
+	<!-- Healing Factor: natural regeneration per level 0.2/0.4/0.6/1/1.5 HP/s (vanilla 0.011-0.16, too weak to matter) -->
+	<set xpath="/progression/perks/perk[@name='perkHealingFactor']/effect_group[1]/passive_effect[@name='HealthChangeOT']/@value">.2,.4,.6,1,1.5</set>
+	<!-- Healing Factor 5 "Regeneration": 6 s without fighting -> +4 HP/s more -->
 	<append xpath="/progression/perks/perk[@name='perkHealingFactor']">
 		<effect_group name="AposMod regeneration">
 			<requirement name="ProgressionLevel" progression_name="perkHealingFactor" operation="GTE" value="5"/>
 			<triggered_effect trigger="onOtherDamagedSelf" action="AddBuff" buff="buffAposInCombat"/>
 			<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" buff="buffAposInCombat"/>
 			<triggered_effect trigger="onSelfDamagedOther" action="AddBuff" buff="buffAposInCombat"/>
-			<passive_effect name="HealthChangeOT" operation="base_add" value="3">
+			<passive_effect name="HealthChangeOT" operation="base_add" value="4">
 				<requirement name="!HasBuff" buff="buffAposInCombat"/>
 			</passive_effect>
 		</effect_group>

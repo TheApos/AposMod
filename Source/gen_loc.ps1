@@ -97,7 +97,7 @@ $extra = [ordered]@{
   aposLegendHarold           = '[FF9900]Unkempt Harold[-]', '[FF9900]Растрёпанный Гарольд[-]'
   aposLegendHaroldDesc       = '[FF9900]Legendary .44 Desert Vulture.[-]\nEvery shot fires 3 bullets in a wide fan. Why aim when you can do everything at once?', '[FF9900]Легендарный .44 «Пустынный стервятник».[-]\nКаждый выстрел — 3 пули широким веером. Зачем целиться, если можно всё и сразу?'
   aposLegendLadyFist         = '[FF9900]Lady Fist[-]', '[FF9900]Леди Кулак[-]'
-  aposLegendLadyFistDesc     = '[FF9900]Legendary 9mm pistol.[-]\n+50% damage. Every headshot heals you for 5 HP.', '[FF9900]Легендарный 9-мм пистолет.[-]\n+50% урона. Каждый хедшот лечит вас на 5 HP.'
+  aposLegendLadyFistDesc     = '[FF9900]Legendary 9mm pistol.[-]\n+50% damage. Every hit heals you for 5 HP, every headshot for 25 HP.', '[FF9900]Легендарный 9-мм пистолет.[-]\n+50% урона. Каждое попадание лечит вас на 5 HP, каждый хедшот - на 25 HP.'
   aposLegendDragonBreath     = '[FF9900]Dragon''s Breath[-]', '[FF9900]Дыхание дракона[-]'
   aposLegendDragonBreathDesc = '[FF9900]Legendary pump shotgun.[-]\n+20% damage. Every hit sets the target on fire.', '[FF9900]Легендарный помповый дробовик.[-]\n+20% урона. Каждое попадание поджигает цель.'
   aposLegendRipper           = '[FF9900]The Ripper[-]', '[FF9900]Потрошитель[-]'
@@ -105,11 +105,11 @@ $extra = [ordered]@{
   aposLegendThunderclap      = '[FF9900]Thunderclap[-]', '[FF9900]Раскат грома[-]'
   aposLegendThunderclapDesc  = '[FF9900]Legendary steel sledgehammer.[-]\n+25% damage, power attacks shock zombies within 4 m.\nStorm charges: every kill gives a charge; at 3 charges the next power attack calls lightning: 150 damage and a 3 s shock to all zombies within 6 m.', '[FF9900]Легендарная стальная кувалда.[-]\n+25% урона, силовые атаки шокируют зомби в радиусе 4 м.\nГрозовые заряды: каждое убийство даёт заряд; на 3 зарядах следующая силовая атака вызывает молнию: 150 урона и шок 3 с всем зомби в радиусе 6 м.'
   aposLegendHornet           = '[FF9900]Hornet[-]', '[FF9900]Шершень[-]'
-  aposLegendHornetDesc       = '[FF9900]Legendary SMG-5.[-]\n+15% damage. Hits have a 30% chance to corrode the target (acid: fuel for reactions).', '[FF9900]Легендарный SMG-5.[-]\n+15% урона. Попадания с шансом 30% разъедают цель кислотой (топливо для реакций).'
+  aposLegendHornetDesc       = '[FF9900]Legendary SMG-5.[-]\n+40% damage. Hits have a 50% chance to corrode the target (acid: fuel for reactions), and you deal +25% more to corroded targets.', '[FF9900]Легендарный SMG-5.[-]\n+40% урона. Попадания с шансом 50% разъедают цель кислотой (топливо для реакций), а по разъеденным целям вы наносите ещё +25%.'
   aposLegendStormFist        = '[FF9900]Storm Fist[-]', '[FF9900]Кулак бури[-]'
   aposLegendStormFistDesc    = '[FF9900]Legendary steel knuckles.[-]\n+20% damage. Every punch has a 25% chance to ignite and a 25% chance to shock: Confusion comes by itself.', '[FF9900]Легендарный стальной кастет.[-]\n+20% урона. Каждый удар с шансом 25% поджигает и с шансом 25% шокирует: Замешательство приходит само.'
   aposLegendArtemis          = '[FF9900]Artemis[-]', '[FF9900]Артемида[-]'
-  aposLegendArtemisDesc      = '[FF9900]Legendary compound bow.[-]\nEvery arrow sets the target on fire and bursts into 8 fragments of 50 HP, at any Archery level.', '[FF9900]Легендарный блочный лук.[-]\nКаждая стрела поджигает цель и разлетается на 8 осколков по 50 HP при любом уровне «Стрельбы из лука».'
+  aposLegendArtemisDesc      = '[FF9900]Legendary compound bow.[-]\n+40% damage. Every arrow sets the target on fire and bursts into 10 fragments of 100 HP (or half the arrow''s hit), at any Archery level.', '[FF9900]Легендарный блочный лук.[-]\n+40% урона. Каждая стрела поджигает цель и разлетается на 10 осколков по 100 HP (или половине урона стрелы) при любом уровне «Стрельбы из лука».'
   aposLegendBigBoom          = '[FF9900]Big Boom[-]', '[FF9900]Большой бабах[-]'
   aposLegendBigBoomDesc      = '[FF9900]Legendary rocket launcher.[-]\nAfter every shot there is a 50% chance that the next rocket costs nothing.', '[FF9900]Легендарная ракетница.[-]\nПосле каждого выстрела с шансом 50% следующая ракета бесплатна.'
   aposLegendPredator         = '[FF9900]Predator[-]', '[FF9900]Хищник[-]'
@@ -270,7 +270,7 @@ $perkHighlights = [ordered]@{
   perkPainTolerance      = 5, 'Unbreakable: below 25% health you take 50% less damage.', 'Несгибаемый: при здоровье ниже 25% вы получаете на 50% меньше урона.'
   perkFortitudeMastery   = 5, 'Second Wind: once per 5 minutes, dropping below 20% health instantly heals 70% of your max health.', 'Второе дыхание: раз в 5 минут, когда здоровье падает ниже 20%, вы сразу восстанавливаете 70% максимума.'
   perkSiphoningStrikes   = 5, 'Vampire: a melee kill gives +50 max health for 15 s. Every kill in that time adds another +50 and restarts the 15 s, without a limit.', 'Вампир: убийство в ближнем бою даёт +50 к максимуму здоровья на 15 с. Каждое убийство за это время добавляет ещё +50 и перезапускает 15 с, без предела.'
-  perkHealingFactor      = 5, 'Regeneration: after 10 s without hitting or being hit you regenerate 3 HP/s.', 'Регенерация: через 10 с без ударов (ваших и по вам) вы восстанавливаете 3 HP/с.'
+  perkHealingFactor      = 5, 'Regeneration: after 6 s without hitting or being hit you regenerate 4 HP/s more.', 'Регенерация: через 6 с без ударов (ваших и по вам) вы восстанавливаете ещё 4 HP/с.'
   perkSlowMetabolism     = 5, 'Iron Stomach: no food poisoning or dysentery (murky water is safe), and food and water never drop below 25%.', 'Железный желудок: никаких отравлений и дизентерии (мутная вода безопасна), а еда и вода не падают ниже 25%.'
   perkRuleOneCardio      = 5, 'Second Lungs: when your stamina runs out you instantly get 50% back (once per 60 s).', 'Второе дыхание лёгких: когда выносливость кончается, вы сразу получаете 50% обратно (раз в 60 с).'
   perkRunAndGun          = 5, 'Gun Kata: shooting on the move: no hip spread and +30% damage.', 'Ган-ката: стрельба на ходу без разброса от бедра и с +30% урона.'
@@ -304,6 +304,16 @@ for ($L = 1; $L -le 5; $L++) {
   $loc[$key] = $en + '\n\n[FFB400]AposMod:[-] every melee hit heals ' + (4 * $L) + '% of the damage dealt.'
   $locRu[$key] = $ru + '\n\n[FFB400]AposMod:[-] каждый удар в ближнем бою лечит ' + (4 * $L) + '% нанесённого урона.'
   if ($L -lt 5) { $extra[$key] = $loc[$key], $locRu[$key] }
+}
+# Healing Factor: stronger natural regeneration per level (progression.xml)
+$regen = '0.2', '0.4', '0.6', '1', '1.5'
+for ($L = 1; $L -le 5; $L++) {
+  $key = "perkHealingFactorRank${L}LongDesc"
+  $en = $loc[$key] -replace 'Gain 1 health every \d+ seconds with natural healing\.', ('Regenerate ' + $regen[$L - 1] + ' HP per second with natural healing.')
+  $ru = $locRu[$key] -replace 'Каждые \d+ секунд вы получаете по 1 очку здоровья за счет естественного восстановления\.', ('Вы естественным образом восстанавливаете ' + $regen[$L - 1].Replace('.', ',') + ' ОЖ в секунду.')
+  if ($en -eq $loc[$key] -or $ru -eq $locRu[$key]) { throw "Healing Factor text changed: $key" }
+  $loc[$key] = $en; $locRu[$key] = $ru
+  if ($L -lt 5) { $extra[$key] = $en, $ru }
 }
 foreach ($p in $perkHighlights.Keys) {
   $h = $perkHighlights[$p]
@@ -397,6 +407,50 @@ $setAdds = [ordered]@{
 foreach ($k in $setAdds.Keys) {
   if (-not $loc[$k]) { throw "No vanilla text for $k" }
   $extra[$k] = ($loc[$k] + '\n\n[FFB400]AposMod:[-] ' + $setAdds[$k][0]), ($locRu[$k] + '\n\n[FFB400]AposMod:[-] ' + $setAdds[$k][1])
+}
+# Item descriptions of set pieces (inventory, traders): the piece's AposMod bonus and the AposMod full set bonus.
+# Reworked sets lost their vanilla set bonus, so its sentence is replaced; kept sets get the AposMod line added.
+$pieceTexts = @{
+  armorBikerHelmet    = 'clubs and sledgehammers +5-30% damage', 'дубинки и кувалды +5-30% урона'
+  armorBikerGloves    = 'power attacks cost 5-30% less stamina', 'силовые атаки тратят на 5-30% меньше выносливости'
+  armorBikerBoots     = '+2-20% run speed', '+2-20% к скорости бега'
+  armorEnforcerHelmet = 'pistols and SMGs: 5-30% less spread', 'пистолеты и ПП: разброс меньше на 5-30%'
+  armorEnforcerOutfit = 'pistols and SMGs +5-30% damage', 'пистолеты и ПП +5-30% урона'
+  armorEnforcerGloves = 'pistols and SMGs reload 5-30% faster', 'пистолеты и ПП перезаряжаются на 5-30% быстрее'
+  armorRangerHelmet   = 'rifles: 5-30% less recoil', 'винтовки: отдача меньше на 5-30%'
+  armorRangerGloves   = 'rifles +5-50% damage', 'винтовки +5-50% урона'
+  armorCommandoHelmet = 'machine guns: +5-30% magazine', 'автоматы: магазин +5-30%'
+  armorCommandoOutfit = 'machine guns: 5-30% less recoil', 'автоматы: отдача меньше на 5-30%'
+  armorCommandoGloves = 'machine guns +5-50% damage', 'автоматы +5-50% урона'
+  armorFarmerHelmet   = 'bows and crossbows +5-30% damage', 'луки и арбалеты +5-30% урона'
+  armorFarmerOutfit   = '5-30% less noise', 'шум меньше на 5-30%'
+  armorFarmerGloves   = 'bows and crossbows reload 5-30% faster and shoot 2-20% faster', 'луки и арбалеты перезаряжаются на 5-30% и стреляют на 2-20% быстрее'
+  armorFarmerBoots    = '+2-20% run speed', '+2-20% к скорости бега'
+  armorPreacherHelmet = '+5-10 fire and shock resistance', '+5-10 к сопротивлению огню и току'
+  armorPreacherOutfit = '+2-20 max health', '+2-20 к максимуму здоровья'
+  armorPreacherGloves = 'elemental mods trigger 1-10% more often, instead of the vanilla damage bonus', 'стихийные моды срабатывают на 1-10% чаще, вместо ванильного бонуса к урону'
+  armorNerdGloves     = 'batons and robots +5-50% damage, instead of the vanilla damage bonus', 'жезлы и роботы +5-50% урона, вместо ванильного бонуса к урону'
+}
+$qualityNote = ' (grows with quality 1-6)', ' (растёт с качеством 1-6)'
+$pieces = 'Helmet', 'Outfit', 'Gloves', 'Boots'
+foreach ($s in @($setTexts.Keys) + @('Assassin', 'Raider', 'Nomad')) {
+  foreach ($pc in $pieces) {
+    $item = "armor$s$pc"; $key = "${item}Desc"
+    if (-not $loc[$key]) { throw "No vanilla text for $key" }
+    $en = $loc[$key]; $ru = $locRu[$key]
+    $addEn = ''; $addRu = ''
+    if ($pieceTexts[$item]) { $addEn += '\n[FFB400]AposMod piece bonus:[-] ' + $pieceTexts[$item][0] + $qualityNote[0] + '.'; $addRu += '\n[FFB400]AposMod, бонус вещи:[-] ' + $pieceTexts[$item][1] + $qualityNote[1] + '.' }
+    if ($setTexts.Contains($s)) {
+      # replace the vanilla full set sentence (the set lost that bonus)
+      $iEn = $en.IndexOf('\n\nFull Set Bonus'); $iRu = $ru.IndexOf('\n\nБонус за полный комплект')
+      if ($iEn -lt 0 -or $iRu -lt 0) { throw "No vanilla set sentence in $key" }
+      $en = $en.Substring(0, $iEn); $ru = $ru.Substring(0, $iRu)
+      $addEn += '\n[FFB400]Full set (AposMod):[-] ' + $setTexts[$s][2]; $addRu += '\n[FFB400]Полный комплект (AposMod):[-] ' + $setTexts[$s][3]
+    } else {
+      $addEn += '\n[FFB400]Full set, AposMod adds:[-] ' + $setAdds["buff${s}SetBonusDesc"][0]; $addRu += '\n[FFB400]Полный комплект, AposMod добавляет:[-] ' + $setAdds["buff${s}SetBonusDesc"][1]
+    }
+    $extra[$key] = ($en + '\n' + $addEn), ($ru + '\n' + $addRu)
+  }
 }
 # renamed sets (the look stays)
 $renamed = [ordered]@{
