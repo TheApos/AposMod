@@ -198,8 +198,8 @@ public class AposShadow : MonoBehaviour
             float w = h * 0.55f, cx = feet.x * Screen.width, cy = (yTop + yBottom) / 2f;
             // farther = fainter, but still visible at the edge of the range (scene space on both sides)
             float near = 0.5f + 0.5f * Mathf.Clamp01(1f - Vector3.Distance(e.transform.position, cam.transform.position) / HunterRange);
-            if (e.sleepingOrWakingUp) GUI.color = new Color(0.4f, 0.65f, 1f, 0.45f * near);
-            else GUI.color = new Color(1f, 0.15f, 0.1f, (0.5f + 0.3f * beat) * near);
+            if (e.sleepingOrWakingUp) GUI.color = new Color(0.4f, 0.65f, 1f, 0.3f * near);
+            else GUI.color = new Color(1f, 0.15f, 0.1f, (0.3f + 0.2f * beat) * near);
             GUI.DrawTexture(new Rect(cx - w / 2f, cy - h / 2f, w, h), glow);
         }
         GUI.color = old;
