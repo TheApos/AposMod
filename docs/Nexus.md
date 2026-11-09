@@ -1,6 +1,7 @@
 # Nexus Mods page
 
-Published 2026-11-05: https://www.nexusmods.com/7daystodie/mods/13737 (version 1.6.0). Update: Manage -> upload a new file with the new version; update the description from this file.
+Published 2026-11-05: https://www.nexusmods.com/7daystodie/mods/13737 (version 1.6.0). Current file: 1.6.1 (2026-11-09, multiplayer join fix; 1.6.0 archived).
+Update: edit page -> General: set Mod version; Files: "Update" on the current file (it is a file input), tick "Archive existing file", rename the display name, add a changelog, Save file. Update the description from this file. The zip now includes LICENSE.txt.
 Thumbnail: release/nexus_thumbnail.jpg (AI art, survivor vs 3-star elite); header banner: release/nexus_header.jpg (cropped to 3.5:1). Gallery also has English reference screenshots (release/reference_*.jpg). AI disclosure: Mod content AI-Generated, Media AI-Generated.
 Permissions (2026-11-06): third-party content No; re-upload, conversion, monetisation Not allowed; modification and asset use Allowed (credit required); donation points with assets Allowed; note: code is MIT on GitHub (LICENSE).
 
