@@ -1,6 +1,6 @@
 # Nexus Mods page
 
-Published 2026-11-05: https://www.nexusmods.com/7daystodie/mods/13737 (version 1.6.0). Current file: 1.6.2 (2026-11-09, area damage XP, Hunter glow, own buff icons; older files archived).
+Published 2026-11-05: https://www.nexusmods.com/7daystodie/mods/13737 (version 1.6.0). Current file: 1.6.3 (2026-11-09, set piece descriptions, Healing Factor, legendaries, launcher loot, no magazine affix on bows; older files archived).
 Update: Files -> "Add file" (upload the zip into that file input), Upload type "Update existing file" + pick the current file, tick "Archive existing file" and "Update mod version to match", rename the display name, add a changelog, Save file. Build the zip fresh from the repo (ModInfo.xml, AposMod.dll, LICENSE as LICENSE.txt, Config, Icons, UIAtlases, README.txt). Update the description from this file. The zip now includes LICENSE.txt.
 Thumbnail: release/nexus_thumbnail.jpg (AI art, survivor vs 3-star elite); header banner: release/nexus_header.jpg (cropped to 3.5:1). Gallery also has English reference screenshots (release/reference_*.jpg). AI disclosure: Mod content AI-Generated, Media AI-Generated.
 Permissions (2026-11-06): third-party content No; re-upload, conversion, monetisation Not allowed; modification and asset use Allowed (credit required); donation points with assets Allowed; note: code is MIT on GitHub (LICENSE).
