@@ -34,7 +34,7 @@
 - Ammo item effect groups fire together with the weapon's events (ItemValue.FireEvent forwards to the loaded ammo) — that is how the slug-only knockback works.
 - Harmony (HarmonyX) lives in `Mods/0_TFP_Harmony/0Harmony.dll` (restored by a full Steam "verify files"; it was missing before). Reference it from there when writing Harmony patches.
 - Ranged AOE: `target="positionAOE"` hits around the impact/hit point (ammo `onProjectileImpact`, player `onSelfPrimaryActionRayHit`); arrows/bolts cannot pierce via XML (projectiles ignore EntityPenetrationCount).
-- Custom UI sprites (buff icons etc.): `UIAtlases/UIAtlas/<name>.png` (white on transparent, tinted by `icon_color`), referenced by file name, e.g. `ui_apos_bloodsucker`.
+- Custom UI sprites (buff icons etc.): `UIAtlases/UIAtlas/<name>.png` (white on transparent, tinted by `icon_color`), referenced by file name, e.g. `ui_apos_bloodsucker`. `Source/gen_buff_icons.ps1 -Out UIAtlases/UIAtlas -Preview <png>` draws the frenzy/adrenaline/evasion/haste/lungs icons.
 - Pictograms drawn by C# (IMGUI): `Icons/*.png` loaded with `ImageConversion.LoadImage` from `AposSettings.ModPath` (elite modifier badges).
 - Tab (backpack) and E (activate) open the same `XUiC_Radial` as the R ammo wheel: a short tap is the normal action, holding past `displayDelay` shows the wheel. Never shorten the delay in `XUiC_Radial.Open` (that broke Tab/E with a bow); the bow patch is on `ItemActionAttack.SetupRadial`.
 - Game logs: `%APPDATA%/7DaysToDie/logs/output_log_client__*.txt`.

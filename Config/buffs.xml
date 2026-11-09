@@ -496,7 +496,7 @@
 	<!-- ===================== 1.0: buffs for attribute and perk highlights (progression.xml) ===================== -->
 	<append xpath="/buffs">
 		<!-- Flurry 5 "Frenzy": +25% attack speed with that perk's weapons for 5 s -->
-		<buff name="buffAposFrenzyPerception" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_game_symbol_knunchuck" icon_color="255,180,0">
+		<buff name="buffAposFrenzyPerception" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_apos_frenzy" icon_color="255,180,0">
 			<stack_type value="replace"/>
 			<duration value="5"/>
 			<effect_group>
@@ -504,7 +504,7 @@
 				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".25"/>
 			</effect_group>
 		</buff>
-		<buff name="buffAposFrenzyStrength" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_game_symbol_knunchuck" icon_color="255,180,0">
+		<buff name="buffAposFrenzyStrength" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_apos_frenzy" icon_color="255,180,0">
 			<stack_type value="replace"/>
 			<duration value="5"/>
 			<effect_group>
@@ -512,7 +512,7 @@
 				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".25"/>
 			</effect_group>
 		</buff>
-		<buff name="buffAposFrenzyFortitude" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_game_symbol_knunchuck" icon_color="255,180,0">
+		<buff name="buffAposFrenzyFortitude" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_apos_frenzy" icon_color="255,180,0">
 			<stack_type value="replace"/>
 			<duration value="5"/>
 			<effect_group>
@@ -520,7 +520,7 @@
 				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".25"/>
 			</effect_group>
 		</buff>
-		<buff name="buffAposFrenzyAgility" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_game_symbol_knunchuck" icon_color="255,180,0">
+		<buff name="buffAposFrenzyAgility" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_apos_frenzy" icon_color="255,180,0">
 			<stack_type value="replace"/>
 			<duration value="5"/>
 			<effect_group>
@@ -530,7 +530,7 @@
 		</buff>
 
 		<!-- Agility 10 "Adrenaline": number = stacks (max 3), +10% move speed each, 15 s after the last kill -->
-		<buff name="buffAposAdrenaline" name_key="buffAposAdrenalineName" description_key="buffAposAdrenalineDesc" icon="ui_game_symbol_agility" icon_color="0,220,120">
+		<buff name="buffAposAdrenaline" name_key="buffAposAdrenalineName" description_key="buffAposAdrenalineDesc" icon="ui_apos_adrenaline" icon_color="0,220,120">
 			<stack_type value="ignore"/>
 			<display_value value="aposAdrenaline"/>
 			<effect_group>
@@ -571,7 +571,7 @@
 			<stack_type value="ignore"/>
 		</buff>
 
-		<buff name="buffAposEvasion" name_key="buffAposEvasionName" description_key="buffAposEvasionDesc" icon="ui_game_symbol_agility_mastery" icon_color="0,200,255">
+		<buff name="buffAposEvasion" name_key="buffAposEvasionName" description_key="buffAposEvasionDesc" icon="ui_apos_evasion" icon_color="0,200,255">
 			<stack_type value="replace"/>
 			<duration value="5"/>
 			<effect_group>
@@ -616,7 +616,7 @@
 			</effect_group>
 		</buff>
 		<!-- Weapon Mastery "Haste" node: a kill gives +aposMHaste attack/fire rate and reload speed for 6 s -->
-		<buff name="buffAposMasteryHaste" name_key="aposMKHasteShort" description_key="buffAposMasteryHasteDesc" icon="ui_game_symbol_twitch_fast" icon_color="255,210,77">
+		<buff name="buffAposMasteryHaste" name_key="aposMKHasteShort" description_key="buffAposMasteryHasteDesc" icon="ui_apos_haste" icon_color="255,210,77">
 			<stack_type value="replace"/>
 			<duration value="6"/>
 			<effect_group>
@@ -626,7 +626,7 @@
 			</effect_group>
 		</buff>
 		<!-- Rule 1: Cardio 5 "Second Lungs" cooldown -->
-		<buff name="buffAposSecondLungsCD" name_key="buffAposSecondLungsName" description_key="buffAposSecondLungsDesc" icon="ui_game_symbol_cardio" icon_color="150,150,150">
+		<buff name="buffAposSecondLungsCD" name_key="buffAposSecondLungsName" description_key="buffAposSecondLungsDesc" icon="ui_apos_lungs" icon_color="150,150,150">
 			<stack_type value="ignore"/>
 			<duration value="60"/>
 		</buff>
