@@ -316,6 +316,19 @@ public class AposElites : MonoBehaviour
         }
     }
 
+    // Line of sight for the name tag: nothing between the player's head and the elite's head. (The vanilla
+    // EntityAlive.CanSee is the AI's sight: it depends on sight range and light and hits the target's own collider,
+    // so the tag almost never showed.) The ray starts a bit in front of the player and stops short of the target.
+    static bool InSight(EntityPlayerLocal p, EntityAlive e)
+    {
+        Vector3 from = p.getHeadPosition(), to = e.getHeadPosition();
+        Vector3 d = to - from;
+        float dist = d.magnitude;
+        if (dist < 1.5f) return true;
+        Vector3 dir = d / dist;
+        return !Voxel.Raycast(p.world, new Ray(from + dir * 0.6f, dir), dist - 1.2f, false, false);
+    }
+
     // ===== Name tag: "Armored Explosive Moe", yellow (1 modifier) or orange (2), 40 m, only in line of sight =====
     void OnGUI()
     {
@@ -332,7 +345,7 @@ public class AposElites : MonoBehaviour
         {
             EntityAlive e = elites[i];
             if ((e.position - player.position).sqrMagnitude > TagRange * TagRange) continue;
-            if (!player.CanSee(e.getHeadPosition())) continue;
+            if (!InSight(player, e)) continue;
             Vector3 vp = cam.WorldToViewportPoint(e.transform.position + Vector3.up * (e.height * e.transform.localScale.y + 0.6f));
             if (vp.z <= 0f) continue;
             float x = vp.x * Screen.width, y = (1f - vp.y) * Screen.height;
