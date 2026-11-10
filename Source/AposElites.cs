@@ -352,7 +352,9 @@ public class AposElites : MonoBehaviour
             string text = Name(e);
             int stars = Mathf.Clamp((int)e.Buffs.GetCustomVar("aposElite"), 1, 3);
             Color color = stars >= 3 ? new Color(1f, 0.25f, 0.25f) : stars == 2 ? new Color(1f, 0.55f, 0.1f) : new Color(1f, 0.85f, 0.2f);
-            Rect r = new Rect(x - 250f, y - 20f, 500f, 40f);
+            // a long name (3 modifiers) wraps: grow the box upwards so the stars stay above and the badges below it
+            float h = Mathf.Max(40f, style.CalcHeight(new GUIContent(text), 500f) + 8f);
+            Rect r = new Rect(x - 250f, y + 20f - h, 500f, h);
             GUI.color = new Color(0f, 0f, 0f, 0.85f);
             GUI.Label(new Rect(r.x + 2f, r.y + 2f, r.width, r.height), text, style);
             GUI.color = color;
