@@ -8,10 +8,14 @@ $ErrorActionPreference = 'Stop'
 $dir = $PSScriptRoot
 $utf8 = New-Object Text.UTF8Encoding($false)
 $uris = [IO.File]::ReadAllLines((Join-Path $dir 'datauris.txt'))
+# {{VERSION}} in the bodies = the mod version from ModInfo.xml, so the page never shows an old one
+$version = ([xml][IO.File]::ReadAllText((Join-Path $dir '..\..\ModInfo.xml'))).xml.Version.value
+if (-not $version) { throw 'No Version in ModInfo.xml' }
 function Body($lang) {
   $b = [IO.File]::ReadAllText((Join-Path $dir "body.$lang.html"))
   $b = [regex]::Replace($b, 'DATAURI_(\d+)', { param($m) $uris[[int]$m.Groups[1].Value] })
   if ($b -match 'DATAURI_') { throw "unresolved image placeholder in body.$lang.html" }
+  $b = $b.Replace('{{VERSION}}', $version)
   "<template id=`"lang-$lang`">`n$b</template>`n"
 }
 $css = @'
@@ -27,4 +31,4 @@ $page = [IO.File]::ReadAllText((Join-Path $dir 'head.html')) + $css + "<div id=`
   "<script>`n" + [IO.File]::ReadAllText((Join-Path $dir 'script.js')) + "</script>`n"
 $out = Join-Path $dir '..\Reference.html'
 [IO.File]::WriteAllText($out, $page, $utf8)
-"Reference.html: $($page.Length) chars"
+"Reference.html: $($page.Length) chars, version $version"
