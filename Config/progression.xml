@@ -354,7 +354,24 @@
 		</effect_group>
 	</append>
 	<!-- Better Barter 5 "Black Market", Daring Adventurer 5 "Big Score": Source/AposRewards.cs -->
-	<!-- Charismatic Nature 5 "Leader": buffs.xml (your own Charismatic buff counts twice) -->
+	<!-- Charismatic Nature 5 "Leader": buffs.xml (your own Charismatic buff counts twice). The buff reads the cvar
+	     aposLeader, set here on progression changes and on entering the game (see the note in buffs.xml) -->
+	<append xpath="/progression/perks/perk[@name='perkCharismaticNature']">
+		<effect_group name="AposMod leader flag">
+			<triggered_effect trigger="onSelfProgressionUpdate" action="ModifyCVar" cvar="aposLeader" operation="set" value="1">
+				<requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="GTE" value="5"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfProgressionUpdate" action="ModifyCVar" cvar="aposLeader" operation="set" value="0">
+				<requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="LT" value="5"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfEnteredGame" action="ModifyCVar" cvar="aposLeader" operation="set" value="1">
+				<requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="GTE" value="5"/>
+			</triggered_effect>
+			<triggered_effect trigger="onSelfEnteredGame" action="ModifyCVar" cvar="aposLeader" operation="set" value="0">
+				<requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="LT" value="5"/>
+			</triggered_effect>
+		</effect_group>
+	</append>
 	<!-- Physician 5 "Field Medic": healing +50%; healing with a medical item stops bleeding -->
 	<append xpath="/progression/perks/perk[@name='perkPhysician']">
 		<effect_group name="AposMod field medic">

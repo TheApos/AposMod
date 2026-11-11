@@ -716,10 +716,14 @@
 		</buff>
 	</append>
 
-	<!-- Charismatic Nature 5 "Leader": the perk owner gets the Charismatic bonuses twice -->
+	<!-- Charismatic Nature 5 "Leader": the perk owner gets the Charismatic bonuses twice.
+	     Never check ProgressionLevel inside this buff: it grants AttributeLevel, and a perk level is calculated from
+	     AttributeLevel/PerkLevel passives, so the check re-enters itself (endless recursion = the game hangs and
+	     crashes without a log, in co-op only, where the buff exists). Vanilla uses a cvar here for the same reason;
+	     aposLeader is set by the perk (progression.xml). -->
 	<append xpath="/buffs/buff[@name='buffPerkCharismaticNature']">
 		<effect_group name="AposMod leader">
-			<requirement name="ProgressionLevel" progression_name="perkCharismaticNature" operation="GTE" value="5"/>
+			<requirement name="CVarCompare" cvar="aposLeader" operation="GTE" value="1"/>
 			<passive_effect name="HealthChangeOT" operation="base_add" value=".5"/>
 			<passive_effect name="EntityDamage" operation="perc_add" value=".2"/>
 			<passive_effect name="BlockDamage" operation="perc_add" value=".2" tags="melee"/>
