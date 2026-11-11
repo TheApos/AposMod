@@ -5,7 +5,7 @@
 - Game version: **V3.4.0 (b6)**. Always verify against the installed game files in `../../Data/Config` (items.xml, buffs.xml, loot.xml, entityclasses.xml, Localization.csv) — do not guess XML names or engine behavior.
 - The owner speaks Ukrainian (answer in Ukrainian) and is learning modding — explain briefly.
 - Ideas and implementation status: `docs/WeaponIdeas.md`. In-game test steps: `docs/TestChecklist.md`. Weapon list: `docs/Weapons.md`. Balance review: `docs/BalanceAnalysis.md`.
-- Player-facing reference page: `docs/Reference.html`, published as a private artifact at https://claude.ai/artifact/C9rHeAvrTK86bwcwhjAHvm and on GitHub Pages — keep it in sync with gameplay changes and republish (same file path or that URL). It is **generated** (English default, Russian, Ukrainian switch): edit `docs/i18n/body.{en,ru,uk}.html` (same markup in all three), `head.html`, `script.js`, then run `& docs/i18n/build_reference.ps1`. Never edit Reference.html by hand.
+- Player-facing reference page: `docs/Reference.html`, published as a private artifact at https://claude.ai/artifact/C9rHeAvrTK86bwcwhjAHvm and on GitHub Pages — keep it in sync with gameplay changes and republish (same file path or that URL). It is **generated** (English default, Russian, Ukrainian switch): edit `docs/i18n/body.{en,ru,uk}.html` (same markup in all three), `head.html`, `script.js`, then run `& docs/i18n/build_reference.ps1`. Never edit Reference.html by hand. The mod version on the page is `{{VERSION}}`, filled from ModInfo.xml: after a version bump rebuild the page and push.
 
 ## Layout
 - `ModInfo.xml` — mod name/version (bump on releases).
