@@ -654,10 +654,11 @@
 	<!-- ===================== 1.1: elite zombies (Source/AposElites.cs adds these on spawn) =====================
 	     Armored, Regen, Explosive, Vampire and Summoner are markers: their logic is in C#. -->
 	<append xpath="/buffs">
+		<!-- max health +aposEliteHP (Settings.xml "health" - 1; default health 2 = +100%), set by Source/AposElites.cs -->
 		<buff name="buffAposElite" hidden="true" remove_on_death="false">
 			<stack_type value="ignore"/>
 			<effect_group>
-				<passive_effect name="HealthMax" operation="perc_add" value="1"/>
+				<passive_effect name="HealthMax" operation="perc_add" value="@aposEliteHP"/>
 			</effect_group>
 		</buff>
 		<buff name="buffAposEliteArmored" hidden="true"><stack_type value="ignore"/></buff>

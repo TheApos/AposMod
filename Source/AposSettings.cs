@@ -14,6 +14,7 @@ public static class AposSettings
     public static bool BuffColor = true;  // cyan numbers for buffed hits
     public static bool StealthRework = true; // POI trigger/attack volumes spawn sleeping zombies (AposStealth.cs)
     public static bool EliteTags = true;     // names above elite zombies (AposElites.cs)
+    public static float EliteHealth = 2f;    // elite max health = normal x this (AposElites.cs, buffAposElite)
 
     static string file;
 
@@ -35,14 +36,22 @@ public static class AposSettings
             XmlElement s = doc.DocumentElement["Stealth"];
             if (s != null) StealthRework = ReadBool(s, "rework", StealthRework);
             XmlElement el = doc.DocumentElement["Elites"];
-            if (el != null) EliteTags = ReadBool(el, "tags", EliteTags);
+            if (el != null)
+            {
+                EliteTags = ReadBool(el, "tags", EliteTags);
+                EliteHealth = Clamp(ReadFloat(el, "health", EliteHealth), 1f, 50f);
+            }
             XmlElement d = doc.DocumentElement["DamageNumbers"];
-            if (d == null) return;
-            Enabled = ReadBool(d, "enabled", Enabled);
-            Scale = Clamp(ReadFloat(d, "scale", Scale), 0.5f, 3f);
-            Lifetime = Clamp(ReadFloat(d, "lifetime", Lifetime), 0.5f, 5f);
-            KillLabel = ReadBool(d, "killLabel", KillLabel);
-            BuffColor = ReadBool(d, "buffColor", BuffColor);
+            if (d != null)
+            {
+                Enabled = ReadBool(d, "enabled", Enabled);
+                Scale = Clamp(ReadFloat(d, "scale", Scale), 0.5f, 3f);
+                Lifetime = Clamp(ReadFloat(d, "lifetime", Lifetime), 0.5f, 5f);
+                KillLabel = ReadBool(d, "killLabel", KillLabel);
+                BuffColor = ReadBool(d, "buffColor", BuffColor);
+            }
+            // rewrite with the same values: a file from an older version gains the new options
+            Save();
         }
         catch (Exception e)
         {
@@ -71,9 +80,10 @@ public static class AposSettings
             XmlElement s = doc.CreateElement("Stealth");
             s.SetAttribute("rework", StealthRework ? "true" : "false");
             root.AppendChild(s);
-            root.AppendChild(doc.CreateComment(" Names above elite zombies. In game: aposelite on|off "));
+            root.AppendChild(doc.CreateComment(" Elites. tags: names above them (in game: aposelite on|off). health: their max health as a multiple of a normal zombie, 1-50, 2 = double (in game: aposelite health N) "));
             XmlElement el = doc.CreateElement("Elites");
             el.SetAttribute("tags", EliteTags ? "true" : "false");
+            el.SetAttribute("health", EliteHealth.ToString("0.##", CultureInfo.InvariantCulture));
             root.AppendChild(el);
             doc.Save(file);
         }
@@ -167,7 +177,7 @@ public class AposEliteCommand : ConsoleCmdAbstract
 
     public override string getDescription()
     {
-        return "AposMod elites: aposelite on|off | make [1|2|3|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
+        return "AposMod elites: aposelite on|off | health N (max health x N, 1-50) | make [1|2|3|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
     }
 
     public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
@@ -195,12 +205,24 @@ public class AposEliteCommand : ConsoleCmdAbstract
             console.Output("Elite: " + e.EntityName);
             return;
         }
+        if (_params.Count > 0 && _params[0] == "health")
+        {
+            float h;
+            if (_params.Count < 2 || !float.TryParse(_params[1], NumberStyles.Float, CultureInfo.InvariantCulture, out h))
+            {
+                console.Output("Usage: aposelite health N  (1-50, 2 = double health)");
+                return;
+            }
+            AposSettings.EliteHealth = AposSettings.Clamp(h, 1f, 50f);
+            AposSettings.Save();
+        }
         if (_params.Count > 0 && (_params[0] == "on" || _params[0] == "off"))
         {
             AposSettings.EliteTags = _params[0] == "on";
             AposSettings.Save();
         }
-        console.Output("Elite names: " + (AposSettings.EliteTags ? "on" : "off"));
+        console.Output("Elite names: " + (AposSettings.EliteTags ? "on" : "off") + ", elite health: x"
+            + AposSettings.EliteHealth.ToString("0.##", CultureInfo.InvariantCulture));
     }
 
     static EntityAlive Nearest()

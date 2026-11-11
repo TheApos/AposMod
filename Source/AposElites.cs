@@ -19,6 +19,7 @@ public class AposElites : MonoBehaviour
         { "Armored", "Fast", "Regen", "Explosive", "Vampire", "Burning", "Electric", "Acidic", "Giant", "Summoner" };
 
     const float TagRange = 40f;
+    const string HealthVar = "aposEliteHP"; // max health bonus read by buffAposElite: Settings.xml health - 1
     const float RegenDelay = 3f;
     // Regenerating and Explosive grow with the stars (index = stars - 1)
     static readonly float[] RegenShare = { 0.03f, 0.045f, 0.065f };
@@ -104,6 +105,7 @@ public class AposElites : MonoBehaviour
         e.Buffs.SetCustomVar("aposElite", count);
         e.Buffs.SetCustomVar("aposEliteMods", mask);
         e.Buffs.SetCustomVar("aposEliteFill", 1f);
+        e.Buffs.SetCustomVar(HealthVar, AposSettings.EliteHealth - 1f);
         e.Buffs.AddBuff("buffAposElite");
         for (int i = 0; i < Modifiers.Length; i++)
         {
@@ -211,7 +213,11 @@ public class AposElites : MonoBehaviour
             if (e == null || e is EntityPlayer || e.IsDead() || !IsElite(e)) continue;
             elites.Add(e);
 
-            // the +100% max health buff needs a moment to apply; then start at full health
+            // max health bonus from Settings.xml (also for elites from an older save or after "aposelite health N")
+            float hpBonus = AposSettings.EliteHealth - 1f;
+            if (e.Buffs.GetCustomVar(HealthVar) != hpBonus) e.Buffs.SetCustomVar(HealthVar, hpBonus);
+
+            // the max health buff needs a moment to apply; then start at full health
             if (e.Buffs.GetCustomVar("aposEliteFill") > 0f && e.GetMaxHealth() > e.Health)
             {
                 e.Health = e.GetMaxHealth();

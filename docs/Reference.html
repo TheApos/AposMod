@@ -476,7 +476,7 @@ html, body { overflow-x: clip; }
       <h3>Elites</h3>
       <div class="tagline">2% chance early → 5% late game · ★ = 1 modifier, ★★ after gamestage 100, ★★★ (25% of them) after gamestage 200</div>
       <ul>
-        <li>Twice the health. Stars above the name: <b>★</b> yellow, <b>★★</b> orange, <b>★★★</b> red. Visible up to 40 m, not through walls.</li>
+        <li>Twice the health (change it with <code>aposelite health N</code> or <code>health</code> in Settings.xml). Stars above the name: <b>★</b> yellow, <b>★★</b> orange, <b>★★★</b> red. Visible up to 40 m, not through walls.</li>
         <li>Eridium on the ground glows purple and has a beam going up, like Borderlands loot — you can see it from afar.</li>
         <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills.</li>
       </ul>
@@ -875,6 +875,7 @@ aposaffix 6          set quality 6 first, then 3 affixes</pre>
       <h3>Elites — <span class="trait">aposelite</span></h3>
       <div class="tagline">F1 console</div>
       <pre>aposelite on | off           names above elites
+aposelite health N           max health x N (1-50, default 2)
 aposelite make               nearest zombie becomes an elite
 aposelite make Armored Giant  with these modifiers</pre>
     </article>
@@ -1241,7 +1242,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
       <h3>Элиты</h3>
       <div class="tagline">Шанс 2% в начале → 5% в поздней игре · ★ = 1 модификатор, ★★ после gamestage 100, ★★★ (25% из них) после gamestage 200</div>
       <ul>
-        <li>Здоровья вдвое больше. Над именем звёзды: <b>★</b> жёлтая, <b>★★</b> оранжевые, <b>★★★</b> красные. Видно до 40 м, сквозь стены — нет.</li>
+        <li>Здоровья вдвое больше (меняется командой <code>aposelite health N</code> или <code>health</code> в Settings.xml). Над именем звёзды: <b>★</b> жёлтая, <b>★★</b> оранжевые, <b>★★★</b> красные. Видно до 40 м, сквозь стены — нет.</li>
         <li>Эридий на земле светится фиолетовым и имеет луч вверх, как лут в Borderlands, — его видно издалека.</li>
         <li><b>Награда:</b> ★ — оружие с аффиксами качества 3–5 и 3–6 Эридия; ★★ — качество 5–6, 8–15 Эридия, 2% легендарка; ★★★ — качество 6, 20–30 Эридия, 10% легендарка. Для мастерства оружия элита = 5 убийств.</li>
       </ul>
@@ -1640,6 +1641,7 @@ aposaffix 6          сначала качество 6, потом 3 аффик�
       <h3>Элиты — <span class="trait">aposelite</span></h3>
       <div class="tagline">Консоль F1</div>
       <pre>aposelite on | off           имена над элитами
+aposelite health N           максимум здоровья x N (1-50, по умолчанию 2)
 aposelite make               ближайший зомби становится элитой
 aposelite make Armored Giant  с этими модификаторами</pre>
     </article>
@@ -2006,7 +2008,7 @@ aposbow off | on  выключить / включить автоналожени
       <h3>Еліти</h3>
       <div class="tagline">Шанс 2% на початку → 5% у пізній грі · ★ = 1 модифікатор, ★★ після gamestage 100, ★★★ (25% з них) після gamestage 200</div>
       <ul>
-        <li>Здоров'я вдвічі більше. Над назвою зірки: <b>★</b> жовта, <b>★★</b> помаранчеві, <b>★★★</b> червоні. Видно до 40 м, крізь стіни — ні.</li>
+        <li>Здоров'я вдвічі більше (змінюється командою <code>aposelite health N</code> або <code>health</code> у Settings.xml). Над назвою зірки: <b>★</b> жовта, <b>★★</b> помаранчеві, <b>★★★</b> червоні. Видно до 40 м, крізь стіни — ні.</li>
         <li>Ерідій на землі світиться фіолетовим і має промінь угору, як лут у Borderlands, — його видно здалеку.</li>
         <li><b>Нагорода:</b> ★ — зброя з афіксами якості 3–5 і 3–6 Ерідію; ★★ — якість 5–6, 8–15 Ерідію, 2% легендарка; ★★★ — якість 6, 20–30 Ерідію, 10% легендарка. Для майстерності зброї еліта = 5 вбивств.</li>
       </ul>
@@ -2405,6 +2407,7 @@ aposaffix 6          спершу якість 6, потім 3 афікси</pre
       <h3>Еліти — <span class="trait">aposelite</span></h3>
       <div class="tagline">Консоль F1</div>
       <pre>aposelite on | off           назви над елітами
+aposelite health N           максимум здоров'я x N (1-50, за замовчуванням 2)
 aposelite make               найближчий зомбі стає елітою
 aposelite make Armored Giant  з цими модифікаторами</pre>
     </article>
