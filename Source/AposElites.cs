@@ -129,10 +129,12 @@ public class AposElites : MonoBehaviour
         Vector3 pos = e.GetPosition() + Vector3.up * 0.8f;
 
         // weapon with affixes: quality 3-5 (1 star), 5-6 (2 stars), 6 (3 stars); legendary 2% (2 stars) / 10% (3 stars)
+        // Settings.xml weaponDrop / "aposelite drop N": chance of the weapon (Eridium always drops)
         ItemStack loot = null;
+        bool weapon = rand.NextDouble() * 100 < AposSettings.EliteWeaponDrop;
         double legendChance = count >= 3 ? 0.1 : count == 2 ? 0.02 : 0;
-        if (rand.NextDouble() < legendChance) loot = AposRewards.RandomLegendary();
-        if (loot == null) loot = RandomWeapon(count >= 3 ? 6 : count == 2 ? rand.Next(5, 7) : rand.Next(3, 6));
+        if (weapon && rand.NextDouble() < legendChance) loot = AposRewards.RandomLegendary();
+        if (weapon && loot == null) loot = RandomWeapon(count >= 3 ? 6 : count == 2 ? rand.Next(5, 7) : rand.Next(3, 6));
         if (loot != null) Drop(loot, pos);
         int eridium = count >= 3 ? rand.Next(20, 31) : count == 2 ? rand.Next(8, 16) : rand.Next(3, 7);
         Drop(new ItemStack(ItemClass.GetItem(Eridium), eridium), pos);

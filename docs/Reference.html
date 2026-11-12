@@ -167,7 +167,7 @@ html, body { overflow-x: clip; }
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.8</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.9</div>
     <h1>AposMod Reference</h1>
     <p class="sub">Weapon traits, affixes, perks and attributes, elements, mods, legendary weapons and settings in one place. Numbers like "0 → 5" depend on the level of the matching perk.</p>
   </div>
@@ -478,7 +478,7 @@ html, body { overflow-x: clip; }
       <ul>
         <li>Twice the health (change it with <code>aposelite health N</code> or <code>health</code> in Settings.xml). Stars above the name: <b>★</b> yellow, <b>★★</b> orange, <b>★★★</b> red. Visible up to 40 m, not through walls.</li>
         <li>Eridium on the ground glows purple and has a beam going up, like Borderlands loot — you can see it from afar.</li>
-        <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills.</li>
+        <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills. The weapon drop chance is set with <code>aposelite drop N</code> or <code>weaponDrop</code> in Settings.xml (0–100%, default 100); Eridium always drops.</li>
       </ul>
     </article>
     <article class="card">
@@ -876,6 +876,7 @@ aposaffix 6          set quality 6 first, then 3 affixes</pre>
       <div class="tagline">F1 console</div>
       <pre>aposelite on | off           names above elites
 aposelite health N           max health x N (1-50, default 2)
+aposelite drop N             weapon drop chance, % (0-100, default 100)
 aposelite make               nearest zombie becomes an elite
 aposelite make Armored Giant  with these modifiers</pre>
     </article>
@@ -925,7 +926,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
 </main>
 
 <footer>
-  <div class="wrap">AposMod 1.6.8 for 7 Days to Die 3.4.</div>
+  <div class="wrap">AposMod 1.6.9 for 7 Days to Die 3.4.</div>
 </footer>
 
 </template>
@@ -933,7 +934,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.8</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.9</div>
     <h1>Справочник AposMod</h1>
     <p class="sub">Фишки оружия, аффиксы, перки и атрибуты, стихии, моды, легендарное оружие и настройки в одном месте. Числа «0 → 5» зависят от уровня соответствующего перка.</p>
   </div>
@@ -1244,7 +1245,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
       <ul>
         <li>Здоровья вдвое больше (меняется командой <code>aposelite health N</code> или <code>health</code> в Settings.xml). Над именем звёзды: <b>★</b> жёлтая, <b>★★</b> оранжевые, <b>★★★</b> красные. Видно до 40 м, сквозь стены — нет.</li>
         <li>Эридий на земле светится фиолетовым и имеет луч вверх, как лут в Borderlands, — его видно издалека.</li>
-        <li><b>Награда:</b> ★ — оружие с аффиксами качества 3–5 и 3–6 Эридия; ★★ — качество 5–6, 8–15 Эридия, 2% легендарка; ★★★ — качество 6, 20–30 Эридия, 10% легендарка. Для мастерства оружия элита = 5 убийств.</li>
+        <li><b>Награда:</b> ★ — оружие с аффиксами качества 3–5 и 3–6 Эридия; ★★ — качество 5–6, 8–15 Эридия, 2% легендарка; ★★★ — качество 6, 20–30 Эридия, 10% легендарка. Для мастерства оружия элита = 5 убийств. Шанс выпадения оружия — <code>aposelite drop N</code> или <code>weaponDrop</code> в Settings.xml (0–100%, по умолчанию 100); Эридий выпадает всегда.</li>
       </ul>
     </article>
     <article class="card">
@@ -1642,6 +1643,7 @@ aposaffix 6          сначала качество 6, потом 3 аффик�
       <div class="tagline">Консоль F1</div>
       <pre>aposelite on | off           имена над элитами
 aposelite health N           максимум здоровья x N (1-50, по умолчанию 2)
+aposelite drop N             шанс выпадения оружия, % (0-100, по умолчанию 100)
 aposelite make               ближайший зомби становится элитой
 aposelite make Armored Giant  с этими модификаторами</pre>
     </article>
@@ -1691,7 +1693,7 @@ aposbow off | on  выключить / включить автоналожени
 </main>
 
 <footer>
-  <div class="wrap">AposMod 1.6.8 для 7 Days to Die 3.4.</div>
+  <div class="wrap">AposMod 1.6.9 для 7 Days to Die 3.4.</div>
 </footer>
 
 </template>
@@ -1699,7 +1701,7 @@ aposbow off | on  выключить / включить автоналожени
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.8</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.9</div>
     <h1>Довідник AposMod</h1>
     <p class="sub">Фішки зброї, афікси, перки й атрибути, стихії, моди, легендарна зброя й налаштування в одному місці. Числа «0 → 5» залежать від рівня відповідного перка.</p>
   </div>
@@ -2010,7 +2012,7 @@ aposbow off | on  выключить / включить автоналожени
       <ul>
         <li>Здоров'я вдвічі більше (змінюється командою <code>aposelite health N</code> або <code>health</code> у Settings.xml). Над назвою зірки: <b>★</b> жовта, <b>★★</b> помаранчеві, <b>★★★</b> червоні. Видно до 40 м, крізь стіни — ні.</li>
         <li>Ерідій на землі світиться фіолетовим і має промінь угору, як лут у Borderlands, — його видно здалеку.</li>
-        <li><b>Нагорода:</b> ★ — зброя з афіксами якості 3–5 і 3–6 Ерідію; ★★ — якість 5–6, 8–15 Ерідію, 2% легендарка; ★★★ — якість 6, 20–30 Ерідію, 10% легендарка. Для майстерності зброї еліта = 5 вбивств.</li>
+        <li><b>Нагорода:</b> ★ — зброя з афіксами якості 3–5 і 3–6 Ерідію; ★★ — якість 5–6, 8–15 Ерідію, 2% легендарка; ★★★ — якість 6, 20–30 Ерідію, 10% легендарка. Для майстерності зброї еліта = 5 вбивств. Шанс випадання зброї — <code>aposelite drop N</code> або <code>weaponDrop</code> у Settings.xml (0–100%, за замовчуванням 100); Ерідій випадає завжди.</li>
       </ul>
     </article>
     <article class="card">
@@ -2408,6 +2410,7 @@ aposaffix 6          спершу якість 6, потім 3 афікси</pre
       <div class="tagline">Консоль F1</div>
       <pre>aposelite on | off           назви над елітами
 aposelite health N           максимум здоров'я x N (1-50, за замовчуванням 2)
+aposelite drop N             шанс випадання зброї, % (0-100, за замовчуванням 100)
 aposelite make               найближчий зомбі стає елітою
 aposelite make Armored Giant  з цими модифікаторами</pre>
     </article>
@@ -2457,7 +2460,7 @@ aposbow off | on  вимкнути / увімкнути автонабій ст�
 </main>
 
 <footer>
-  <div class="wrap">AposMod 1.6.8 для 7 Days to Die 3.4.</div>
+  <div class="wrap">AposMod 1.6.9 для 7 Days to Die 3.4.</div>
 </footer>
 
 </template>

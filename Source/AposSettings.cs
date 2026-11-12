@@ -15,6 +15,7 @@ public static class AposSettings
     public static bool StealthRework = true; // POI trigger/attack volumes spawn sleeping zombies (AposStealth.cs)
     public static bool EliteTags = true;     // names above elite zombies (AposElites.cs)
     public static float EliteHealth = 2f;    // elite max health = normal x this (AposElites.cs, buffAposElite)
+    public static float EliteWeaponDrop = 100f; // % chance an elite drops a weapon (Eridium always drops; AposElites.OnDeath)
 
     static string file;
 
@@ -40,6 +41,7 @@ public static class AposSettings
             {
                 EliteTags = ReadBool(el, "tags", EliteTags);
                 EliteHealth = Clamp(ReadFloat(el, "health", EliteHealth), 1f, 50f);
+                EliteWeaponDrop = Clamp(ReadFloat(el, "weaponDrop", EliteWeaponDrop), 0f, 100f);
             }
             XmlElement d = doc.DocumentElement["DamageNumbers"];
             if (d != null)
@@ -80,10 +82,11 @@ public static class AposSettings
             XmlElement s = doc.CreateElement("Stealth");
             s.SetAttribute("rework", StealthRework ? "true" : "false");
             root.AppendChild(s);
-            root.AppendChild(doc.CreateComment(" Elites. tags: names above them (in game: aposelite on|off). health: their max health as a multiple of a normal zombie, 1-50, 2 = double (in game: aposelite health N) "));
+            root.AppendChild(doc.CreateComment(" Elites. tags: names above them (in game: aposelite on|off). health: their max health as a multiple of a normal zombie, 1-50, 2 = double (in game: aposelite health N). weaponDrop: % chance they drop a weapon, 0-100, 0 = never; Eridium always drops (in game: aposelite drop N) "));
             XmlElement el = doc.CreateElement("Elites");
             el.SetAttribute("tags", EliteTags ? "true" : "false");
             el.SetAttribute("health", EliteHealth.ToString("0.##", CultureInfo.InvariantCulture));
+            el.SetAttribute("weaponDrop", EliteWeaponDrop.ToString("0.##", CultureInfo.InvariantCulture));
             root.AppendChild(el);
             doc.Save(file);
         }
@@ -190,6 +193,7 @@ public class AposDamageNumbersCommand : ConsoleCmdAbstract
 }
 
 // aposelite on|off                 -> names above elite zombies
+// aposelite drop N                 -> weapon drop chance in % (0 = never)
 // aposelite make                   -> nearest zombie within 20 m becomes an elite with 1 random modifier
 // aposelite make 2|3               -> ... with 2 or 3 random modifiers
 // aposelite make Armored Giant     -> ... with these modifiers
@@ -202,7 +206,7 @@ public class AposEliteCommand : ConsoleCmdAbstract
 
     public override string getDescription()
     {
-        return "AposMod elites: aposelite on|off | health N (max health x N, 1-50) | make [1|2|3|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
+        return "AposMod elites: aposelite on|off | health N (max health x N, 1-50) | drop N (weapon drop chance %, 0-100) | make [1|2|3|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
     }
 
     public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
@@ -241,13 +245,25 @@ public class AposEliteCommand : ConsoleCmdAbstract
             AposSettings.EliteHealth = AposSettings.Clamp(h, 1f, 50f);
             AposSettings.Save();
         }
+        if (_params.Count > 0 && _params[0] == "drop")
+        {
+            float d;
+            if (_params.Count < 2 || !float.TryParse(_params[1], NumberStyles.Float, CultureInfo.InvariantCulture, out d))
+            {
+                console.Output("Usage: aposelite drop N  (weapon drop chance in %, 0-100, 0 = never)");
+                return;
+            }
+            AposSettings.EliteWeaponDrop = AposSettings.Clamp(d, 0f, 100f);
+            AposSettings.Save();
+        }
         if (_params.Count > 0 && (_params[0] == "on" || _params[0] == "off"))
         {
             AposSettings.EliteTags = _params[0] == "on";
             AposSettings.Save();
         }
         console.Output("Elite names: " + (AposSettings.EliteTags ? "on" : "off") + ", elite health: x"
-            + AposSettings.EliteHealth.ToString("0.##", CultureInfo.InvariantCulture));
+            + AposSettings.EliteHealth.ToString("0.##", CultureInfo.InvariantCulture) + ", weapon drop: "
+            + AposSettings.EliteWeaponDrop.ToString("0.##", CultureInfo.InvariantCulture) + "%");
     }
 
     static EntityAlive Nearest()
