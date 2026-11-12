@@ -114,6 +114,31 @@ public static class AposSettings
         return float.TryParse(v, NumberStyles.Float, CultureInfo.InvariantCulture, out f) ? f : fallback;
     }
 
+    // Folder for per-player data (Weapon Mastery, Wardrobe). Single player and the host: the world's save folder.
+    // A client joining someone else's game has no such folder (the world lives on the host), so writing there
+    // failed and progress was lost on rejoin; a client uses its local folder for that server instead.
+    public static string PlayerDataDir()
+    {
+        GameManager gm = GameManager.Instance;
+        bool client = gm != null && gm.World != null && gm.World.IsRemote();
+        string dir = GameIO.GetSaveGameDir();
+        if (client)
+        {
+            // throws while the server's game id is not known yet (very start of joining)
+            try { dir = GameIO.GetSaveGameLocalDir(); }
+            catch (Exception) { return null; }
+        }
+        if (dir != checkedDir)
+        {
+            // called every frame: touch the disk only when the folder changes (another world or server)
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            checkedDir = dir;
+        }
+        return dir;
+    }
+
+    static string checkedDir;
+
     public static float Clamp(float v, float min, float max)
     {
         return v < min ? min : (v > max ? max : v);

@@ -43,7 +43,9 @@ public class AposWardrobe : MonoBehaviour
             switchTo = -1;
             return;
         }
-        string path = Path.Combine(GameIO.GetSaveGameDir(), FileName);
+        string dir = AposSettings.PlayerDataDir();
+        if (dir == null) return; // joining: the folder is not known yet
+        string path = Path.Combine(dir, FileName);
         if (path != file) Load(path);
 
         if (Switching)

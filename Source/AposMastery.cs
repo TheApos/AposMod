@@ -427,7 +427,9 @@ public class AposMastery : MonoBehaviour
             appliedFor = null;
             return;
         }
-        string path = Path.Combine(GameIO.GetSaveGameDir(), FileName);
+        string dir = AposSettings.PlayerDataDir();
+        if (dir == null) return; // joining: the folder is not known yet
+        string path = Path.Combine(dir, FileName);
         if (path != file) Load(path);
         if (dirty && Time.time >= saveAt) Save();
 
