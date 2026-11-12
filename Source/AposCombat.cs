@@ -3,8 +3,8 @@
 // - Siphoning Strikes: melee hits heal 4/8/12/16/20% of the damage dealt (instead of the vanilla kill heal)
 // - Strength 10 "Overkill": damage beyond a killing blow with a Strength weapon hits the nearest zombie within 4 m
 // - Penetrator 5 "Shrapnel": armor-piercing hits deal 40% of the damage to every zombie within 3 m of the target
-// - Boomstick 5 "Pump Action": a shotgun kill loads 1 shell into the magazine
-// - Demolitions Expert 5 "Chain Reaction": an explosive kill blows the zombie up (250 within 4 m)
+// - Boomstick 5 "Pump Action": a shotgun kill loads 2 shells into the magazine
+// - Demolitions Expert 5 "Chain Reaction": an explosive kill blows the zombie up (250 or 50% of the hit within 4 m)
 // - Advanced Engineering 5 "Overclock": your traps and turret blocks deal +50%
 // - Strength Mastery 5 "Crippling Blows": the flagged target becomes a crawler
 // - Fortitude Mastery 5 "Second Wind" (damage to the player)
@@ -23,6 +23,8 @@ public static class AposCombat
     const float ChainRadius = 4f;
     const int ChainDamage = 250;
     const float SiphonShare = 0.04f;
+    const float LeechCap = 0.3f; // all life steal together (affix + weapon + Siphoning Strikes + mastery)
+    const float ChainShare = 0.5f;
 
     static readonly FastTags<TagGroup.Global> StrengthTag = FastTags<TagGroup.Global>.Parse("attStrength");
     static readonly FastTags<TagGroup.Global> ShotgunTag = FastTags<TagGroup.Global>.Parse("shotgun");
@@ -80,6 +82,7 @@ public static class AposCombat
         target.Buffs.SetCustomVar("aposHitDmg", response.Strength * elemMult);
         target.Buffs.SetCustomVar("aposPreacher", preacher ? 1f : 0f);
         target.Buffs.SetCustomVar("aposHitBy", attacker.entityId); // splinters and reactions deal damage in this name
+        AposSplash.LastHit[attacker.entityId] = response.Strength; // XML area damage can be a share of it (aposSplashPct)
 
         // Strength Mastery 5 "Crippling Blows": a club/sledge power hit flagged the target (progression.xml)
         if (!response.Fatal && target.Buffs.GetCustomVar("aposCripple") > 0f)
@@ -103,7 +106,7 @@ public static class AposCombat
         if (response.Fatal) AposMastery.CountKill(attacker, target);
         if (leech > 0f)
         {
-            int heal = Mathf.Max(1, Mathf.RoundToInt(dealt * leech));
+            int heal = Mathf.Max(1, Mathf.RoundToInt(dealt * Mathf.Min(leech, LeechCap)));
             attacker.AddHealth(heal);
         }
 
@@ -118,7 +121,7 @@ public static class AposCombat
             if (weaponClass.ItemTags.Test_AnySet(ShotgunTag) && AposAffixes.Level(attacker, "perkBoomstick") >= 5
                 && attacker.inventory.holdingItem == weaponClass)
             {
-                AposAmmo.LoadRounds(attacker as EntityPlayerLocal, 1);
+                AposAmmo.LoadRounds(attacker as EntityPlayerLocal, 2);
             }
             // Gunslinger 5: a headshot kill during Headhunter adds 2 empowered shots
             if ((response.HitBodyPart & EnumBodyPartHit.Head) != 0 && attacker.Buffs.HasBuff("buffAposHeadhunter")
@@ -130,7 +133,8 @@ public static class AposCombat
             if (IsExplosive(weaponClass) && AposAffixes.Level(attacker, "perkDemolitionsExpert") >= 5)
             {
                 target.Buffs.AddBuff("buffAposChainBlast"); // visual only
-                foreach (EntityAlive e in Around(world, target, ChainRadius)) Splash(e, ChainDamage, attacker.entityId);
+                int blast = Mathf.Max(ChainDamage, Mathf.RoundToInt(response.Strength * ChainShare));
+                foreach (EntityAlive e in Around(world, target, ChainRadius)) Splash(e, blast, attacker.entityId);
             }
         }
 
@@ -259,6 +263,7 @@ public static class AposCombatDamagePatch
 public static class AposSplash
 {
     public static int Depth;
+    public static readonly Dictionary<int, int> LastHit = new Dictionary<int, int>(); // attacker id -> damage of the last weapon hit
 
     public static void Deal(EntityAlive target, int damage, int attackerId, EnumDamageTypes type)
     {
@@ -289,6 +294,14 @@ public static class AposSplash
             if (dmg >= 0f) continue;
             e.Buffs.SetCustomVar("aposSplashDmg", 0f);
             BuffValue b = e.Buffs.GetBuff("buffAposSplash");
+            // aposSplashPct: the damage is that share of the attacker's last hit when it is more than the flat value
+            float pct = e.Buffs.GetCustomVar("aposSplashPct");
+            int last;
+            if (pct > 0f)
+            {
+                e.Buffs.SetCustomVar("aposSplashPct", 0f);
+                if (b != null && LastHit.TryGetValue(b.InstigatorId, out last)) dmg = Mathf.Min(dmg, -last * pct);
+            }
             Deal(e, Mathf.RoundToInt(-dmg), b != null ? b.InstigatorId : -1, EnumDamageTypes.Piercing);
         }
     }

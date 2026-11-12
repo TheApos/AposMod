@@ -59,7 +59,7 @@
       <div class="tagline">Perk: Skull Crusher</div>
       <ul>
         <li>A normal attack can knock the target down.</li>
-        <li>A power attack knocks down every zombie around and damages each one.</li>
+        <li>A power attack knocks down every zombie around and damages each one: the number in the table, or 10% of the power hit per level if that's more.</li>
       </ul>
       <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Knockdown (normal)</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td><td>45%</td></tr><tr><td>Radius</td><td>3 m</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Damage to knocked down</td><td>—</td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr></table></div>
       <div class="cost">4 s cooldown. Power attack costs 50% more stamina.</div>
@@ -132,7 +132,7 @@
     <article class="card">
       <h3>Shotguns — <span class="trait">Slug Knockback</span></h3>
       <ul>
-        <li>Slugs (Slug and Breaching Slug) knock the zombie back and down. Buckshot works as before.</li>
+        <li>Slugs (Slug and Breaching Slug) knock the zombie back and down. Buckshot does the same point blank (within 3 m); the force grows with Boomstick.</li>
         <li>Breaching Slug only reaches 4 m — that's how the base game designed it.</li>
       </ul>
     </article>
@@ -140,9 +140,9 @@
     <article class="card">
       <h3>Rifles — <span class="trait">Ricochet</span></h3>
       <div class="tagline">Perk: Dead Eye</div>
-      <ul><li>A headshot damages every zombie near the impact point.</li></ul>
+      <ul><li>A headshot damages every zombie near the impact point: the number in the table, or a share of the headshot (5% → 20% by level) if that's more.</li></ul>
       <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Radius</td><td>5 m</td><td>7</td><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>Damage</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td></tr></table></div>
-      <div class="five"><b>Level 5:</b> the ricochet also stuns everyone it hits for 2 s.</div>
+      <div class="five"><b>Level 5:</b> the ricochet also stuns everyone it hits for 2 s (once per 4 s).</div>
     </article>
 
     <article class="card">
@@ -244,9 +244,9 @@
     <article class="card">
       <h3>Robots — <span class="trait">Guardian Protocol</span></h3>
       <div class="tagline">Perk: Robotics Inventor · turret and robotic sledge</div>
-      <ul><li>When your health is below 30%, robots attack faster and harder. An indicator buff appears.</li></ul>
+      <ul><li>When your health is below 50%, robots attack faster and harder. An indicator buff appears.</li></ul>
       <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Speed</td><td>+30%</td><td>+40%</td><td>+50%</td><td>+60%</td><td>+70%</td><td>+80%</td></tr><tr><td>Damage</td><td>+10%</td><td>+15%</td><td>+20%</td><td>+25%</td><td>+30%</td><td>+35%</td></tr></table></div>
-      <div class="five"><b>Level 5:</b> kicks in already below 50% health.</div>
+      <div class="five"><b>Level 5:</b> kicks in already below 70% health.</div>
     </article>
   </div>
 </section>
@@ -438,7 +438,7 @@
       <div class="tagline">Root: Damage +5%</div>
       <ul>
         <li>Dismember +15% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Fire 25%</b></li>
-        <li>Reload +10% → Reload +10% → <b>Kill: +1 round</b> → Magazine +25% → <b class="trait">Reload +25%</b></li>
+        <li>Reload +10% → Reload +10% → <b>Kill: +1 round</b> → Magazine +25% → <b class="trait">Every 5th hit +100%</b></li>
         <li>Knockdown 6% → Knockdown 6% → <b>First strike (full HP) +50%</b> → Splash 15% within 3 m → <b class="trait">Splash 30% within 3 m</b></li>
         <li><small>Bridges: Spread and recoil −10% · Magazine +20% · Damage +6% · Stun 6%</small></li>
       </ul>
@@ -457,9 +457,9 @@
       <h3>Assault rifles &amp; machine guns</h3>
       <div class="tagline">Root: Damage +5%</div>
       <ul>
-        <li>Spread and recoil −10% → Spread and recoil −10% → <b>Combo +3%/hit (up to 5)</b> → Spread and recoil −15% → <b class="trait">Combo +5%/hit (up to 5)</b></li>
+        <li>Spread and recoil −10% → Spread and recoil −10% → <b>Combo +3%/hit (up to 5)</b> → Spread and recoil −15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
         <li>Magazine +15% → Magazine +15% → <b>Kill: +3 rounds</b> → Reload +15% → <b class="trait">Magazine +40%</b></li>
-        <li>Damage +5% → Speed +5% → <b>Shock 8%</b> → Speed +6% → <b class="trait">Fire 15%</b></li>
+        <li>Damage +5% → Speed +5% → <b>Shock 8%</b> → Speed +6% → <b class="trait">Fire 25%</b></li>
         <li><small>Bridges: Speed +5% · Reload +10% · Damage +5% · Crit 5% (×2)</small></li>
       </ul>
     </article>
@@ -489,7 +489,7 @@
       <ul>
         <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +10% → <b class="trait">First strike (full HP) +60%</b></li>
         <li>Fire 10% → Fire 10% → <b>Shock 15%</b> → Acid 15% → <b class="trait">Splash 20% within 3 m</b></li>
-        <li>Reload +10% → Stun 8% → <b>Kill: +1 round</b> → Reload +20% → <b class="trait">Reload +40%</b></li>
+        <li>Reload +10% → Stun 8% → <b>Kill: +1 round</b> → Reload +20% → <b class="trait">Crit 15% (×2)</b></li>
         <li><small>Bridges: Reload +10% · Knockdown 8% · Damage +6% · Knockdown 8%</small></li>
       </ul>
     </article>
@@ -505,28 +505,28 @@
         <li><b>Perception — Executioner:</b> rifles, spears and explosives deal +100% damage to targets below 30% health.</li>
         <li><b>Strength — Overkill:</b> excess damage from a killing blow with a shotgun, club or sledgehammer carries over to the nearest zombie within 4 m.</li>
         <li><b>Fortitude — Iron Body:</b> no bleeding, no infection, and an existing infection is cured.</li>
-        <li><b>Agility — Adrenaline:</b> kills with a pistol, bow or knife give +10% run speed for 15 s, up to 3 stacks.</li>
-        <li><b>Intellect — Charged Chain Lightning:</b> each kill gives a lightning charge. At 10 charges your next hit with any weapon releases Chain Lightning around you that also deals damage: 4 s of shock and 200 damage to every zombie within 8 m.</li>
+        <li><b>Agility — Adrenaline:</b> kills with a pistol, bow or knife give +10% run speed and +5% damage for 15 s, up to 3 stacks.</li>
+        <li><b>Intellect — Charged Chain Lightning:</b> each kill gives a lightning charge. At 10 charges your next hit with any weapon releases Chain Lightning around you that also deals damage: 4 s of shock and 200 damage (or half of that hit if it's more) to every zombie within 8 m.</li>
       </ul>
     </article>
     <article class="card">
       <h3>Perception — <span class="trait">level 5</span></h3>
       <ul>
-        <li><b>Flurry of Perception — Frenzy:</b> a spear kill gives +25% attack speed for 5 s.</li>
-        <li><b>Demolitions Expert — Chain Reaction:</b> a zombie killed by your explosives explodes itself: 250 damage within 4 m.</li>
+        <li><b>Flurry of Perception — Frenzy:</b> a spear kill gives +15% attack speed for 5 s.</li>
+        <li><b>Demolitions Expert — Chain Reaction:</b> a zombie killed by your explosives explodes itself: 250 damage within 4 m, or half of the killing hit if that's more.</li>
         <li><b>Penetrator — Shrapnel:</b> armor-piercing rounds deal 40% of the shot's damage to everyone within 3 m of the target.</li>
         <li><b>Infiltrator — Ghost:</b> while crouched you're twice as hard to spot, hits on a zombie that can't see you deal ×2, and mines and traps don't hurt you.</li>
         <li><b>Animal Tracker — Hunter's Mark:</b> hitting an animal puts a Mark on it.</li>
         <li><b>Treasure Hunter — X Marks the Spot:</b> the treasure search circle shrinks almost to a point, and the chest holds a quality 5–6 weapon with affixes.</li>
         <li><b>Salvage Operations — Junk Genius:</b> salvage tools wear out 90% slower.</li>
-        <li><b>Perception Mastery — Lucky Shot:</b> 10% chance that a hit with a Perception weapon deals +100% damage.</li>
+        <li><b>Perception Mastery — Lucky Shot:</b> 15% chance that a hit with a Perception weapon deals +100% damage.</li>
       </ul>
     </article>
     <article class="card">
       <h3>Strength — <span class="trait">level 5</span></h3>
       <ul>
-        <li><b>Flurry of Strength — Frenzy:</b> a club or sledgehammer kill gives +25% attack speed for 5 s.</li>
-        <li><b>Boomstick — Pump Action:</b> a shotgun kill loads 1 shell into the magazine.</li>
+        <li><b>Flurry of Strength — Frenzy:</b> a club or sledgehammer kill gives +15% attack speed for 5 s.</li>
+        <li><b>Boomstick — Pump Action:</b> a shotgun kill loads 2 shells into the magazine.</li>
         <li><b>Pack Mule — Beast of Burden:</b> being encumbered no longer slows you.</li>
         <li><b>Strength Mastery — Crippling Blows:</b> a club or sledgehammer power attack breaks the zombie's legs, and it crawls.</li>
         <li><b>Miner 69'er — Tunnel Rat:</b> mining tools use 50% less stamina.</li>
@@ -537,11 +537,11 @@
     <article class="card">
       <h3>Fortitude — <span class="trait">level 5</span></h3>
       <ul>
-        <li><b>Flurry of Fortitude — Frenzy:</b> a knuckles kill gives +25% attack speed for 5 s.</li>
+        <li><b>Flurry of Fortitude — Frenzy:</b> a knuckles kill gives +15% attack speed for 5 s.</li>
         <li><b>The Huntsman — Butcher:</b> harvesting a carcass heals 30 HP.</li>
-        <li><b>Pain Tolerance — Unbreakable:</b> below 25% health you take 50% less damage.</li>
+        <li><b>Pain Tolerance — Unbreakable:</b> below 25% health you take 45% less damage.</li>
         <li><b>Fortitude Mastery — Second Wind:</b> once every 5 min, when your health drops below 20%, you instantly restore 70%.</li>
-        <li><b>Siphoning Strikes</b> (all levels): instead of the vanilla 2–10 HP per kill — life steal: every melee hit heals 4/8/12/16/20% of damage dealt. <b>Vampire</b> (5): a melee kill gives +50 max health for 15 s (doesn't heal — fill it with life steal). Each kill during that time adds another +50 and restarts the 15 s — no cap. When the buff ends, the bonus is gone.</li>
+        <li><b>Siphoning Strikes</b> (all levels): instead of the vanilla 2–10 HP per kill — life steal: every melee hit heals 4/8/12/16/20% of damage dealt (all life steal together — affix, mastery, this perk — is capped at 30%). <b>Vampire</b> (5): a melee kill gives +50 max health for 15 s (doesn't heal — fill it with life steal). Each kill during that time adds another +50 and restarts the 15 s — no cap. When the buff ends, the bonus is gone.</li>
         <li><b>Healing Factor:</b> natural regeneration 0.2 / 0.4 / 0.6 / 1 / 1.5 HP/s by level (vanilla 0.01–0.16). <b>Regeneration</b> (level 5): 6 s out of combat and you regenerate 4 HP/s more.</li>
         <li><b>Slow Metabolism — Iron Stomach:</b> no food poisoning, no dysentery (you can drink murky water), and food and water never drop below 25%.</li>
         <li><b>Rule 1: Cardio — Second Lungs:</b> when stamina runs out you instantly get +50% (once per 60 s).</li>
@@ -550,9 +550,9 @@
     <article class="card">
       <h3>Agility — <span class="trait">level 5</span></h3>
       <ul>
-        <li><b>Flurry of Agility — Frenzy:</b> a knife kill gives +25% attack speed for 5 s.</li>
+        <li><b>Flurry of Agility — Frenzy:</b> a knife kill gives +15% attack speed for 5 s.</li>
         <li><b>Run and Gun — Gun Kata:</b> hip fire on the move has no spread and +30% damage.</li>
-        <li><b>Hard Target — Blur:</b> while running you take 50% less damage.</li>
+        <li><b>Hard Target — Blur:</b> while running you take 45% less damage (with Unbreakable — 90% in total).</li>
         <li><b>Parkour — Cat Landing:</b> falls deal 99% less damage.</li>
         <li><b>Agility Mastery — Evasion:</b> after taking a hit you run 30% faster for 5 s.</li>
         <li><b>Hidden Strike — Shadow Strike:</b> 3 s crouched, unnoticed and without attacking — the "Shadow" buff, your next weapon hit deals ×2; if it kills, "Shadow" comes back right away, so you can clear a room one by one. Lost if you stand up or get noticed.</li>
@@ -736,7 +736,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
         <li>Headhunter — empowered shots left</li>
         <li>Rage — stacks</li>
         <li>Guardian Protocol, Energy Shield</li>
-        <li>Earthquake and Chain Lightning cooldown</li>
+        <li>Earthquake, Chain Lightning and Ricochet stun cooldown</li>
         <li>Thunderclap storm charges, Big Boom free rocket</li>
         <li>Red ring above a zombie — it has a crossbow Mark</li>
         <li>Frenzy, Adrenaline (stacks), lightning charges, Jackpot, Evasion</li>

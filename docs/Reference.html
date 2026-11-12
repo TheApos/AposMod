@@ -167,7 +167,7 @@ html, body { overflow-x: clip; }
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.7</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.8</div>
     <h1>AposMod Reference</h1>
     <p class="sub">Weapon traits, affixes, perks and attributes, elements, mods, legendary weapons and settings in one place. Numbers like "0 → 5" depend on the level of the matching perk.</p>
   </div>
@@ -225,7 +225,7 @@ html, body { overflow-x: clip; }
       <div class="tagline">Perk: Skull Crusher</div>
       <ul>
         <li>A normal attack can knock the target down.</li>
-        <li>A power attack knocks down every zombie around and damages each one.</li>
+        <li>A power attack knocks down every zombie around and damages each one: the number in the table, or 10% of the power hit per level if that's more.</li>
       </ul>
       <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Knockdown (normal)</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td><td>45%</td></tr><tr><td>Radius</td><td>3 m</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Damage to knocked down</td><td>—</td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr></table></div>
       <div class="cost">4 s cooldown. Power attack costs 50% more stamina.</div>
@@ -298,7 +298,7 @@ html, body { overflow-x: clip; }
     <article class="card">
       <h3>Shotguns — <span class="trait">Slug Knockback</span></h3>
       <ul>
-        <li>Slugs (Slug and Breaching Slug) knock the zombie back and down. Buckshot works as before.</li>
+        <li>Slugs (Slug and Breaching Slug) knock the zombie back and down. Buckshot does the same point blank (within 3 m); the force grows with Boomstick.</li>
         <li>Breaching Slug only reaches 4 m — that's how the base game designed it.</li>
       </ul>
     </article>
@@ -306,9 +306,9 @@ html, body { overflow-x: clip; }
     <article class="card">
       <h3>Rifles — <span class="trait">Ricochet</span></h3>
       <div class="tagline">Perk: Dead Eye</div>
-      <ul><li>A headshot damages every zombie near the impact point.</li></ul>
+      <ul><li>A headshot damages every zombie near the impact point: the number in the table, or a share of the headshot (5% → 20% by level) if that's more.</li></ul>
       <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Radius</td><td>5 m</td><td>7</td><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>Damage</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td></tr></table></div>
-      <div class="five"><b>Level 5:</b> the ricochet also stuns everyone it hits for 2 s.</div>
+      <div class="five"><b>Level 5:</b> the ricochet also stuns everyone it hits for 2 s (once per 4 s).</div>
     </article>
 
     <article class="card">
@@ -410,9 +410,9 @@ html, body { overflow-x: clip; }
     <article class="card">
       <h3>Robots — <span class="trait">Guardian Protocol</span></h3>
       <div class="tagline">Perk: Robotics Inventor · turret and robotic sledge</div>
-      <ul><li>When your health is below 30%, robots attack faster and harder. An indicator buff appears.</li></ul>
+      <ul><li>When your health is below 50%, robots attack faster and harder. An indicator buff appears.</li></ul>
       <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Speed</td><td>+30%</td><td>+40%</td><td>+50%</td><td>+60%</td><td>+70%</td><td>+80%</td></tr><tr><td>Damage</td><td>+10%</td><td>+15%</td><td>+20%</td><td>+25%</td><td>+30%</td><td>+35%</td></tr></table></div>
-      <div class="five"><b>Level 5:</b> kicks in already below 50% health.</div>
+      <div class="five"><b>Level 5:</b> kicks in already below 70% health.</div>
     </article>
   </div>
 </section>
@@ -604,7 +604,7 @@ html, body { overflow-x: clip; }
       <div class="tagline">Root: Damage +5%</div>
       <ul>
         <li>Dismember +15% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Fire 25%</b></li>
-        <li>Reload +10% → Reload +10% → <b>Kill: +1 round</b> → Magazine +25% → <b class="trait">Reload +25%</b></li>
+        <li>Reload +10% → Reload +10% → <b>Kill: +1 round</b> → Magazine +25% → <b class="trait">Every 5th hit +100%</b></li>
         <li>Knockdown 6% → Knockdown 6% → <b>First strike (full HP) +50%</b> → Splash 15% within 3 m → <b class="trait">Splash 30% within 3 m</b></li>
         <li><small>Bridges: Spread and recoil −10% · Magazine +20% · Damage +6% · Stun 6%</small></li>
       </ul>
@@ -623,9 +623,9 @@ html, body { overflow-x: clip; }
       <h3>Assault rifles &amp; machine guns</h3>
       <div class="tagline">Root: Damage +5%</div>
       <ul>
-        <li>Spread and recoil −10% → Spread and recoil −10% → <b>Combo +3%/hit (up to 5)</b> → Spread and recoil −15% → <b class="trait">Combo +5%/hit (up to 5)</b></li>
+        <li>Spread and recoil −10% → Spread and recoil −10% → <b>Combo +3%/hit (up to 5)</b> → Spread and recoil −15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
         <li>Magazine +15% → Magazine +15% → <b>Kill: +3 rounds</b> → Reload +15% → <b class="trait">Magazine +40%</b></li>
-        <li>Damage +5% → Speed +5% → <b>Shock 8%</b> → Speed +6% → <b class="trait">Fire 15%</b></li>
+        <li>Damage +5% → Speed +5% → <b>Shock 8%</b> → Speed +6% → <b class="trait">Fire 25%</b></li>
         <li><small>Bridges: Speed +5% · Reload +10% · Damage +5% · Crit 5% (×2)</small></li>
       </ul>
     </article>
@@ -655,7 +655,7 @@ html, body { overflow-x: clip; }
       <ul>
         <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +10% → <b class="trait">First strike (full HP) +60%</b></li>
         <li>Fire 10% → Fire 10% → <b>Shock 15%</b> → Acid 15% → <b class="trait">Splash 20% within 3 m</b></li>
-        <li>Reload +10% → Stun 8% → <b>Kill: +1 round</b> → Reload +20% → <b class="trait">Reload +40%</b></li>
+        <li>Reload +10% → Stun 8% → <b>Kill: +1 round</b> → Reload +20% → <b class="trait">Crit 15% (×2)</b></li>
         <li><small>Bridges: Reload +10% · Knockdown 8% · Damage +6% · Knockdown 8%</small></li>
       </ul>
     </article>
@@ -671,28 +671,28 @@ html, body { overflow-x: clip; }
         <li><b>Perception — Executioner:</b> rifles, spears and explosives deal +100% damage to targets below 30% health.</li>
         <li><b>Strength — Overkill:</b> excess damage from a killing blow with a shotgun, club or sledgehammer carries over to the nearest zombie within 4 m.</li>
         <li><b>Fortitude — Iron Body:</b> no bleeding, no infection, and an existing infection is cured.</li>
-        <li><b>Agility — Adrenaline:</b> kills with a pistol, bow or knife give +10% run speed for 15 s, up to 3 stacks.</li>
-        <li><b>Intellect — Charged Chain Lightning:</b> each kill gives a lightning charge. At 10 charges your next hit with any weapon releases Chain Lightning around you that also deals damage: 4 s of shock and 200 damage to every zombie within 8 m.</li>
+        <li><b>Agility — Adrenaline:</b> kills with a pistol, bow or knife give +10% run speed and +5% damage for 15 s, up to 3 stacks.</li>
+        <li><b>Intellect — Charged Chain Lightning:</b> each kill gives a lightning charge. At 10 charges your next hit with any weapon releases Chain Lightning around you that also deals damage: 4 s of shock and 200 damage (or half of that hit if it's more) to every zombie within 8 m.</li>
       </ul>
     </article>
     <article class="card">
       <h3>Perception — <span class="trait">level 5</span></h3>
       <ul>
-        <li><b>Flurry of Perception — Frenzy:</b> a spear kill gives +25% attack speed for 5 s.</li>
-        <li><b>Demolitions Expert — Chain Reaction:</b> a zombie killed by your explosives explodes itself: 250 damage within 4 m.</li>
+        <li><b>Flurry of Perception — Frenzy:</b> a spear kill gives +15% attack speed for 5 s.</li>
+        <li><b>Demolitions Expert — Chain Reaction:</b> a zombie killed by your explosives explodes itself: 250 damage within 4 m, or half of the killing hit if that's more.</li>
         <li><b>Penetrator — Shrapnel:</b> armor-piercing rounds deal 40% of the shot's damage to everyone within 3 m of the target.</li>
         <li><b>Infiltrator — Ghost:</b> while crouched you're twice as hard to spot, hits on a zombie that can't see you deal ×2, and mines and traps don't hurt you.</li>
         <li><b>Animal Tracker — Hunter's Mark:</b> hitting an animal puts a Mark on it.</li>
         <li><b>Treasure Hunter — X Marks the Spot:</b> the treasure search circle shrinks almost to a point, and the chest holds a quality 5–6 weapon with affixes.</li>
         <li><b>Salvage Operations — Junk Genius:</b> salvage tools wear out 90% slower.</li>
-        <li><b>Perception Mastery — Lucky Shot:</b> 10% chance that a hit with a Perception weapon deals +100% damage.</li>
+        <li><b>Perception Mastery — Lucky Shot:</b> 15% chance that a hit with a Perception weapon deals +100% damage.</li>
       </ul>
     </article>
     <article class="card">
       <h3>Strength — <span class="trait">level 5</span></h3>
       <ul>
-        <li><b>Flurry of Strength — Frenzy:</b> a club or sledgehammer kill gives +25% attack speed for 5 s.</li>
-        <li><b>Boomstick — Pump Action:</b> a shotgun kill loads 1 shell into the magazine.</li>
+        <li><b>Flurry of Strength — Frenzy:</b> a club or sledgehammer kill gives +15% attack speed for 5 s.</li>
+        <li><b>Boomstick — Pump Action:</b> a shotgun kill loads 2 shells into the magazine.</li>
         <li><b>Pack Mule — Beast of Burden:</b> being encumbered no longer slows you.</li>
         <li><b>Strength Mastery — Crippling Blows:</b> a club or sledgehammer power attack breaks the zombie's legs, and it crawls.</li>
         <li><b>Miner 69'er — Tunnel Rat:</b> mining tools use 50% less stamina.</li>
@@ -703,11 +703,11 @@ html, body { overflow-x: clip; }
     <article class="card">
       <h3>Fortitude — <span class="trait">level 5</span></h3>
       <ul>
-        <li><b>Flurry of Fortitude — Frenzy:</b> a knuckles kill gives +25% attack speed for 5 s.</li>
+        <li><b>Flurry of Fortitude — Frenzy:</b> a knuckles kill gives +15% attack speed for 5 s.</li>
         <li><b>The Huntsman — Butcher:</b> harvesting a carcass heals 30 HP.</li>
-        <li><b>Pain Tolerance — Unbreakable:</b> below 25% health you take 50% less damage.</li>
+        <li><b>Pain Tolerance — Unbreakable:</b> below 25% health you take 45% less damage.</li>
         <li><b>Fortitude Mastery — Second Wind:</b> once every 5 min, when your health drops below 20%, you instantly restore 70%.</li>
-        <li><b>Siphoning Strikes</b> (all levels): instead of the vanilla 2–10 HP per kill — life steal: every melee hit heals 4/8/12/16/20% of damage dealt. <b>Vampire</b> (5): a melee kill gives +50 max health for 15 s (doesn't heal — fill it with life steal). Each kill during that time adds another +50 and restarts the 15 s — no cap. When the buff ends, the bonus is gone.</li>
+        <li><b>Siphoning Strikes</b> (all levels): instead of the vanilla 2–10 HP per kill — life steal: every melee hit heals 4/8/12/16/20% of damage dealt (all life steal together — affix, mastery, this perk — is capped at 30%). <b>Vampire</b> (5): a melee kill gives +50 max health for 15 s (doesn't heal — fill it with life steal). Each kill during that time adds another +50 and restarts the 15 s — no cap. When the buff ends, the bonus is gone.</li>
         <li><b>Healing Factor:</b> natural regeneration 0.2 / 0.4 / 0.6 / 1 / 1.5 HP/s by level (vanilla 0.01–0.16). <b>Regeneration</b> (level 5): 6 s out of combat and you regenerate 4 HP/s more.</li>
         <li><b>Slow Metabolism — Iron Stomach:</b> no food poisoning, no dysentery (you can drink murky water), and food and water never drop below 25%.</li>
         <li><b>Rule 1: Cardio — Second Lungs:</b> when stamina runs out you instantly get +50% (once per 60 s).</li>
@@ -716,9 +716,9 @@ html, body { overflow-x: clip; }
     <article class="card">
       <h3>Agility — <span class="trait">level 5</span></h3>
       <ul>
-        <li><b>Flurry of Agility — Frenzy:</b> a knife kill gives +25% attack speed for 5 s.</li>
+        <li><b>Flurry of Agility — Frenzy:</b> a knife kill gives +15% attack speed for 5 s.</li>
         <li><b>Run and Gun — Gun Kata:</b> hip fire on the move has no spread and +30% damage.</li>
-        <li><b>Hard Target — Blur:</b> while running you take 50% less damage.</li>
+        <li><b>Hard Target — Blur:</b> while running you take 45% less damage (with Unbreakable — 90% in total).</li>
         <li><b>Parkour — Cat Landing:</b> falls deal 99% less damage.</li>
         <li><b>Agility Mastery — Evasion:</b> after taking a hit you run 30% faster for 5 s.</li>
         <li><b>Hidden Strike — Shadow Strike:</b> 3 s crouched, unnoticed and without attacking — the "Shadow" buff, your next weapon hit deals ×2; if it kills, "Shadow" comes back right away, so you can clear a room one by one. Lost if you stand up or get noticed.</li>
@@ -902,7 +902,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
         <li>Headhunter — empowered shots left</li>
         <li>Rage — stacks</li>
         <li>Guardian Protocol, Energy Shield</li>
-        <li>Earthquake and Chain Lightning cooldown</li>
+        <li>Earthquake, Chain Lightning and Ricochet stun cooldown</li>
         <li>Thunderclap storm charges, Big Boom free rocket</li>
         <li>Red ring above a zombie — it has a crossbow Mark</li>
         <li>Frenzy, Adrenaline (stacks), lightning charges, Jackpot, Evasion</li>
@@ -925,7 +925,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
 </main>
 
 <footer>
-  <div class="wrap">AposMod 1.6.7 for 7 Days to Die 3.4.</div>
+  <div class="wrap">AposMod 1.6.8 for 7 Days to Die 3.4.</div>
 </footer>
 
 </template>
@@ -933,7 +933,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.7</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.8</div>
     <h1>Справочник AposMod</h1>
     <p class="sub">Фишки оружия, аффиксы, перки и атрибуты, стихии, моды, легендарное оружие и настройки в одном месте. Числа «0 → 5» зависят от уровня соответствующего перка.</p>
   </div>
@@ -991,7 +991,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
       <div class="tagline">Перк: Skull Crusher</div>
       <ul>
         <li>Обычный удар может сбить цель с ног.</li>
-        <li>Силовой удар сбивает с ног всех зомби вокруг и наносит каждому урон.</li>
+        <li>Силовой удар сбивает с ног всех зомби вокруг и наносит каждому урон: число из таблицы или 10% силового удара за уровень, если это больше.</li>
       </ul>
       <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Сбить обычным</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td><td>45%</td></tr><tr><td>Радиус</td><td>3 м</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Урон сбитым</td><td>—</td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr></table></div>
       <div class="cost">Перезарядка 4 с. Силовой удар тратит на 50% больше выносливости.</div>
@@ -1064,7 +1064,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
     <article class="card">
       <h3>Дробовики — <span class="trait">Slug Knockback</span></h3>
       <ul>
-        <li>Пуля (Slug и Breaching Slug) отбрасывает зомби и сбивает его с ног. Дробь работает как раньше.</li>
+        <li>Пуля (Slug и Breaching Slug) отбрасывает зомби и сбивает его с ног. Дробь делает то же в упор (до 3 м); сила растёт с Boomstick.</li>
         <li>Breaching Slug бьёт только до 4 м — так задумано в самой игре.</li>
       </ul>
     </article>
@@ -1072,9 +1072,9 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
     <article class="card">
       <h3>Винтовки — <span class="trait">Ricochet</span></h3>
       <div class="tagline">Перк: Dead Eye</div>
-      <ul><li>Хедшот ранит всех зомби рядом с местом попадания.</li></ul>
+      <ul><li>Хедшот ранит всех зомби рядом с местом попадания: число из таблицы или доля урона хедшота (5% → 20% по уровню), если это больше.</li></ul>
       <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Радиус</td><td>5 м</td><td>7</td><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>Урон</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td></tr></table></div>
-      <div class="five"><b>5 уровень:</b> рикошет ещё и оглушает всех, кого задел, на 2 с.</div>
+      <div class="five"><b>5 уровень:</b> рикошет ещё и оглушает всех, кого задел, на 2 с (раз в 4 с).</div>
     </article>
 
     <article class="card">
@@ -1176,9 +1176,9 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
     <article class="card">
       <h3>Роботы — <span class="trait">Guardian Protocol</span></h3>
       <div class="tagline">Перк: Robotics Inventor · турель и робо-кувалда</div>
-      <ul><li>Когда ваше здоровье ниже 30%, роботы атакуют быстрее и сильнее. Появляется бафф-индикатор.</li></ul>
+      <ul><li>Когда ваше здоровье ниже 50%, роботы атакуют быстрее и сильнее. Появляется бафф-индикатор.</li></ul>
       <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Скорость</td><td>+30%</td><td>+40%</td><td>+50%</td><td>+60%</td><td>+70%</td><td>+80%</td></tr><tr><td>Урон</td><td>+10%</td><td>+15%</td><td>+20%</td><td>+25%</td><td>+30%</td><td>+35%</td></tr></table></div>
-      <div class="five"><b>5 уровень:</b> включается уже при здоровье ниже 50%.</div>
+      <div class="five"><b>5 уровень:</b> включается уже при здоровье ниже 70%.</div>
     </article>
   </div>
 </section>
@@ -1370,7 +1370,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
       <div class="tagline">Корень: Урон +5%</div>
       <ul>
         <li>Расчленение +15% → Урон +6% → <b>Добивание (&lt;35% HP) +30%</b> → Урон +8% → <b class="trait">Поджог 25%</b></li>
-        <li>Перезарядка +10% → Перезарядка +10% → <b>Убийство: +1 патрон</b> → Магазин +25% → <b class="trait">Перезарядка +25%</b></li>
+        <li>Перезарядка +10% → Перезарядка +10% → <b>Убийство: +1 патрон</b> → Магазин +25% → <b class="trait">Каждый 5-й удар +100%</b></li>
         <li>Сбить с ног 6% → Сбить с ног 6% → <b>Первый удар (полное HP) +50%</b> → Осколки 15% в 3 м → <b class="trait">Осколки 30% в 3 м</b></li>
         <li><small>Перемычки: Разброс и отдача −10% · Магазин +20% · Урон +6% · Оглушение 6%</small></li>
       </ul>
@@ -1389,9 +1389,9 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
       <h3>Автоматы и пулемёты</h3>
       <div class="tagline">Корень: Урон +5%</div>
       <ul>
-        <li>Разброс и отдача −10% → Разброс и отдача −10% → <b>Комбо +3%/удар (до 5)</b> → Разброс и отдача −15% → <b class="trait">Комбо +5%/удар (до 5)</b></li>
+        <li>Разброс и отдача −10% → Разброс и отдача −10% → <b>Комбо +3%/удар (до 5)</b> → Разброс и отдача −15% → <b class="trait">Комбо +8%/удар (до 5)</b></li>
         <li>Магазин +15% → Магазин +15% → <b>Убийство: +3 патрона</b> → Перезарядка +15% → <b class="trait">Магазин +40%</b></li>
-        <li>Урон +5% → Скорость +5% → <b>Шок 8%</b> → Скорость +6% → <b class="trait">Поджог 15%</b></li>
+        <li>Урон +5% → Скорость +5% → <b>Шок 8%</b> → Скорость +6% → <b class="trait">Поджог 25%</b></li>
         <li><small>Перемычки: Скорость +5% · Перезарядка +10% · Урон +5% · Крит 5% (×2)</small></li>
       </ul>
     </article>
@@ -1421,7 +1421,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
       <ul>
         <li>Урон +6% → Урон +6% → <b>Добивание (&lt;35% HP) +30%</b> → Урон +10% → <b class="trait">Первый удар (полное HP) +60%</b></li>
         <li>Поджог 10% → Поджог 10% → <b>Шок 15%</b> → Кислота 15% → <b class="trait">Осколки 20% в 3 м</b></li>
-        <li>Перезарядка +10% → Оглушение 8% → <b>Убийство: +1 патрон</b> → Перезарядка +20% → <b class="trait">Перезарядка +40%</b></li>
+        <li>Перезарядка +10% → Оглушение 8% → <b>Убийство: +1 патрон</b> → Перезарядка +20% → <b class="trait">Крит 15% (×2)</b></li>
         <li><small>Перемычки: Перезарядка +10% · Сбить с ног 8% · Урон +6% · Сбить с ног 8%</small></li>
       </ul>
     </article>
@@ -1437,28 +1437,28 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
         <li><b>Perception — Executioner:</b> винтовки, копья и взрывчатка наносят +100% урона целям, у которых меньше 30% здоровья.</li>
         <li><b>Strength — Overkill:</b> лишний урон от добивающего удара дробовиком, дубинкой или кувалдой переходит на ближайшего зомби в 4 м.</li>
         <li><b>Fortitude — Iron Body:</b> ни кровотечения, ни инфекции, а имеющаяся инфекция вылечивается.</li>
-        <li><b>Agility — Adrenaline:</b> убийства пистолетом, луком или ножом дают +10% скорости бега на 15 с, до 3 стаков.</li>
-        <li><b>Intellect — Charged Chain Lightning:</b> каждое убийство даёт заряд молнии. На 10 зарядах следующий удар любым оружием выпускает вокруг вас Chain Lightning, которая ещё и наносит урон: 4 с шока и 200 урона всем зомби в 8 м.</li>
+        <li><b>Agility — Adrenaline:</b> убийства пистолетом, луком или ножом дают +10% скорости бега и +5% урона на 15 с, до 3 стаков.</li>
+        <li><b>Intellect — Charged Chain Lightning:</b> каждое убийство даёт заряд молнии. На 10 зарядах следующий удар любым оружием выпускает вокруг вас Chain Lightning, которая ещё и наносит урон: 4 с шока и 200 урона (или половина этого удара, если это больше) всем зомби в 8 м.</li>
       </ul>
     </article>
     <article class="card">
       <h3>Perception — <span class="trait">уровень 5</span></h3>
       <ul>
-        <li><b>Flurry of Perception — Frenzy:</b> убийство копьём даёт +25% скорости атак на 5 с.</li>
-        <li><b>Demolitions Expert — Chain Reaction:</b> зомби, убитый вашей взрывчаткой, сам взрывается: 250 урона в 4 м.</li>
+        <li><b>Flurry of Perception — Frenzy:</b> убийство копьём даёт +15% скорости атак на 5 с.</li>
+        <li><b>Demolitions Expert — Chain Reaction:</b> зомби, убитый вашей взрывчаткой, сам взрывается: 250 урона в 4 м или половина добивающего удара, если это больше.</li>
         <li><b>Penetrator — Shrapnel:</b> бронебойные патроны наносят 40% урона выстрела всем в 3 м от цели.</li>
         <li><b>Infiltrator — Ghost:</b> в присяде вас вдвое сложнее заметить, удар по зомби, который вас не видит, ×2, а мины и ловушки вам не вредят.</li>
         <li><b>Animal Tracker — Hunter's Mark:</b> попадание по животному ставит на него Mark.</li>
         <li><b>Treasure Hunter — X Marks the Spot:</b> круг поиска клада сжимается почти до точки, а в сундуке лежит оружие качества 5–6 с аффиксами.</li>
         <li><b>Salvage Operations — Junk Genius:</b> инструменты для разборки изнашиваются на 90% медленнее.</li>
-        <li><b>Perception Mastery — Lucky Shot:</b> 10% шанс, что попадание оружием Perception нанесёт +100% урона.</li>
+        <li><b>Perception Mastery — Lucky Shot:</b> 15% шанс, что попадание оружием Perception нанесёт +100% урона.</li>
       </ul>
     </article>
     <article class="card">
       <h3>Strength — <span class="trait">уровень 5</span></h3>
       <ul>
-        <li><b>Flurry of Strength — Frenzy:</b> убийство дубинкой или кувалдой даёт +25% скорости атак на 5 с.</li>
-        <li><b>Boomstick — Pump Action:</b> убийство из дробовика заряжает 1 патрон в магазин.</li>
+        <li><b>Flurry of Strength — Frenzy:</b> убийство дубинкой или кувалдой даёт +15% скорости атак на 5 с.</li>
+        <li><b>Boomstick — Pump Action:</b> убийство из дробовика заряжает 2 патрона в магазин.</li>
         <li><b>Pack Mule — Beast of Burden:</b> перегруз больше не замедляет.</li>
         <li><b>Strength Mastery — Crippling Blows:</b> силовой удар дубинкой или кувалдой ломает зомби ноги, и он ползёт.</li>
         <li><b>Miner 69'er — Tunnel Rat:</b> инструменты для добычи тратят на 50% меньше выносливости.</li>
@@ -1469,11 +1469,11 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
     <article class="card">
       <h3>Fortitude — <span class="trait">уровень 5</span></h3>
       <ul>
-        <li><b>Flurry of Fortitude — Frenzy:</b> убийство кастетами даёт +25% скорости атак на 5 с.</li>
+        <li><b>Flurry of Fortitude — Frenzy:</b> убийство кастетами даёт +15% скорости атак на 5 с.</li>
         <li><b>The Huntsman — Butcher:</b> разделка туши лечит 30 HP.</li>
-        <li><b>Pain Tolerance — Unbreakable:</b> когда здоровье ниже 25%, вы получаете на 50% меньше урона.</li>
+        <li><b>Pain Tolerance — Unbreakable:</b> когда здоровье ниже 25%, вы получаете на 45% меньше урона.</li>
         <li><b>Fortitude Mastery — Second Wind:</b> раз в 5 мин, когда здоровье падает ниже 20%, вы сразу восстанавливаете 70%.</li>
-        <li><b>Siphoning Strikes</b> (все уровни): вместо ванильных 2–10 HP за убийство — вампиризм: каждый удар в ближнем бою лечит 4/8/12/16/20% нанесённого урона. <b>Vampire</b> (5): убийство в ближнем бою даёт +50 к максимуму здоровья на 15 с (не лечит — заполняйте вампиризмом). Каждое убийство за это время добавляет ещё +50 и перезапускает 15 с — без предела. Когда бафф спадает, бонус исчезает.</li>
+        <li><b>Siphoning Strikes</b> (все уровни): вместо ванильных 2–10 HP за убийство — вампиризм: каждый удар в ближнем бою лечит 4/8/12/16/20% нанесённого урона (весь вампиризм вместе — аффикс, мастерство, этот перк — не больше 30%). <b>Vampire</b> (5): убийство в ближнем бою даёт +50 к максимуму здоровья на 15 с (не лечит — заполняйте вампиризмом). Каждое убийство за это время добавляет ещё +50 и перезапускает 15 с — без предела. Когда бафф спадает, бонус исчезает.</li>
         <li><b>Healing Factor:</b> естественная регенерация 0,2 / 0,4 / 0,6 / 1 / 1,5 HP/с по уровням (в ванилле 0,01–0,16). <b>Regeneration</b> (5 уровень): 6 с без боя — и вы восстанавливаете ещё 4 HP/с.</li>
         <li><b>Slow Metabolism — Iron Stomach:</b> ни отравления, ни дизентерии (грязную воду можно пить), а еда и вода не падают ниже 25%.</li>
         <li><b>Rule 1: Cardio — Second Lungs:</b> когда выносливость заканчивается, вы сразу получаете +50% (раз в 60 с).</li>
@@ -1482,9 +1482,9 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
     <article class="card">
       <h3>Agility — <span class="trait">уровень 5</span></h3>
       <ul>
-        <li><b>Flurry of Agility — Frenzy:</b> убийство ножом даёт +25% скорости атак на 5 с.</li>
+        <li><b>Flurry of Agility — Frenzy:</b> убийство ножом даёт +15% скорости атак на 5 с.</li>
         <li><b>Run and Gun — Gun Kata:</b> на ходу стрельба от бедра без разброса и с +30% урона.</li>
-        <li><b>Hard Target — Blur:</b> на бегу вы получаете на 50% меньше урона.</li>
+        <li><b>Hard Target — Blur:</b> на бегу вы получаете на 45% меньше урона (вместе с Unbreakable — 90%).</li>
         <li><b>Parkour — Cat Landing:</b> падение наносит на 99% меньше урона.</li>
         <li><b>Agility Mastery — Evasion:</b> после полученного удара вы бегаете на 30% быстрее 5 с.</li>
         <li><b>Hidden Strike — Shadow Strike:</b> 3 с в присяде, незамеченным и без атак — бафф «Тень», следующий удар оружием ×2; если он убивает, «Тень» сразу возвращается, так что комнату можно зачистить по одному. Пропадает, если встать или вас заметили.</li>
@@ -1668,7 +1668,7 @@ aposbow off | on  выключить / включить автоналожени
         <li>Headhunter — остаток усиленных выстрелов</li>
         <li>Rage — стаки</li>
         <li>Guardian Protocol, Energy Shield</li>
-        <li>Перезарядка Earthquake и Chain Lightning</li>
+        <li>Перезарядка Earthquake, Chain Lightning и оглушения Ricochet</li>
         <li>Грозовые заряды Thunderclap, бесплатная ракета Big Boom</li>
         <li>Красное кольцо над зомби — на нём Mark арбалета</li>
         <li>Frenzy, Adrenaline (стаки), заряды молнии, Jackpot, Evasion</li>
@@ -1691,7 +1691,7 @@ aposbow off | on  выключить / включить автоналожени
 </main>
 
 <footer>
-  <div class="wrap">AposMod 1.6.7 для 7 Days to Die 3.4.</div>
+  <div class="wrap">AposMod 1.6.8 для 7 Days to Die 3.4.</div>
 </footer>
 
 </template>
@@ -1699,7 +1699,7 @@ aposbow off | on  выключить / включить автоналожени
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.7</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.8</div>
     <h1>Довідник AposMod</h1>
     <p class="sub">Фішки зброї, афікси, перки й атрибути, стихії, моди, легендарна зброя й налаштування в одному місці. Числа «0 → 5» залежать від рівня відповідного перка.</p>
   </div>
@@ -1757,7 +1757,7 @@ aposbow off | on  выключить / включить автоналожени
       <div class="tagline">Перк: Skull Crusher</div>
       <ul>
         <li>Звичайний удар може збити ціль з ніг.</li>
-        <li>Силовий удар валить усіх зомбі навколо й завдає кожному шкоди.</li>
+        <li>Силовий удар валить усіх зомбі навколо й завдає кожному шкоди: число з таблиці або 10% силового удару за рівень, якщо це більше.</li>
       </ul>
       <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Збити звичайним</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td><td>45%</td></tr><tr><td>Радіус</td><td>3 м</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Шкода збитим</td><td>—</td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr></table></div>
       <div class="cost">Перезарядка 4 с. Силовий удар забирає на 50% більше витривалості.</div>
@@ -1830,7 +1830,7 @@ aposbow off | on  выключить / включить автоналожени
     <article class="card">
       <h3>Дробовики — <span class="trait">Slug Knockback</span></h3>
       <ul>
-        <li>Куля (Slug і Breaching Slug) відкидає зомбі й валить його з ніг. Дріб працює як раніше.</li>
+        <li>Куля (Slug і Breaching Slug) відкидає зомбі й валить його з ніг. Дріб робить те саме впритул (до 3 м); сила росте з Boomstick.</li>
         <li>Breaching Slug б'є лише до 4 м — так задумано в самій грі.</li>
       </ul>
     </article>
@@ -1838,9 +1838,9 @@ aposbow off | on  выключить / включить автоналожени
     <article class="card">
       <h3>Гвинтівки — <span class="trait">Ricochet</span></h3>
       <div class="tagline">Перк: Dead Eye</div>
-      <ul><li>Хедшот ранить усіх зомбі поблизу місця влучання.</li></ul>
+      <ul><li>Хедшот ранить усіх зомбі поблизу місця влучання: число з таблиці або частка шкоди хедшоту (5% → 20% за рівнем), якщо це більше.</li></ul>
       <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Радіус</td><td>5 м</td><td>7</td><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>Шкода</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td></tr></table></div>
-      <div class="five"><b>5 рівень:</b> рикошет ще й оглушає всіх, кого зачепив, на 2 с.</div>
+      <div class="five"><b>5 рівень:</b> рикошет ще й оглушає всіх, кого зачепив, на 2 с (раз на 4 с).</div>
     </article>
 
     <article class="card">
@@ -1942,9 +1942,9 @@ aposbow off | on  выключить / включить автоналожени
     <article class="card">
       <h3>Роботи — <span class="trait">Guardian Protocol</span></h3>
       <div class="tagline">Перк: Robotics Inventor · турель і робо-кувалда</div>
-      <ul><li>Коли ваше здоров'я нижче 30%, роботи атакують швидше й сильніше. З'являється бафф-індикатор.</li></ul>
+      <ul><li>Коли ваше здоров'я нижче 50%, роботи атакують швидше й сильніше. З'являється бафф-індикатор.</li></ul>
       <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Швидкість</td><td>+30%</td><td>+40%</td><td>+50%</td><td>+60%</td><td>+70%</td><td>+80%</td></tr><tr><td>Шкода</td><td>+10%</td><td>+15%</td><td>+20%</td><td>+25%</td><td>+30%</td><td>+35%</td></tr></table></div>
-      <div class="five"><b>5 рівень:</b> вмикається вже при здоров'ї нижче 50%.</div>
+      <div class="five"><b>5 рівень:</b> вмикається вже при здоров'ї нижче 70%.</div>
     </article>
   </div>
 </section>
@@ -2136,7 +2136,7 @@ aposbow off | on  выключить / включить автоналожени
       <div class="tagline">Корінь: Шкода +5%</div>
       <ul>
         <li>Розчленування +15% → Шкода +6% → <b>Добивання (&lt;35% HP) +30%</b> → Шкода +8% → <b class="trait">Підпал 25%</b></li>
-        <li>Перезарядка +10% → Перезарядка +10% → <b>Вбивство: +1 набоїв</b> → Магазин +25% → <b class="trait">Перезарядка +25%</b></li>
+        <li>Перезарядка +10% → Перезарядка +10% → <b>Вбивство: +1 набоїв</b> → Магазин +25% → <b class="trait">Кожен 5-й удар +100%</b></li>
         <li>Збити з ніг 6% → Збити з ніг 6% → <b>Перший удар (повне HP) +50%</b> → Осколки 15% у 3 м → <b class="trait">Осколки 30% у 3 м</b></li>
         <li><small>Перемички: Розкид і віддача −10% · Магазин +20% · Шкода +6% · Оглушення 6%</small></li>
       </ul>
@@ -2155,9 +2155,9 @@ aposbow off | on  выключить / включить автоналожени
       <h3>Автомати й кулемети</h3>
       <div class="tagline">Корінь: Шкода +5%</div>
       <ul>
-        <li>Розкид і віддача −10% → Розкид і віддача −10% → <b>Комбо +3%/удар (до 5)</b> → Розкид і віддача −15% → <b class="trait">Комбо +5%/удар (до 5)</b></li>
+        <li>Розкид і віддача −10% → Розкид і віддача −10% → <b>Комбо +3%/удар (до 5)</b> → Розкид і віддача −15% → <b class="trait">Комбо +8%/удар (до 5)</b></li>
         <li>Магазин +15% → Магазин +15% → <b>Вбивство: +3 набоїв</b> → Перезарядка +15% → <b class="trait">Магазин +40%</b></li>
-        <li>Шкода +5% → Швидкість +5% → <b>Шок 8%</b> → Швидкість +6% → <b class="trait">Підпал 15%</b></li>
+        <li>Шкода +5% → Швидкість +5% → <b>Шок 8%</b> → Швидкість +6% → <b class="trait">Підпал 25%</b></li>
         <li><small>Перемички: Швидкість +5% · Перезарядка +10% · Шкода +5% · Крит 5% (×2)</small></li>
       </ul>
     </article>
@@ -2187,7 +2187,7 @@ aposbow off | on  выключить / включить автоналожени
       <ul>
         <li>Шкода +6% → Шкода +6% → <b>Добивання (&lt;35% HP) +30%</b> → Шкода +10% → <b class="trait">Перший удар (повне HP) +60%</b></li>
         <li>Підпал 10% → Підпал 10% → <b>Шок 15%</b> → Кислота 15% → <b class="trait">Осколки 20% у 3 м</b></li>
-        <li>Перезарядка +10% → Оглушення 8% → <b>Вбивство: +1 набоїв</b> → Перезарядка +20% → <b class="trait">Перезарядка +40%</b></li>
+        <li>Перезарядка +10% → Оглушення 8% → <b>Вбивство: +1 набоїв</b> → Перезарядка +20% → <b class="trait">Крит 15% (×2)</b></li>
         <li><small>Перемички: Перезарядка +10% · Збити з ніг 8% · Шкода +6% · Збити з ніг 8%</small></li>
       </ul>
     </article>
@@ -2203,28 +2203,28 @@ aposbow off | on  выключить / включить автоналожени
         <li><b>Perception — Executioner:</b> гвинтівки, списи й вибухівка завдають +100% шкоди цілям, у яких менше 30% здоров'я.</li>
         <li><b>Strength — Overkill:</b> зайва шкода від добивального удару дробовиком, дубинкою чи кувалдою переходить на найближчого зомбі в 4 м.</li>
         <li><b>Fortitude — Iron Body:</b> ні кровотечі, ні інфекції, а наявна інфекція виліковується.</li>
-        <li><b>Agility — Adrenaline:</b> вбивства пістолетом, луком чи ножем дають +10% швидкості бігу на 15 с, до 3 стаків.</li>
-        <li><b>Intellect — Charged Chain Lightning:</b> кожне вбивство дає заряд блискавки. На 10 зарядах наступний удар будь-якою зброєю випускає навколо вас Chain Lightning, яка ще й завдає шкоди: 4 с шоку й 200 шкоди всім зомбі в 8 м.</li>
+        <li><b>Agility — Adrenaline:</b> вбивства пістолетом, луком чи ножем дають +10% швидкості бігу і +5% шкоди на 15 с, до 3 стаків.</li>
+        <li><b>Intellect — Charged Chain Lightning:</b> кожне вбивство дає заряд блискавки. На 10 зарядах наступний удар будь-якою зброєю випускає навколо вас Chain Lightning, яка ще й завдає шкоди: 4 с шоку й 200 шкоди (або половина цього удару, якщо це більше) всім зомбі в 8 м.</li>
       </ul>
     </article>
     <article class="card">
       <h3>Perception — <span class="trait">рівень 5</span></h3>
       <ul>
-        <li><b>Flurry of Perception — Frenzy:</b> вбивство списом дає +25% швидкості атак на 5 с.</li>
-        <li><b>Demolitions Expert — Chain Reaction:</b> зомбі, вбитий вашою вибухівкою, сам вибухає: 250 шкоди в 4 м.</li>
+        <li><b>Flurry of Perception — Frenzy:</b> вбивство списом дає +15% швидкості атак на 5 с.</li>
+        <li><b>Demolitions Expert — Chain Reaction:</b> зомбі, вбитий вашою вибухівкою, сам вибухає: 250 шкоди в 4 м або половина добивального удару, якщо це більше.</li>
         <li><b>Penetrator — Shrapnel:</b> бронебійні набої завдають 40% шкоди пострілу всім у 3 м від цілі.</li>
         <li><b>Infiltrator — Ghost:</b> навпочіпки вас удвічі важче помітити, удар по зомбі, що вас не бачить, ×2, а міни й пастки вам не шкодять.</li>
         <li><b>Animal Tracker — Hunter's Mark:</b> влучання по тварині ставить на неї Mark.</li>
         <li><b>Treasure Hunter — X Marks the Spot:</b> коло пошуку скарбу стискається майже до точки, а в скрині лежить зброя якості 5–6 з афіксами.</li>
         <li><b>Salvage Operations — Junk Genius:</b> інструменти для розбирання зношуються на 90% повільніше.</li>
-        <li><b>Perception Mastery — Lucky Shot:</b> 10% шанс, що влучання зброєю Perception завдасть +100% шкоди.</li>
+        <li><b>Perception Mastery — Lucky Shot:</b> 15% шанс, що влучання зброєю Perception завдасть +100% шкоди.</li>
       </ul>
     </article>
     <article class="card">
       <h3>Strength — <span class="trait">рівень 5</span></h3>
       <ul>
-        <li><b>Flurry of Strength — Frenzy:</b> вбивство дубинкою чи кувалдою дає +25% швидкості атак на 5 с.</li>
-        <li><b>Boomstick — Pump Action:</b> вбивство з дробовика заряджає 1 набій у магазин.</li>
+        <li><b>Flurry of Strength — Frenzy:</b> вбивство дубинкою чи кувалдою дає +15% швидкості атак на 5 с.</li>
+        <li><b>Boomstick — Pump Action:</b> вбивство з дробовика заряджає 2 набої в магазин.</li>
         <li><b>Pack Mule — Beast of Burden:</b> перевантаження більше не сповільнює.</li>
         <li><b>Strength Mastery — Crippling Blows:</b> силовий удар дубинкою чи кувалдою ламає зомбі ноги, і він повзе.</li>
         <li><b>Miner 69'er — Tunnel Rat:</b> інструменти для видобутку витрачають на 50% менше витривалості.</li>
@@ -2235,11 +2235,11 @@ aposbow off | on  выключить / включить автоналожени
     <article class="card">
       <h3>Fortitude — <span class="trait">рівень 5</span></h3>
       <ul>
-        <li><b>Flurry of Fortitude — Frenzy:</b> вбивство кастетами дає +25% швидкості атак на 5 с.</li>
+        <li><b>Flurry of Fortitude — Frenzy:</b> вбивство кастетами дає +15% швидкості атак на 5 с.</li>
         <li><b>The Huntsman — Butcher:</b> розбирання туші лікує 30 HP.</li>
-        <li><b>Pain Tolerance — Unbreakable:</b> коли здоров'я нижче 25%, ви отримуєте на 50% менше шкоди.</li>
+        <li><b>Pain Tolerance — Unbreakable:</b> коли здоров'я нижче 25%, ви отримуєте на 45% менше шкоди.</li>
         <li><b>Fortitude Mastery — Second Wind:</b> раз на 5 хв, коли здоров'я падає нижче 20%, ви одразу відновлюєте 70%.</li>
-        <li><b>Siphoning Strikes</b> (усі рівні): замість ванільних 2–10 HP за вбивство — вампіризм: кожен удар у ближньому бою лікує 4/8/12/16/20% завданої шкоди. <b>Vampire</b> (5): вбивство в ближньому бою дає +50 до максимуму здоров'я на 15 с (не лікує — заповнюйте вампіризмом). Кожне вбивство за цей час додає ще +50 і перезапускає 15 с — без межі. Коли бафф спадає, бонус зникає.</li>
+        <li><b>Siphoning Strikes</b> (усі рівні): замість ванільних 2–10 HP за вбивство — вампіризм: кожен удар у ближньому бою лікує 4/8/12/16/20% завданої шкоди (весь вампіризм разом — афікс, майстерність, цей перк — не більше 30%). <b>Vampire</b> (5): вбивство в ближньому бою дає +50 до максимуму здоров'я на 15 с (не лікує — заповнюйте вампіризмом). Кожне вбивство за цей час додає ще +50 і перезапускає 15 с — без межі. Коли бафф спадає, бонус зникає.</li>
         <li><b>Healing Factor:</b> природна регенерація 0,2 / 0,4 / 0,6 / 1 / 1,5 HP/с за рівнями (у ванілі 0,01–0,16). <b>Regeneration</b> (5 рівень): 6 с без бою — і ви відновлюєте ще 4 HP/с.</li>
         <li><b>Slow Metabolism — Iron Stomach:</b> ні отруєння, ні дизентерії (брудну воду можна пити), а їжа й вода не падають нижче 25%.</li>
         <li><b>Rule 1: Cardio — Second Lungs:</b> коли витривалість закінчується, ви одразу отримуєте +50% (раз на 60 с).</li>
@@ -2248,9 +2248,9 @@ aposbow off | on  выключить / включить автоналожени
     <article class="card">
       <h3>Agility — <span class="trait">рівень 5</span></h3>
       <ul>
-        <li><b>Flurry of Agility — Frenzy:</b> вбивство ножем дає +25% швидкості атак на 5 с.</li>
+        <li><b>Flurry of Agility — Frenzy:</b> вбивство ножем дає +15% швидкості атак на 5 с.</li>
         <li><b>Run and Gun — Gun Kata:</b> на ходу стрільба від стегна без розкиду і з +30% шкоди.</li>
-        <li><b>Hard Target — Blur:</b> на бігу ви отримуєте на 50% менше шкоди.</li>
+        <li><b>Hard Target — Blur:</b> на бігу ви отримуєте на 45% менше шкоди (разом з Unbreakable — 90%).</li>
         <li><b>Parkour — Cat Landing:</b> падіння завдає на 99% менше шкоди.</li>
         <li><b>Agility Mastery — Evasion:</b> після отриманого удару ви бігаєте на 30% швидше 5 с.</li>
         <li><b>Hidden Strike — Shadow Strike:</b> 3 с у присіді, не помічені й без атак — бафф «Тінь», наступний удар зброєю ×2; якщо він вбиває, «Тінь» одразу повертається, тож кімнату можна зачистити по одному. Зникає, якщо встати або вас помітили.</li>
@@ -2434,7 +2434,7 @@ aposbow off | on  вимкнути / увімкнути автонабій ст�
         <li>Headhunter — залишок посилених пострілів</li>
         <li>Rage — стаки</li>
         <li>Guardian Protocol, Energy Shield</li>
-        <li>Перезарядка Earthquake і Chain Lightning</li>
+        <li>Перезарядка Earthquake, Chain Lightning і оглушення Ricochet</li>
         <li>Грозові заряди Thunderclap, безкоштовна ракета Big Boom</li>
         <li>Червоне кільце над зомбі — на ньому Mark арбалета</li>
         <li>Frenzy, Adrenaline (стаки), заряди блискавки, Jackpot, Evasion</li>
@@ -2457,7 +2457,7 @@ aposbow off | on  вимкнути / увімкнути автонабій ст�
 </main>
 
 <footer>
-  <div class="wrap">AposMod 1.6.7 для 7 Days to Die 3.4.</div>
+  <div class="wrap">AposMod 1.6.8 для 7 Days to Die 3.4.</div>
 </footer>
 
 </template>

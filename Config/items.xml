@@ -14,12 +14,22 @@
 	<set xpath="/items/item[@name='thrownAmmoMolotovCocktail']/property[@class='Explosion']/property[@name='Duration']/@value">16</set>
 
 	<!-- ===== Shotgun slugs: knock the target back and down ===== -->
-	<!-- Ammo effects fire together with the weapon's, so buckshot is not affected -->
+	<!-- Ammo effects fire together with the weapon's, so each ammo type has its own knockback -->
 	<append xpath="/items/item[@name='ammoShotgunSlug' or @name='ammoShotgunBreachingSlug']/effect_group[1]">
 		<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration="2.5" force="1000">
 			<requirement name="IsAlive" target="other"/>
 			<requirement name="!EntityTagCompare" target="other" tags="trader"/>
 		</triggered_effect>
+	</append>
+
+	<!-- ===== Buckshot: point blank (within 3 m) it throws the zombie back and down; force 300 + 100 per Boomstick level ===== -->
+	<append xpath="/items/item[@name='ammoShotgunShell']/effect_group[1]">
+		<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration="2" force="300"><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="TargetRange" target="other" operation="LTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkBoomstick" operation="Equals" value="0"/></triggered_effect>
+		<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration="2" force="400"><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="TargetRange" target="other" operation="LTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkBoomstick" operation="Equals" value="1"/></triggered_effect>
+		<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration="2" force="500"><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="TargetRange" target="other" operation="LTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkBoomstick" operation="Equals" value="2"/></triggered_effect>
+		<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration="2" force="600"><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="TargetRange" target="other" operation="LTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkBoomstick" operation="Equals" value="3"/></triggered_effect>
+		<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration="2" force="700"><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="TargetRange" target="other" operation="LTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkBoomstick" operation="Equals" value="4"/></triggered_effect>
+		<triggered_effect trigger="onSelfPrimaryActionRayHit" action="Ragdoll" target="other" duration="2" force="800"><requirement name="IsAlive" target="other"/><requirement name="!EntityTagCompare" target="other" tags="trader"/><requirement name="TargetRange" target="other" operation="LTE" value="3"/><requirement name="ProgressionLevel" progression_name="perkBoomstick" operation="Equals" value="5"/></triggered_effect>
 	</append>
 
 	<!-- ===== Bows "Splinter": the arrow bursts into fragments that hit the nearest other zombies within 5 m ===== -->

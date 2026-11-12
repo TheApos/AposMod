@@ -85,17 +85,17 @@ public class AposMastery : MonoBehaviour
         // Pistols: A headshots, B reload / ammo, C tempo
         "Dmg 5|Head 15|Handling 10|Reload 10|Mag 15|Speed 5|Head 15|Reload 10|Speed 6|Crit 8|Dmg 6|Ammo 2|Handling 10|Haste 20|Head 20|Mag 20|Dmg 8|CritDmg 100|Combo 6|Nth 150",
         // Shotguns: A damage / fire, B reload, C control
-        "Dmg 5|Dismember 15|Handling 10|Reload 10|Mag 20|Knock 6|Dmg 6|Reload 10|Knock 6|Execute 30|Dmg 6|Ammo 1|Stun 6|Opener 50|Dmg 8|Mag 25|Splash 15|Burn 25|Reload 25|Splash 30",
+        "Dmg 5|Dismember 15|Handling 10|Reload 10|Mag 20|Knock 6|Dmg 6|Reload 10|Knock 6|Execute 30|Dmg 6|Ammo 1|Stun 6|Opener 50|Dmg 8|Mag 25|Splash 15|Burn 25|Nth 100|Splash 30",
         // Rifles: A headshots, B reload / ammo, C first shot
         "Dmg 5|Head 15|Handling 15|Reload 10|Dmg 5|Opener 30|Head 15|Reload 10|Opener 30|Crit 8|Handling 10|Ammo 1|Mag 20|Execute 30|Head 25|Speed 10|Dmg 8|CritDmg 150|Splash 40|Opener 100",
         // Machine guns: A control, B magazine, C tempo
-        "Dmg 5|Handling 10|Speed 5|Mag 15|Reload 10|Dmg 5|Handling 10|Mag 15|Speed 5|Combo 3|Dmg 5|Ammo 3|Crit 5|Shock 8|Handling 15|Reload 15|Speed 6|Combo 5|Mag 40|Burn 15",
+        "Dmg 5|Handling 10|Speed 5|Mag 15|Reload 10|Dmg 5|Handling 10|Mag 15|Speed 5|Combo 3|Dmg 5|Ammo 3|Crit 5|Shock 8|Handling 15|Reload 15|Speed 6|Combo 8|Mag 40|Burn 25",
         // Bows: A headshots, B splinters, C bleeding / fire
         "Dmg 5|Head 15|Speed 5|Dmg 6|Handling 10|Bleed 15|Head 15|Dmg 6|Bleed 15|Crit 8|Opener 50|Splash 20|Speed 5|Acid 15|Head 20|Dmg 8|Burn 15|CritDmg 150|Splash 40|DeepBleed 30",
         // Crossbows: A headshots, B damage / knock, C reload / shock
         "Dmg 5|Head 15|Reload 10|Dmg 6|Handling 10|Reload 10|Head 15|Dmg 6|Reload 15|Crit 8|Opener 60|Knock 10|Stun 8|Haste 20|Head 25|Dmg 10|Shock 15|CritDmg 150|Splash 40|Combo 8",
         // Explosives: A damage, B elements, C reload
-        "Dmg 5|Dmg 6|Reload 10|Burn 10|Knock 8|Reload 10|Dmg 6|Burn 10|Stun 8|Execute 30|Dmg 6|Shock 15|Knock 8|Ammo 1|Dmg 10|Acid 15|Reload 20|Opener 60|Splash 20|Reload 40",
+        "Dmg 5|Dmg 6|Reload 10|Burn 10|Knock 8|Reload 10|Dmg 6|Burn 10|Stun 8|Execute 30|Dmg 6|Shock 15|Knock 8|Ammo 1|Dmg 10|Acid 15|Reload 20|Opener 60|Splash 20|Crit 15",
     };
 
     public static readonly Node[][] Trees = ParseTrees();

@@ -71,7 +71,7 @@
 			<passive_effect name="BuffResistance" operation="base_add" value="1" tags="buffInjuryBleeding,buffInjuryBleedingOne,buffInjuryBleedingTwo,buffInjuryBleedingBarbedWire,buffInfectionCatch,buffInfectionMain"/>
 		</effect_group>
 	</append>
-	<!-- Agility 10 "Adrenaline": Agility weapon kills give +10% move speed for 15 s, up to 3 stacks -->
+	<!-- Agility 10 "Adrenaline": Agility weapon kills give +10% move speed and +5% damage for 15 s, up to 3 stacks -->
 	<append xpath="/progression/attributes/attribute[@name='attAgility']">
 		<effect_group name="AposMod adrenaline">
 			<requirement name="ProgressionLevel" progression_name="attAgility" operation="GTE" value="10"/>
@@ -81,6 +81,8 @@
 			</triggered_effect>
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposAdrenalineSpeed" operation="set" value="@aposAdrenaline"/>
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposAdrenalineSpeed" operation="multiply" value=".1"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposAdrenalineDmg" operation="set" value="@aposAdrenaline"/>
+			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposAdrenalineDmg" operation="multiply" value=".05"/>
 			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposAdrenalineTime" operation="set" value="15"/>
 			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposAdrenaline"/>
 		</effect_group>
@@ -104,6 +106,10 @@
 			<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="otherAOE" range="8" target_tags="zombie,animal" cvar="aposSplashDmg" operation="set" value="-200">
 				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
 			</triggered_effect>
+			<!-- or 50% of the hit that released it, whichever is bigger (aposSplashPct, AposSplash.ProcessXml) -->
+			<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="otherAOE" range="8" target_tags="zombie,animal" cvar="aposSplashPct" operation="set" value=".5">
+				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
+			</triggered_effect>
 			<triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="otherAOE" range="8" target_tags="zombie,animal" buff="buffAposSplash">
 				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
 			</triggered_effect>
@@ -117,7 +123,7 @@
 	</append>
 
 	<!-- ===================== 1.0: max rank highlights of every perk ===================== -->
-	<!-- Flurry of Perception / Strength / Fortitude / Agility 5 "Frenzy": a kill with that perk's weapons: +25% attack speed for 5 s -->
+	<!-- Flurry of Perception / Strength / Fortitude / Agility 5 "Frenzy": a kill with that perk's weapons: +15% attack speed for 5 s -->
 	<append xpath="/progression/perks/perk[@name='perkFlurryOfPerception']">
 		<effect_group name="AposMod frenzy">
 			<requirement name="ProgressionLevel" progression_name="perkFlurryOfPerception" operation="GTE" value="5"/>
@@ -191,13 +197,13 @@
 			<passive_effect name="DegradationPerUse" operation="perc_add" value="-.9"/>
 		</effect_group>
 	</append>
-	<!-- Perception Mastery 5 "Lucky Shot": 10% chance a hit with a Perception weapon deals +100% damage -->
+	<!-- Perception Mastery 5 "Lucky Shot": 15% chance a hit with a Perception weapon deals +100% damage -->
 	<append xpath="/progression/perks/perk[@name='perkPerceptionMastery']">
 		<effect_group name="AposMod lucky shot">
 			<requirement name="ProgressionLevel" progression_name="perkPerceptionMastery" operation="GTE" value="5"/>
 			<requirement name="HoldingItemHasTags" tags="attPerception"/>
 			<passive_effect name="EntityDamage" operation="perc_add" value="1">
-				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="10"/>
+				<requirement name="RandomRoll" seed_type="Random" min_max="0,100" operation="LTE" value="15"/>
 			</passive_effect>
 		</effect_group>
 	</append>
@@ -255,13 +261,13 @@
 			<triggered_effect trigger="onSelfHarvestOther" action="AddBuff" buff="buffAposButcherCD"/>
 		</effect_group>
 	</append>
-	<!-- Pain Tolerance 5 "Unbreakable": below 25% health you take 50% less damage -->
+	<!-- Pain Tolerance 5 "Unbreakable": below 25% health you take 45% less damage (with Blur 90% in total: 100% would be god mode) -->
 	<append xpath="/progression/perks/perk[@name='perkPainTolerance']">
 		<effect_group name="AposMod unbreakable">
 			<requirement name="ProgressionLevel" progression_name="perkPainTolerance" operation="GTE" value="5"/>
 			<!-- the health check sits on the passive: a group-level one runs for every passive lookup, also while a
 			     joining multiplayer player's stats are created (Health is still null there -> NullReferenceException) -->
-			<passive_effect name="GeneralDamageResist" operation="base_add" value=".5"><requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".25"/></passive_effect>
+			<passive_effect name="GeneralDamageResist" operation="base_add" value=".45"><requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".25"/></passive_effect>
 		</effect_group>
 	</append>
 	<!-- Fortitude Mastery 5 "Second Wind": Source/AposCombat.cs -->
@@ -312,12 +318,12 @@
 			<passive_effect name="EntityDamage" operation="perc_add" value=".3"/>
 		</effect_group>
 	</append>
-	<!-- Hard Target 5 "Blur": while running you take 50% less damage -->
+	<!-- Hard Target 5 "Blur": while running you take 45% less damage -->
 	<append xpath="/progression/perks/perk[@name='perkHardTarget']">
 		<effect_group name="AposMod blur">
 			<requirement name="ProgressionLevel" progression_name="perkHardTarget" operation="GTE" value="5"/>
 			<requirement name="EntityHasMovementTag" tags="running"/>
-			<passive_effect name="GeneralDamageResist" operation="base_add" value=".5"/>
+			<passive_effect name="GeneralDamageResist" operation="base_add" value=".45"/>
 		</effect_group>
 	</append>
 	<!-- Parkour 5 "Cat Landing": 99% less fall damage -->

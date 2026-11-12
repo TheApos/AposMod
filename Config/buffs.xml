@@ -21,12 +21,12 @@
 		<effect_group name="AposMod robots guardian indicator">
 			<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffAposGuardian">
 				<requirement name="ProgressionLevel" progression_name="perkTurrets" operation="GTE" value="1"/>
-				<requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".3"/>
+				<requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".5"/>
 				<requirement name="!HasBuff" buff="buffAposGuardian"/>
 			</triggered_effect>
 			<triggered_effect trigger="onSelfBuffUpdate" action="AddBuff" buff="buffAposGuardian">
 				<requirement name="ProgressionLevel" progression_name="perkTurrets" operation="Equals" value="5"/>
-				<requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".5"/>
+				<requirement name="StatComparePercCurrentToMax" stat="Health" operation="LT" value=".7"/>
 				<requirement name="!HasBuff" buff="buffAposGuardian"/>
 			</triggered_effect>
 		</effect_group>
@@ -242,15 +242,6 @@
 			</effect_group>
 		</buff>
 
-		<!-- Earthquake damage (Skull Crusher): each knocked-down target loses its own aposQuakeDmg (negative) HP -->
-		<buff name="buffAposQuakeHit" hidden="true">
-			<stack_type value="replace"/>
-			<duration value="1"/>
-			<effect_group>
-				<triggered_effect trigger="onSelfBuffStart" action="ModifyStats" stat="Health" operation="add" value="@aposQuakeDmg"/>
-			</effect_group>
-		</buff>
-
 		<!-- ===== Ranged pack ===== -->
 
 		<!-- Pistols "Headhunter": number = empowered shots left. Damage bonus aposHHDamage is set on activation. -->
@@ -347,11 +338,11 @@
 			<stack_type value="ignore"/>
 			<effect_group>
 				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposGuardian">
-					<requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value=".3"/>
+					<requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value=".5"/>
 					<requirement name="ProgressionLevel" progression_name="perkTurrets" operation="LT" value="5"/>
 				</triggered_effect>
 				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposGuardian">
-					<requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value=".5"/>
+					<requirement name="StatComparePercCurrentToMax" stat="Health" operation="GTE" value=".7"/>
 				</triggered_effect>
 			</effect_group>
 		</buff>
@@ -391,6 +382,11 @@
 		<buff name="buffAposChainCD" name_key="buffAposChainCDName" description_key="buffAposChainCDDesc" icon="ui_game_symbol_electric_power" icon_color="150,150,150">
 			<stack_type value="ignore"/>
 			<duration value="3"/>
+		</buff>
+		<!-- Ricochet stun (Dead Eye 5): once per 4 s -->
+		<buff name="buffAposRicochetCD" name_key="buffAposRicochetCDName" description_key="buffAposRicochetCDDesc" icon="ui_game_symbol_stunned" icon_color="150,150,150">
+			<stack_type value="ignore"/>
+			<duration value="4"/>
 		</buff>
 
 		<!-- Pipe weapons: marks that the "max bonus" message was shown once -->
@@ -495,13 +491,13 @@
 
 	<!-- ===================== 1.0: buffs for attribute and perk highlights (progression.xml) ===================== -->
 	<append xpath="/buffs">
-		<!-- Flurry 5 "Frenzy": +25% attack speed with that perk's weapons for 5 s -->
+		<!-- Flurry 5 "Frenzy": +15% attack speed with that perk's weapons for 5 s -->
 		<buff name="buffAposFrenzyPerception" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_apos_frenzy" icon_color="255,180,0">
 			<stack_type value="replace"/>
 			<duration value="5"/>
 			<effect_group>
 				<requirement name="HoldingItemHasTags" tags="perkFlurryOfPerception"/>
-				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".25"/>
+				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".15"/>
 			</effect_group>
 		</buff>
 		<buff name="buffAposFrenzyStrength" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_apos_frenzy" icon_color="255,180,0">
@@ -509,7 +505,7 @@
 			<duration value="5"/>
 			<effect_group>
 				<requirement name="HoldingItemHasTags" tags="perkFlurryOfStrength"/>
-				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".25"/>
+				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".15"/>
 			</effect_group>
 		</buff>
 		<buff name="buffAposFrenzyFortitude" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_apos_frenzy" icon_color="255,180,0">
@@ -517,7 +513,7 @@
 			<duration value="5"/>
 			<effect_group>
 				<requirement name="HoldingItemHasTags" tags="perkFlurryOfFortitude"/>
-				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".25"/>
+				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".15"/>
 			</effect_group>
 		</buff>
 		<buff name="buffAposFrenzyAgility" name_key="buffAposFrenzyName" description_key="buffAposFrenzyDesc" icon="ui_apos_frenzy" icon_color="255,180,0">
@@ -525,23 +521,25 @@
 			<duration value="5"/>
 			<effect_group>
 				<requirement name="HoldingItemHasTags" tags="perkFlurryOfAgility"/>
-				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".25"/>
+				<passive_effect name="AttacksPerMinute" operation="perc_add" value=".15"/>
 			</effect_group>
 		</buff>
 
-		<!-- Agility 10 "Adrenaline": number = stacks (max 3), +10% move speed each, 15 s after the last kill -->
+		<!-- Agility 10 "Adrenaline": number = stacks (max 3), +10% move speed and +5% damage each, 15 s after the last kill -->
 		<buff name="buffAposAdrenaline" name_key="buffAposAdrenalineName" description_key="buffAposAdrenalineDesc" icon="ui_apos_adrenaline" icon_color="0,220,120">
 			<stack_type value="ignore"/>
 			<display_value value="aposAdrenaline"/>
 			<effect_group>
 				<passive_effect name="WalkSpeed" operation="perc_add" value="@aposAdrenalineSpeed"/>
 				<passive_effect name="RunSpeed" operation="perc_add" value="@aposAdrenalineSpeed"/>
+				<passive_effect name="EntityDamage" operation="perc_add" value="@aposAdrenalineDmg"/>
 				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposAdrenalineTime" operation="add" value="-1"/>
 				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposAdrenaline">
 					<requirement name="CVarCompare" cvar="aposAdrenalineTime" operation="LTE" value="0"/>
 				</triggered_effect>
 				<triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="aposAdrenaline" operation="set" value="0"/>
 				<triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="aposAdrenalineSpeed" operation="set" value="0"/>
+				<triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="aposAdrenalineDmg" operation="set" value="0"/>
 			</effect_group>
 		</buff>
 
