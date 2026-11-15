@@ -54,7 +54,7 @@
 		</lootgroup>
 	</insertBefore>
 	<append xpath="/lootcontainers/lootgroup[@name='groupBuriedTreasure']">
-		<item group="groupAposTreasureWeapon" prob="0" tags="aposTreasureHunter5"/>
+		<item group="groupAposTreasureWeapon" prob="0" force_prob="true" tags="aposTreasureHunter5"/>
 	</append>
 	<insertBefore xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT4']">
 		<lootgroup name="groupAposLegendary" loot_quality_template="QLTemplateApos6">
@@ -71,10 +71,10 @@
 		</lootgroup>
 	</insertBefore>
 	<append xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT4']">
-		<item group="groupAposLegendary" prob="0.04"/>
+		<item group="groupAposLegendary" prob="0.04" force_prob="true"/>
 	</append>
 	<append xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT5']">
-		<item group="groupAposLegendary" prob="0.1"/>
+		<item group="groupAposLegendary" prob="0.1" force_prob="true"/>
 	</append>
 
 	<!-- ===== Final POI chests always contain rockets, more for harder POIs ===== -->
@@ -95,18 +95,19 @@
 		<item group="groupAmmoRocket" count="4,6"/>
 	</append>
 	<!-- ===== Rocket launcher (+1 rocket) in final chests: 6% T2, 10% T3, 15% T4, 20% T5 (otherwise only the
-	     Demolitionist loot gave it, and rockets piled up with nothing to fire them) ===== -->
+	     Demolitionist loot gave it, and rockets piled up with nothing to fire them).
+	     These groups are count="all": prob is ignored there unless force_prob="true" ===== -->
 	<append xpath="/lootcontainers/lootgroup[@name='groupReinforcedChestT2']">
-		<item group="groupAposEarlyRocketLauncher" prob="0.06"/>
+		<item group="groupAposEarlyRocketLauncher" prob="0.06" force_prob="true"/>
 	</append>
 	<append xpath="/lootcontainers/lootgroup[@name='groupReinforcedChestT3']">
-		<item group="groupWeaponsT3_Demolitionist01" prob="0.1"/>
+		<item group="groupWeaponsT3_Demolitionist01" prob="0.1" force_prob="true"/>
 	</append>
 	<append xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT4']">
-		<item group="groupWeaponsT3_Demolitionist01" prob="0.15"/>
+		<item group="groupWeaponsT3_Demolitionist01" prob="0.15" force_prob="true"/>
 	</append>
 	<append xpath="/lootcontainers/lootgroup[@name='groupHardenedChestT5']">
-		<item group="groupWeaponsT3_Demolitionist01" prob="0.2"/>
+		<item group="groupWeaponsT3_Demolitionist01" prob="0.2" force_prob="true"/>
 	</append>
 	<!-- ===== Bird nests: x3 feathers (vanilla 1 + 1-5) ===== -->
 	<set xpath="/lootcontainers/lootgroup[@name='groupBirdNest01']/item[@name='resourceFeather']/@count">3</set>
