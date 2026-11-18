@@ -16,10 +16,11 @@ public static class AposSettings
     public static bool EliteTags = true;     // names above elite zombies (AposElites.cs)
     public static float EliteHealth = 2f;    // elite max health = normal x this (AposElites.cs, buffAposElite)
     public static float EliteWeaponDrop = 100f; // % chance an elite drops a weapon (Eridium always drops; AposElites.OnDeath)
-    // per-biome weapon drop chance (%), same order as DropBiomes; other biomes use EliteWeaponDrop
+    // per-biome weapon drop chance (%), same order as DropBiomes; other biomes use EliteWeaponDrop.
+    // Default 10/20/30/40/50: harder biomes (tougher elites) drop more often.
     public static readonly string[] DropBiomes = { "pine_forest", "burnt_forest", "desert", "snow", "wasteland" };
     static readonly string[] DropAttrs = { "dropPineForest", "dropBurntForest", "dropDesert", "dropSnow", "dropWasteland" };
-    public static readonly float[] EliteBiomeDrop = { 100f, 100f, 100f, 100f, 100f };
+    public static readonly float[] EliteBiomeDrop = { 10f, 20f, 30f, 40f, 50f };
 
     static string file;
 
@@ -46,10 +47,13 @@ public static class AposSettings
                 EliteTags = ReadBool(el, "tags", EliteTags);
                 EliteHealth = Clamp(ReadFloat(el, "health", EliteHealth), 1f, 50f);
                 EliteWeaponDrop = Clamp(ReadFloat(el, "weaponDrop", EliteWeaponDrop), 0f, 100f);
-                // a file from before 1.6.12 has no biome values: they take weaponDrop
+                // a file from before 1.6.12 has no biome values: they get the defaults, or weaponDrop if the player
+                // changed it (e.g. weaponDrop="0" to turn weapon drops off stays off)
+                bool customDrop = EliteWeaponDrop != 100f;
                 for (int i = 0; i < DropAttrs.Length; i++)
                 {
-                    EliteBiomeDrop[i] = Clamp(ReadFloat(el, DropAttrs[i], EliteWeaponDrop), 0f, 100f);
+                    float fallback = customDrop ? EliteWeaponDrop : EliteBiomeDrop[i];
+                    EliteBiomeDrop[i] = Clamp(ReadFloat(el, DropAttrs[i], fallback), 0f, 100f);
                 }
             }
             XmlElement d = doc.DocumentElement["DamageNumbers"];

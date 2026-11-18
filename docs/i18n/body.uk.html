@@ -312,7 +312,7 @@
       <ul>
         <li>Здоров'я вдвічі більше (змінюється командою <code>aposelite health N</code> або <code>health</code> у Settings.xml). Над назвою зірки: <b>★</b> жовта, <b>★★</b> помаранчеві, <b>★★★</b> червоні. Видно до 40 м, крізь стіни — ні.</li>
         <li>Лут на землі світиться і має промінь угору, як у Borderlands, — його видно здалеку: Ерідій фіолетовим, зброя з афіксами золотим, легендарки помаранчевим.</li>
-        <li><b>Нагорода:</b> ★ — зброя з афіксами якості 3–5 і 3–6 Ерідію; ★★ — якість 5–6, 8–15 Ерідію, 2% легендарка; ★★★ — якість 6, 20–30 Ерідію, 10% легендарка. Для майстерності зброї еліта = 5 вбивств. Шанс випадання зброї — <code>aposelite drop N</code> або <code>weaponDrop</code> у Settings.xml (0–100%, за замовчуванням 100); Ерідій випадає завжди. Шанс можна задати за біомами: <code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code> у Settings.xml або <code>aposelite drop wasteland N</code> (наприклад, 10/20/30/40/50%).</li>
+        <li><b>Нагорода:</b> ★ — зброя з афіксами якості 3–5 і 3–6 Ерідію; ★★ — якість 5–6, 8–15 Ерідію, 2% легендарка; ★★★ — якість 6, 20–30 Ерідію, 10% легендарка. Для майстерності зброї еліта = 5 вбивств. Ерідій випадає завжди; зброя — з шансом за біомом, частіше там, де еліти сильніші: сосновий ліс 10%, випалений ліс 20%, пустеля 30%, сніги 40%, пустки 50% (інші біоми 100%, <code>weaponDrop</code>). Змінюється в Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) або в грі: <code>aposelite drop wasteland N</code> для одного біому, <code>aposelite drop N</code> для всіх.</li>
       </ul>
     </article>
     <article class="card">
@@ -710,7 +710,7 @@ aposaffix 6          спершу якість 6, потім 3 афікси</pre
       <div class="tagline">Консоль F1</div>
       <pre>aposelite on | off           назви над елітами
 aposelite health N           максимум здоров'я x N (1-50, за замовчуванням 2)
-aposelite drop N             шанс випадання зброї, % (0-100, за замовчуванням 100), усі біоми
+aposelite drop N             шанс випадання зброї, % (0-100), усі біоми
 aposelite drop wasteland N   ... в одному біомі (pine, burnt, desert, snow, wasteland)
 aposelite make               найближчий зомбі стає елітою
 aposelite make Armored Giant  з цими модифікаторами</pre>

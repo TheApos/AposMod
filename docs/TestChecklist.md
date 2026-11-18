@@ -605,3 +605,7 @@ giveself thrownAmmoMolotovCocktail 1 10
 - [ ] `aposelite drop pine 0`, у сосновому лісі `aposelite make` і вбити: лише Ерідій. У пустошах (100%) зброя випадає. `aposelite` показує шанси всіх біомів.
 - [ ] `aposelite drop 100` ставить 100 усім біомам.
 - [ ] Зброя з еліти на землі світиться золотим променем, легендарка помаранчевим, Ерідій як і раніше фіолетовим. Звичайна зброя без афіксів не світиться.
+## 17.18. Шанси зброї за біомами за замовчуванням (1.6.13)
+- [ ] Settings.xml без drop<Biome> і з weaponDrop="100": після запуску dropPineForest="10" ... dropWasteland="50".
+- [ ] Settings.xml з weaponDrop="0" (старий): усі drop<Biome> стають 0, зброя не випадає.
+- [ ] `aposelite` показує pine_forest 10%, burnt_forest 20%, desert 30%, snow 40%, wasteland 50%.
