@@ -311,8 +311,8 @@
       <div class="tagline">2% chance early → 5% late game · ★ = 1 modifier, ★★ after gamestage 100, ★★★ (25% of them) after gamestage 200</div>
       <ul>
         <li>Twice the health (change it with <code>aposelite health N</code> or <code>health</code> in Settings.xml). Stars above the name: <b>★</b> yellow, <b>★★</b> orange, <b>★★★</b> red. Visible up to 40 m, not through walls.</li>
-        <li>Eridium on the ground glows purple and has a beam going up, like Borderlands loot — you can see it from afar.</li>
-        <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills. The weapon drop chance is set with <code>aposelite drop N</code> or <code>weaponDrop</code> in Settings.xml (0–100%, default 100); Eridium always drops.</li>
+        <li>Loot on the ground glows and has a beam going up, like in Borderlands, so you see it from afar: Eridium purple, weapons with affixes gold, legendaries orange.</li>
+        <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills. The weapon drop chance is set with <code>aposelite drop N</code> or <code>weaponDrop</code> in Settings.xml (0–100%, default 100); Eridium always drops. It can differ by biome: <code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code> in Settings.xml or <code>aposelite drop wasteland N</code> (e.g. 10/20/30/40/50%).</li>
       </ul>
     </article>
     <article class="card">
@@ -710,7 +710,8 @@ aposaffix 6          set quality 6 first, then 3 affixes</pre>
       <div class="tagline">F1 console</div>
       <pre>aposelite on | off           names above elites
 aposelite health N           max health x N (1-50, default 2)
-aposelite drop N             weapon drop chance, % (0-100, default 100)
+aposelite drop N             weapon drop chance, % (0-100, default 100), all biomes
+aposelite drop wasteland N   ... in one biome (pine, burnt, desert, snow, wasteland)
 aposelite make               nearest zombie becomes an elite
 aposelite make Armored Giant  with these modifiers</pre>
     </article>

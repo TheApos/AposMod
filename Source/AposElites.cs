@@ -129,9 +129,9 @@ public class AposElites : MonoBehaviour
         Vector3 pos = e.GetPosition() + Vector3.up * 0.8f;
 
         // weapon with affixes: quality 3-5 (1 star), 5-6 (2 stars), 6 (3 stars); legendary 2% (2 stars) / 10% (3 stars)
-        // Settings.xml weaponDrop / "aposelite drop N": chance of the weapon (Eridium always drops)
+        // Settings.xml weaponDrop + drop<Biome> / "aposelite drop [biome] N": chance of the weapon (Eridium always drops)
         ItemStack loot = null;
-        bool weapon = rand.NextDouble() * 100 < AposSettings.EliteWeaponDrop;
+        bool weapon = rand.NextDouble() * 100 < AposSettings.EliteDropChance(BiomeName(e));
         double legendChance = count >= 3 ? 0.1 : count == 2 ? 0.02 : 0;
         if (weapon && rand.NextDouble() < legendChance) loot = AposRewards.RandomLegendary();
         if (weapon && loot == null) loot = RandomWeapon(count >= 3 ? 6 : count == 2 ? rand.Next(5, 7) : rand.Next(3, 6));
@@ -140,6 +140,19 @@ public class AposElites : MonoBehaviour
         Drop(new ItemStack(ItemClass.GetItem(Eridium), eridium), pos);
 
         if (Has(e, "Explosive")) Blast(e);
+    }
+
+    // biome the elite died in: the one it stood on, else the biome map at its position
+    static string BiomeName(EntityAlive e)
+    {
+        BiomeDefinition b = e.biomeStandingOn;
+        if (b == null)
+        {
+            World world = GameManager.Instance.World;
+            Vector3i p = World.worldToBlockPos(e.GetPosition());
+            if (world != null) b = world.GetBiome(p.x, p.z);
+        }
+        return b != null ? b.m_sBiomeName : null;
     }
 
     public static void Drop(ItemStack stack, Vector3 pos)
@@ -241,9 +254,12 @@ public class AposElites : MonoBehaviour
         }
     }
 
-    // ===== Eridium on the ground: a purple light and a Borderlands-style loot beam above the sack =====
+    // ===== Loot on the ground: a light and a Borderlands-style loot beam above Eridium (purple), weapons with
+    // affixes (gold) and legendaries (orange), so a weapon drop next to the Eridium sack is easy to see =====
     const float BeamHeight = 5f;
     static readonly Color EridiumColor = new Color(0.75f, 0.35f, 1f);
+    static readonly Color AffixColor = new Color(1f, 0.85f, 0.3f);
+    static readonly Color LegendaryColor = new Color(1f, 0.45f, 0.05f);
     readonly Dictionary<int, Transform> glows = new Dictionary<int, Transform>();
     readonly List<int> goneGlows = new List<int>();
     static Material beamMaterial;
@@ -257,9 +273,10 @@ public class AposElites : MonoBehaviour
             for (int i = 0; i < list.Count; i++)
             {
                 EntityItem item = list[i] as EntityItem;
-                if (item == null || item.IsDead() || glows.ContainsKey(item.entityId) || item.itemStack == null
-                    || item.itemStack.itemValue.type != eridiumValue.type) continue;
-                glows[item.entityId] = AddGlow(item.transform);
+                if (item == null || item.IsDead() || glows.ContainsKey(item.entityId) || item.itemStack == null) continue;
+                Color color;
+                if (!GlowColor(item.itemStack.itemValue, out color)) continue;
+                glows[item.entityId] = AddGlow(item.transform, color);
             }
         }
         // the sack rolls; keep the beam pointing straight up, forget picked up / despawned sacks
@@ -272,13 +289,26 @@ public class AposElites : MonoBehaviour
         for (int i = 0; i < goneGlows.Count; i++) glows.Remove(goneGlows[i]);
     }
 
-    static Transform AddGlow(Transform parent)
+    static bool GlowColor(ItemValue iv, out Color color)
+    {
+        color = EridiumColor;
+        if (iv == null || iv.type == 0) return false;
+        if (iv.type == eridiumValue.type) return true;
+        ItemClass ic = iv.ItemClass;
+        if (ic == null) return false;
+        color = LegendaryColor;
+        if (ic.Name.StartsWith("aposLegend")) return true;
+        color = AffixColor;
+        return AposAffixes.Kind(ic) != 0 && iv.Stats != null && AposAffixes.Decompose(iv).Count > 0;
+    }
+
+    static Transform AddGlow(Transform parent, Color color)
     {
         GameObject go = new GameObject("AposEridiumGlow");
         go.transform.SetParent(parent, false);
         Light light = go.AddComponent<Light>();
         light.type = LightType.Point;
-        light.color = EridiumColor;
+        light.color = color;
         light.range = 4f;
         light.intensity = 3f;
 
@@ -297,8 +327,8 @@ public class AposElites : MonoBehaviour
             beam.startWidth = 0.12f;
             beam.endWidth = 0.02f;
             beam.material = beamMaterial;
-            beam.startColor = new Color(EridiumColor.r, EridiumColor.g, EridiumColor.b, 0.9f);
-            beam.endColor = new Color(EridiumColor.r, EridiumColor.g, EridiumColor.b, 0f);
+            beam.startColor = new Color(color.r, color.g, color.b, 0.9f);
+            beam.endColor = new Color(color.r, color.g, color.b, 0f);
             beam.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             beam.receiveShadows = false;
         }

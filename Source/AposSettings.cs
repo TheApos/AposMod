@@ -16,6 +16,10 @@ public static class AposSettings
     public static bool EliteTags = true;     // names above elite zombies (AposElites.cs)
     public static float EliteHealth = 2f;    // elite max health = normal x this (AposElites.cs, buffAposElite)
     public static float EliteWeaponDrop = 100f; // % chance an elite drops a weapon (Eridium always drops; AposElites.OnDeath)
+    // per-biome weapon drop chance (%), same order as DropBiomes; other biomes use EliteWeaponDrop
+    public static readonly string[] DropBiomes = { "pine_forest", "burnt_forest", "desert", "snow", "wasteland" };
+    static readonly string[] DropAttrs = { "dropPineForest", "dropBurntForest", "dropDesert", "dropSnow", "dropWasteland" };
+    public static readonly float[] EliteBiomeDrop = { 100f, 100f, 100f, 100f, 100f };
 
     static string file;
 
@@ -42,6 +46,11 @@ public static class AposSettings
                 EliteTags = ReadBool(el, "tags", EliteTags);
                 EliteHealth = Clamp(ReadFloat(el, "health", EliteHealth), 1f, 50f);
                 EliteWeaponDrop = Clamp(ReadFloat(el, "weaponDrop", EliteWeaponDrop), 0f, 100f);
+                // a file from before 1.6.12 has no biome values: they take weaponDrop
+                for (int i = 0; i < DropAttrs.Length; i++)
+                {
+                    EliteBiomeDrop[i] = Clamp(ReadFloat(el, DropAttrs[i], EliteWeaponDrop), 0f, 100f);
+                }
             }
             XmlElement d = doc.DocumentElement["DamageNumbers"];
             if (d != null)
@@ -82,11 +91,15 @@ public static class AposSettings
             XmlElement s = doc.CreateElement("Stealth");
             s.SetAttribute("rework", StealthRework ? "true" : "false");
             root.AppendChild(s);
-            root.AppendChild(doc.CreateComment(" Elites. tags: names above them (in game: aposelite on|off). health: their max health as a multiple of a normal zombie, 1-50, 2 = double (in game: aposelite health N). weaponDrop: % chance they drop a weapon, 0-100, 0 = never; Eridium always drops (in game: aposelite drop N) "));
+            root.AppendChild(doc.CreateComment(" Elites. tags: names above them (in game: aposelite on|off). health: their max health as a multiple of a normal zombie, 1-50, 2 = double (in game: aposelite health N). weaponDrop: % chance they drop a weapon, 0-100, 0 = never; Eridium always drops. drop<Biome>: the same chance for elites killed in that biome; weaponDrop is used elsewhere (in game: aposelite drop N for all, aposelite drop wasteland N for one) "));
             XmlElement el = doc.CreateElement("Elites");
             el.SetAttribute("tags", EliteTags ? "true" : "false");
             el.SetAttribute("health", EliteHealth.ToString("0.##", CultureInfo.InvariantCulture));
             el.SetAttribute("weaponDrop", EliteWeaponDrop.ToString("0.##", CultureInfo.InvariantCulture));
+            for (int i = 0; i < DropAttrs.Length; i++)
+            {
+                el.SetAttribute(DropAttrs[i], EliteBiomeDrop[i].ToString("0.##", CultureInfo.InvariantCulture));
+            }
             root.AppendChild(el);
             doc.Save(file);
         }
@@ -94,6 +107,33 @@ public static class AposSettings
         {
             UnityEngine.Debug.LogWarning("[AposMod] Could not save " + file + ": " + e.Message);
         }
+    }
+
+    // weapon drop chance (%) for an elite killed in this biome (biome name from biomes.xml, may be null)
+    public static float EliteDropChance(string biome)
+    {
+        int i = biome == null ? -1 : Array.IndexOf(DropBiomes, biome);
+        return i >= 0 ? EliteBiomeDrop[i] : EliteWeaponDrop;
+    }
+
+    // "pine", "burnt", "wasteland"... -> index in DropBiomes, -1 if unknown
+    public static int FindDropBiome(string name)
+    {
+        for (int i = 0; i < DropBiomes.Length; i++)
+        {
+            if (DropBiomes[i].StartsWith(name, StringComparison.OrdinalIgnoreCase)) return i;
+        }
+        return -1;
+    }
+
+    public static string DescribeDrop()
+    {
+        string s = "weapon drop: " + EliteWeaponDrop.ToString("0.##", CultureInfo.InvariantCulture) + "% (other biomes)";
+        for (int i = 0; i < DropBiomes.Length; i++)
+        {
+            s += ", " + DropBiomes[i] + " " + EliteBiomeDrop[i].ToString("0.##", CultureInfo.InvariantCulture) + "%";
+        }
+        return s;
     }
 
     public static string Describe()
@@ -193,7 +233,8 @@ public class AposDamageNumbersCommand : ConsoleCmdAbstract
 }
 
 // aposelite on|off                 -> names above elite zombies
-// aposelite drop N                 -> weapon drop chance in % (0 = never)
+// aposelite drop N                 -> weapon drop chance in % (0 = never), all biomes
+// aposelite drop wasteland N       -> ... in one biome (pine, burnt, desert, snow, wasteland)
 // aposelite make                   -> nearest zombie within 20 m becomes an elite with 1 random modifier
 // aposelite make 2|3               -> ... with 2 or 3 random modifiers
 // aposelite make Armored Giant     -> ... with these modifiers
@@ -206,7 +247,7 @@ public class AposEliteCommand : ConsoleCmdAbstract
 
     public override string getDescription()
     {
-        return "AposMod elites: aposelite on|off | health N (max health x N, 1-50) | drop N (weapon drop chance %, 0-100) | make [1|2|3|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
+        return "AposMod elites: aposelite on|off | health N (max health x N, 1-50) | drop [biome] N (weapon drop chance %, 0-100; biomes: pine, burnt, desert, snow, wasteland) | make [1|2|3|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
     }
 
     public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
@@ -248,12 +289,20 @@ public class AposEliteCommand : ConsoleCmdAbstract
         if (_params.Count > 0 && _params[0] == "drop")
         {
             float d;
-            if (_params.Count < 2 || !float.TryParse(_params[1], NumberStyles.Float, CultureInfo.InvariantCulture, out d))
+            int biome = _params.Count > 2 ? AposSettings.FindDropBiome(_params[1]) : -1;
+            bool ok = _params.Count == 2 || (_params.Count == 3 && biome >= 0);
+            if (!ok || !float.TryParse(_params[_params.Count - 1], NumberStyles.Float, CultureInfo.InvariantCulture, out d))
             {
-                console.Output("Usage: aposelite drop N  (weapon drop chance in %, 0-100, 0 = never)");
+                console.Output("Usage: aposelite drop N  or  aposelite drop <pine|burnt|desert|snow|wasteland> N  (weapon drop chance in %, 0-100, 0 = never)");
                 return;
             }
-            AposSettings.EliteWeaponDrop = AposSettings.Clamp(d, 0f, 100f);
+            d = AposSettings.Clamp(d, 0f, 100f);
+            if (biome >= 0) AposSettings.EliteBiomeDrop[biome] = d;
+            else
+            {
+                AposSettings.EliteWeaponDrop = d;
+                for (int i = 0; i < AposSettings.EliteBiomeDrop.Length; i++) AposSettings.EliteBiomeDrop[i] = d;
+            }
             AposSettings.Save();
         }
         if (_params.Count > 0 && (_params[0] == "on" || _params[0] == "off"))
@@ -262,8 +311,7 @@ public class AposEliteCommand : ConsoleCmdAbstract
             AposSettings.Save();
         }
         console.Output("Elite names: " + (AposSettings.EliteTags ? "on" : "off") + ", elite health: x"
-            + AposSettings.EliteHealth.ToString("0.##", CultureInfo.InvariantCulture) + ", weapon drop: "
-            + AposSettings.EliteWeaponDrop.ToString("0.##", CultureInfo.InvariantCulture) + "%");
+            + AposSettings.EliteHealth.ToString("0.##", CultureInfo.InvariantCulture) + ", " + AposSettings.DescribeDrop());
     }
 
     static EntityAlive Nearest()
