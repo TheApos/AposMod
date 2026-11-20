@@ -311,7 +311,7 @@
       <div class="tagline">Шанс 2% на початку → 5% у пізній грі · ★ = 1 модифікатор, ★★ після gamestage 100, ★★★ (25% з них) після gamestage 200</div>
       <ul>
         <li>Здоров'я вдвічі більше (змінюється командою <code>aposelite health N</code> або <code>health</code> у Settings.xml). Над назвою зірки: <b>★</b> жовта, <b>★★</b> помаранчеві, <b>★★★</b> червоні. Видно до 40 м, крізь стіни — ні.</li>
-        <li>Лут на землі світиться і має промінь угору, як у Borderlands, — його видно здалеку: Ерідій фіолетовим, зброя з афіксами золотим, легендарки помаранчевим.</li>
+        <li>Лут на землі світиться і має промінь угору, як у Borderlands, — його видно здалеку: Ерідій фіолетовим, зброя з афіксами золотим, легендарки помаранчевим. За бажанням — білим над ванільними мішками з лутом із зомбі: <code>aposbags on</code> або <code>&lt;LootBeam bags="true"/&gt;</code> у Settings.xml (за замовчуванням вимкнено: на кривавий місяць променів дуже багато).</li>
         <li><b>Нагорода:</b> ★ — зброя з афіксами якості 3–5 і 3–6 Ерідію; ★★ — якість 5–6, 8–15 Ерідію, 2% легендарка; ★★★ — якість 6, 20–30 Ерідію, 10% легендарка. Для майстерності зброї еліта = 5 вбивств. Ерідій випадає завжди; зброя — з шансом за біомом, частіше там, де еліти сильніші: сосновий ліс 10%, випалений ліс 20%, пустеля 30%, сніги 40%, пустки 50% (інші біоми 100%, <code>weaponDrop</code>). Змінюється в Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) або в грі: <code>aposelite drop wasteland N</code> для одного біому, <code>aposelite drop N</code> для всіх. Еліти кидають лише зброю гравця (не зброю NPC з NPC-модів); <code>aposelite weapons</code> показує список, а <code>weaponExclude</code> у Settings.xml прибирає зайве (імена предметів або їх початок через кому, наприклад <code>gunExplosives,meleeToolAxe</code>).</li>
       </ul>
     </article>
@@ -565,7 +565,7 @@
         <li><b>Electrocutioner — Overcharge:</b> по шокованих зомбі будь-яка ваша зброя завдає +25% шкоди.</li>
         <li><b>Better Barter — Black Market:</b> після кожного оновлення асортименту з шансом 25% у торговця з'являється легендарка.</li>
         <li><b>Daring Adventurer — Big Score:</b> зброя в нагороду за квест ★5+ завжди якості 6 з 3 афіксами.</li>
-        <li><b>Charismatic Nature — Leader:</b> бонуси вашої харизми діють на вас удвічі сильніше.</li>
+        <li><b>Charismatic Nature — Leader:</b> у ванілі бонуси Charismatic Nature отримують лише союзники; ви теж їх отримуєте, удвічі: регенерація +100%, шкода ближнього бою і по блоках +40%, опір шкоді 20%, кращий лут +60%, усі атрибути +2.</li>
         <li><b>Physician — Field Medic:</b> лікування +50%, а аптечка ще й зупиняє кровотечу.</li>
         <li><b>Advanced Engineering — Overclock:</b> ваші пастки й турелі-блоки завдають +50% шкоди.</li>
         <li><b>Grease Monkey — Mechanic:</b> транспорт витрачає на 50% менше пального.</li>
@@ -713,6 +713,7 @@ aposelite health N           максимум здоров'я x N (1-50, за з
 aposelite drop N             шанс випадання зброї, % (0-100), усі біоми
 aposelite drop wasteland N   ... в одному біомі (pine, burnt, desert, snow, wasteland)
 aposelite weapons            список зброї, яку можуть кинути еліти
+aposbags on|off              промінь над мішками з лутом із зомбі (за замовч. вимк.)
 aposelite make               найближчий зомбі стає елітою
 aposelite make Armored Giant  з цими модифікаторами</pre>
     </article>

@@ -715,21 +715,38 @@
 		</buff>
 	</append>
 
-	<!-- Charismatic Nature 5 "Leader": the perk owner gets the Charismatic bonuses twice.
+	<!-- Charismatic Nature 5 "Leader": the perk owner gets the level 5 Charismatic bonuses twice. Vanilla gives
+	     buffPerkCharismaticNature only to other players (selfOtherPlayers skips the owner), so this is a buff of
+	     its own, added by the perk (progression.xml) and kept while the cvar aposLeader is set.
 	     Never check ProgressionLevel inside this buff: it grants AttributeLevel, and a perk level is calculated from
 	     AttributeLevel/PerkLevel passives, so the check re-enters itself (endless recursion = the game hangs and
-	     crashes without a log, in co-op only, where the buff exists). Vanilla uses a cvar here for the same reason;
-	     aposLeader is set by the perk (progression.xml). -->
-	<append xpath="/buffs/buff[@name='buffPerkCharismaticNature']">
-		<effect_group name="AposMod leader">
-			<requirement name="CVarCompare" cvar="aposLeader" operation="GTE" value="1"/>
-			<passive_effect name="HealthChangeOT" operation="base_add" value=".5"/>
-			<passive_effect name="EntityDamage" operation="perc_add" value=".2"/>
-			<passive_effect name="BlockDamage" operation="perc_add" value=".2" tags="melee"/>
-			<passive_effect name="GeneralDamageResist" operation="base_add" value=".1"/>
-			<passive_effect name="LootStage" operation="perc_add" value=".3"/>
-			<passive_effect name="AttributeLevel" operation="base_add" value="1"/>
-		</effect_group>
+	     crashes without a log). Vanilla uses a cvar in its buff for the same reason. -->
+	<append xpath="/buffs">
+		<buff name="buffAposLeader" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="0"/>
+			<effect_group>
+				<requirement name="CVarCompare" cvar="aposLeader" operation="GTE" value="1"/>
+				<passive_effect name="EntityDamage" operation="perc_add" value=".4"/>
+				<passive_effect name="BlockDamage" operation="perc_add" value=".4" tags="melee"/>
+				<passive_effect name="GeneralDamageResist" operation="base_add" value=".2"/>
+				<passive_effect name="LootStage" operation="perc_add" value=".6"/>
+				<passive_effect name="AttributeLevel" operation="base_add" value="2"/>
+			</effect_group>
+			<effect_group>
+				<requirement name="CVarCompare" cvar="aposLeader" operation="GTE" value="1"/>
+				<requirement name="!HasBuff" buff="buffStatusHungry03,buffStatusThirsty03"/>
+				<passive_effect name="HealthChangeOT" operation="base_add" value="1"/>
+			</effect_group>
+			<effect_group>
+				<requirement name="CVarCompare" cvar="aposLeader" operation="LT" value="1"/>
+				<triggered_effect trigger="onSelfBuffUpdate" action="RemoveBuff" buff="buffAposLeader"/>
+			</effect_group>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="RefreshPerks"/>
+				<triggered_effect trigger="onSelfBuffRemove" action="RefreshPerks"/>
+			</effect_group>
+		</buff>
 	</append>
 
 	<!-- Fortitude 10 "Iron Body": an infection caught before reaching level 10 is cured -->

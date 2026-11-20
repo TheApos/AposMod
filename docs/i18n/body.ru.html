@@ -311,7 +311,7 @@
       <div class="tagline">Шанс 2% в начале → 5% в поздней игре · ★ = 1 модификатор, ★★ после gamestage 100, ★★★ (25% из них) после gamestage 200</div>
       <ul>
         <li>Здоровья вдвое больше (меняется командой <code>aposelite health N</code> или <code>health</code> в Settings.xml). Над именем звёзды: <b>★</b> жёлтая, <b>★★</b> оранжевые, <b>★★★</b> красные. Видно до 40 м, сквозь стены — нет.</li>
-        <li>Лут на земле светится и имеет луч вверх, как в Borderlands, — его видно издалека: Эридий фиолетовым, оружие с аффиксами золотым, легендарки оранжевым.</li>
+        <li>Лут на земле светится и имеет луч вверх, как в Borderlands, — его видно издалека: Эридий фиолетовым, оружие с аффиксами золотым, легендарки оранжевым. По желанию — белым над ванильными мешками с лутом из зомби: <code>aposbags on</code> или <code>&lt;LootBeam bags="true"/&gt;</code> в Settings.xml (по умолчанию выключено: на кровавую луну лучей очень много).</li>
         <li><b>Награда:</b> ★ — оружие с аффиксами качества 3–5 и 3–6 Эридия; ★★ — качество 5–6, 8–15 Эридия, 2% легендарка; ★★★ — качество 6, 20–30 Эридия, 10% легендарка. Для мастерства оружия элита = 5 убийств. Эридий выпадает всегда; оружие — с шансом по биому, чаще там, где элиты сильнее: сосновый лес 10%, выжженный лес 20%, пустыня 30%, снега 40%, пустоши 50% (другие биомы 100%, <code>weaponDrop</code>). Меняется в Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) или в игре: <code>aposelite drop wasteland N</code> для одного биома, <code>aposelite drop N</code> для всех. Элиты роняют только оружие игрока (не оружие NPC из NPC-модов); <code>aposelite weapons</code> показывает список, а <code>weaponExclude</code> в Settings.xml убирает лишнее (имена предметов или их начало через запятую, например <code>gunExplosives,meleeToolAxe</code>).</li>
       </ul>
     </article>
@@ -565,7 +565,7 @@
         <li><b>Electrocutioner — Overcharge:</b> по шокированным зомби любое ваше оружие наносит +25% урона.</li>
         <li><b>Better Barter — Black Market:</b> после каждого обновления ассортимента с шансом 25% у торговца появляется легендарка.</li>
         <li><b>Daring Adventurer — Big Score:</b> оружие в награду за квест ★5+ всегда качества 6 с 3 аффиксами.</li>
-        <li><b>Charismatic Nature — Leader:</b> бонусы вашей харизмы действуют на вас вдвое сильнее.</li>
+        <li><b>Charismatic Nature — Leader:</b> в ванили бонусы Charismatic Nature получают только союзники; вы тоже их получаете, вдвойне: регенерация +100%, урон ближнего боя и по блокам +40%, сопротивление урону 20%, лучший лут +60%, все атрибуты +2.</li>
         <li><b>Physician — Field Medic:</b> лечение +50%, а аптечка ещё и останавливает кровотечение.</li>
         <li><b>Advanced Engineering — Overclock:</b> ваши ловушки и турели-блоки наносят +50% урона.</li>
         <li><b>Grease Monkey — Mechanic:</b> транспорт тратит на 50% меньше топлива.</li>
@@ -713,6 +713,7 @@ aposelite health N           максимум здоровья x N (1-50, по �
 aposelite drop N             шанс выпадения оружия, % (0-100), все биомы
 aposelite drop wasteland N   ... в одном биоме (pine, burnt, desert, snow, wasteland)
 aposelite weapons            список оружия, которое могут уронить элиты
+aposbags on|off              луч над мешками с лутом из зомби (по умолчанию выкл.)
 aposelite make               ближайший зомби становится элитой
 aposelite make Armored Giant  с этими модификаторами</pre>
     </article>

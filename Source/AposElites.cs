@@ -277,12 +277,15 @@ public class AposElites : MonoBehaviour
     }
 
     // ===== Loot on the ground: a light and a Borderlands-style loot beam above Eridium (purple), weapons with
-    // affixes (gold) and legendaries (orange), so a weapon drop next to the Eridium sack is easy to see =====
+    // affixes (gold) and legendaries (orange), so a weapon drop next to the Eridium sack is easy to see; optionally
+    // (Settings.xml LootBeam bags / "aposbags on") white above the vanilla zombie loot bags =====
     const float BeamHeight = 5f;
     static readonly Color EridiumColor = new Color(0.75f, 0.35f, 1f);
     static readonly Color AffixColor = new Color(1f, 0.85f, 0.3f);
     static readonly Color LegendaryColor = new Color(1f, 0.45f, 0.05f);
+    static readonly Color BagColor = new Color(0.95f, 0.95f, 0.95f);
     readonly Dictionary<int, Transform> glows = new Dictionary<int, Transform>();
+    readonly HashSet<int> bagGlows = new HashSet<int>();
     readonly List<int> goneGlows = new List<int>();
     static Material beamMaterial;
     static ItemValue eridiumValue;
@@ -300,6 +303,30 @@ public class AposElites : MonoBehaviour
                 if (!GlowColor(item.itemStack.itemValue, out color)) continue;
                 glows[item.entityId] = AddGlow(item.transform, color);
             }
+            if (AposSettings.LootBagBeam)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    EntityLootContainer bag = list[i] as EntityLootContainer;
+                    if (bag == null || bag.IsDead() || glows.ContainsKey(bag.entityId)) continue;
+                    glows[bag.entityId] = AddGlow(bag.transform, BagColor);
+                    bagGlows.Add(bag.entityId);
+                }
+            }
+        }
+        // switched off in game: take the beams off the bags
+        if (!AposSettings.LootBagBeam && bagGlows.Count > 0)
+        {
+            foreach (int id in bagGlows)
+            {
+                Transform t;
+                if (glows.TryGetValue(id, out t))
+                {
+                    if (t != null) Destroy(t.gameObject);
+                    glows.Remove(id);
+                }
+            }
+            bagGlows.Clear();
         }
         // the sack rolls; keep the beam pointing straight up, forget picked up / despawned sacks
         goneGlows.Clear();
@@ -308,7 +335,11 @@ public class AposElites : MonoBehaviour
             if (kv.Value == null) goneGlows.Add(kv.Key);
             else kv.Value.rotation = Quaternion.identity;
         }
-        for (int i = 0; i < goneGlows.Count; i++) glows.Remove(goneGlows[i]);
+        for (int i = 0; i < goneGlows.Count; i++)
+        {
+            glows.Remove(goneGlows[i]);
+            bagGlows.Remove(goneGlows[i]);
+        }
     }
 
     static bool GlowColor(ItemValue iv, out Color color)

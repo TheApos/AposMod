@@ -311,7 +311,7 @@
       <div class="tagline">2% chance early → 5% late game · ★ = 1 modifier, ★★ after gamestage 100, ★★★ (25% of them) after gamestage 200</div>
       <ul>
         <li>Twice the health (change it with <code>aposelite health N</code> or <code>health</code> in Settings.xml). Stars above the name: <b>★</b> yellow, <b>★★</b> orange, <b>★★★</b> red. Visible up to 40 m, not through walls.</li>
-        <li>Loot on the ground glows and has a beam going up, like in Borderlands, so you see it from afar: Eridium purple, weapons with affixes gold, legendaries orange.</li>
+        <li>Loot on the ground glows and has a beam going up, like in Borderlands, so you see it from afar: Eridium purple, weapons with affixes gold, legendaries orange. Optionally also white above vanilla zombie loot bags: <code>aposbags on</code> or <code>&lt;LootBeam bags="true"/&gt;</code> in Settings.xml (off by default: lots of beams on blood moons).</li>
         <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills. Eridium always drops; the weapon drops by biome, more often where elites are tougher: pine forest 10%, burnt forest 20%, desert 30%, snow 40%, wasteland 50% (other biomes 100%, <code>weaponDrop</code>). Change it in Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) or in game: <code>aposelite drop wasteland N</code> for one biome, <code>aposelite drop N</code> for all. Elites drop only player weapons (not the NPC-only guns of NPC mods); <code>aposelite weapons</code> lists them, and <code>weaponExclude</code> in Settings.xml removes some (comma-separated item names or name starts, e.g. <code>gunExplosives,meleeToolAxe</code>).</li>
       </ul>
     </article>
@@ -565,7 +565,7 @@
         <li><b>Electrocutioner — Overcharge:</b> any of your weapons deals +25% damage to shocked zombies.</li>
         <li><b>Better Barter — Black Market:</b> after each stock refresh there's a 25% chance a trader has a legendary.</li>
         <li><b>Daring Adventurer — Big Score:</b> a weapon reward for a ★5+ quest is always quality 6 with 3 affixes.</li>
-        <li><b>Charismatic Nature — Leader:</b> your charisma bonuses affect you twice as strongly.</li>
+        <li><b>Charismatic Nature — Leader:</b> in vanilla only your allies get the Charismatic Nature bonuses; you get them too, twice: health regen +100%, melee and block damage +40%, damage resistance 20%, better loot +60%, all attributes +2.</li>
         <li><b>Physician — Field Medic:</b> +50% healing, and a first aid kit also stops bleeding.</li>
         <li><b>Advanced Engineering — Overclock:</b> your traps and turret blocks deal +50% damage.</li>
         <li><b>Grease Monkey — Mechanic:</b> vehicles use 50% less fuel.</li>
@@ -713,6 +713,7 @@ aposelite health N           max health x N (1-50, default 2)
 aposelite drop N             weapon drop chance, % (0-100), all biomes
 aposelite drop wasteland N   ... in one biome (pine, burnt, desert, snow, wasteland)
 aposelite weapons            list the weapons elites can drop
+aposbags on|off              loot beam above zombie loot bags (default off)
 aposelite make               nearest zombie becomes an elite
 aposelite make Armored Giant  with these modifiers</pre>
     </article>

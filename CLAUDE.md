@@ -29,6 +29,7 @@
 
 ## Gotchas found the hard way
 - Never put a `ProgressionLevel` requirement in an effect group that grants `AttributeLevel`/`SkillLevel`/`PerkLevel` (e.g. `buffPerkCharismaticNature`): perk levels are calculated from those passives, so the check re-enters itself and the game hangs and crashes without a log. Use a cvar set by the perk (vanilla does; AposMod Leader uses `aposLeader`).
+- `target="selfOtherPlayers"` skips the source entity: vanilla Charismatic Nature buffs only OTHER players, never the perk owner (MinEventActionTargetedBase.CanExecute).
 - A zombie killed by `ModifyStats Health` has no killer: no XP, no quest/challenge credit (vanilla then shows a "1"). Area damage (splinters, Ricochet, reactions, Overkill, Shrapnel...) goes through `AposSplash.Deal` (AposCombat.cs) as a real hit in the player's name; XML effects set `aposSplashDmg` + the marker buff `buffAposSplash`, and `AposSplash.ProcessXml` deals it with the buff instigator as the attacker.
 - In a `count="all"` lootgroup (e.g. the final chests `groupReinforcedChestT*`, `groupHardenedChestT*`, `groupBuriedTreasure`) an item's `prob` is **ignored** unless it has `force_prob="true"` (`LootContainer.SpawnAllItemsFromList`): without it the item always spawns.
 - A lootgroup must be **defined before it is referenced**; otherwise loot.xml fails to load and world generation breaks (player falls through the ground).

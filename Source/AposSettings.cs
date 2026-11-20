@@ -21,7 +21,8 @@ public static class AposSettings
     public static readonly string[] DropBiomes = { "pine_forest", "burnt_forest", "desert", "snow", "wasteland" };
     static readonly string[] DropAttrs = { "dropPineForest", "dropBurntForest", "dropDesert", "dropSnow", "dropWasteland" };
     public static readonly float[] EliteBiomeDrop = { 10f, 20f, 30f, 40f, 50f };
-    public static string EliteWeaponExclude = ""; // item names / name starts elites never drop (AposElites.WeaponPool)
+    public static string EliteWeaponExclude = "";
+    public static bool LootBagBeam = false; // loot beam above vanilla zombie loot bags (AposElites.UpdateGlows) // item names / name starts elites never drop (AposElites.WeaponPool)
 
     static string file;
 
@@ -58,6 +59,8 @@ public static class AposSettings
                     EliteBiomeDrop[i] = Clamp(ReadFloat(el, DropAttrs[i], fallback), 0f, 100f);
                 }
             }
+            XmlElement lb = doc.DocumentElement["LootBeam"];
+            if (lb != null) LootBagBeam = ReadBool(lb, "bags", LootBagBeam);
             XmlElement d = doc.DocumentElement["DamageNumbers"];
             if (d != null)
             {
@@ -108,6 +111,10 @@ public static class AposSettings
                 el.SetAttribute(DropAttrs[i], EliteBiomeDrop[i].ToString("0.##", CultureInfo.InvariantCulture));
             }
             root.AppendChild(el);
+            root.AppendChild(doc.CreateComment(" Loot beam (like the one above Eridium) above vanilla zombie loot bags. Many beams on blood moons (in game: aposbags on|off) "));
+            XmlElement lb = doc.CreateElement("LootBeam");
+            lb.SetAttribute("bags", LootBagBeam ? "true" : "false");
+            root.AppendChild(lb);
             doc.Save(file);
         }
         catch (Exception e)
@@ -236,6 +243,31 @@ public class AposDamageNumbersCommand : ConsoleCmdAbstract
             AposSettings.Save();
         }
         console.Output(AposSettings.Describe());
+    }
+}
+
+// aposbags on|off -> loot beam above vanilla zombie loot bags
+public class AposLootBagCommand : ConsoleCmdAbstract
+{
+    public override string[] getCommands()
+    {
+        return new string[] { "aposbags" };
+    }
+
+    public override string getDescription()
+    {
+        return "AposMod: aposbags on|off - loot beam above zombie loot bags";
+    }
+
+    public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
+    {
+        SdtdConsole console = SingletonMonoBehaviour<SdtdConsole>.Instance;
+        if (_params.Count > 0 && (_params[0] == "on" || _params[0] == "off"))
+        {
+            AposSettings.LootBagBeam = _params[0] == "on";
+            AposSettings.Save();
+        }
+        console.Output("Loot bag beams: " + (AposSettings.LootBagBeam ? "on" : "off"));
     }
 }
 
