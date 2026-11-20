@@ -360,7 +360,7 @@
 		</effect_group>
 	</append>
 	<!-- Better Barter 5 "Black Market", Daring Adventurer 5 "Big Score": Source/AposRewards.cs -->
-	<!-- Charismatic Nature 5 "Leader": buffAposLeader (buffs.xml) gives the perk owner the Charismatic bonuses twice.
+	<!-- Charismatic Nature 5 "Leader": buffAposLeader (buffs.xml) gives the perk owner the Charismatic bonuses too.
 	     Vanilla gives buffPerkCharismaticNature only to OTHER players (target selfOtherPlayers skips the owner).
 	     The buff reads the cvar aposLeader, set here on progression changes and on entering the game (see buffs.xml) -->
 	<append xpath="/progression/perks/perk[@name='perkCharismaticNature']">
