@@ -41,6 +41,7 @@ public class AposElites : MonoBehaviour
     // last time each entity took damage (regeneration waits 3 s after it)
     static readonly Dictionary<int, float> lastDamaged = new Dictionary<int, float>();
     static List<string> weapons;
+    static string weaponsExclude;
 
     readonly List<EntityAlive> elites = new List<EntityAlive>();
     readonly HashSet<int> scaled = new HashSet<int>();
@@ -161,21 +162,42 @@ public class AposElites : MonoBehaviour
         GameManager.Instance.ItemDropServer(stack, pos, new Vector3(0.5f, 0f, 0.5f), -1, 600f, false);
     }
 
+    // Weapons an elite can drop: player weapons that take affixes. Items hidden from the creative menu (NPC-only guns
+    // of NPC mods, zombie hands, admin tools) or without a translated name are left out, and so is anything matching
+    // Settings.xml weaponExclude (comma-separated item names or name starts). "aposelite weapons" lists the pool.
+    public static List<string> WeaponPool()
+    {
+        if (weapons != null && weaponsExclude == AposSettings.EliteWeaponExclude) return weapons;
+        weaponsExclude = AposSettings.EliteWeaponExclude;
+        List<string> exclude = new List<string>();
+        foreach (string part in (weaponsExclude ?? "").Split(','))
+        {
+            string t = part.Trim();
+            if (t.Length > 0) exclude.Add(t);
+        }
+        weapons = new List<string>();
+        foreach (ItemClass ic in ItemClass.list)
+        {
+            if (ic == null || AposAffixes.Kind(ic) == 0) continue;
+            if (ic.CreativeMode != EnumCreativeMode.Player && ic.CreativeMode != EnumCreativeMode.All) continue;
+            string n = ic.Name;
+            if (n.Contains("Admin") || n.Contains("Test") || n.Contains("Debug") || n.Contains("Candy")) continue;
+            if (!Localization.Exists(n, false)) continue;
+            bool excluded = false;
+            foreach (string x in exclude)
+            {
+                if (n.StartsWith(x, System.StringComparison.OrdinalIgnoreCase)) excluded = true;
+            }
+            if (!excluded) weapons.Add(n);
+        }
+        return weapons;
+    }
+
     static ItemStack RandomWeapon(int quality)
     {
-        if (weapons == null)
-        {
-            weapons = new List<string>();
-            foreach (ItemClass ic in ItemClass.list)
-            {
-                if (ic == null || AposAffixes.Kind(ic) == 0) continue;
-                string n = ic.Name;
-                if (n.Contains("Admin") || n.Contains("Test") || n.Contains("Debug") || n.Contains("Candy")) continue;
-                weapons.Add(n);
-            }
-        }
-        if (weapons.Count == 0) return null;
-        ItemValue iv = ItemClass.GetItem(weapons[rand.Next(weapons.Count)]);
+        List<string> pool = WeaponPool();
+        if (pool.Count == 0) return null;
+        ItemValue iv = ItemClass.GetItem(pool[rand.Next(pool.Count)]);
         if (iv == null || iv.type == 0) return null;
         iv = new ItemValue(iv.type, quality, quality, true, null, 1f);
         AposAffixes.Roll(iv, true);

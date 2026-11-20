@@ -21,6 +21,7 @@ public static class AposSettings
     public static readonly string[] DropBiomes = { "pine_forest", "burnt_forest", "desert", "snow", "wasteland" };
     static readonly string[] DropAttrs = { "dropPineForest", "dropBurntForest", "dropDesert", "dropSnow", "dropWasteland" };
     public static readonly float[] EliteBiomeDrop = { 10f, 20f, 30f, 40f, 50f };
+    public static string EliteWeaponExclude = ""; // item names / name starts elites never drop (AposElites.WeaponPool)
 
     static string file;
 
@@ -49,6 +50,7 @@ public static class AposSettings
                 EliteWeaponDrop = Clamp(ReadFloat(el, "weaponDrop", EliteWeaponDrop), 0f, 100f);
                 // a file from before 1.6.12 has no biome values: they get the defaults, or weaponDrop if the player
                 // changed it (e.g. weaponDrop="0" to turn weapon drops off stays off)
+                EliteWeaponExclude = el.GetAttribute("weaponExclude");
                 bool customDrop = EliteWeaponDrop != 100f;
                 for (int i = 0; i < DropAttrs.Length; i++)
                 {
@@ -95,11 +97,12 @@ public static class AposSettings
             XmlElement s = doc.CreateElement("Stealth");
             s.SetAttribute("rework", StealthRework ? "true" : "false");
             root.AppendChild(s);
-            root.AppendChild(doc.CreateComment(" Elites. tags: names above them (in game: aposelite on|off). health: their max health as a multiple of a normal zombie, 1-50, 2 = double (in game: aposelite health N). weaponDrop: % chance they drop a weapon, 0-100, 0 = never; Eridium always drops. drop<Biome>: the same chance for elites killed in that biome; weaponDrop is used elsewhere (in game: aposelite drop N for all, aposelite drop wasteland N for one) "));
+            root.AppendChild(doc.CreateComment(" Elites. tags: names above them (in game: aposelite on|off). health: their max health as a multiple of a normal zombie, 1-50, 2 = double (in game: aposelite health N). weaponDrop: % chance they drop a weapon, 0-100, 0 = never; Eridium always drops. drop<Biome>: the same chance for elites killed in that biome; weaponDrop is used elsewhere (in game: aposelite drop N for all, aposelite drop wasteland N for one). weaponExclude: comma-separated item names or name starts elites never drop, e.g. 'gunExplosives,meleeToolAxe' (in game: aposelite weapons lists what they can drop) "));
             XmlElement el = doc.CreateElement("Elites");
             el.SetAttribute("tags", EliteTags ? "true" : "false");
             el.SetAttribute("health", EliteHealth.ToString("0.##", CultureInfo.InvariantCulture));
             el.SetAttribute("weaponDrop", EliteWeaponDrop.ToString("0.##", CultureInfo.InvariantCulture));
+            el.SetAttribute("weaponExclude", EliteWeaponExclude ?? "");
             for (int i = 0; i < DropAttrs.Length; i++)
             {
                 el.SetAttribute(DropAttrs[i], EliteBiomeDrop[i].ToString("0.##", CultureInfo.InvariantCulture));
@@ -239,6 +242,7 @@ public class AposDamageNumbersCommand : ConsoleCmdAbstract
 // aposelite on|off                 -> names above elite zombies
 // aposelite drop N                 -> weapon drop chance in % (0 = never), all biomes
 // aposelite drop wasteland N       -> ... in one biome (pine, burnt, desert, snow, wasteland)
+// aposelite weapons                -> list the weapons elites can drop (Settings.xml weaponExclude filters it)
 // aposelite make                   -> nearest zombie within 20 m becomes an elite with 1 random modifier
 // aposelite make 2|3               -> ... with 2 or 3 random modifiers
 // aposelite make Armored Giant     -> ... with these modifiers
@@ -251,7 +255,7 @@ public class AposEliteCommand : ConsoleCmdAbstract
 
     public override string getDescription()
     {
-        return "AposMod elites: aposelite on|off | health N (max health x N, 1-50) | drop [biome] N (weapon drop chance %, 0-100; biomes: pine, burnt, desert, snow, wasteland) | make [1|2|3|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
+        return "AposMod elites: aposelite on|off | health N (max health x N, 1-50) | drop [biome] N (weapon drop chance %, 0-100; biomes: pine, burnt, desert, snow, wasteland) | weapons (list what elites can drop) | make [1|2|3|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
     }
 
     public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
@@ -277,6 +281,12 @@ public class AposEliteCommand : ConsoleCmdAbstract
             if (mask == 0) mask = AposElites.RandomMask(e, count);
             AposElites.Make(e, mask);
             console.Output("Elite: " + e.EntityName);
+            return;
+        }
+        if (_params.Count > 0 && _params[0] == "weapons")
+        {
+            List<string> pool = AposElites.WeaponPool();
+            console.Output("Elites can drop " + pool.Count + " weapons (Settings.xml weaponExclude=\"" + AposSettings.EliteWeaponExclude + "\"): " + string.Join(", ", pool.ToArray()));
             return;
         }
         if (_params.Count > 0 && _params[0] == "health")

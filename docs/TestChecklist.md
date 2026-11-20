@@ -609,3 +609,6 @@ giveself thrownAmmoMolotovCocktail 1 10
 - [ ] Settings.xml без drop<Biome> і з weaponDrop="100": після запуску dropPineForest="10" ... dropWasteland="50".
 - [ ] Settings.xml з weaponDrop="0" (старий): усі drop<Biome> стають 0, зброя не випадає.
 - [ ] `aposelite` показує pine_forest 10%, burnt_forest 20%, desert 30%, snow 40%, wasteland 50%.
+## 17.19. Фільтр зброї з еліт (1.6.14)
+- [ ] `aposelite weapons`: список лише зі звичайної зброї гравця, без рук зомбі, адмін-інструментів і NPC-зброї (з NPC-модами теж).
+- [ ] У Settings.xml `weaponExclude="gunExplosives,meleeToolAxe"`, перезапуск: `aposelite weapons` без ракетниці й сокир; з еліт вони не випадають.

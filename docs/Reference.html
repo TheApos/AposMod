@@ -167,7 +167,7 @@ html, body { overflow-x: clip; }
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.13</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.14</div>
     <h1>AposMod Reference</h1>
     <p class="sub">Weapon traits, affixes, perks and attributes, elements, mods, legendary weapons and settings in one place. Numbers like "0 → 5" depend on the level of the matching perk.</p>
   </div>
@@ -478,7 +478,7 @@ html, body { overflow-x: clip; }
       <ul>
         <li>Twice the health (change it with <code>aposelite health N</code> or <code>health</code> in Settings.xml). Stars above the name: <b>★</b> yellow, <b>★★</b> orange, <b>★★★</b> red. Visible up to 40 m, not through walls.</li>
         <li>Loot on the ground glows and has a beam going up, like in Borderlands, so you see it from afar: Eridium purple, weapons with affixes gold, legendaries orange.</li>
-        <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills. Eridium always drops; the weapon drops by biome, more often where elites are tougher: pine forest 10%, burnt forest 20%, desert 30%, snow 40%, wasteland 50% (other biomes 100%, <code>weaponDrop</code>). Change it in Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) or in game: <code>aposelite drop wasteland N</code> for one biome, <code>aposelite drop N</code> for all.</li>
+        <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills. Eridium always drops; the weapon drops by biome, more often where elites are tougher: pine forest 10%, burnt forest 20%, desert 30%, snow 40%, wasteland 50% (other biomes 100%, <code>weaponDrop</code>). Change it in Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) or in game: <code>aposelite drop wasteland N</code> for one biome, <code>aposelite drop N</code> for all. Elites drop only player weapons (not the NPC-only guns of NPC mods); <code>aposelite weapons</code> lists them, and <code>weaponExclude</code> in Settings.xml removes some (comma-separated item names or name starts, e.g. <code>gunExplosives,meleeToolAxe</code>).</li>
       </ul>
     </article>
     <article class="card">
@@ -878,6 +878,7 @@ aposaffix 6          set quality 6 first, then 3 affixes</pre>
 aposelite health N           max health x N (1-50, default 2)
 aposelite drop N             weapon drop chance, % (0-100), all biomes
 aposelite drop wasteland N   ... in one biome (pine, burnt, desert, snow, wasteland)
+aposelite weapons            list the weapons elites can drop
 aposelite make               nearest zombie becomes an elite
 aposelite make Armored Giant  with these modifiers</pre>
     </article>
@@ -927,7 +928,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
 </main>
 
 <footer>
-  <div class="wrap">AposMod 1.6.13 for 7 Days to Die 3.4.</div>
+  <div class="wrap">AposMod 1.6.14 for 7 Days to Die 3.4.</div>
 </footer>
 
 </template>
@@ -935,7 +936,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.13</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.14</div>
     <h1>Справочник AposMod</h1>
     <p class="sub">Фишки оружия, аффиксы, перки и атрибуты, стихии, моды, легендарное оружие и настройки в одном месте. Числа «0 → 5» зависят от уровня соответствующего перка.</p>
   </div>
@@ -1246,7 +1247,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
       <ul>
         <li>Здоровья вдвое больше (меняется командой <code>aposelite health N</code> или <code>health</code> в Settings.xml). Над именем звёзды: <b>★</b> жёлтая, <b>★★</b> оранжевые, <b>★★★</b> красные. Видно до 40 м, сквозь стены — нет.</li>
         <li>Лут на земле светится и имеет луч вверх, как в Borderlands, — его видно издалека: Эридий фиолетовым, оружие с аффиксами золотым, легендарки оранжевым.</li>
-        <li><b>Награда:</b> ★ — оружие с аффиксами качества 3–5 и 3–6 Эридия; ★★ — качество 5–6, 8–15 Эридия, 2% легендарка; ★★★ — качество 6, 20–30 Эридия, 10% легендарка. Для мастерства оружия элита = 5 убийств. Эридий выпадает всегда; оружие — с шансом по биому, чаще там, где элиты сильнее: сосновый лес 10%, выжженный лес 20%, пустыня 30%, снега 40%, пустоши 50% (другие биомы 100%, <code>weaponDrop</code>). Меняется в Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) или в игре: <code>aposelite drop wasteland N</code> для одного биома, <code>aposelite drop N</code> для всех.</li>
+        <li><b>Награда:</b> ★ — оружие с аффиксами качества 3–5 и 3–6 Эридия; ★★ — качество 5–6, 8–15 Эридия, 2% легендарка; ★★★ — качество 6, 20–30 Эридия, 10% легендарка. Для мастерства оружия элита = 5 убийств. Эридий выпадает всегда; оружие — с шансом по биому, чаще там, где элиты сильнее: сосновый лес 10%, выжженный лес 20%, пустыня 30%, снега 40%, пустоши 50% (другие биомы 100%, <code>weaponDrop</code>). Меняется в Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) или в игре: <code>aposelite drop wasteland N</code> для одного биома, <code>aposelite drop N</code> для всех. Элиты роняют только оружие игрока (не оружие NPC из NPC-модов); <code>aposelite weapons</code> показывает список, а <code>weaponExclude</code> в Settings.xml убирает лишнее (имена предметов или их начало через запятую, например <code>gunExplosives,meleeToolAxe</code>).</li>
       </ul>
     </article>
     <article class="card">
@@ -1646,6 +1647,7 @@ aposaffix 6          сначала качество 6, потом 3 аффик�
 aposelite health N           максимум здоровья x N (1-50, по умолчанию 2)
 aposelite drop N             шанс выпадения оружия, % (0-100), все биомы
 aposelite drop wasteland N   ... в одном биоме (pine, burnt, desert, snow, wasteland)
+aposelite weapons            список оружия, которое могут уронить элиты
 aposelite make               ближайший зомби становится элитой
 aposelite make Armored Giant  с этими модификаторами</pre>
     </article>
@@ -1695,7 +1697,7 @@ aposbow off | on  выключить / включить автоналожени
 </main>
 
 <footer>
-  <div class="wrap">AposMod 1.6.13 для 7 Days to Die 3.4.</div>
+  <div class="wrap">AposMod 1.6.14 для 7 Days to Die 3.4.</div>
 </footer>
 
 </template>
@@ -1703,7 +1705,7 @@ aposbow off | on  выключить / включить автоналожени
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.13</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.14</div>
     <h1>Довідник AposMod</h1>
     <p class="sub">Фішки зброї, афікси, перки й атрибути, стихії, моди, легендарна зброя й налаштування в одному місці. Числа «0 → 5» залежать від рівня відповідного перка.</p>
   </div>
@@ -2014,7 +2016,7 @@ aposbow off | on  выключить / включить автоналожени
       <ul>
         <li>Здоров'я вдвічі більше (змінюється командою <code>aposelite health N</code> або <code>health</code> у Settings.xml). Над назвою зірки: <b>★</b> жовта, <b>★★</b> помаранчеві, <b>★★★</b> червоні. Видно до 40 м, крізь стіни — ні.</li>
         <li>Лут на землі світиться і має промінь угору, як у Borderlands, — його видно здалеку: Ерідій фіолетовим, зброя з афіксами золотим, легендарки помаранчевим.</li>
-        <li><b>Нагорода:</b> ★ — зброя з афіксами якості 3–5 і 3–6 Ерідію; ★★ — якість 5–6, 8–15 Ерідію, 2% легендарка; ★★★ — якість 6, 20–30 Ерідію, 10% легендарка. Для майстерності зброї еліта = 5 вбивств. Ерідій випадає завжди; зброя — з шансом за біомом, частіше там, де еліти сильніші: сосновий ліс 10%, випалений ліс 20%, пустеля 30%, сніги 40%, пустки 50% (інші біоми 100%, <code>weaponDrop</code>). Змінюється в Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) або в грі: <code>aposelite drop wasteland N</code> для одного біому, <code>aposelite drop N</code> для всіх.</li>
+        <li><b>Нагорода:</b> ★ — зброя з афіксами якості 3–5 і 3–6 Ерідію; ★★ — якість 5–6, 8–15 Ерідію, 2% легендарка; ★★★ — якість 6, 20–30 Ерідію, 10% легендарка. Для майстерності зброї еліта = 5 вбивств. Ерідій випадає завжди; зброя — з шансом за біомом, частіше там, де еліти сильніші: сосновий ліс 10%, випалений ліс 20%, пустеля 30%, сніги 40%, пустки 50% (інші біоми 100%, <code>weaponDrop</code>). Змінюється в Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) або в грі: <code>aposelite drop wasteland N</code> для одного біому, <code>aposelite drop N</code> для всіх. Еліти кидають лише зброю гравця (не зброю NPC з NPC-модів); <code>aposelite weapons</code> показує список, а <code>weaponExclude</code> у Settings.xml прибирає зайве (імена предметів або їх початок через кому, наприклад <code>gunExplosives,meleeToolAxe</code>).</li>
       </ul>
     </article>
     <article class="card">
@@ -2414,6 +2416,7 @@ aposaffix 6          спершу якість 6, потім 3 афікси</pre
 aposelite health N           максимум здоров'я x N (1-50, за замовчуванням 2)
 aposelite drop N             шанс випадання зброї, % (0-100), усі біоми
 aposelite drop wasteland N   ... в одному біомі (pine, burnt, desert, snow, wasteland)
+aposelite weapons            список зброї, яку можуть кинути еліти
 aposelite make               найближчий зомбі стає елітою
 aposelite make Armored Giant  з цими модифікаторами</pre>
     </article>
@@ -2463,7 +2466,7 @@ aposbow off | on  вимкнути / увімкнути автонабій ст�
 </main>
 
 <footer>
-  <div class="wrap">AposMod 1.6.13 для 7 Days to Die 3.4.</div>
+  <div class="wrap">AposMod 1.6.14 для 7 Days to Die 3.4.</div>
 </footer>
 
 </template>

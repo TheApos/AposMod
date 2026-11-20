@@ -312,7 +312,7 @@
       <ul>
         <li>Twice the health (change it with <code>aposelite health N</code> or <code>health</code> in Settings.xml). Stars above the name: <b>★</b> yellow, <b>★★</b> orange, <b>★★★</b> red. Visible up to 40 m, not through walls.</li>
         <li>Loot on the ground glows and has a beam going up, like in Borderlands, so you see it from afar: Eridium purple, weapons with affixes gold, legendaries orange.</li>
-        <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills. Eridium always drops; the weapon drops by biome, more often where elites are tougher: pine forest 10%, burnt forest 20%, desert 30%, snow 40%, wasteland 50% (other biomes 100%, <code>weaponDrop</code>). Change it in Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) or in game: <code>aposelite drop wasteland N</code> for one biome, <code>aposelite drop N</code> for all.</li>
+        <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills. Eridium always drops; the weapon drops by biome, more often where elites are tougher: pine forest 10%, burnt forest 20%, desert 30%, snow 40%, wasteland 50% (other biomes 100%, <code>weaponDrop</code>). Change it in Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) or in game: <code>aposelite drop wasteland N</code> for one biome, <code>aposelite drop N</code> for all. Elites drop only player weapons (not the NPC-only guns of NPC mods); <code>aposelite weapons</code> lists them, and <code>weaponExclude</code> in Settings.xml removes some (comma-separated item names or name starts, e.g. <code>gunExplosives,meleeToolAxe</code>).</li>
       </ul>
     </article>
     <article class="card">
@@ -712,6 +712,7 @@ aposaffix 6          set quality 6 first, then 3 affixes</pre>
 aposelite health N           max health x N (1-50, default 2)
 aposelite drop N             weapon drop chance, % (0-100), all biomes
 aposelite drop wasteland N   ... in one biome (pine, burnt, desert, snow, wasteland)
+aposelite weapons            list the weapons elites can drop
 aposelite make               nearest zombie becomes an elite
 aposelite make Armored Giant  with these modifiers</pre>
     </article>
