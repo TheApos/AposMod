@@ -267,7 +267,7 @@ public class XUiC_AposForge : XUiController
         Enable(scrapButton, iv != null && ScrapValue(iv) > 0);
 
         int tier = held != null ? AposTiers.Tier(held) : 0;
-        if (sharpenLabel != null) sharpenLabel.Text = SharpenInfo(held, tier);
+        if (sharpenLabel != null) sharpenLabel.Text = SharpenInfo(held, tier, eridium, steel);
         SharpenButtons(sharpenButton, sharpenSafeButton, held, tier, eridium, steel);
     }
 
@@ -308,15 +308,33 @@ public class XUiC_AposForge : XUiController
         }
     }
 
-    // "Sharpen to 8: 40 Eridium + 40 steel, 50%" (or why not)
-    static string SharpenInfo(ItemValue iv, int tier)
+    // "Sharpen to 8: success 50%" + the break warning, or what is missing for a normal sharpen
+    static string SharpenInfo(ItemValue iv, int tier, int eridium, int steel)
     {
         if (iv == null) return "";
         if (tier >= AposTiers.MaxTier) return "[FFD24D]" + Localization.Get("aposForgeSharpenMax") + "[-]";
         int target = tier + 1;
-        if (target <= 6) return string.Format(Localization.Get("aposForgeSharpenSure"), target);
-        return string.Format(Localization.Get("aposForgeSharpenInfo"), target, Mathf.RoundToInt(ChanceFor(target) * 100f))
-            + "  [FF4040]" + Localization.Get("aposForgeBreakInfo") + "[-]";
+        string info = target <= 6 ? string.Format(Localization.Get("aposForgeSharpenSure"), target)
+            : string.Format(Localization.Get("aposForgeSharpenInfo"), target, Mathf.RoundToInt(ChanceFor(target) * 100f));
+        string missing = Missing(CostFor(target), eridium, steel);
+        if (missing != "") return info + "  " + missing;
+        return target <= 6 ? info : info + "  [FF4040]" + Localization.Get("aposForgeBreakInfo") + "[-]";
+    }
+
+    // "[red]Missing: 38 forged steel[-]" or "" when both are enough
+    static string Missing(int cost, int eridium, int steel)
+    {
+        List<string> parts = new List<string>();
+        if (eridium < cost) parts.Add(string.Format(Localization.Get("aposForgeMissingEridium"), cost - eridium));
+        if (steel < cost) parts.Add(string.Format(Localization.Get("aposForgeMissingSteel"), cost - steel));
+        if (parts.Count == 0) return "";
+        return "[FF4040]" + string.Format(Localization.Get("aposForgeMissing"), string.Join(", ", parts.ToArray())) + "[-]";
+    }
+
+    // "40 + 40": Eridium in purple and forged steel in grey, as in the line above; a part you lack is red
+    static string Price(int cost, int eridium, int steel)
+    {
+        return (eridium >= cost ? "[BE5AFF]" : "[FF4040]") + cost + "[-]+" + (steel >= cost ? "[B0B0B0]" : "[FF4040]") + cost + "[-]";
     }
 
     void SharpenButtons(XUiC_SimpleButton normal, XUiC_SimpleButton safe, ItemValue iv, int tier, int eridium, int steel)
@@ -324,8 +342,8 @@ public class XUiC_AposForge : XUiController
         bool can = iv != null && tier < AposTiers.MaxTier;
         int cost = can ? CostFor(tier + 1) : 0;
         bool risky = can && tier + 1 >= 7; // Safe only matters where a failure is possible
-        SetText(normal, can ? Localization.Get("aposForgeSharpen") + "  " + cost + "/" + cost : Localization.Get("aposForgeSharpen"));
-        SetText(safe, risky ? Localization.Get("aposForgeSharpenSafe") + "  " + cost * SafeMultiplier + "/" + cost * SafeMultiplier : Localization.Get("aposForgeSharpenSafe"));
+        SetText(normal, can ? Localization.Get("aposForgeSharpen") + "  " + Price(cost, eridium, steel) : Localization.Get("aposForgeSharpen"));
+        SetText(safe, risky ? Localization.Get("aposForgeSharpenSafe") + "  " + Price(cost * SafeMultiplier, eridium, steel) : Localization.Get("aposForgeSharpenSafe"));
         Enable(normal, can && eridium >= cost && steel >= cost);
         Enable(safe, risky && eridium >= cost * SafeMultiplier && steel >= cost * SafeMultiplier);
     }
