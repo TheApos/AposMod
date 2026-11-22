@@ -2,7 +2,7 @@
 // The game only knows quality 1-6, so the item keeps Quality = 6 and the extra tier lives in its metadata
 // (aposTier = 7..10). Every value that grows with quality in the item's own XML (tier="1,6" lists: damage, armor,
 // durability, magazine, apparel bonuses...) continues with the same step: one tier = (value at the top tier -
-// value at the first tier) / (number of steps). Done by swapping the value list for an extrapolated copy while the
+// value at the first tier) / (number of steps). Damage and armor resistances grow 3 steps per tier (StrongStep). Done by swapping the value list for an extrapolated copy while the
 // sharpened item's effects are evaluated (Harmony on ItemValue.ModifyValue / GetModifiedValueData + PassiveEffect.ModValue).
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,26 @@ public static class AposTiers
 
     // extra tiers of the item whose effects are being evaluated right now (0 = none)
     [ThreadStatic] public static int Extra;
+    // the passive whose value list PassiveEffect.ModValue is reading now (set by AposTierTypePatch)
+    [ThreadStatic] public static PassiveEffects Type;
+    public const int StrongStep = 3;
+
+    // weapon damage and armor: a sharpened tier adds 3 vanilla quality steps; everything else (durability, mod slots,
+    // magazine, other apparel bonuses) adds one
+    public static int StepFor(PassiveEffects type)
+    {
+        switch (type)
+        {
+            case PassiveEffects.EntityDamage:
+            case PassiveEffects.BlockDamage:
+            case PassiveEffects.ExplosionEntityDamage:
+            case PassiveEffects.ExplosionBlockDamage:
+            case PassiveEffects.PhysicalDamageResist:
+            case PassiveEffects.ElementalDamageResist:
+                return StrongStep;
+        }
+        return 1;
+    }
 
     // cache: original value list -> extrapolated lists for 1..4 extra tiers (lists are shared per effect, never change)
     static readonly ConditionalWeakTable<float[], float[][]> cache = new ConditionalWeakTable<float[], float[][]>();
@@ -46,7 +66,8 @@ public static class AposTiers
         iv.SetMetadata(SpentKey, Spent(iv) + eridium);
     }
 
-    public static float[] Extrapolate(float[] values, float[] levels, int extra)
+    // a value list belongs to one passive, so its step multiplier never changes and the cache stays per list
+    public static float[] Extrapolate(float[] values, float[] levels, int extra, int stepMultiplier)
     {
         float[][] perExtra = cache.GetValue(values, v => new float[MaxTier - 5][]);
         float[] result = perExtra[extra];
@@ -55,7 +76,7 @@ public static class AposTiers
         int last = values.Length - 1;
         float steps = levels[last] - levels[0];
         float step = steps > 0f ? (values[last] - values[0]) / steps : 0f;
-        float top = values[last] + step * extra;
+        float top = values[last] + step * extra * stepMultiplier;
         // a value that shrinks with quality (e.g. a penalty) stops at zero instead of changing sign
         if (values[last] > 0f && top < 0f || values[last] < 0f && top > 0f) top = 0f;
         result = (float[])values.Clone();
@@ -127,7 +148,29 @@ public static class AposTierValuePatch
         int extra = AposTiers.Extra;
         if (extra <= 0 || _levels == null || _values == null || _values.Length < 2 || _values.Length != _levels.Length) return;
         if (_level < _levels[_levels.Length - 1]) return; // only items at the top tier (quality 6)
-        _values = AposTiers.Extrapolate(_values, _levels, extra);
+        _values = AposTiers.Extrapolate(_values, _levels, extra, AposTiers.StepFor(AposTiers.Type));
+    }
+}
+
+// PassiveEffect.ModValue is static and does not know which passive it reads; both of its callers are PassiveEffect methods
+[HarmonyPatch]
+public static class AposTierTypePatch
+{
+    static IEnumerable<System.Reflection.MethodBase> TargetMethods()
+    {
+        yield return AccessTools.Method(typeof(PassiveEffect), "ModifyValue");
+        yield return AccessTools.Method(typeof(PassiveEffect), "GetModifiedValueData");
+    }
+
+    static void Prefix(PassiveEffect __instance, out PassiveEffects __state)
+    {
+        __state = AposTiers.Type;
+        AposTiers.Type = __instance.Type;
+    }
+
+    static void Postfix(PassiveEffects __state)
+    {
+        AposTiers.Type = __state;
     }
 }
 
