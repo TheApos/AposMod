@@ -14,6 +14,7 @@ public static class AposSettings
     public static bool BuffColor = true;  // cyan numbers for buffed hits
     public static bool StealthRework = true; // POI trigger/attack volumes spawn sleeping zombies (AposStealth.cs)
     public static bool EliteTags = true;     // names above elite zombies (AposElites.cs)
+    public static bool EliteAnnounce = true; // "elite nearby" banner with tips (AposElites.Announce)
     // elite max health and damage = normal x this, by stars (AposElites.cs, buffAposElite)
     public static readonly float[] EliteHealth = { 3f, 6f, 12f };
     public static readonly float[] EliteDamage = { 2f, 4f, 6f };
@@ -49,6 +50,7 @@ public static class AposSettings
             if (el != null)
             {
                 EliteTags = ReadBool(el, "tags", EliteTags);
+                EliteAnnounce = ReadBool(el, "announce", EliteAnnounce);
                 // "health" (one value for all stars) from 1.6.16 and older is ignored: the stars have their own now
                 for (int i = 0; i < 3; i++)
                 {
@@ -107,9 +109,10 @@ public static class AposSettings
             XmlElement s = doc.CreateElement("Stealth");
             s.SetAttribute("rework", StealthRework ? "true" : "false");
             root.AppendChild(s);
-            root.AppendChild(doc.CreateComment(" Elites. tags: names above them (in game: aposelite on|off). health1/2/3, damage1/2/3: max health and damage of 1, 2 and 3 star elites as a multiple of a normal zombie, 1-100 (in game: aposelite health 3 6 12, aposelite damage 2 4 6). weaponDrop: % chance they drop a weapon, 0-100, 0 = never; Eridium always drops. drop<Biome>: the same chance for elites killed in that biome; weaponDrop is used elsewhere (in game: aposelite drop N for all, aposelite drop wasteland N for one). weaponExclude: comma-separated item names or name starts elites never drop, e.g. 'gunExplosives,meleeToolAxe' (in game: aposelite weapons lists what they can drop) "));
+            root.AppendChild(doc.CreateComment(" Elites. tags: names above them (in game: aposelite on|off). announce: a banner with tips when an elite first comes into view (in game: aposelite announce on|off). health1/2/3, damage1/2/3: max health and damage of 1, 2 and 3 star elites as a multiple of a normal zombie, 1-100 (in game: aposelite health 3 6 12, aposelite damage 2 4 6). weaponDrop: % chance they drop a weapon, 0-100, 0 = never; Eridium always drops. drop<Biome>: the same chance for elites killed in that biome; weaponDrop is used elsewhere (in game: aposelite drop N for all, aposelite drop wasteland N for one). weaponExclude: comma-separated item names or name starts elites never drop, e.g. 'gunExplosives,meleeToolAxe' (in game: aposelite weapons lists what they can drop) "));
             XmlElement el = doc.CreateElement("Elites");
             el.SetAttribute("tags", EliteTags ? "true" : "false");
+            el.SetAttribute("announce", EliteAnnounce ? "true" : "false");
             for (int i = 0; i < 3; i++)
             {
                 el.SetAttribute("health" + (i + 1), EliteHealth[i].ToString("0.##", CultureInfo.InvariantCulture));
@@ -366,12 +369,17 @@ public class AposEliteCommand : ConsoleCmdAbstract
             }
             AposSettings.Save();
         }
+        if (_params.Count == 2 && _params[0] == "announce" && (_params[1] == "on" || _params[1] == "off"))
+        {
+            AposSettings.EliteAnnounce = _params[1] == "on";
+            AposSettings.Save();
+        }
         if (_params.Count > 0 && (_params[0] == "on" || _params[0] == "off"))
         {
             AposSettings.EliteTags = _params[0] == "on";
             AposSettings.Save();
         }
-        console.Output("Elite names: " + (AposSettings.EliteTags ? "on" : "off") + ", health by stars: x" + Stars(AposSettings.EliteHealth)
+        console.Output("Elite names: " + (AposSettings.EliteTags ? "on" : "off") + ", banner: " + (AposSettings.EliteAnnounce ? "on" : "off") + ", health by stars: x" + Stars(AposSettings.EliteHealth)
             + ", damage by stars: x" + Stars(AposSettings.EliteDamage) + ", " + AposSettings.DescribeDrop());
     }
 

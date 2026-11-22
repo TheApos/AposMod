@@ -279,6 +279,91 @@ public class AposElites : MonoBehaviour
                 Summon(gm.World, e);
             }
         }
+        if (tick) Announce();
+    }
+
+    // ===== "Elite nearby" banner: once per elite (cvar on the zombie, saved with it), when it first comes within 40 m
+    // in line of sight; several at once share one banner. Settings.xml Elites announce / "aposelite announce on|off". =====
+    const float BannerTime = 7f;
+    const string SeenVar = "aposEliteSeen";
+    float bannerUntil;
+    string bannerTitle, bannerText;
+    int bannerStars;
+    GUIStyle bannerTitleStyle, bannerStyle;
+
+    void Announce()
+    {
+        if (player == null) return;
+        List<EntityAlive> fresh = new List<EntityAlive>();
+        for (int i = 0; i < elites.Count; i++)
+        {
+            EntityAlive e = elites[i];
+            if (e.Buffs.GetCustomVar(SeenVar) > 0f) continue;
+            if ((e.position - player.position).sqrMagnitude > TagRange * TagRange || !InSight(player, e)) continue;
+            e.Buffs.SetCustomVar(SeenVar, 1f);
+            fresh.Add(e);
+        }
+        if (fresh.Count == 0 || !AposSettings.EliteAnnounce) return;
+
+        int stars = 1, mask = 0;
+        List<string> names = new List<string>();
+        foreach (EntityAlive e in fresh)
+        {
+            int s = StarIndex(e) + 1;
+            stars = Math.Max(stars, s);
+            mask |= (int)e.Buffs.GetCustomVar("aposEliteMods");
+            names.Add(Localization.Get(EntityClass.list[e.entityClass].entityClassName)
+                + (fresh.Count > 1 ? " (" + string.Format(Localization.Get("aposEliteStarsN"), s) + ")" : ""));
+        }
+        bannerTitle = fresh.Count == 1 ? string.Format(Localization.Get("aposEliteNear"), names[0])
+            : string.Format(Localization.Get("aposEliteNearMany"), string.Join(", ", names.ToArray()));
+        List<string> tips = new List<string>();
+        for (int i = 0; i < Modifiers.Length; i++)
+        {
+            if ((mask & (1 << i)) == 0) continue;
+            string tip = Localization.Get("aposEliteTip" + Modifiers[i]);
+            if (Modifiers[i] == "Explosive") tip = string.Format(tip, ExplosivePlayerDamage[stars - 1], ExplosiveRadius[stars - 1]);
+            if (Modifiers[i] == "Regen") tip = string.Format(tip, Mathf.RoundToInt(RegenShare[stars - 1] * 1000f) / 10f);
+            tips.Add("[" + Localization.Get("aposElite" + Modifiers[i]) + "] " + tip);
+        }
+        bannerText = string.Join("\n", tips.ToArray());
+        bannerStars = stars;
+        bannerUntil = Time.time + BannerTime;
+        Audio.Manager.PlayInsidePlayerHead("keystone_build_warning", player.entityId);
+    }
+
+    void DrawBanner()
+    {
+        if (Time.time > bannerUntil || bannerTitle == null) return;
+        if (bannerTitleStyle == null)
+        {
+            bannerTitleStyle = new GUIStyle(GUI.skin.label);
+            bannerTitleStyle.alignment = TextAnchor.MiddleCenter;
+            bannerTitleStyle.fontStyle = FontStyle.Bold;
+            bannerTitleStyle.wordWrap = true;
+            bannerStyle = new GUIStyle(GUI.skin.label);
+            bannerStyle.alignment = TextAnchor.UpperCenter;
+            bannerStyle.wordWrap = true;
+        }
+        float k = AposSettings.Scale;
+        bannerTitleStyle.fontSize = Mathf.RoundToInt(26 * k);
+        bannerStyle.fontSize = Mathf.RoundToInt(19 * k);
+        float alpha = Mathf.Clamp01(bannerUntil - Time.time); // fades out in the last second
+        float w = Mathf.Min(Screen.width - 40f, 900f * k);
+        float titleH = bannerTitleStyle.CalcHeight(new GUIContent(bannerTitle), w - 20f) + 6f;
+        float textH = string.IsNullOrEmpty(bannerText) ? 0f : bannerStyle.CalcHeight(new GUIContent(bannerText), w - 20f) + 8f;
+        Rect box = new Rect((Screen.width - w) / 2f, Screen.height * 0.12f, w, titleH + textH + 14f);
+        Color color = bannerStars >= 3 ? new Color(1f, 0.25f, 0.25f) : bannerStars == 2 ? new Color(1f, 0.55f, 0.1f) : new Color(1f, 0.85f, 0.2f);
+        Color old = GUI.color;
+        GUI.color = new Color(0f, 0f, 0f, 0.6f * alpha);
+        GUI.DrawTexture(box, Texture2D.whiteTexture);
+        GUI.color = new Color(color.r, color.g, color.b, alpha);
+        GUI.DrawTexture(new Rect(box.x, box.y, box.width, 3f), Texture2D.whiteTexture);
+        DrawStars(Screen.width / 2f, box.y + 4f, bannerStars, GUI.color);
+        GUI.Label(new Rect(box.x + 10f, box.y + 6f, w - 20f, titleH), bannerTitle, bannerTitleStyle);
+        GUI.color = new Color(1f, 1f, 1f, alpha);
+        if (textH > 0f) GUI.Label(new Rect(box.x + 10f, box.y + 8f + titleH, w - 20f, textH), bannerText, bannerStyle);
+        GUI.color = old;
     }
 
     // ===== Loot on the ground: a light and a Borderlands-style loot beam above Eridium (purple), weapons with
@@ -429,6 +514,7 @@ public class AposElites : MonoBehaviour
     // ===== Name tag: "Armored Explosive Moe", yellow (1 modifier) or orange (2), 40 m, only in line of sight =====
     void OnGUI()
     {
+        if (Event.current.type == EventType.Repaint) DrawBanner();
         if (elites.Count == 0 || cam == null || player == null || !AposSettings.EliteTags || Event.current.type != EventType.Repaint) return;
         if (style == null)
         {
