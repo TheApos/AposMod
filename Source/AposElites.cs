@@ -19,12 +19,13 @@ public class AposElites : MonoBehaviour
         { "Armored", "Fast", "Regen", "Explosive", "Vampire", "Burning", "Electric", "Acidic", "Giant", "Summoner" };
 
     const float TagRange = 40f;
-    const string HealthVar = "aposEliteHP"; // max health bonus read by buffAposElite: Settings.xml health - 1
+    const string HealthVar = "aposEliteHP";  // max health bonus read by buffAposElite: Settings.xml health<stars> - 1
+    const string DamageVar = "aposEliteDmg"; // damage bonus read by buffAposElite: Settings.xml damage<stars> - 1
     const float RegenDelay = 3f;
     // Regenerating and Explosive grow with the stars (index = stars - 1)
     static readonly float[] RegenShare = { 0.03f, 0.045f, 0.065f };
-    static readonly float[] ExplosiveRadius = { 3f, 3.5f, 4f };
-    static readonly int[] ExplosivePlayerDamage = { 40, 70, 110 };
+    static readonly float[] ExplosiveRadius = { 3f, 4.5f, 6f };
+    static readonly int[] ExplosivePlayerDamage = { 100, 250, 500 };
     static readonly int[] ExplosiveZombieDamage = { 150, 250, 400 };
 
     static int StarIndex(EntityAlive e)
@@ -106,7 +107,8 @@ public class AposElites : MonoBehaviour
         e.Buffs.SetCustomVar("aposElite", count);
         e.Buffs.SetCustomVar("aposEliteMods", mask);
         e.Buffs.SetCustomVar("aposEliteFill", 1f);
-        e.Buffs.SetCustomVar(HealthVar, AposSettings.EliteHealth - 1f);
+        e.Buffs.SetCustomVar(HealthVar, AposSettings.EliteHealth[StarIndex(e)] - 1f);
+        e.Buffs.SetCustomVar(DamageVar, AposSettings.EliteDamage[StarIndex(e)] - 1f);
         e.Buffs.AddBuff("buffAposElite");
         for (int i = 0; i < Modifiers.Length; i++)
         {
@@ -204,7 +206,7 @@ public class AposElites : MonoBehaviour
         return new ItemStack(iv, 1);
     }
 
-    // Explosive: 40/70/110 damage to players and 150/250/400 to zombies within 3/3.5/4 m by stars, no block damage
+    // Explosive: 100/250/500 damage to players and 150/250/400 to zombies within 3/4.5/6 m by stars, no block damage
     static void Blast(EntityAlive dead)
     {
         int s = StarIndex(dead);
@@ -250,9 +252,12 @@ public class AposElites : MonoBehaviour
             if (e == null || e is EntityPlayer || e.IsDead() || !IsElite(e)) continue;
             elites.Add(e);
 
-            // max health bonus from Settings.xml (also for elites from an older save or after "aposelite health N")
-            float hpBonus = AposSettings.EliteHealth - 1f;
+            // max health and damage by stars from Settings.xml (also for elites from an older save or after
+            // "aposelite health / damage")
+            float hpBonus = AposSettings.EliteHealth[StarIndex(e)] - 1f;
             if (e.Buffs.GetCustomVar(HealthVar) != hpBonus) e.Buffs.SetCustomVar(HealthVar, hpBonus);
+            float dmgBonus = AposSettings.EliteDamage[StarIndex(e)] - 1f;
+            if (e.Buffs.GetCustomVar(DamageVar) != dmgBonus) e.Buffs.SetCustomVar(DamageVar, dmgBonus);
 
             // the max health buff needs a moment to apply; then start at full health
             if (e.Buffs.GetCustomVar("aposEliteFill") > 0f && e.GetMaxHealth() > e.Health)

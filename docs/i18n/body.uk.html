@@ -310,7 +310,7 @@
       <h3>Еліти</h3>
       <div class="tagline">Шанс 2% на початку → 5% у пізній грі · ★ = 1 модифікатор, ★★ після gamestage 100, ★★★ (25% з них) після gamestage 200</div>
       <ul>
-        <li>Здоров'я вдвічі більше (змінюється командою <code>aposelite health N</code> або <code>health</code> у Settings.xml). Над назвою зірки: <b>★</b> жовта, <b>★★</b> помаранчеві, <b>★★★</b> червоні. Видно до 40 м, крізь стіни — ні.</li>
+        <li>Сильніші з кожною зіркою: ★ здоров'я x3 і шкода x2, ★★ x6 і x4, ★★★ x12 і x6 (змінюється командами <code>aposelite health 3 6 12</code> / <code>aposelite damage 2 4 6</code> або health1-3 / damage1-3 у Settings.xml). Над назвою зірки: <b>★</b> жовта, <b>★★</b> помаранчеві, <b>★★★</b> червоні. Видно до 40 м, крізь стіни — ні.</li>
         <li>Лут на землі світиться і має промінь угору, як у Borderlands, — його видно здалеку: Ерідій фіолетовим, зброя з афіксами золотим, легендарки помаранчевим. За бажанням — білим над ванільними мішками з лутом із зомбі: <code>aposbags on</code> або <code>&lt;LootBeam bags="true"/&gt;</code> у Settings.xml (за замовчуванням вимкнено: на кривавий місяць променів дуже багато).</li>
         <li><b>Нагорода:</b> ★ — зброя з афіксами якості 3–5 і 3–6 Ерідію; ★★ — якість 5–6, 8–15 Ерідію, 2% легендарка; ★★★ — якість 6, 20–30 Ерідію, 10% легендарка. Для майстерності зброї еліта = 5 вбивств. Ерідій випадає завжди; зброя — з шансом за біомом, частіше там, де еліти сильніші: сосновий ліс 10%, випалений ліс 20%, пустеля 30%, сніги 40%, пустки 50% (інші біоми 100%, <code>weaponDrop</code>). Змінюється в Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) або в грі: <code>aposelite drop wasteland N</code> для одного біому, <code>aposelite drop N</code> для всіх. Еліти кидають лише зброю гравця (не зброю NPC з NPC-модів); <code>aposelite weapons</code> показує список, а <code>weaponExclude</code> у Settings.xml прибирає зайве (імена предметів або їх початок через кому, наприклад <code>gunExplosives,meleeToolAxe</code>).</li>
       </ul>
@@ -322,7 +322,7 @@
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#b3cdf2;--m:url(DATAURI_0)" aria-hidden="true"></span><b>Броньований</b><small>×0.5 у тіло</small><span class="pop" role="tooltip"><b>Броньований:</b> Удари в тіло завдають половину шкоди, хедшоти — повну.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#4de6ff;--m:url(DATAURI_1)" aria-hidden="true"></span><b>Швидкий</b><small>+60% біг</small><span class="pop" role="tooltip"><b>Швидкий:</b> Завжди біжить, і на 60% швидше.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#66ff73;--m:url(DATAURI_2)" aria-hidden="true"></span><b>Регенерувальний</b><small>3–6.5% HP/с (зірки)</small><span class="pop" role="tooltip"><b>Регенерувальний:</b> Через 3 с без шкоди відновлює 3% (★) / 4.5% (★★) / 6.5% (★★★) здоров'я за секунду.</span></div>
-        <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff9926;--m:url(DATAURI_3)" aria-hidden="true"></span><b>Вибуховий</b><small>40–110 вам (зірки)</small><span class="pop" role="tooltip"><b>Вибуховий:</b> Після смерті вибухає: ★ — 40 шкоди вам і 150 зомбі в 3 м; ★★ — 70 і 250 в 3.5 м; ★★★ — 110 і 400 в 4 м.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff9926;--m:url(DATAURI_3)" aria-hidden="true"></span><b>Вибуховий</b><small>100–500 вам (зірки)</small><span class="pop" role="tooltip"><b>Вибуховий:</b> Після смерті вибухає: ★ — 100 шкоди вам і 150 зомбі в 3 м; ★★ — 250 і 250 в 4.5 м; ★★★ — 500 і 400 в 6 м.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#f2334d;--m:url(DATAURI_4)" aria-hidden="true"></span><b>Вампірський</b><small>лікується 50%</small><span class="pop" role="tooltip"><b>Вампірський:</b> Його удари лікують його на половину завданої шкоди.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff7319;--m:url(DATAURI_5)" aria-hidden="true"></span><b>Палаючий</b><small>підпалює</small><span class="pop" role="tooltip"><b>Палаючий:</b> Його удари підпалюють вас, а сам він до вогню несприйнятливий.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#80bfff;--m:url(DATAURI_6)" aria-hidden="true"></span><b>Електричний</b><small>шокує</small><span class="pop" role="tooltip"><b>Електричний:</b> Його удари шокують вас, а сам він до струму несприйнятливий.</span></div>
@@ -709,7 +709,8 @@ aposaffix 6          спершу якість 6, потім 3 афікси</pre
       <h3>Еліти — <span class="trait">aposelite</span></h3>
       <div class="tagline">Консоль F1</div>
       <pre>aposelite on | off           назви над елітами
-aposelite health N           максимум здоров'я x N (1-50, за замовчуванням 2)
+aposelite health A B C       здоров'я еліт з 1/2/3 зірками (за замовчуванням 3 6 12)
+aposelite damage A B C       шкода еліт з 1/2/3 зірками (за замовчуванням 2 4 6)
 aposelite drop N             шанс випадання зброї, % (0-100), усі біоми
 aposelite drop wasteland N   ... в одному біомі (pine, burnt, desert, snow, wasteland)
 aposelite weapons            список зброї, яку можуть кинути еліти

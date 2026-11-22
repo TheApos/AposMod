@@ -310,7 +310,7 @@
       <h3>Elites</h3>
       <div class="tagline">2% chance early → 5% late game · ★ = 1 modifier, ★★ after gamestage 100, ★★★ (25% of them) after gamestage 200</div>
       <ul>
-        <li>Twice the health (change it with <code>aposelite health N</code> or <code>health</code> in Settings.xml). Stars above the name: <b>★</b> yellow, <b>★★</b> orange, <b>★★★</b> red. Visible up to 40 m, not through walls.</li>
+        <li>Stronger with every star: ★ x3 health and x2 damage, ★★ x6 and x4, ★★★ x12 and x6 (change with <code>aposelite health 3 6 12</code> / <code>aposelite damage 2 4 6</code> or health1-3 / damage1-3 in Settings.xml). Stars above the name: <b>★</b> yellow, <b>★★</b> orange, <b>★★★</b> red. Visible up to 40 m, not through walls.</li>
         <li>Loot on the ground glows and has a beam going up, like in Borderlands, so you see it from afar: Eridium purple, weapons with affixes gold, legendaries orange. Optionally also white above vanilla zombie loot bags: <code>aposbags on</code> or <code>&lt;LootBeam bags="true"/&gt;</code> in Settings.xml (off by default: lots of beams on blood moons).</li>
         <li><b>Reward:</b> ★ — weapon with affixes, quality 3–5, and 3–6 Eridium; ★★ — quality 5–6, 8–15 Eridium, 2% legendary; ★★★ — quality 6, 20–30 Eridium, 10% legendary. For weapon mastery an elite counts as 5 kills. Eridium always drops; the weapon drops by biome, more often where elites are tougher: pine forest 10%, burnt forest 20%, desert 30%, snow 40%, wasteland 50% (other biomes 100%, <code>weaponDrop</code>). Change it in Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) or in game: <code>aposelite drop wasteland N</code> for one biome, <code>aposelite drop N</code> for all. Elites drop only player weapons (not the NPC-only guns of NPC mods); <code>aposelite weapons</code> lists them, and <code>weaponExclude</code> in Settings.xml removes some (comma-separated item names or name starts, e.g. <code>gunExplosives,meleeToolAxe</code>).</li>
       </ul>
@@ -322,7 +322,7 @@
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#b3cdf2;--m:url(DATAURI_0)" aria-hidden="true"></span><b>Armored</b><small>×0.5 to body</small><span class="pop" role="tooltip"><b>Armored:</b> Body hits deal half damage, headshots deal full damage.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#4de6ff;--m:url(DATAURI_1)" aria-hidden="true"></span><b>Fast</b><small>+60% run</small><span class="pop" role="tooltip"><b>Fast:</b> Always runs, and 60% faster.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#66ff73;--m:url(DATAURI_2)" aria-hidden="true"></span><b>Regenerating</b><small>3–6.5% HP/s (stars)</small><span class="pop" role="tooltip"><b>Regenerating:</b> After 3 s without damage restores 3% (★) / 4.5% (★★) / 6.5% (★★★) health per second.</span></div>
-        <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff9926;--m:url(DATAURI_3)" aria-hidden="true"></span><b>Explosive</b><small>40–110 to you (stars)</small><span class="pop" role="tooltip"><b>Explosive:</b> Explodes on death: ★ — 40 damage to you and 150 to zombies within 3 m; ★★ — 70 and 250 within 3.5 m; ★★★ — 110 and 400 within 4 m.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff9926;--m:url(DATAURI_3)" aria-hidden="true"></span><b>Explosive</b><small>100–500 to you (stars)</small><span class="pop" role="tooltip"><b>Explosive:</b> Explodes on death: ★ — 100 damage to you and 150 to zombies within 3 m; ★★ — 250 and 250 within 4.5 m; ★★★ — 500 and 400 within 6 m.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#f2334d;--m:url(DATAURI_4)" aria-hidden="true"></span><b>Vampiric</b><small>heals 50%</small><span class="pop" role="tooltip"><b>Vampiric:</b> Its hits heal it for half the damage dealt.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff7319;--m:url(DATAURI_5)" aria-hidden="true"></span><b>Burning</b><small>sets on fire</small><span class="pop" role="tooltip"><b>Burning:</b> Its hits set you on fire, and it's immune to fire.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#80bfff;--m:url(DATAURI_6)" aria-hidden="true"></span><b>Electric</b><small>shocks</small><span class="pop" role="tooltip"><b>Electric:</b> Its hits shock you, and it's immune to shock.</span></div>
@@ -709,7 +709,8 @@ aposaffix 6          set quality 6 first, then 3 affixes</pre>
       <h3>Elites — <span class="trait">aposelite</span></h3>
       <div class="tagline">F1 console</div>
       <pre>aposelite on | off           names above elites
-aposelite health N           max health x N (1-50, default 2)
+aposelite health A B C       max health of 1/2/3 star elites (default 3 6 12)
+aposelite damage A B C       damage of 1/2/3 star elites (default 2 4 6)
 aposelite drop N             weapon drop chance, % (0-100), all biomes
 aposelite drop wasteland N   ... in one biome (pine, burnt, desert, snow, wasteland)
 aposelite weapons            list the weapons elites can drop

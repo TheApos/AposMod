@@ -310,7 +310,7 @@
       <h3>Элиты</h3>
       <div class="tagline">Шанс 2% в начале → 5% в поздней игре · ★ = 1 модификатор, ★★ после gamestage 100, ★★★ (25% из них) после gamestage 200</div>
       <ul>
-        <li>Здоровья вдвое больше (меняется командой <code>aposelite health N</code> или <code>health</code> в Settings.xml). Над именем звёзды: <b>★</b> жёлтая, <b>★★</b> оранжевые, <b>★★★</b> красные. Видно до 40 м, сквозь стены — нет.</li>
+        <li>Сильнее с каждой звездой: ★ здоровье x3 и урон x2, ★★ x6 и x4, ★★★ x12 и x6 (меняется командами <code>aposelite health 3 6 12</code> / <code>aposelite damage 2 4 6</code> или health1-3 / damage1-3 в Settings.xml). Над именем звёзды: <b>★</b> жёлтая, <b>★★</b> оранжевые, <b>★★★</b> красные. Видно до 40 м, сквозь стены — нет.</li>
         <li>Лут на земле светится и имеет луч вверх, как в Borderlands, — его видно издалека: Эридий фиолетовым, оружие с аффиксами золотым, легендарки оранжевым. По желанию — белым над ванильными мешками с лутом из зомби: <code>aposbags on</code> или <code>&lt;LootBeam bags="true"/&gt;</code> в Settings.xml (по умолчанию выключено: на кровавую луну лучей очень много).</li>
         <li><b>Награда:</b> ★ — оружие с аффиксами качества 3–5 и 3–6 Эридия; ★★ — качество 5–6, 8–15 Эридия, 2% легендарка; ★★★ — качество 6, 20–30 Эридия, 10% легендарка. Для мастерства оружия элита = 5 убийств. Эридий выпадает всегда; оружие — с шансом по биому, чаще там, где элиты сильнее: сосновый лес 10%, выжженный лес 20%, пустыня 30%, снега 40%, пустоши 50% (другие биомы 100%, <code>weaponDrop</code>). Меняется в Settings.xml (<code>dropPineForest</code>, <code>dropBurntForest</code>, <code>dropDesert</code>, <code>dropSnow</code>, <code>dropWasteland</code>, 0–100) или в игре: <code>aposelite drop wasteland N</code> для одного биома, <code>aposelite drop N</code> для всех. Элиты роняют только оружие игрока (не оружие NPC из NPC-модов); <code>aposelite weapons</code> показывает список, а <code>weaponExclude</code> в Settings.xml убирает лишнее (имена предметов или их начало через запятую, например <code>gunExplosives,meleeToolAxe</code>).</li>
       </ul>
@@ -322,7 +322,7 @@
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#b3cdf2;--m:url(DATAURI_0)" aria-hidden="true"></span><b>Бронированный</b><small>×0.5 в тело</small><span class="pop" role="tooltip"><b>Бронированный:</b> Удары в тело наносят половину урона, хедшоты — полный.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#4de6ff;--m:url(DATAURI_1)" aria-hidden="true"></span><b>Быстрый</b><small>+60% бег</small><span class="pop" role="tooltip"><b>Быстрый:</b> Всегда бежит, и на 60% быстрее.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#66ff73;--m:url(DATAURI_2)" aria-hidden="true"></span><b>Регенерирующий</b><small>3–6.5% HP/с (звёзды)</small><span class="pop" role="tooltip"><b>Регенерирующий:</b> Через 3 с без урона восстанавливает 3% (★) / 4.5% (★★) / 6.5% (★★★) здоровья в секунду.</span></div>
-        <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff9926;--m:url(DATAURI_3)" aria-hidden="true"></span><b>Взрывной</b><small>40–110 вам (звёзды)</small><span class="pop" role="tooltip"><b>Взрывной:</b> После смерти взрывается: ★ — 40 урона вам и 150 зомби в 3 м; ★★ — 70 и 250 в 3.5 м; ★★★ — 110 и 400 в 4 м.</span></div>
+        <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff9926;--m:url(DATAURI_3)" aria-hidden="true"></span><b>Взрывной</b><small>100–500 вам (звёзды)</small><span class="pop" role="tooltip"><b>Взрывной:</b> После смерти взрывается: ★ — 100 урона вам и 150 зомби в 3 м; ★★ — 250 и 250 в 4.5 м; ★★★ — 500 и 400 в 6 м.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#f2334d;--m:url(DATAURI_4)" aria-hidden="true"></span><b>Вампирский</b><small>лечится 50%</small><span class="pop" role="tooltip"><b>Вампирский:</b> Его удары лечат его на половину нанесённого урона.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#ff7319;--m:url(DATAURI_5)" aria-hidden="true"></span><b>Горящий</b><small>поджигает</small><span class="pop" role="tooltip"><b>Горящий:</b> Его удары поджигают вас, а сам он к огню невосприимчив.</span></div>
         <div class="mil" tabindex="0"><span class="mi big" style="--c:#80bfff;--m:url(DATAURI_6)" aria-hidden="true"></span><b>Электрический</b><small>шокирует</small><span class="pop" role="tooltip"><b>Электрический:</b> Его удары шокируют вас, а сам он к току невосприимчив.</span></div>
@@ -709,7 +709,8 @@ aposaffix 6          сначала качество 6, потом 3 аффик�
       <h3>Элиты — <span class="trait">aposelite</span></h3>
       <div class="tagline">Консоль F1</div>
       <pre>aposelite on | off           имена над элитами
-aposelite health N           максимум здоровья x N (1-50, по умолчанию 2)
+aposelite health A B C       здоровье элит с 1/2/3 звёздами (по умолчанию 3 6 12)
+aposelite damage A B C       урон элит с 1/2/3 звёздами (по умолчанию 2 4 6)
 aposelite drop N             шанс выпадения оружия, % (0-100), все биомы
 aposelite drop wasteland N   ... в одном биоме (pine, burnt, desert, snow, wasteland)
 aposelite weapons            список оружия, которое могут уронить элиты
