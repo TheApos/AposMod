@@ -69,7 +69,8 @@ public class XUiC_AposForge : XUiController
     XUiController progressBox;
     XUiV_Sprite progressFill;
     XUiV_Label gainLabel;
-    int hoverRow = -1;          // apparel row whose sharpen button the mouse is over
+    int hoverLegend = -1;       // legendary button the mouse is over (its description is shown)
+    readonly XUiV_Label[] wearGainLabels = new XUiV_Label[WearRows];
     Color resultColor;
     float resultStart;
     static readonly Color BarColor = new Color(1f, 0.75f, 0.25f);
@@ -133,20 +134,22 @@ public class XUiC_AposForge : XUiController
             wearLabels[i] = Label(this, "lblWear" + i);
             wearButtons[i] = Button("btnWear" + i, () => StartSharpen(wearSlots[row], false));
             wearSafeButtons[i] = Button("btnWearSafe" + i, () => StartSharpen(wearSlots[row], true));
-            XUiEvent_OnHoverEventHandler hover = (_sender, _isOver) =>
-            {
-                if (_isOver) hoverRow = row;
-                else if (hoverRow == row) hoverRow = -1;
-                UpdateGain();
-            };
-            if (wearButtons[i] != null) wearButtons[i].OnHover += hover;
-            if (wearSafeButtons[i] != null) wearSafeButtons[i].OnHover += hover;
+            wearGainLabels[i] = Label(this, "lblWearGain" + i);
         }
         for (int i = 0; i < legendButtons.Length; i++)
         {
             int k = i;
             legendButtons[i] = Button("btnLegend" + i, () => BuyLegend(k));
             SetText(legendButtons[i], Localization.Get(AposRewards.Legendaries[i]) + "  [BE5AFF]" + LegendCost + "[-]");
+            if (legendButtons[i] != null)
+            {
+                legendButtons[i].OnHovered += (_sender, _isOver) =>
+                {
+                    if (_isOver) hoverLegend = k;
+                    else if (hoverLegend == k) hoverLegend = -1;
+                    UpdateGain();
+                };
+            }
         }
     }
 
@@ -329,6 +332,7 @@ public class XUiC_AposForge : XUiController
                 wearLabels[row].Text = iv.ItemClass.GetLocalizedItemName() + "  [FFD24D]" + tier + "[-]"
                     + (can ? "" : "  [808080]" + Localization.Get("aposForgeNothing") + "[-]");
             }
+            if (wearGainLabels[row] != null) wearGainLabels[row].Text = can ? RowGain(iv) : "";
             if (can) SharpenButtons(wearButtons[row], wearSafeButtons[row], iv, tier, eridium, steel);
             else
             {
@@ -584,26 +588,55 @@ public class XUiC_AposForge : XUiController
     }
 
     // ===== what the next level gives =====
+    // Weapon tab: the next level of the weapon in hand. Apparel tab: each row shows its own (RowGain).
+    // Legendaries tab: what the hovered legendary does.
     void UpdateGain()
     {
         if (gainLabel == null) return;
-        ItemValue iv = null;
-        if (tab == 0) iv = Held();
-        else if (tab == 1 && hoverRow >= 0 && wearSlots[hoverRow] >= 0 && Player != null) iv = ItemIn(Player, wearSlots[hoverRow]);
-        if (iv == null || iv.IsEmpty() || iv.ItemClass == null)
+        if (tab == 2)
         {
-            gainLabel.Text = tab == 1 ? "[808080]" + Localization.Get("aposForgeGainHover") + "[-]" : "";
+            if (hoverLegend < 0)
+            {
+                gainLabel.Text = "[808080]" + Localization.Get("aposForgeLegendHover") + "[-]";
+                return;
+            }
+            string id = AposRewards.Legendaries[hoverLegend];
+            gainLabel.Text = "[FF9900]" + Localization.Get(id) + "[-]\n" + Localization.Get(id + "Desc");
             return;
         }
-        gainLabel.Text = GainText(iv);
+        ItemValue iv = tab == 0 ? Held() : null;
+        if (iv == null || iv.IsEmpty() || iv.ItemClass == null)
+        {
+            gainLabel.Text = "";
+            return;
+        }
+        List<string> parts = GainParts(iv);
+        if (parts.Count == 0)
+        {
+            gainLabel.Text = "";
+            return;
+        }
+        // "Level 8 gives:" and two values per line
+        string text = "[FFD24D]" + string.Format(Localization.Get("aposForgeGain"), AposTiers.Tier(iv) + 1) + "[-]";
+        for (int i = 0; i < parts.Count; i++) text += (i % 2 == 0 ? "\n" : "        ") + parts[i];
+        gainLabel.Text = text;
     }
 
-    // "Next level (8): Damage +25% -> +40%, Durability 400 -> 420"
-    static string GainText(ItemValue iv)
+    // one short line under an apparel row: "next: Armor 12 > 18,  Heat 5 > 6"
+    static string RowGain(ItemValue iv)
+    {
+        List<string> parts = GainParts(iv);
+        if (parts.Count == 0) return "";
+        if (parts.Count > 2) parts.RemoveRange(2, parts.Count - 2);
+        return "[B0B0B0]" + string.Format(Localization.Get("aposForgeGainShort"), AposTiers.Tier(iv) + 1) + "[-] " + string.Join(",  ", parts.ToArray());
+    }
+
+    // "Damage +25% > +40%" for every value the next level changes
+    static List<string> GainParts(ItemValue iv)
     {
         int tier = AposTiers.Tier(iv);
-        if (tier >= AposTiers.MaxTier || !AposTiers.HasTieredValues(iv.ItemClass)) return "";
         List<string> parts = new List<string>();
+        if (tier >= AposTiers.MaxTier || !AposTiers.HasTieredValues(iv.ItemClass)) return parts;
         List<PassiveEffects> seen = new List<PassiveEffects>();
         foreach (MinEffectGroup g in iv.ItemClass.Effects.EffectGroups)
         {
@@ -616,14 +649,19 @@ public class XUiC_AposForge : XUiController
                 string key = GainKey(p.Type);
                 if (key == null) continue;
                 float now = TierValue(p, tier), next = TierValue(p, tier + 1);
+                if (p.Type == PassiveEffects.ModSlots)
+                {
+                    // the game counts whole slots
+                    now = Mathf.Floor(now);
+                    next = Mathf.Floor(next);
+                }
                 if (Math.Abs(next - now) < 0.0001f) continue;
                 seen.Add(p.Type);
                 bool perc = p.Modifier == PassiveEffect.ValueModifierTypes.perc_add || p.Modifier == PassiveEffect.ValueModifierTypes.perc_set;
                 parts.Add(Localization.Get(key) + " " + Num(now, perc) + " > [40FF60]" + Num(next, perc) + "[-]");
             }
         }
-        if (parts.Count == 0) return "";
-        return string.Format(Localization.Get("aposForgeGain"), tier + 1) + " " + string.Join(",  ", parts.ToArray());
+        return parts;
     }
 
     // the passive's value at quality 1..6 (vanilla interpolation between its tiers) or forge tier 7..10
