@@ -325,17 +325,51 @@ public static class AposAffixes
         if (list.Count == 0) return null;
         int locked = LockedType(iv);
         List<string> lines = new List<string>();
-        foreach (Entry e in list)
+        foreach (Entry e in list) lines.Add(Line(e, locked));
+        return string.Join("\n", lines.ToArray());
+    }
+
+    // "Damage +27%" (name in gold); the locked affix is marked
+    public static string Line(Entry e, int locked)
+    {
+        string name = Localization.Get("aposAffix" + e.Affix.Key);
+        string lockMark = (int)e.Affix.Types[0] == locked ? " [BE5AFF](" + Localization.Get("aposAffixLocked") + ")[-]" : "";
+        if (e.Affix.Key == "Twin") return "[FFD24D]" + name + "[-] " + Localization.Get("aposAffixTwinDesc") + lockMark;
+        float pct = e.Value * 100f;
+        return "[FFD24D]" + name + "[-] " + (pct > 0 ? "+" : "") + pct.ToString("0", CultureInfo.InvariantCulture) + "%" + lockMark;
+    }
+
+    // Combine Station preview: the result (already merged and trimmed by MergeBest / MergeBestStats) and the
+    // affixes of the two weapons that do not make it into the result
+    public static string DescribeCombine(ItemValue result, ItemValue a, ItemValue b)
+    {
+        if (result == null || result.ItemClass == null) return "";
+        List<string> lines = new List<string>();
+        lines.Add(string.Format(Localization.Get("aposCombineResult"),
+            result.ItemClass.GetLocalizedItemName() + AposTiers.NameSuffix(result), result.Quality));
+        List<Entry> kept = Decompose(result);
+        if (Kind(result.ItemClass) == 0) return lines[0];
+        if (kept.Count == 0) lines.Add(Localization.Get("aposCombineNoAffixes"));
+        int locked = LockedType(result);
+        foreach (Entry e in kept) lines.Add("  " + Line(e, locked));
+        List<string> dropped = new List<string>();
+        List<string> seen = new List<string>();
+        foreach (ItemValue src in new ItemValue[] { a, b })
         {
-            string name = Localization.Get("aposAffix" + e.Affix.Key);
-            string lockMark = (int)e.Affix.Types[0] == locked ? " [BE5AFF](" + Localization.Get("aposAffixLocked") + ")[-]" : "";
-            if (e.Affix.Key == "Twin")
+            if (src == null) continue;
+            foreach (Entry e in Decompose(src))
             {
-                lines.Add("[FFD24D]" + name + "[-] " + Localization.Get("aposAffixTwinDesc") + lockMark);
-                continue;
+                bool inResult = false;
+                foreach (Entry k in kept) if (k.Affix.Key == e.Affix.Key) inResult = true;
+                if (inResult || seen.Contains(e.Affix.Key)) continue;
+                seen.Add(e.Affix.Key);
+                dropped.Add(Line(e, -1));
             }
-            float pct = e.Value * 100f;
-            lines.Add("[FFD24D]" + name + "[-] " + (pct > 0 ? "+" : "") + pct.ToString("0", CultureInfo.InvariantCulture) + "%" + lockMark);
+        }
+        if (dropped.Count > 0)
+        {
+            lines.Add("[FF6464]" + string.Format(Localization.Get("aposCombineDropped"), Cap(result.Quality), result.Quality) + "[-]");
+            foreach (string d in dropped) lines.Add("  " + d);
         }
         return string.Join("\n", lines.ToArray());
     }
@@ -410,6 +444,37 @@ public static class AposAffixTooltipPatch
         if (stack == null || stack.IsEmpty()) return;
         string affixes = AposAffixes.Describe(stack.itemValue);
         if (affixes != null) value = affixes + "\n\n" + value;
+    }
+}
+
+// Combine Station: a panel under the Combine button lists the affixes of the result and the ones that get dropped
+// (window XML: Config/XUi_InGame/windows.xml). SetResult refreshes the bindings whenever a slot changes.
+[HarmonyPatch(typeof(XUiC_CombineGrid), "GetBindingValueInternal")]
+public static class AposCombinePreviewPatch
+{
+    static void Postfix(ref string value, string bindingName, ref bool __result, ItemStack ___result,
+        XUiC_RequiredItemStack ___merge1, XUiC_RequiredItemStack ___merge2)
+    {
+        if (bindingName != "aposcombine" && bindingName != "aposcombinevisible") return;
+        __result = true;
+        bool has = ___result != null && !___result.IsEmpty();
+        if (bindingName == "aposcombinevisible")
+        {
+            value = has ? "true" : "false";
+            return;
+        }
+        value = "";
+        if (!has) return;
+        try
+        {
+            value = AposAffixes.DescribeCombine(___result.itemValue,
+                ___merge1 != null && ___merge1.ItemStack != null ? ___merge1.ItemStack.itemValue : null,
+                ___merge2 != null && ___merge2.ItemStack != null ? ___merge2.ItemStack.itemValue : null);
+        }
+        catch (Exception e)
+        {
+            UnityEngine.Debug.LogError("[AposMod] Combine preview failed: " + e);
+        }
     }
 }
 

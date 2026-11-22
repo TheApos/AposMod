@@ -1,4 +1,13 @@
 <configs>
+	<!-- Combine Station: what the result gets (affixes, forge tier) and which affixes are dropped over the quality cap.
+	     Text from Source/AposAffixes.cs (AposCombinePreviewPatch). -->
+	<append xpath="/windows/window[@name='windowCombine']/rect[@controller='CombineGrid']">
+		<rect name="aposCombinePreview" pos="0,-490" width="610" height="196" visible="{aposcombinevisible}">
+			<sprite depth="1" color="[darkGrey]" type="sliced"/>
+			<sprite depth="2" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false"/>
+			<label depth="3" pos="12,-8" width="586" height="180" font_size="22" text="{aposcombine}" justify="left" max_line_count="8" />
+		</rect>
+	</append>
 	<!-- Eridium Forge window (Source/AposForge.cs, controller XUiC_AposForge): 3 tabs + progress line -->
 	<append xpath="/windows">
 		<window name="windowAposForge" width="610" height="520" panel="Left" cursor_area="true" controller="AposForge, AposMod">
