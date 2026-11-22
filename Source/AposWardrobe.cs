@@ -71,14 +71,43 @@ public class AposWardrobe : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha0)) ui.windowManager.Open("aposWardrobe", true);
     }
 
-    // Only armor and clothing belong to an outfit. The backpack slot stays as it is: its size decides how many bag
-    // slots you have, and a smaller (or no) backpack drops what does not fit. The biome badges stay too.
+    // Only the 4 armor slots belong to an outfit. Clothing under the armor (it only gives cold / heat resistance), the
+    // backpack (its size decides how many bag slots you have; a smaller one drops what does not fit) and the biome
+    // badges stay on.
+    public static readonly EquipmentSlots[] OutfitSlots = { EquipmentSlots.Head, EquipmentSlots.Chest, EquipmentSlots.Hands, EquipmentSlots.Feet };
+
     public static bool Swaps(int slot)
     {
-        EquipmentSlots s = (EquipmentSlots)slot;
-        return s == EquipmentSlots.Head || s == EquipmentSlots.Chest || s == EquipmentSlots.Hands || s == EquipmentSlots.Feet
-            || s == EquipmentSlots.ClothingHead || s == EquipmentSlots.ClothingChest || s == EquipmentSlots.ClothingHands
-            || s == EquipmentSlots.ClothingFeet;
+        return Array.IndexOf(OutfitSlots, (EquipmentSlots)slot) >= 0;
+    }
+
+    // what an outfit holds in a slot: the worn item for the active one, the stored item for the others
+    public static ItemValue ItemIn(EntityPlayerLocal p, int outfit, EquipmentSlots slot)
+    {
+        ItemValue iv;
+        if (outfit == Active) iv = p.equipment.GetSlotItem((int)slot);
+        else Stored[outfit].TryGetValue((int)slot, out iv);
+        return iv != null && !iv.IsEmpty() && iv.ItemClass != null ? iv : null;
+    }
+
+    // armor value of an item at its quality / forge tier (the item's own tiered passive, mods not counted)
+    public static float ItemValueOf(ItemValue iv, PassiveEffects type)
+    {
+        float sum = 0f;
+        if (iv == null || iv.ItemClass == null || iv.ItemClass.Effects == null || iv.ItemClass.Effects.EffectGroups == null) return 0f;
+        int tier = AposTiers.Tier(iv);
+        foreach (MinEffectGroup g in iv.ItemClass.Effects.EffectGroups)
+        {
+            if (g.PassiveEffects == null) continue;
+            foreach (PassiveEffect pe in g.PassiveEffects)
+            {
+                if (pe.Type != type || pe.Values == null || pe.Values.Length == 0) continue;
+                if (pe.Modifier != PassiveEffect.ValueModifierTypes.base_add) continue;
+                if (pe.Levels != null && pe.Levels.Length == pe.Values.Length && pe.Values.Length >= 2) sum += XUiC_AposForge.TierValue(pe, tier);
+                else sum += pe.Values[0];
+            }
+        }
+        return sum;
     }
 
     // worn items -> the active outfit's tab; the chosen outfit -> equipment
@@ -307,10 +336,38 @@ public static class AposWardrobeCharacterPatch
 // Wardrobe window: 3 tabs with the items of each outfit, "Put on" and "Take to backpack"
 public class XUiC_AposWardrobe : XUiController
 {
-    const int Rows = 8;
+    // "Ranger set 4/4 - bonus active: ..." for the armor group with the most pieces (a group with a vanilla set bonus)
+    static string SetText(Dictionary<string, int> groups)
+    {
+        string best = null;
+        int count = 0;
+        BuffClass bonus = null;
+        foreach (KeyValuePair<string, int> kv in groups)
+        {
+            if (!kv.Key.StartsWith("group") || kv.Value <= count) continue;
+            BuffClass b = BuffManager.GetBuff("buff" + kv.Key.Substring(5) + "SetBonus");
+            if (b == null) continue;
+            best = kv.Key;
+            count = kv.Value;
+            bonus = b;
+        }
+        if (bonus == null) return "[808080]" + Localization.Get("aposWardrobeNoSet") + "[-]";
+        string name = !string.IsNullOrEmpty(bonus.LocalizedName) ? bonus.LocalizedName : best.Substring(5);
+        if (count < 4)
+        {
+            return string.Format(Localization.Get("aposWardrobeSetPartial"), name, count, 4 - count);
+        }
+        string desc = !string.IsNullOrEmpty(bonus.DescriptionKey) ? Localization.Get(bonus.DescriptionKey) : bonus.Description;
+        if (desc != null) desc = desc.Replace("\n", " ").Replace("\n", " ");
+        return string.Format(Localization.Get("aposWardrobeSetFull"), name) + (string.IsNullOrEmpty(desc) ? "" : " [C0C0C0]" + desc + "[-]");
+    }
+
+    const int Rows = 4;
     readonly XUiC_SimpleButton[] tabs = new XUiC_SimpleButton[AposWardrobe.Outfits];
     readonly XUiV_Label[] rows = new XUiV_Label[Rows];
-    XUiV_Label title;
+    readonly XUiV_Sprite[] icons = new XUiV_Sprite[Rows];
+    static readonly string[] SlotKeys = { "aposWardrobeSlotHead", "aposWardrobeSlotChest", "aposWardrobeSlotHands", "aposWardrobeSlotFeet" };
+    XUiV_Label title, armorLabel, setLabel;
     XUiC_SimpleButton wear, take;
     int tab;
     float nextRefresh;
@@ -325,7 +382,14 @@ public class XUiC_AposWardrobe : XUiController
             tabs[i] = Button("btnTab" + i, () => tab = t);
             SetText(tabs[i], string.Format(Localization.Get("aposWardrobeTab"), i + 1));
         }
-        for (int i = 0; i < Rows; i++) rows[i] = Label(this, "lblItem" + i);
+        for (int i = 0; i < Rows; i++)
+        {
+            rows[i] = Label(this, "lblItem" + i);
+            XUiController c = GetChildById("icoItem" + i);
+            icons[i] = c != null ? c.ViewComponent as XUiV_Sprite : null;
+        }
+        armorLabel = Label(this, "lblArmor");
+        setLabel = Label(this, "lblSet");
         wear = Button("btnWear", () => AposWardrobe.RequestSwitch(tab));
         take = Button("btnTake", () =>
         {
@@ -391,25 +455,49 @@ public class XUiC_AposWardrobe : XUiController
                 + (active ? "[40FF60]" + Localization.Get("aposWardrobeWorn") + "[-]" : "");
         }
 
-        // the active outfit is what you wear now; the others come from the wardrobe
-        List<ItemValue> items = new List<ItemValue>();
-        if (active)
-        {
-            for (int i = 0; i < p.equipment.GetSlotCount(); i++)
-            {
-                if (!AposWardrobe.Swaps(i)) continue;
-                ItemValue iv = p.equipment.GetSlotItem(i);
-                if (iv != null && !iv.IsEmpty()) items.Add(iv);
-            }
-        }
-        else items.AddRange(AposWardrobe.Stored[tab].Values);
-
+        // one row per armor slot: icon, slot, item, quality / forge tier, its armor
+        float armor = 0f, elemental = 0f;
+        Dictionary<string, int> groups = new Dictionary<string, int>();
         for (int i = 0; i < Rows; i++)
         {
-            if (rows[i] == null) continue;
-            if (i < items.Count) rows[i].Text = items[i].ItemClass.GetLocalizedItemName() + "  [FFD24D]" + AposTiers.Tier(items[i]) + "[-]";
-            else rows[i].Text = i == 0 && items.Count == 0 ? "[808080]" + Localization.Get("aposWardrobeEmpty") + "[-]" : "";
+            ItemValue iv = AposWardrobe.ItemIn(p, tab, AposWardrobe.OutfitSlots[i]);
+            string slot = "[A0A0A0]" + Localization.Get(SlotKeys[i]) + ":[-]  ";
+            if (iv == null)
+            {
+                if (rows[i] != null) rows[i].Text = slot + "[707070]" + Localization.Get("aposWardrobeEmpty") + "[-]";
+                if (icons[i] != null) icons[i].IsVisible = false;
+                continue;
+            }
+            float a = AposWardrobe.ItemValueOf(iv, PassiveEffects.PhysicalDamageResist);
+            armor += a;
+            elemental += AposWardrobe.ItemValueOf(iv, PassiveEffects.ElementalDamageResist);
+            if (rows[i] != null)
+            {
+                rows[i].Text = slot + iv.ItemClass.GetLocalizedItemName() + "  [FFD24D]" + AposTiers.Tier(iv) + "[-]"
+                    + (a > 0f ? "   [80C8FF]" + string.Format(Localization.Get("aposWardrobeItemArmor"), Mathf.RoundToInt(a)) + "[-]" : "");
+            }
+            if (icons[i] != null)
+            {
+                icons[i].IsVisible = true;
+                icons[i].SpriteName = iv.ItemClass.GetIconName();
+                icons[i].Color = iv.ItemClass.GetIconTint(iv);
+            }
+            ItemClassArmor ac = iv.ItemClass as ItemClassArmor;
+            if (ac != null && ac.ArmorGroup != null)
+            {
+                foreach (string g in ac.ArmorGroup)
+                {
+                    int n;
+                    groups.TryGetValue(g, out n);
+                    groups[g] = n + 1;
+                }
+            }
         }
+        if (armorLabel != null)
+        {
+            armorLabel.Text = string.Format(Localization.Get("aposWardrobeArmor"), Mathf.RoundToInt(armor), Mathf.RoundToInt(elemental));
+        }
+        if (setLabel != null) setLabel.Text = SetText(groups);
         if (wear != null) wear.Enabled = !active && !AposWardrobe.Switching;
         if (take != null) take.Enabled = !active && AposWardrobe.Stored[tab].Count > 0;
     }

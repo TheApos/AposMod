@@ -627,7 +627,7 @@ public class XUiC_AposForge : XUiController
     }
 
     // the passive's value at quality 1..6 (vanilla interpolation between its tiers) or forge tier 7..10
-    static float TierValue(PassiveEffect p, int tier)
+    public static float TierValue(PassiveEffect p, int tier)
     {
         float[] v = p.Values, l = p.Levels;
         int last = v.Length - 1;

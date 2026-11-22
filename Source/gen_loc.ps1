@@ -495,6 +495,15 @@ $extra['aposWardrobeHint']     = 'Alt+1 / Alt+2 / Alt+3 - change outfit, Alt+0 -
 $extra['aposWardrobeChanging'] = 'Changing into outfit {0}', 'Переодевание в комплект {0}'
 $extra['aposWardrobeSwitched'] = 'Outfit {0} is on', 'Надет комплект {0}'
 $extra['aposWardrobeButton']   = 'Wardrobe (Alt+0)', 'Гардероб (Alt+0)'
+$extra['aposWardrobeSlotHead']  = 'Head', 'Голова'
+$extra['aposWardrobeSlotChest'] = 'Body', 'Тело'
+$extra['aposWardrobeSlotHands'] = 'Hands', 'Руки'
+$extra['aposWardrobeSlotFeet']  = 'Feet', 'Ноги'
+$extra['aposWardrobeItemArmor'] = 'armor {0}', 'броня {0}'
+$extra['aposWardrobeArmor']     = 'Armor: [80C8FF]{0}[-]     Elemental: [FFB060]{1}[-]', 'Броня: [80C8FF]{0}[-]     От стихий: [FFB060]{1}[-]'
+$extra['aposWardrobeNoSet']     = 'No armor set', 'Без комплекта брони'
+$extra['aposWardrobeSetPartial'] = 'Set "{0}": {1}/4, {2} more for the set bonus', 'Сет «{0}»: {1}/4, до бонуса не хватает {2}'
+$extra['aposWardrobeSetFull']   = '[40FF60]Set "{0}" 4/4, bonus active:[-]', '[40FF60]Сет «{0}» 4/4, бонус активен:[-]'
 $extra['aposWardrobeTip']      = 'Tip: keep up to 3 outfits and change in 1.5 s with Alt+1 / Alt+2 / Alt+3. Alt+0 or the Wardrobe button in the character window shows them.', 'Совет: можно держать до 3 комплектов одежды и переодеваться за 1.5 с клавишами Alt+1 / Alt+2 / Alt+3. Alt+0 или кнопка «Гардероб» в окне персонажа показывает их.'
 
 # Weapon Mastery (Source/AposMastery.cs): window, classes, node kinds (aposMK<Kind> = description with {0}, ...Short = button)

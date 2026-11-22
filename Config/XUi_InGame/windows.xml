@@ -256,14 +256,20 @@
 					<label depth="4" name="btnLabel" pos="0,-8" width="192" height="30" font_size="22" justify="center" text="" />
 				</rect>
 				<label depth="3" name="lblOutfit" pos="12,-56" width="590" height="32" font_size="26" text="" />
-				<label depth="3" name="lblItem0" pos="18,-96" width="570" height="30" font_size="22" text="" />
-				<label depth="3" name="lblItem1" pos="18,-130" width="570" height="30" font_size="22" text="" />
-				<label depth="3" name="lblItem2" pos="18,-164" width="570" height="30" font_size="22" text="" />
-				<label depth="3" name="lblItem3" pos="18,-198" width="570" height="30" font_size="22" text="" />
-				<label depth="3" name="lblItem4" pos="18,-232" width="570" height="30" font_size="22" text="" />
-				<label depth="3" name="lblItem5" pos="18,-266" width="570" height="30" font_size="22" text="" />
-				<label depth="3" name="lblItem6" pos="18,-300" width="570" height="30" font_size="22" text="" />
-				<label depth="3" name="lblItem7" pos="18,-334" width="570" height="30" font_size="22" text="" />
+				<sprite depth="2" pos="12,-96" width="590" height="44" color="0,0,0,90" type="sliced" />
+				<sprite depth="3" name="icoItem0" pos="16,-98" width="40" height="40" atlas="ItemIconAtlas" sprite="" foregroundlayer="true" />
+				<label depth="3" name="lblItem0" pos="66,-104" width="530" height="30" font_size="22" text="" />
+				<sprite depth="2" pos="12,-144" width="590" height="44" color="0,0,0,90" type="sliced" />
+				<sprite depth="3" name="icoItem1" pos="16,-146" width="40" height="40" atlas="ItemIconAtlas" sprite="" foregroundlayer="true" />
+				<label depth="3" name="lblItem1" pos="66,-152" width="530" height="30" font_size="22" text="" />
+				<sprite depth="2" pos="12,-192" width="590" height="44" color="0,0,0,90" type="sliced" />
+				<sprite depth="3" name="icoItem2" pos="16,-194" width="40" height="40" atlas="ItemIconAtlas" sprite="" foregroundlayer="true" />
+				<label depth="3" name="lblItem2" pos="66,-200" width="530" height="30" font_size="22" text="" />
+				<sprite depth="2" pos="12,-240" width="590" height="44" color="0,0,0,90" type="sliced" />
+				<sprite depth="3" name="icoItem3" pos="16,-242" width="40" height="40" atlas="ItemIconAtlas" sprite="" foregroundlayer="true" />
+				<label depth="3" name="lblItem3" pos="66,-248" width="530" height="30" font_size="22" text="" />
+				<label depth="3" name="lblArmor" pos="12,-292" width="590" height="30" font_size="24" text="" />
+				<label depth="3" name="lblSet" pos="12,-322" width="590" height="50" font_size="19" text="" max_line_count="2" />
 				<rect name="btnWear" pos="12,-376" width="290" height="38" controller="SimpleButton">
 					<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
 					<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
