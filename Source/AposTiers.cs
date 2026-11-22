@@ -66,6 +66,10 @@ public static class AposTiers
         iv.SetMetadata(SpentKey, Spent(iv) + eridium);
     }
 
+    // Share of the tier 10 bonus reached at tiers 6..10: every next tier adds more than the one before (+1, +2, +3, +4
+    // parts of 10). Tier 10 = 4 tiers x the step multiplier, as with an even growth.
+    static readonly float[] Curve = { 0f, 0.1f, 0.3f, 0.6f, 1f };
+
     // a value list belongs to one passive, so its step multiplier never changes and the cache stays per list
     public static float[] Extrapolate(float[] values, float[] levels, int extra, int stepMultiplier)
     {
@@ -76,7 +80,7 @@ public static class AposTiers
         int last = values.Length - 1;
         float steps = levels[last] - levels[0];
         float step = steps > 0f ? (values[last] - values[0]) / steps : 0f;
-        float top = values[last] + step * extra * stepMultiplier;
+        float top = values[last] + step * stepMultiplier * (MaxTier - 6) * Curve[extra];
         // a value that shrinks with quality (e.g. a penalty) stops at zero instead of changing sign
         if (values[last] > 0f && top < 0f || values[last] < 0f && top > 0f) top = 0f;
         result = (float[])values.Clone();
