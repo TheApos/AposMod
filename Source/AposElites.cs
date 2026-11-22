@@ -308,7 +308,8 @@ public class AposElites : MonoBehaviour
                 for (int i = 0; i < list.Count; i++)
                 {
                     EntityLootContainer bag = list[i] as EntityLootContainer;
-                    if (bag == null || bag.IsDead() || glows.ContainsKey(bag.entityId)) continue;
+                    // no IsDead check: a bag is "dead" from its first frame (EntityContainerAbs.Start calls SetDead)
+                    if (bag == null || glows.ContainsKey(bag.entityId)) continue;
                     glows[bag.entityId] = AddGlow(bag.transform, BagColor);
                     bagGlows.Add(bag.entityId);
                 }
@@ -655,12 +656,7 @@ public static class AposScrapPatch
     static void Postfix(XUiC_RecipeStack __instance, Recipe ___recipe, ItemValue ___outputItemValue, bool __result)
     {
         if (!__result || ___recipe == null) return;
-        if (!___recipe.IsScrap)
-        {
-            AposInventor.Apply(___outputItemValue, __instance.xui.playerUI.entityPlayer);
-            return;
-        }
-        if (___recipe.ingredients.Count == 0) return;
+        if (!___recipe.IsScrap || ___recipe.ingredients.Count == 0) return;
         AposElites.GiveEridium(AposElites.ScrapEridium(___recipe.ingredients[0].itemValue));
     }
 }
@@ -751,6 +747,19 @@ public static class AposInventor
         // crafted weapons never get affixes in vanilla; the Inventor's do, rolled like loot of that quality
         if (AposAffixes.Kind(iv.ItemClass) != 0 && AposAffixes.Decompose(iv).Count == 0) AposAffixes.Roll(iv, false);
         if (iv.Quality >= 6 && AposTiers.Tier(iv) < 7 && AposTiers.HasTieredValues(iv.ItemClass)) AposTiers.SetTier(iv, 7);
+    }
+}
+
+// Crafting with the window open: giveExp runs right after outputStack creates the item and before the item goes
+// into the backpack, which stores a copy (ItemStackGrid.AddItem clones the ItemValue); a postfix on outputStack was
+// too late. giveExp only runs for the player who queued the recipe; repairs do not call it.
+[HarmonyPatch(typeof(XUiC_RecipeStack), "giveExp")]
+public static class AposInventorCraftPatch
+{
+    static void Prefix(XUiC_RecipeStack __instance, ItemValue _iv, Recipe ___recipe)
+    {
+        if (___recipe == null || ___recipe.IsScrap) return;
+        AposInventor.Apply(_iv, __instance.xui.playerUI.entityPlayer);
     }
 }
 
