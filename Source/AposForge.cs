@@ -68,6 +68,10 @@ public class XUiC_AposForge : XUiController
     XUiV_Label eridiumLabel, weaponLabel, sharpenLabel, progressLabel;
     XUiController progressBox;
     XUiV_Sprite progressFill;
+    XUiV_Label gainLabel;
+    int hoverRow = -1;          // apparel row whose sharpen button the mouse is over
+    Color resultColor;
+    float resultStart;
     static readonly Color BarColor = new Color(1f, 0.75f, 0.25f);
     readonly XUiV_Label[] affixLabels = new XUiV_Label[Rows];
     readonly XUiC_SimpleButton[] rerollButtons = new XUiC_SimpleButton[Rows];
@@ -102,6 +106,7 @@ public class XUiC_AposForge : XUiController
         XUiController fill = GetChildById("barFill");
         progressFill = fill != null ? fill.ViewComponent as XUiV_Sprite : null;
         Show(progressBox, false);
+        gainLabel = Label(this, "lblGain");
         string[] pageIds = { "pageWeapon", "pageApparel", "pageLegends" };
         string[] tabIds = { "btnTabWeapon", "btnTabApparel", "btnTabLegends" };
         string[] tabKeys = { "aposForgeTabWeapon", "aposForgeTabApparel", "aposForgeTabLegends" };
@@ -128,6 +133,14 @@ public class XUiC_AposForge : XUiController
             wearLabels[i] = Label(this, "lblWear" + i);
             wearButtons[i] = Button("btnWear" + i, () => StartSharpen(wearSlots[row], false));
             wearSafeButtons[i] = Button("btnWearSafe" + i, () => StartSharpen(wearSlots[row], true));
+            XUiEvent_OnHoverEventHandler hover = (_sender, _isOver) =>
+            {
+                if (_isOver) hoverRow = row;
+                else if (hoverRow == row) hoverRow = -1;
+                UpdateGain();
+            };
+            if (wearButtons[i] != null) wearButtons[i].OnHover += hover;
+            if (wearSafeButtons[i] != null) wearSafeButtons[i].OnHover += hover;
         }
         for (int i = 0; i < legendButtons.Length; i++)
         {
@@ -208,6 +221,13 @@ public class XUiC_AposForge : XUiController
             resultUntil = 0f;
             ClearProgress();
         }
+        else if (resultUntil > 0f)
+        {
+            // the result blinks 3 times, then stays in its colour
+            float since = Time.time - resultStart;
+            bool bright = since < 0.9f && Mathf.FloorToInt(since / 0.15f) % 2 == 0;
+            SetBar(1f, bright ? Color.Lerp(resultColor, Color.white, 0.6f) : resultColor);
+        }
         if (Time.time < nextRefresh) return;
         nextRefresh = Time.time + 0.3f; // the held weapon, worn items or counts may change while the window is open
         Refresh();
@@ -251,6 +271,7 @@ public class XUiC_AposForge : XUiController
         }
         RefreshWeapon(p, eridium, steel);
         RefreshApparel(p, eridium, steel);
+        UpdateGain();
         for (int i = 0; i < legendButtons.Length; i++) Enable(legendButtons[i], eridium >= LegendCost);
     }
 
@@ -530,7 +551,7 @@ public class XUiC_AposForge : XUiController
             PutBack(p, busySlot, copy);
             Audio.Manager.PlayInsidePlayerHead("levelup", p.entityId);
             text = "[40FF60]" + string.Format(Localization.Get("aposForgeSharpenOk"), target) + "[-]";
-            SetBar(1f, new Color(0.25f, 0.85f, 0.35f));
+            resultColor = new Color(0.25f, 0.85f, 0.35f);
         }
         else if (!busySafe)
         {
@@ -540,7 +561,7 @@ public class XUiC_AposForge : XUiController
             AposElites.GiveEridium(back);
             Audio.Manager.PlayInsidePlayerHead("itembreak", p.entityId);
             text = "[FF2020]" + string.Format(Localization.Get("aposForgeSharpenBroke"), back) + "[-]";
-            SetBar(1f, new Color(0.85f, 0.15f, 0.15f));
+            resultColor = new Color(0.85f, 0.15f, 0.15f);
         }
         else
         {
@@ -551,11 +572,100 @@ public class XUiC_AposForge : XUiController
             Audio.Manager.PlayInsidePlayerHead("lockpick_fail", p.entityId);
             text = "[FF6040]" + (down == tier ? Localization.Get("aposForgeSharpenFailSafe")
                 : string.Format(Localization.Get("aposForgeSharpenFail"), down)) + "[-]";
-            SetBar(1f, new Color(0.95f, 0.45f, 0.15f));
+            resultColor = new Color(0.95f, 0.45f, 0.15f);
         }
         if (progressLabel != null) progressLabel.Text = text;
-        resultUntil = Time.time + 4f;
+        // also on the HUD, so the result is seen even with the eyes on the item
+        GameManager.ShowTooltip(p, text);
+        resultStart = Time.time;
+        resultUntil = Time.time + 6f;
+        SetBar(1f, resultColor);
         Refresh();
+    }
+
+    // ===== what the next level gives =====
+    void UpdateGain()
+    {
+        if (gainLabel == null) return;
+        ItemValue iv = null;
+        if (tab == 0) iv = Held();
+        else if (tab == 1 && hoverRow >= 0 && wearSlots[hoverRow] >= 0 && Player != null) iv = ItemIn(Player, wearSlots[hoverRow]);
+        if (iv == null || iv.IsEmpty() || iv.ItemClass == null)
+        {
+            gainLabel.Text = tab == 1 ? "[808080]" + Localization.Get("aposForgeGainHover") + "[-]" : "";
+            return;
+        }
+        gainLabel.Text = GainText(iv);
+    }
+
+    // "Next level (8): Damage +25% -> +40%, Durability 400 -> 420"
+    static string GainText(ItemValue iv)
+    {
+        int tier = AposTiers.Tier(iv);
+        if (tier >= AposTiers.MaxTier || !AposTiers.HasTieredValues(iv.ItemClass)) return "";
+        List<string> parts = new List<string>();
+        List<PassiveEffects> seen = new List<PassiveEffects>();
+        foreach (MinEffectGroup g in iv.ItemClass.Effects.EffectGroups)
+        {
+            if (g.PassiveEffects == null) continue;
+            foreach (PassiveEffect p in g.PassiveEffects)
+            {
+                float[] v = p.Values, l = p.Levels;
+                if (v == null || l == null || v.Length < 2 || v.Length != l.Length || v[0] == v[v.Length - 1]) continue;
+                if (seen.Contains(p.Type)) continue;
+                string key = GainKey(p.Type);
+                if (key == null) continue;
+                float now = TierValue(p, tier), next = TierValue(p, tier + 1);
+                if (Math.Abs(next - now) < 0.0001f) continue;
+                seen.Add(p.Type);
+                bool perc = p.Modifier == PassiveEffect.ValueModifierTypes.perc_add || p.Modifier == PassiveEffect.ValueModifierTypes.perc_set;
+                parts.Add(Localization.Get(key) + " " + Num(now, perc) + " > [40FF60]" + Num(next, perc) + "[-]");
+            }
+        }
+        if (parts.Count == 0) return "";
+        return string.Format(Localization.Get("aposForgeGain"), tier + 1) + " " + string.Join(",  ", parts.ToArray());
+    }
+
+    // the passive's value at quality 1..6 (vanilla interpolation between its tiers) or forge tier 7..10
+    static float TierValue(PassiveEffect p, int tier)
+    {
+        float[] v = p.Values, l = p.Levels;
+        int last = v.Length - 1;
+        if (tier > 6) return AposTiers.Extrapolate(v, l, Math.Min(tier, AposTiers.MaxTier) - 6, AposTiers.StepFor(p.Type))[last];
+        if (tier < l[0]) return 0f; // the bonus starts at a higher quality
+        for (int i = 1; i <= last; i++)
+        {
+            if (tier <= l[i]) return Mathf.Lerp(v[i - 1], v[i], (tier - l[i - 1]) / Math.Max(0.0001f, l[i] - l[i - 1]));
+        }
+        return v[last];
+    }
+
+    static string Num(float value, bool perc)
+    {
+        if (perc)
+        {
+            float pct = value * 100f;
+            return (pct > 0f ? "+" : "") + pct.ToString("0", System.Globalization.CultureInfo.InvariantCulture) + "%";
+        }
+        return value.ToString(Math.Abs(value) >= 10f || value == Mathf.Round(value) ? "0" : "0.#", System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    static string GainKey(PassiveEffects type)
+    {
+        switch (type)
+        {
+            case PassiveEffects.EntityDamage: return "aposForgeGainDamage";
+            case PassiveEffects.BlockDamage: return "aposForgeGainBlock";
+            case PassiveEffects.ExplosionEntityDamage: return "aposForgeGainExplosion";
+            case PassiveEffects.PhysicalDamageResist: return "aposForgeGainArmor";
+            case PassiveEffects.ElementalDamageResist: return "aposForgeGainElemental";
+            case PassiveEffects.DegradationMax: return "aposForgeGainDurability";
+            case PassiveEffects.ModSlots: return "aposForgeGainModSlots";
+            case PassiveEffects.MagazineSize: return "aposForgeGainMagazine";
+            case PassiveEffects.HypothermalResist: return "aposForgeGainCold";
+            case PassiveEffects.HyperthermalResist: return "aposForgeGainHeat";
+        }
+        return null;
     }
 
     // Quality up to 6 is the real item quality (affix values grow with it), 7..10 is the forge tier
