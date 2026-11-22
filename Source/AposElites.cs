@@ -670,14 +670,17 @@ public static class AposWorkstationScrapPatch
     static void Prefix(RecipeQueueItem[] ___queue, out Dictionary<Recipe, int> __state)
     {
         __state = Scraps(___queue);
-        // Intellect Mastery 5 "Inventor" for items this workstation finishes (AposInventorStackPatch)
-        RecipeQueueItem active = ___queue != null && ___queue.Length > 0 ? ___queue[___queue.Length - 1] : null;
-        AposInventor.Crafter = active != null && active.Recipe != null && !active.Recipe.IsScrap ? active.StartingEntityId : -1;
+        // Intellect Mastery 5 "Inventor": raised qualities while the workstation creates items (AposInventor)
+        AposInventor.BeginQueue(___queue);
+    }
+
+    static void Finalizer()
+    {
+        AposInventor.EndQueue();
     }
 
     static void Postfix(TileEntityWorkstation __instance, RecipeQueueItem[] ___queue, ItemStack[] ___output, Dictionary<Recipe, int> __state)
     {
-        AposInventor.Crafter = -1;
         if (__state == null) return;
         try
         {
@@ -734,32 +737,111 @@ public static class AposDismemberGuardPatch
     }
 }
 
-// Intellect Mastery 5 "Inventor": crafted weapons roll affixes like loot; crafting gives +1 quality (progression.xml,
-// CraftingTier), and an item that comes out at quality 6 (the crafting cap) with values growing with quality is forge tier 7.
+// Intellect Mastery 5 "Inventor": a crafted item comes out one quality level above the quality picked in the recipe
+// (6 stays 6 and becomes forge tier 7 instead), and crafted weapons roll affixes like loot of that quality.
+// The picked quality is raised only while the game creates the item, so the crafting window keeps showing the pick.
 public static class AposInventor
 {
-    public static int Crafter = -1; // set while a closed workstation finishes its queue
+    // the queue of the workstation that is finishing items right now (AposWorkstationScrapPatch), with the picked qualities
+    static RecipeQueueItem[] queue;
+    static readonly Dictionary<RecipeQueueItem, byte> picked = new Dictionary<RecipeQueueItem, byte>();
+    // the quality picked for the item the open crafting window is making now (AposInventorCraftPatch), -1 = none
+    public static int WindowPick = -1;
 
-    public static void Apply(ItemValue iv, EntityAlive crafter)
+    public static bool Has(EntityAlive crafter)
     {
-        if (iv == null || crafter == null || iv.ItemClass == null || !iv.ItemClass.HasQuality) return;
-        if (AposAffixes.Level(crafter, "perkIntellectMastery") < 5) return;
+        return crafter != null && AposAffixes.Level(crafter, "perkIntellectMastery") >= 5;
+    }
+
+    public static bool Raises(Recipe r)
+    {
+        if (r == null || r.IsScrap || r.itemValueType <= 0 || r.itemValueType >= ItemClass.list.Length) return false;
+        ItemClass ic = ItemClass.list[r.itemValueType];
+        return ic != null && ic.HasQuality;
+    }
+
+    public static int Raise(int quality)
+    {
+        return quality > 0 && quality < 6 ? quality + 1 : quality;
+    }
+
+    public static void Apply(ItemValue iv, EntityAlive crafter, int pick)
+    {
+        if (iv == null || iv.ItemClass == null || !iv.ItemClass.HasQuality || !Has(crafter)) return;
         // crafted weapons never get affixes in vanilla; the Inventor's do, rolled like loot of that quality
         if (AposAffixes.Kind(iv.ItemClass) != 0 && AposAffixes.Decompose(iv).Count == 0) AposAffixes.Roll(iv, false);
-        if (iv.Quality >= 6 && AposTiers.Tier(iv) < 7 && AposTiers.HasTieredValues(iv.ItemClass)) AposTiers.SetTier(iv, 7);
+        if (pick >= 6 && AposTiers.Tier(iv) < 7 && AposTiers.HasTieredValues(iv.ItemClass)) AposTiers.SetTier(iv, 7);
+    }
+
+    public static void BeginQueue(RecipeQueueItem[] q)
+    {
+        EndQueue();
+        World world = GameManager.Instance.World;
+        if (q == null || world == null) return;
+        queue = q;
+        for (int i = 0; i < q.Length; i++)
+        {
+            RecipeQueueItem item = q[i];
+            if (item == null || item.Multiplier <= 0 || !Raises(item.Recipe)) continue;
+            if (item.RepairItem != null && !item.RepairItem.IsEmpty()) continue;
+            if (!Has(world.GetEntity(item.StartingEntityId) as EntityAlive)) continue;
+            picked[item] = item.Quality;
+            item.Quality = (byte)Raise(item.Quality);
+        }
+    }
+
+    public static void EndQueue()
+    {
+        foreach (KeyValuePair<RecipeQueueItem, byte> kv in picked) kv.Key.Quality = kv.Value;
+        picked.Clear();
+        queue = null;
+    }
+
+    // the workstation puts the item its active (last) queue slot finished into the output
+    public static void OnQueueOutput(ItemValue iv)
+    {
+        if (queue == null || queue.Length == 0 || GameManager.Instance.World == null) return;
+        RecipeQueueItem active = queue[queue.Length - 1];
+        byte pick;
+        if (active == null || !picked.TryGetValue(active, out pick)) return;
+        Apply(iv, GameManager.Instance.World.GetEntity(active.StartingEntityId) as EntityAlive, pick);
     }
 }
 
-// Crafting with the window open: giveExp runs right after outputStack creates the item and before the item goes
-// into the backpack, which stores a copy (ItemStackGrid.AddItem clones the ItemValue); a postfix on outputStack was
-// too late. giveExp only runs for the player who queued the recipe; repairs do not call it.
-[HarmonyPatch(typeof(XUiC_RecipeStack), "giveExp")]
+// Crafting with the window open: outputStack creates the item at outputQuality, raised here for the Inventor and put back
+// afterwards (the finalizer also runs when outputStack throws). Repairs and scrapping are left alone.
+[HarmonyPatch(typeof(XUiC_RecipeStack), "outputStack")]
 public static class AposInventorCraftPatch
 {
-    static void Prefix(XUiC_RecipeStack __instance, ItemValue _iv, Recipe ___recipe)
+    static void Prefix(XUiC_RecipeStack __instance, Recipe ___recipe, ItemValue ___originalItem, int ___startingEntityId, ref int ___outputQuality, out int __state)
     {
-        if (___recipe == null || ___recipe.IsScrap) return;
-        AposInventor.Apply(_iv, __instance.xui.playerUI.entityPlayer);
+        __state = -1;
+        AposInventor.WindowPick = -1;
+        if (___originalItem != null && !___originalItem.IsEmpty()) return;
+        if (!AposInventor.Raises(___recipe)) return;
+        EntityPlayerLocal p = __instance.xui.playerUI.entityPlayer;
+        if (p == null || p.entityId != ___startingEntityId || !AposInventor.Has(p)) return;
+        __state = ___outputQuality;
+        AposInventor.WindowPick = ___outputQuality;
+        ___outputQuality = AposInventor.Raise(___outputQuality);
+    }
+
+    static void Finalizer(ref int ___outputQuality, int __state)
+    {
+        if (__state >= 0) ___outputQuality = __state;
+        AposInventor.WindowPick = -1;
+    }
+}
+
+// giveExp runs right after outputStack creates the item and before the item goes into the backpack, which stores a copy
+// (ItemStackGrid.AddItem clones the ItemValue), so the affixes are added here. Only for the player who queued it.
+[HarmonyPatch(typeof(XUiC_RecipeStack), "giveExp")]
+public static class AposInventorExpPatch
+{
+    static void Prefix(XUiC_RecipeStack __instance, ItemValue _iv)
+    {
+        if (AposInventor.WindowPick < 0) return;
+        AposInventor.Apply(_iv, __instance.xui.playerUI.entityPlayer, AposInventor.WindowPick);
     }
 }
 
@@ -769,7 +851,6 @@ public static class AposInventorStackPatch
 {
     static void Prefix(ItemStack _itemStack)
     {
-        if (AposInventor.Crafter < 0 || _itemStack == null || GameManager.Instance.World == null) return;
-        AposInventor.Apply(_itemStack.itemValue, GameManager.Instance.World.GetEntity(AposInventor.Crafter) as EntityAlive);
+        if (_itemStack != null) AposInventor.OnQueueOutput(_itemStack.itemValue);
     }
 }

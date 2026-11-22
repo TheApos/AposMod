@@ -45,11 +45,7 @@
 			<requirement name="ProgressionLevel" progression_name="perkIntellectMastery" operation="GTE" value="4"/>
 			<passive_effect name="DegradationPerUse" operation="perc_add" value="-.3"/>
 		</effect_group>
-		<!-- Level 5 "Inventor": crafted items come out one quality level higher -->
-		<effect_group name="AposMod inventor">
-			<requirement name="ProgressionLevel" progression_name="perkIntellectMastery" operation="GTE" value="5"/>
-			<passive_effect name="CraftingTier" operation="base_add" value="1"/>
-		</effect_group>
+		<!-- Level 5 "Inventor": crafted items come out one quality level above the picked one (Source/AposElites.cs, AposInventor) -->
 	</append>
 
 	<!-- ===================== 1.0: attribute level 10 highlights ===================== -->
