@@ -47,6 +47,8 @@ public class AposWardrobe : MonoBehaviour
         if (dir == null) return; // joining: the folder is not known yet
         string path = Path.Combine(dir, FileName);
         if (path != file) Load(path);
+        Hint(player);
+        UpdateHud(player);
 
         if (Switching)
         {
@@ -112,6 +114,67 @@ public class AposWardrobe : MonoBehaviour
         Active = target;
         Save();
         GameManager.ShowTooltip(player, string.Format(Localization.Get("aposWardrobeSwitched"), target + 1));
+    }
+
+    // ===== reminders: a one-time tip, the active outfit next to the toolbelt =====
+    const string TipCVar = "aposWardrobeTip";
+    static float nextHint;
+    static readonly string[] Roman = { "I", "II", "III" };
+    static XUiV_Label hudLabel;
+    static LocalPlayerUI hudUi;
+    static string hudText;
+
+    // once per character (a cvar, saved with the player): when a full armor set is on, or the bag holds armor for a slot
+    // that is already worn
+    static void Hint(EntityPlayerLocal p)
+    {
+        if (Time.time < nextHint) return;
+        nextHint = Time.time + 2f;
+        if (p.IsDead() || p.Buffs.GetCustomVar(TipCVar) >= 1f || !WantsHint(p)) return;
+        p.Buffs.SetCustomVar(TipCVar, 1f);
+        GameManager.ShowTooltip(p, Localization.Get("aposWardrobeTip"), false, false, 12f);
+    }
+
+    static bool WantsHint(EntityPlayerLocal p)
+    {
+        foreach (BuffValue b in p.Buffs.ActiveBuffs)
+        {
+            string n = b.BuffName;
+            if (n != null && n.StartsWith("buff") && n.EndsWith("SetBonus")) return true;
+        }
+        bool spare = false;
+        p.bag.PerformActionOnSlots(s =>
+        {
+            if (spare || s == null || s.IsEmpty()) return;
+            ItemClassArmor a = s.itemValue.ItemClass as ItemClassArmor;
+            if (a == null || a.IsCosmetic || !Swaps((int)a.EquipSlot)) return;
+            ItemValue worn = p.equipment.GetSlotItem((int)a.EquipSlot);
+            if (worn != null && !worn.IsEmpty()) spare = true;
+        });
+        return spare;
+    }
+
+    // "II" left of the toolbelt; grey while the other outfits are empty
+    static void UpdateHud(EntityPlayerLocal p)
+    {
+        LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(p);
+        if (ui == null || ui.xui == null) return;
+        if (ui != hudUi || hudLabel == null)
+        {
+            hudUi = ui;
+            hudLabel = null;
+            hudText = null;
+            XUiV_Window w = ui.xui.GetWindow("windowToolbelt");
+            XUiController c = w != null && w.Controller != null ? w.Controller.GetChildById("aposOutfitLabel") : null;
+            hudLabel = c != null ? c.ViewComponent as XUiV_Label : null;
+            if (hudLabel == null) return;
+        }
+        bool used = false;
+        for (int o = 0; o < Outfits; o++) if (o != Active && Stored[o].Count > 0) used = true;
+        string text = (used ? "[FFFFFF]" : "[909090]") + Roman[Active] + "[-]";
+        if (text == hudText) return;
+        hudText = text;
+        hudLabel.Text = text;
     }
 
     // Moves a stored (not worn) outfit's items into the backpack; what does not fit falls to the ground
@@ -220,6 +283,24 @@ public class AposWardrobe : MonoBehaviour
         GUI.color = new Color(1f, 0.85f, 0.3f);
         GUI.Label(r, text, style);
         GUI.color = old;
+    }
+}
+
+// "Wardrobe (Alt+0)" button under the armor and clothing slots of the character window (Config/XUi_InGame/windows.xml)
+[HarmonyLib.HarmonyPatch(typeof(XUiC_CharacterFrameWindow), "Init")]
+public static class AposWardrobeCharacterPatch
+{
+    static void Postfix(XUiC_CharacterFrameWindow __instance)
+    {
+        foreach (string id in new[] { "aposWardrobeBtnArmor", "aposWardrobeBtnClothing" })
+        {
+            XUiC_SimpleButton b = __instance.GetChildById(id) as XUiC_SimpleButton;
+            if (b == null) continue;
+            XUiController label = b.GetChildById("btnLabel");
+            XUiV_Label l = label != null ? label.ViewComponent as XUiV_Label : null;
+            if (l != null) l.Text = Localization.Get("aposWardrobeButton");
+            b.OnPressed += (_sender, _mouseButton) => __instance.xui.playerUI.windowManager.Open("aposWardrobe", true);
+        }
     }
 }
 

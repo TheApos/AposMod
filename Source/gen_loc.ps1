@@ -494,6 +494,8 @@ $extra['aposWardrobeTake']     = 'Take to backpack', 'Забрать в рюкз
 $extra['aposWardrobeHint']     = 'Alt+1 / Alt+2 / Alt+3 - change outfit, Alt+0 - this window', 'Alt+1 / Alt+2 / Alt+3 - сменить комплект, Alt+0 - это окно'
 $extra['aposWardrobeChanging'] = 'Changing into outfit {0}', 'Переодевание в комплект {0}'
 $extra['aposWardrobeSwitched'] = 'Outfit {0} is on', 'Надет комплект {0}'
+$extra['aposWardrobeButton']   = 'Wardrobe (Alt+0)', 'Гардероб (Alt+0)'
+$extra['aposWardrobeTip']      = 'Tip: keep up to 3 outfits and change in 1.5 s with Alt+1 / Alt+2 / Alt+3. Alt+0 or the Wardrobe button in the character window shows them.', 'Совет: можно держать до 3 комплектов одежды и переодеваться за 1.5 с клавишами Alt+1 / Alt+2 / Alt+3. Alt+0 или кнопка «Гардероб» в окне персонажа показывает их.'
 
 # Weapon Mastery (Source/AposMastery.cs): window, classes, node kinds (aposMK<Kind> = description with {0}, ...Short = button)
 $extra['aposMasteryTitle']      = 'WEAPON MASTERY', 'МАСТЕРСТВО ОРУЖИЯ'

@@ -390,6 +390,29 @@
 				</rect>				<label depth="3" name="lblResetHint" pos="590,-466" width="358" height="40" font_size="16" text="" />
 			</rect>
 		</window>	</append>
+	<!-- Wardrobe button under the armor / clothing slots of the character window (Source/AposWardrobe.cs opens Alt+0) -->
+	<append xpath="/windows/window[@name='CharacterFrameWindow']//rect[@tab_key='armor']">
+			<rect name="aposWardrobeBtnArmor" pos="3,-92" width="190" height="34" controller="SimpleButton">
+				<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+				<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+				<label depth="4" name="btnLabel" pos="0,-6" width="190" height="34" font_size="20" justify="center" text="" />
+			</rect>
+	</append>
+	<append xpath="/windows/window[@name='CharacterFrameWindow']//rect[@tab_key='clothing']">
+			<rect name="aposWardrobeBtnClothing" pos="3,-92" width="190" height="34" controller="SimpleButton">
+				<sprite depth="3" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+				<button depth="2" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
+				<label depth="4" name="btnLabel" pos="0,-6" width="190" height="34" font_size="20" justify="center" text="" />
+			</rect>
+	</append>
+	<!-- Active outfit (I / II / III) left of the toolbelt (Source/AposWardrobe.cs sets the text) -->
+	<append xpath="/windows/window[@name='windowToolbelt']">
+		<rect name="aposOutfit" pos="-62,-8" width="56" height="66">
+			<sprite depth="1" color="0,0,0,140" type="sliced" />
+			<sprite depth="2" name="aposOutfitIcon" pos="13,-4" width="30" height="30" sprite="ui_game_symbol_wardrobe" />
+			<label depth="2" name="aposOutfitLabel" pos="0,-36" width="56" height="26" font_size="22" justify="center" text="" effect="outline" />
+		</rect>
+	</append>
 	<!-- Weapon Mastery button in the item info panel, after Stats / Description (Source/AposMastery.cs shows it for weapons) -->
 	<append xpath="/windows/window[@name='itemInfoPanel']//rect[@name='searchControls']">
 		<button depth="4" name="aposMasteryButton" style="icon30px, press" pos="108,-22" sprite="ui_game_symbol_skills" pivot="center" tooltip_key="aposMasteryTitle" sound="[paging_click]" />
