@@ -771,6 +771,7 @@ public static class AposInventor
         // crafted weapons never get affixes in vanilla; the Inventor's do, rolled like loot of that quality
         if (AposAffixes.Kind(iv.ItemClass) != 0 && AposAffixes.Decompose(iv).Count == 0) AposAffixes.Roll(iv, false);
         if (pick >= 6 && AposTiers.Tier(iv) < 7 && AposTiers.HasTieredValues(iv.ItemClass)) AposTiers.SetTier(iv, 7);
+        Debug.Log("[AposMod] Inventor: " + iv.ItemClass.Name + " picked " + pick + " -> quality " + iv.Quality + ", tier " + AposTiers.Tier(iv));
     }
 
     public static void BeginQueue(RecipeQueueItem[] q)

@@ -69,6 +69,16 @@ public class AposWardrobe : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha0)) ui.windowManager.Open("aposWardrobe", true);
     }
 
+    // Only armor and clothing belong to an outfit. The backpack slot stays as it is: its size decides how many bag
+    // slots you have, and a smaller (or no) backpack drops what does not fit. The biome badges stay too.
+    public static bool Swaps(int slot)
+    {
+        EquipmentSlots s = (EquipmentSlots)slot;
+        return s == EquipmentSlots.Head || s == EquipmentSlots.Chest || s == EquipmentSlots.Hands || s == EquipmentSlots.Feet
+            || s == EquipmentSlots.ClothingHead || s == EquipmentSlots.ClothingChest || s == EquipmentSlots.ClothingHands
+            || s == EquipmentSlots.ClothingFeet;
+    }
+
     // worn items -> the active outfit's tab; the chosen outfit -> equipment
     static void DoSwitch(EntityPlayerLocal player, int target)
     {
@@ -76,14 +86,26 @@ public class AposWardrobe : MonoBehaviour
         Dictionary<int, ItemValue> worn = new Dictionary<int, ItemValue>();
         for (int i = 0; i < eq.GetSlotCount(); i++)
         {
+            if (!Swaps(i)) continue;
             ItemValue iv = eq.GetSlotItem(i);
             if (iv != null && !iv.IsEmpty()) worn[i] = iv.Clone();
         }
         Dictionary<int, ItemValue> next = Stored[target];
         for (int i = 0; i < eq.GetSlotCount(); i++)
         {
+            if (!Swaps(i)) continue;
             ItemValue iv;
             eq.SetSlotItem(i, next.TryGetValue(i, out iv) ? iv.Clone() : ItemValue.None.Clone());
+        }
+        // an outfit stored by 1.6.15 or older may hold a backpack or a badge: it goes to the bag (or the ground)
+        foreach (KeyValuePair<int, ItemValue> kv in next)
+        {
+            if (Swaps(kv.Key)) continue;
+            ItemStack stack = new ItemStack(kv.Value.Clone(), 1);
+            if (!player.bag.AddItem(stack))
+            {
+                GameManager.Instance.ItemDropServer(stack, player.GetPosition() + Vector3.up, Vector3.zero, -1, 600f, false);
+            }
         }
         Stored[Active] = worn;
         Stored[target] = new Dictionary<int, ItemValue>();
@@ -294,6 +316,7 @@ public class XUiC_AposWardrobe : XUiController
         {
             for (int i = 0; i < p.equipment.GetSlotCount(); i++)
             {
+                if (!AposWardrobe.Swaps(i)) continue;
                 ItemValue iv = p.equipment.GetSlotItem(i);
                 if (iv != null && !iv.IsEmpty()) items.Add(iv);
             }
