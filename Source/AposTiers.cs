@@ -2,7 +2,8 @@
 // The game only knows quality 1-6, so the item keeps Quality = 6 and the extra tier lives in its metadata
 // (aposTier = 7..10). Every value that grows with quality in the item's own XML (tier="1,6" lists: damage, armor,
 // durability, magazine, apparel bonuses...) continues with the same step: one tier = (value at the top tier -
-// value at the first tier) / (number of steps). Damage and armor resistances grow 3 steps per tier (StrongStep). Done by swapping the value list for an extrapolated copy while the
+// value at the first tier) / (number of steps). Tiers 7, 8, 9, 10 add 1, 2, 3, 4 x StepFor steps on top of each other
+// (damage and armor: 3, 6, 9, 12 steps; a pistol +25% -> +40 / +70 / +115 / +175%). Done by swapping the value list for an extrapolated copy while the
 // sharpened item's effects are evaluated (Harmony on ItemValue.ModifyValue / GetModifiedValueData + PassiveEffect.ModValue).
 using System;
 using System.Collections.Generic;
@@ -19,11 +20,11 @@ public static class AposTiers
     [ThreadStatic] public static int Extra;
     // the passive whose value list PassiveEffect.ModValue is reading now (set by AposTierTypePatch)
     [ThreadStatic] public static PassiveEffects Type;
-    public const int StrongStep = 3;
+    public const float StrongStep = 3f;
 
-    // weapon damage and armor: a sharpened tier adds 3 vanilla quality steps; everything else (durability, mod slots,
-    // magazine, other apparel bonuses) adds one
-    public static int StepFor(PassiveEffects type)
+    // vanilla quality steps per sharpening unit: weapon damage and armor 3, mod slots 0.4 (tier 10 = one more slot),
+    // everything else (durability, magazine, other apparel bonuses) 1
+    public static float StepFor(PassiveEffects type)
     {
         switch (type)
         {
@@ -34,8 +35,10 @@ public static class AposTiers
             case PassiveEffects.PhysicalDamageResist:
             case PassiveEffects.ElementalDamageResist:
                 return StrongStep;
+            case PassiveEffects.ModSlots:
+                return 0.4f;
         }
-        return 1;
+        return 1f;
     }
 
     // cache: original value list -> extrapolated lists for 1..4 extra tiers (lists are shared per effect, never change)
@@ -66,12 +69,11 @@ public static class AposTiers
         iv.SetMetadata(SpentKey, Spent(iv) + eridium);
     }
 
-    // Share of the tier 10 bonus reached at tiers 6..10: every next tier adds more than the one before (+1, +2, +3, +4
-    // parts of 10). Tier 10 = 4 tiers x the step multiplier, as with an even growth.
-    static readonly float[] Curve = { 0f, 0.1f, 0.3f, 0.6f, 1f };
+    // Sharpening units reached at tiers 6..10: each tier adds one more unit than the one before (+1, +2, +3, +4)
+    static readonly float[] Curve = { 0f, 1f, 3f, 6f, 10f };
 
     // a value list belongs to one passive, so its step multiplier never changes and the cache stays per list
-    public static float[] Extrapolate(float[] values, float[] levels, int extra, int stepMultiplier)
+    public static float[] Extrapolate(float[] values, float[] levels, int extra, float stepMultiplier)
     {
         float[][] perExtra = cache.GetValue(values, v => new float[MaxTier - 5][]);
         float[] result = perExtra[extra];
@@ -80,7 +82,7 @@ public static class AposTiers
         int last = values.Length - 1;
         float steps = levels[last] - levels[0];
         float step = steps > 0f ? (values[last] - values[0]) / steps : 0f;
-        float top = values[last] + step * stepMultiplier * (MaxTier - 6) * Curve[extra];
+        float top = values[last] + step * stepMultiplier * Curve[extra];
         // a value that shrinks with quality (e.g. a penalty) stops at zero instead of changing sign
         if (values[last] > 0f && top < 0f || values[last] < 0f && top > 0f) top = 0f;
         result = (float[])values.Clone();
