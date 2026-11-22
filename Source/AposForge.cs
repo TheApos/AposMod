@@ -7,7 +7,7 @@
 // - Legendaries: 10 legendaries for 300 each, quality 6
 // Sharpening (one quality at a time, always paid): up to 6 it always works; 7-10 can fail, a failure breaks the item
 // (30% of its scrap value comes back). "Safe" costs 5x: a failure drops one tier instead (not below 6).
-// Every sharpening attempt takes 2.5 s with anvil sounds and a progress line before the result.
+// Every sharpening attempt takes 2.5 s with anvil sounds and a progress bar before the result.
 // Eridium and steel are taken from the backpack and the toolbelt.
 using System;
 using System.Collections.Generic;
@@ -66,6 +66,9 @@ public class XUiC_AposForge : XUiController
     }
 
     XUiV_Label eridiumLabel, weaponLabel, sharpenLabel, progressLabel;
+    XUiController progressBox;
+    XUiV_Sprite progressFill;
+    static readonly Color BarColor = new Color(1f, 0.75f, 0.25f);
     readonly XUiV_Label[] affixLabels = new XUiV_Label[Rows];
     readonly XUiC_SimpleButton[] rerollButtons = new XUiC_SimpleButton[Rows];
     readonly XUiC_SimpleButton[] lockButtons = new XUiC_SimpleButton[Rows];
@@ -82,7 +85,7 @@ public class XUiC_AposForge : XUiController
 
     // running sharpening attempt
     bool busy;
-    float busyStart, nextHit;
+    float busyStart, nextHit, lastHit;
     int busySlot;    // -1 = weapon in hand, else equipment slot
     bool busySafe;
     ItemValue busyItem;
@@ -95,6 +98,10 @@ public class XUiC_AposForge : XUiController
         weaponLabel = Label(this, "lblWeapon");
         sharpenLabel = Label(this, "lblSharpen");
         progressLabel = Label(this, "lblProgress");
+        progressBox = GetChildById("progressBox");
+        XUiController fill = GetChildById("barFill");
+        progressFill = fill != null ? fill.ViewComponent as XUiV_Sprite : null;
+        Show(progressBox, false);
         string[] pageIds = { "pageWeapon", "pageApparel", "pageLegends" };
         string[] tabIds = { "btnTabWeapon", "btnTabApparel", "btnTabLegends" };
         string[] tabKeys = { "aposForgeTabWeapon", "aposForgeTabApparel", "aposForgeTabLegends" };
@@ -174,8 +181,22 @@ public class XUiC_AposForge : XUiController
     {
         base.OnOpen();
         busy = false;
-        if (progressLabel != null) progressLabel.Text = "";
+        ClearProgress();
         Refresh();
+    }
+
+    void ClearProgress()
+    {
+        if (progressLabel != null) progressLabel.Text = "";
+        Show(progressBox, false);
+    }
+
+    void SetBar(float fill, Color color)
+    {
+        Show(progressBox, true);
+        if (progressFill == null) return;
+        progressFill.Fill = Mathf.Clamp01(fill);
+        progressFill.Color = color;
     }
 
     public override void Update(float _dt)
@@ -185,7 +206,7 @@ public class XUiC_AposForge : XUiController
         else if (resultUntil > 0f && Time.time > resultUntil)
         {
             resultUntil = 0f;
-            if (progressLabel != null) progressLabel.Text = "";
+            ClearProgress();
         }
         if (Time.time < nextRefresh) return;
         nextRefresh = Time.time + 0.3f; // the held weapon, worn items or counts may change while the window is open
@@ -473,15 +494,19 @@ public class XUiC_AposForge : XUiController
         if (Time.time >= nextHit)
         {
             nextHit = Time.time + 0.5f;
+            lastHit = Time.time;
             if (p != null) Audio.Manager.PlayInsidePlayerHead("metalhitmetal", p.entityId);
         }
         if (t < 1f)
         {
-            // "Sharpening  ■■■■■□□□□□" with a pulsing colour
-            int filled = Mathf.Clamp(Mathf.FloorToInt(t * 10f), 0, 10);
-            string bar = new string('|', filled * 2) + "[505050]" + new string('|', (10 - filled) * 2) + "[-]";
-            string pulse = Mathf.Sin(Time.time * 12f) > 0f ? "[FFD24D]" : "[FF9900]";
-            if (progressLabel != null) progressLabel.Text = pulse + Localization.Get("aposForgeSharpening") + "[-]  " + bar;
+            // a smooth bar; each hammer hit brightens it for a moment
+            float flash = Mathf.Clamp01(1f - (Time.time - lastHit) / 0.15f) * 0.5f;
+            SetBar(t, Color.Lerp(BarColor, Color.white, flash));
+            if (progressLabel != null)
+            {
+                progressLabel.Text = string.Format(Localization.Get("aposForgeSharpeningTo"), AposTiers.Tier(busyItem) + 1)
+                    + "  " + Mathf.FloorToInt(t * 100f) + "%";
+            }
             return;
         }
 
@@ -489,7 +514,11 @@ public class XUiC_AposForge : XUiController
         if (p == null) return;
         ItemValue now = ItemIn(p, busySlot);
         // the item left its place during the attempt (swapped weapon): no roll, the resources are spent
-        if (now == null || now.type != busyItem.type) return;
+        if (now == null || now.type != busyItem.type)
+        {
+            ClearProgress();
+            return;
+        }
 
         int tier = AposTiers.Tier(now);
         int target = tier + 1;
@@ -501,6 +530,7 @@ public class XUiC_AposForge : XUiController
             PutBack(p, busySlot, copy);
             Audio.Manager.PlayInsidePlayerHead("levelup", p.entityId);
             text = "[40FF60]" + string.Format(Localization.Get("aposForgeSharpenOk"), target) + "[-]";
+            SetBar(1f, new Color(0.25f, 0.85f, 0.35f));
         }
         else if (!busySafe)
         {
@@ -510,6 +540,7 @@ public class XUiC_AposForge : XUiController
             AposElites.GiveEridium(back);
             Audio.Manager.PlayInsidePlayerHead("itembreak", p.entityId);
             text = "[FF2020]" + string.Format(Localization.Get("aposForgeSharpenBroke"), back) + "[-]";
+            SetBar(1f, new Color(0.85f, 0.15f, 0.15f));
         }
         else
         {
@@ -520,6 +551,7 @@ public class XUiC_AposForge : XUiController
             Audio.Manager.PlayInsidePlayerHead("lockpick_fail", p.entityId);
             text = "[FF6040]" + (down == tier ? Localization.Get("aposForgeSharpenFailSafe")
                 : string.Format(Localization.Get("aposForgeSharpenFail"), down)) + "[-]";
+            SetBar(1f, new Color(0.95f, 0.45f, 0.15f));
         }
         if (progressLabel != null) progressLabel.Text = text;
         resultUntil = Time.time + 4f;

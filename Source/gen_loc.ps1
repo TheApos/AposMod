@@ -159,6 +159,7 @@ $extra = [ordered]@{
   aposForgeSharpenInfo       = 'Sharpen to quality {0}: success {1}%', 'Заточка до {0} качества: успех {1}%'
   aposForgeBreakInfo         = 'failure breaks the item (Safe: quality -1)', 'неудача ломает предмет («Безопасно»: качество -1)'
   aposForgeSharpening        = 'SHARPENING', 'ЗАТОЧКА'
+  aposForgeSharpeningTo      = 'Sharpening to {0}...', 'Заточка до {0}...'
   aposForgeSharpenOk         = 'SUCCESS! Quality {0}', 'УСПЕХ! Качество {0}'
   aposForgeSharpenFail       = 'Failure... quality dropped to {0}', 'Неудача... качество упало до {0}'
   aposForgeSharpenFailSafe   = 'Failure, the quality is kept', 'Неудача, качество сохранено'

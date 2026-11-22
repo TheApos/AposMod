@@ -219,7 +219,13 @@
 					<label depth="4" name="btnLabel" pos="0,-8" width="290" height="38" font_size="22" justify="center" text="" />
 				</rect>
 				</rect>
-				<label depth="5" name="lblProgress" pos="0,-420" width="610" height="44" font_size="30" justify="center" text="" />
+				<!-- sharpening progress: a bar that fills in 2.5 s, brightens on each hammer hit, turns green / red / orange -->
+				<rect name="progressBox" pos="12,-418" width="586" height="40">
+					<sprite depth="5" name="barBack" color="30,30,30,255" type="sliced" />
+					<filledsprite depth="6" name="barFill" color="255,190,60,255" type="filled" fill="0" fillspritepad="true" />
+					<sprite depth="7" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+				</rect>
+				<label depth="8" name="lblProgress" pos="0,-424" width="610" height="36" font_size="26" justify="center" text="" effect="outline" effect_color="[black]" />
 			</rect>
 		</window>
 		<!-- Wardrobe window (Source/AposWardrobe.cs, controller XUiC_AposWardrobe) -->

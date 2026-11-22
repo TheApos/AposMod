@@ -141,6 +141,7 @@ aposForgeSharpenMax,buffs,Buff,,,"Maximum quality 10 reached","Достигну�
 aposForgeSharpenInfo,buffs,Buff,,,"Sharpen to quality {0}: success {1}%","Заточка до {0} качества: успех {1}%"
 aposForgeBreakInfo,buffs,Buff,,,"failure breaks the item (Safe: quality -1)","неудача ломает предмет («Безопасно»: качество -1)"
 aposForgeSharpening,buffs,Buff,,,"SHARPENING","ЗАТОЧКА"
+aposForgeSharpeningTo,buffs,Buff,,,"Sharpening to {0}...","Заточка до {0}..."
 aposForgeSharpenOk,buffs,Buff,,,"SUCCESS! Quality {0}","УСПЕХ! Качество {0}"
 aposForgeSharpenFail,buffs,Buff,,,"Failure... quality dropped to {0}","Неудача... качество упало до {0}"
 aposForgeSharpenFailSafe,buffs,Buff,,,"Failure, the quality is kept","Неудача, качество сохранено"
