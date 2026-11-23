@@ -210,6 +210,14 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
 .chgnote { padding: 8px 10px; border: 1px solid var(--warn); background: rgba(232,176,74,.08); font-size: 12.5px; }
 .chgnote b { color: var(--warn); }
 .chip.warn { border-color: var(--warn); color: var(--warn); cursor: pointer; }
+/* a skill that a learned capstone switches off (red) or weakens (orange) */
+.node.dead .ic { border-color: var(--bad) !important; background: rgba(255,111,97,.18) !important; color: var(--bad) !important; }
+.node.weak .ic { border-color: var(--warn) !important; box-shadow: 0 0 0 2px rgba(232,176,74,.35); }
+.node .brk { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 2; font: 700 9px/1.4 var(--f-mono); padding: 0 4px; color: #111; white-space: nowrap; }
+.node.dead .brk { background: var(--bad); } .node.weak .brk { background: var(--warn); }
+.brknote { padding: 8px 10px; font-size: 12.5px; border: 1px solid var(--bad); background: rgba(255,111,97,.08); }
+.brknote.weak { border-color: var(--warn); background: rgba(232,176,74,.08); }
+.brknote b { color: var(--bad); } .brknote.weak b { color: var(--warn); }
 .tip { position: fixed; z-index: 20; pointer-events: none; max-width: 260px; background: #0b0b0c; border: 1px solid var(--gold); padding: 6px 8px; font-size: 12px; }
 </style>
 
@@ -234,7 +242,8 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
     <div class="tabs" style="gap:8px;align-items:center">
       <span class="eyebrow">Готові білди</span>
       <div class="presets" id="presets"></div>
-      <button class="btn" id="reset">Скинути (Кузня)</button>
+      <button class="btn" id="reset" title="Біля Кузні Ерідію">Скинути все · 250 Ерідію</button>
+      <span class="chip" title="Скільки Ерідію пішло б на скидання в цьому прототипі">Ерідій на скидання <b id="resetSpent">0</b></span>
     </div>
     <div class="body">
       <div class="treepane">
@@ -273,7 +282,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
     </div>
     <textarea id="copyArea" hidden readonly style="width:100%;min-height:140px;background:var(--panel2);color:var(--fg);border:1px solid var(--line);font:12px var(--f-mono)"></textarea>
   </section>
-  <p class="foot">Прототип для затвердження дизайну. Числа — чернетка. Вкладки зверху перемикають клас зброї (✓ — затверджено). Вбивства на рівень: для кожного предмета окремо, як зараз. Лівий клік по навичці вивчає ранг, правий знімає (обидва відкривають її картку).</p>
+  <p class="foot">Прототип для затвердження дизайну. Числа — чернетка. Вкладки зверху перемикають клас зброї (✓ — затверджено). Вбивства на рівень: для кожного предмета окремо, як зараз. Лівий клік по навичці вивчає ранг, правий знімає (обидва відкривають її картку; у грі зняти можна лише скиданням). Скидання біля Кузні Ерідію: одна навичка (усі її ранги) — 20 Ерідію, усе дерево — 250. Червона позначка — навичку вимикає вивчений капстоун, помаранчева — капстоун її послаблює.</p>
 </div>
 <div class="tip" id="tip" hidden></div>
 
@@ -751,7 +760,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
         '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="4.5" fill="' + (hit ? "var(--b)" : "none") + '" stroke="var(--b)" opacity="' + (hit ? 1 : .3) + '"/>';
     }
     return '<div class="loop"><svg viewBox="0 0 120 120" width="110" height="110" role="img" aria-label="Рикошет по зомбі навколо"><circle cx="60" cy="60" r="56" fill="none" stroke="var(--line)" stroke-dasharray="3 3"/>' + dots + '<circle cx="60" cy="60" r="7" fill="var(--a)"/></svg>' +
-      '<div style="display:grid;gap:4px">' + (S.ricoOff ? '<div class="big" style="color:var(--bad)">вимкнено<small>Один постріл вимикає Рикошет</small></div>' :
+      '<div style="display:grid;gap:4px">' + (S.ricoOff ? '<div class="big" style="color:var(--bad)">вимкнено<small>рикошету немає</small></div>' :
       '<div class="big">' + S.targets + "<small>цілей у радіусі " + S.radius + " м</small></div>" +
       '<div class="mono" style="font-size:12px">б\'є на ' + S.share + "% від шкоди хедшоту (мін. 20) · оглушення " + (S.stun ? S.stun + " с" : "—") + "</div>" +
       '<div class="mono" style="font-size:12px">' + (S.body ? "і від влучань у тіло (50%) · " : "лише від хедшотів · ") + (S.overflow ? "надлишок " + S.overflow + "% у рикошети" : "без надлишку") + (S.storm ? " · <b style='color:var(--b)'>буря: рикошети ×2, по 3 влучання</b>" : "") + "</div>") + "</div></div>";
@@ -760,7 +769,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
     var rows = RIFLES_DMG.map(function (r) {
       var full = r[1] * (1 + S.head / 100);
       var head = Math.round(full * (S.storm ? 0.5 : 1));
-      var rico = S.ricoOff ? 0 : Math.max(20, Math.round(full * S.share / 100)) * (S.storm ? 2 : 1);
+      var rico = S.ricoOff ? 0 : Math.round(Math.max(20, Math.round(full * S.share / 100)) * (S.storm ? 2 : 1) * (S.oneShot ? 0.5 : 1));
       return '<div class="bar"><span>' + r[0] + '</span><span class="tr"><span class="A" style="width:' + Math.round(head / 220 * 100) + '%"></span></span><span class="v">' + head + "</span></div>" +
         '<div class="bar" style="opacity:.8"><span style="padding-left:10px">↳ рикошет</span><span class="tr"><span class="B" style="width:' + Math.round(rico / 220 * 100) + '%"></span></span><span class="v">' + rico + "</span></div>";
     }).join("");
@@ -805,9 +814,12 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
         ranks: ["+50% по елітах і великих"],
         syn: [{ t: "S1", w: "H2", x: "Спостерігач: контури показують, де еліта." }] },
       { id: "A8", br: "A", tier: 5, col: 0, span: 2, max: 1, icon: "duel", cap: true, name: "Один постріл", en: "One Shot",
-        desc: "Капстоун. Влучання в будь-яку частину тіла рахується як хедшот (з усіма бонусами шкоди в голову). По елітах ×2. Мінус: Рикошет (фішка класу) вимикається.",
-        ranks: ["Будь-яке влучання = хедшот; еліти ×2; Рикошет вимкнено"],
-        syn: [{ t: "S6", w: "B2", x: "Усе, що вкладено в рикошет, стає марним: свідомий вибір чистого снайпера." }] },
+        desc: "Капстоун. Влучання в будь-яку частину тіла рахується як хедшот (з усіма бонусами шкоди в голову). По елітах ×2. Мінус: Рикошет (фішка класу) вдвічі слабший, а влучання в тіло його не викликають — лише справжні хедшоти.",
+        ranks: ["Будь-яке влучання = хедшот; еліти ×2; Рикошет ×0.5 і лише від справжніх хедшотів"], rev: 2,
+        chg: "За правилом «капстоун не вимикає іншу гілку»: раніше Рикошет вимикався повністю й очки в гілці B пропадали. Тепер Рикошет вдвічі слабший і лише від справжніх хедшотів; «Рикошет від тіла» з таким капстоуном не працює (червона позначка).",
+        breaks: [{ ids: ["B1", "B2", "B3", "B4", "B6", "B7", "H1", "H3"], lvl: "weak", why: "Рикошет удвічі слабший і лише від справжніх хедшотів." },
+                 { ids: ["B5"], lvl: "dead", why: "Влучання в тіло рикошету більше не дають." }],
+        syn: [{ t: "S6", w: "B2", x: "Рикошет лишається, але вдвічі слабший: очки в гілці B не пропадають, лише «Рикошет від тіла» вимикається." }] },
 
       { id: "B1", br: "B", tier: 1, col: 0, max: 3, icon: "spread", name: "Широкий рикошет", en: "Wide Ricochet",
         desc: "Більший радіус рикошету. Залежить від атрибута Сприйняття: ранг × рівень Сприйняття.",
@@ -885,7 +897,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
         head: [0, 15, 30, 50][r.A1], bolt: [0, 20, 35, 50][r.A2], opener: [0, 30, 60, 100][r.A3],
         farPer: [0, 10, 20, 30][r.A4], farCap: [0, 100, 150, 200][r.A4], farPen: [0, 50, 40, 25][r.A4],
         weak: r.A5 > 0, chargePer: [0, 10, 20, 20][r.A6], chargeCap: [0, 100, 100, 1000][r.A6],
-        biggame: r.A7 ? 50 : 0, oneShot: r.A8 > 0, ricoOff: r.A8 > 0,
+        biggame: r.A7 ? 50 : 0, oneShot: r.A8 > 0, ricoOff: false,
         share: [5, 15, 25, 45][r.B2], targets: [3, 5, 7, 10][r.B3], stun: [0, .5, 1, 2][r.B4], body: r.B5 > 0,
         elemental: [0, 25, 60][r.B6], overflow: [0, 50, 100][r.B7], storm: r.B8 > 0
       };
@@ -1086,7 +1098,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
       dots += '<path d="M60 60L' + x.toFixed(1) + " " + y.toFixed(1) + '" stroke="var(--a)" stroke-width="1.2"/><circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="4" fill="var(--a)"/>';
     }
     return '<div class="loop"><svg viewBox="0 0 120 120" width="110" height="110" role="img" aria-label="Уламки стріли летять у зомбі навколо"><circle cx="60" cy="60" r="56" fill="none" stroke="var(--line)" stroke-dasharray="3 3"/>' + dots + '<path d="M50 70L70 50M64 50h6v6" stroke="var(--gold)" stroke-width="2" fill="none"/></svg>' +
-      '<div style="display:grid;gap:4px">' + (S.splOff ? '<div class="big" style="color:var(--bad)">вимкнено<small>Списоголова стріла вимикає Розщеплення</small></div>' :
+      '<div style="display:grid;gap:4px">' + (S.splOff ? '<div class="big" style="color:var(--warn)">лише швидкі постріли<small>Списоголова стріла: повний натяг не розлітається</small></div>' :
       '<div class="big">' + S.splinters + "<small>уламків у радіусі " + S.splRadius + " м</small></div>" +
       '<div class="mono" style="font-size:12px">кожен: ' + S.splShare + "% від шкоди стріли, мінімум " + S.splMin + "</div>" +
       '<div class="mono" style="font-size:12px">' + (S.splElem ? "стихія стріли: " + S.splElem + "% на уламок" + (S.splElemLong ? ", ×2 тривалість" : "") + " · " : "") + (S.splSlow ? "сповільнює на " + S.splSlow + "% · " : "") + (S.splChain ? "вбивство уламком → ще 2 уламки · " : "") + (S.mine ? "друга хвиля " + (S.mine === 100 ? "×1" : "×½") + " · " : "") + (S.barbed ? "уламок = рана · " : "") + (S.needles ? "уламки прошивають 1 зомбі · " : "") + (S.storm ? "<b style='color:var(--a)'>буря: ×2 уламків, у голову</b>" : "") + "</div>") + "</div></div>";
@@ -1169,9 +1181,12 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
         desc: "Стріла, що вбила зомбі, одразу повертається в інвентар — не треба підбирати.",
         ranks: ["50% шанс", "Завжди"] },
       { id: "B8", br: "B", tier: 5, col: 0, span: 2, max: 1, icon: "duel", cap: true, name: "Списоголова стріла", en: "Lance Arrow",
-        desc: "Капстоун. Повністю натягнута стріла ×2.5 шкоди і прошиває всіх зомбі в лінії без обмеження, кожному накладає Мисливську рану. Мінус: Розщеплення (фішка класу) вимикається.",
-        ranks: ["Повний натяг ×2.5, прошиває всю лінію з раною; уламків немає"],
-        syn: [{ t: "S6", w: "A1", x: "Усе, що вкладено в уламки, стає марним: чистий мисливець." }, { t: "S1", w: "B2", x: "Наскрізна стріла вже не потрібна для довжини лінії — капстоун прошиває всіх." }] },
+        desc: "Капстоун. Повністю натягнута стріла ×2.5 шкоди і прошиває всіх зомбі в лінії без обмеження, кожному накладає Мисливську рану. Мінус: повністю натягнута стріла не розлітається на уламки — Розщеплення лишається лише для швидких (неповних) пострілів.",
+        ranks: ["Повний натяг ×2.5, прошиває всю лінію з раною; уламки лише від неповного натягу"], rev: 3,
+        chg: "За правилом «капстоун не вимикає іншу гілку»: раніше Розщеплення вимикалось повністю й очки в гілці уламків пропадали. Тепер уламки лишаються для швидких пострілів, вимкнені лише на списоголових (повних) стрілах.",
+        breaks: [{ ids: ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "H1", "H2"], lvl: "weak", why: "Уламки дають лише швидкі (неповні) постріли; повністю натягнута стріла не розлітається." },
+                 { ids: ["H3"], lvl: "dead", why: "Тисяча голок працює лише з уламками повністю натягнутої стріли, а вона більше не розлітається." }],
+        syn: [{ t: "S6", w: "A1", x: "Уламки лишаються для швидких пострілів: повний натяг — по лінії, швидкий — по натовпу навколо." }, { t: "S1", w: "B2", x: "Наскрізна стріла вже не потрібна для довжини лінії — капстоун прошиває всіх." }] },
 
       { id: "H1", br: "H", row: 3, need: 5, max: 1, icon: "frag", name: "Зазубрені уламки", en: "Barbed Splinters",
         desc: "Гібрид. Кожен уламок теж залишає Мисливську рану (1 рану), тож одна стріла в натовп «готує» всю групу під наступні постріли.",
@@ -1269,7 +1284,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
   }
   function xbowTable(S) {
     var rows = XBOW_LIST.map(function (b) {
-      var bolt = Math.round(b[1] * (S.pack ? 0.6 : 1)), ch = S.charge && !S.chargeOff ? Math.round(bolt * S.charge / 100) : 0;
+      var bolt0 = Math.round(b[1] * (S.pack ? 0.6 : 1)), bolt = Math.round(bolt0 * (S.cluster ? 0.5 : 1)), ch = S.charge && !S.chargeOff ? Math.round(bolt0 * S.charge / 100 * (S.cluster ? 0.6 : 1)) : 0;
       return '<div class="bar"><span>' + b[0] + '</span><span class="tr"><span class="B" style="width:' + Math.round(ch / 260 * 100) + '%"></span></span><span class="v">' + bolt + " / " + ch + "</span></div>";
     }).join("");
     return '<div class="eyebrow" style="margin-bottom:6px">Болт / вибух заряду (залізний болт, якість 1)</div><div class="bars">' + rows + "</div>" + foot("Перезарядка " + (S.reload ? "+" + S.reload + "% швидше" : "ванільна (повільна)") + ". Вибух не ламає блоки.");
@@ -1310,9 +1325,10 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
         desc: "Вбивство позначеного зомбі (будь-якою зброєю) прискорює наступну перезарядку арбалета на 5 с.",
         ranks: ["Перезарядка +30%", "Перезарядка +100% (удвічі швидше)"] },
       { id: "A8", br: "A", tier: 5, col: 0, span: 2, max: 1, icon: "star", cap: true, name: "Мисливська зграя", en: "Hunting Party",
-        desc: "Капстоун. Бонус Мітки подвоюється, а кожне вбивство позначеного позначає 3 найближчих зомбі в 8 м. Мінус: сам болт −40% шкоди, і заряди гілки B не вибухають — арбалет стає чистою підтримкою.",
-        ranks: ["Мітка ×2, вбивство позначеного → мітка ще 3; болт −40%, без зарядів"],
-        syn: [{ t: "S6", w: "B1", x: "Усе, що вкладено в заряди, стає марним: чиста підтримка." }] },
+        desc: "Капстоун. Бонус Мітки подвоюється, а кожне вбивство позначеного позначає 3 найближчих зомбі в 8 м. Мінус: болт −40% шкоди (і вибух заряду теж, він рахується від болта) — арбалет стає підтримкою.",
+        ranks: ["Мітка ×2, вбивство позначеного → мітка ще 3; болт і заряд −40%"],
+        breaks: [{ ids: ["B1", "B8"], lvl: "weak", why: "Вибух заряду рахується від шкоди болта, а болт −40%." }],
+        syn: [{ t: "S6", w: "B1", x: "Заряди працюють, але на 40% слабші: вибух рахується від болта." }] },
 
       { id: "B1", br: "B", tier: 1, col: 0, max: 3, icon: "burst", name: "Липкий заряд", en: "Sticky Charge",
         desc: "Болт застрягає в зомбі (або в стіні чи землі) і через 2 с вибухає: шкода по всіх навколо, як справжній удар від вас (дає досвід, не ламає блоки).",
@@ -1338,9 +1354,9 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
         desc: "Заряд, що влучив у стіну або землю, не вибухає одразу, а чекає 30 с і спрацьовує, коли зомбі підходить ближче 2 м.",
         ranks: ["До 2 мін одночасно", "До 5 мін одночасно"] },
       { id: "B8", br: "B", tier: 5, col: 0, span: 2, max: 1, icon: "pellets", cap: true, name: "Касета", en: "Cluster Bolt",
-        desc: "Капстоун. Болт розпадається на 3 заряди, які прилипають до трьох найближчих зомбі в 5 м. Мінус: Мітка (фішка класу) вимикається.",
-        ranks: ["3 заряди з одного болта; Мітки немає"],
-        syn: [{ t: "S6", w: "A1", x: "Усе, що вкладено в Мітку, стає марним: чистий підривник." }, { t: "S1", w: "B5", x: "Детонатор: три заряди підривають один одного." }] },
+        desc: "Капстоун. Болт розпадається на 3 заряди, які прилипають до трьох найближчих зомбі в 5 м, і кожен позначений Міткою. Мінус: кожен заряд касети б'є лише на 60% сили, а сам болт по цілі — на 50%.",
+        ranks: ["3 заряди по 60% з Міткою; болт по цілі −50%"],
+        syn: [{ t: "S1", w: "A3", x: "Широка мітка: три заряди — три центри позначення." }, { t: "S1", w: "B5", x: "Детонатор: три заряди підривають один одного." }] },
 
       { id: "H1", br: "H", row: 3, need: 5, max: 1, icon: "target", name: "Мічений вибух", en: "Marking Blast",
         desc: "Гібрид. Вибух заряду позначає всіх, кого зачепив.",
@@ -1363,7 +1379,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
       E_ELEM: { cls: "E", icon: "flame", name: "Стихії: вогонь, шок, кислота, кровотеча", c: "var(--fire)" }
     },
     pairs: [
-      { a: "A8", b: "B8", t: "S6", anti: true, title: "Мисливська зграя ✕ Касета", text: function () { return "Капстоуни взаємовиключні: Зграя вимикає заряди, Касета — Мітку."; } },
+      { a: "A8", b: "B8", t: "S6", anti: true, title: "Мисливська зграя ✕ Касета", text: function () { return "Обидва капстоуни не взяти (13 + 13 > 25). Зграя послаблює заряди на 40%, Касета — сам болт і силу кожного заряду."; } },
       { a: "A4", b: "X_PISTOL", t: "S4", title: "Слабке місце + пістолет", text: function (r, s) { return "Влучання в тіло позначеного рахуються в серію Мисливця: " + s.weak + "%."; } },
       { a: "A4", b: "X_RIFLE", t: "S4", title: "Слабке місце + гвинтівка", text: function (r, s) { return "Рикошет від влучання в тіло позначеного: " + s.weak + "%."; } },
       { a: "A1", b: "X_BOW", t: "S4", title: "Глибока мітка + Мисливська рана лука", text: function (r, s) { return "Мітка +" + s.markBonus + "% і рана лука до +100% складаються: еліта тане від будь-якої зброї."; } },
@@ -1385,10 +1401,10 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
       return {
         attr: attr, attrVal: extra, markTime: 10 + extra,
         markBonus: [20, 35, 50, 80][r.A1] * (r.A8 ? 2 : 1), markRadius: [0, 2, 3, 5][r.A3], weak: [0, 25, 50, 100][r.A4],
-        elem: r.A5 > 0, transfer: [0, 1, 4][r.A6], reloadKill: [0, 30, 100][r.A7], pack: r.A8 > 0, chargeOff: r.A8 > 0,
+        elem: r.A5 > 0, transfer: [0, 1, 4][r.A6], reloadKill: [0, 30, 100][r.A7], pack: r.A8 > 0, chargeOff: false,
         charge: [0, 30, 50, 100][r.B1], chargeRadius: [0, 2, 2.5, 3][r.B1], fuse: [2, 1.5, 1, 0.3][r.B2],
         fire: [0, 25, 50, 100][r.B3], shock: r.B3 >= 3, reload: [0, 15, 30, 60][r.B4], detonator: r.B5 > 0,
-        knock: r.B6, mines: [0, 2, 5][r.B7], cluster: r.B8 > 0, markOff: r.B8 > 0
+        knock: r.B6, mines: [0, 2, 5][r.B7], cluster: r.B8 > 0, markOff: false
       };
     },
     viz: function (s, S) {
@@ -1462,12 +1478,38 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
   function unlearn(id) { var s = byId[id]; if (s && canUnlearn(s)) { R()[id] = rk(id) - 1; if (!R()[id]) delete R()[id]; save(); render(); } }
   function stats() { return C.stats(ranksObj(), st.attrBy[st.cls]); }
 
+  // A learned capstone can switch off ("dead") or weaken ("weak") skills: { lvl, why, by }
+  function brokenBy(s) {
+    var out = null;
+    C.skills.forEach(function (c) {
+      if (!c.breaks || !rk(c.id)) return;
+      c.breaks.forEach(function (b) {
+        if (b.ids.indexOf(s.id) >= 0 && (!out || b.lvl === "dead")) out = { lvl: b.lvl, why: b.why, by: c.name };
+      });
+    });
+    return out;
+  }
+  // reset one skill (all its ranks) for 20 Eridium, if the skills above still have their tier points
+  var RESET_ONE = 20, RESET_ALL = 250;
+  function canResetSkill(s) {
+    if (!rk(s.id)) return false;
+    var test = Object.assign({}, R()); delete test[s.id];
+    return C.skills.every(function (o) { return !(test[o.id] > 0) || reqMet(o, test); });
+  }
+  function resetSkill(id) {
+    var s = byId[id]; if (!s || !canResetSkill(s)) return;
+    delete R()[id]; st.resetSpent = (st.resetSpent || 0) + RESET_ONE; save(); render();
+  }
+
   // ===== static parts =====
   var tabs = document.getElementById("tabs");
   tabs.addEventListener("click", function (e) { var b = e.target.closest("[data-cls]"); if (!b) return; setClass(b.dataset.cls); save(); render(); });
   var pre = document.getElementById("presets");
   pre.addEventListener("click", function (e) { var b = e.target.closest("[data-preset]"); if (!b) return; st.ranksBy[st.cls] = Object.assign({}, C.presets[+b.dataset.preset].r); st.level = 25; save(); render(); });
-  document.getElementById("reset").addEventListener("click", function () { st.ranksBy[st.cls] = {}; save(); render(); });
+  document.getElementById("reset").addEventListener("click", function () {
+    if (spent()) st.resetSpent = (st.resetSpent || 0) + RESET_ALL;
+    st.ranksBy[st.cls] = {}; save(); render();
+  });
   document.getElementById("review").addEventListener("click", function () {
     var rl = reviewList(st.cls); if (!rl.length) return;
     var i = rl.map(function (s) { return s.id; }).indexOf(sel());
@@ -1495,7 +1537,9 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
   tree.addEventListener("mousemove", function (e) {
     var n = e.target.closest("[data-id]"); var s = n && byId[n.dataset.id];
     if (!s) { tip.hidden = true; return; }
-    tip.innerHTML = "<b>" + esc(s.name) + "</b> " + rk(s.id) + "/" + s.max + "<br>" + esc(s.ranks[Math.min(rk(s.id), s.max - 1)]);
+    var bk = brokenBy(s);
+    tip.innerHTML = "<b>" + esc(s.name) + "</b> " + rk(s.id) + "/" + s.max + "<br>" + esc(s.ranks[Math.min(rk(s.id), s.max - 1)]) +
+      (bk ? '<br><b style="color:' + (bk.lvl === "dead" ? "var(--bad)" : "var(--warn)") + '">' + (bk.lvl === "dead" ? "Не працює" : "Послаблено") + " (" + esc(bk.by) + "):</b> " + esc(bk.why) : "");
     tip.hidden = false;
     tip.style.left = Math.min(e.clientX + 14, window.innerWidth - 270) + "px";
     tip.style.top = (e.clientY + 14) + "px";
@@ -1519,6 +1563,8 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
     if (sel() === s.id) cls.push("sel");
     var chg = needsReview(s);
     if (chg) cls.push("needs");
+    var bk = brokenBy(s);
+    if (bk) cls.push(bk.lvl);
     var lc = links[s.id];
     if (lc) cls.push("link");
     var col, row;
@@ -1528,6 +1574,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
     return '<button class="' + cls.join(" ") + '" data-id="' + s.id + '" style="grid-column:' + col + ";grid-row:" + row + (lc ? ";--lc:" + lc : "") + '" aria-label="' + esc(s.name) + ", ранг " + r + " з " + s.max + '">' +
       (s.notable ? '<span class="star">★</span>' : "") + (s.cap ? '<span class="star">CAP</span>' : "") + (s.big ? '<span class="star">≥8</span>' : "") +
       (chg ? '<span class="chg">ЗМІНЕНО</span>' : "") +
+      (bk ? '<span class="brk">' + (bk.lvl === "dead" ? "НЕ ПРАЦЮЄ" : "СЛАБШЕ") + "</span>" : "") +
       '<span class="ic">' + icon(s.icon) + '</span><span class="pips">' + pips + '</span><span class="nm">' + esc(s.name) + "</span></button>";
   }
 
@@ -1559,6 +1606,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
     var t = e.target.closest("button"); if (!t) return;
     if (t.dataset.learn) learn(t.dataset.learn);
     else if (t.dataset.unlearn) unlearn(t.dataset.unlearn);
+    else if (t.dataset.reset) resetSkill(t.dataset.reset);
     else if (t.dataset.go) { setSel(t.dataset.go); save(); render(); }
     else if (t.dataset.vote) {
       var v = st.votes[vkey(sel())] || {}; v.v = v.v === t.dataset.vote && (!byId[sel()] || v.rev === (byId[sel()].rev || 1)) ? "" : t.dataset.vote;
@@ -1616,10 +1664,12 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
     detail.innerHTML =
       '<div class="dhead"><span class="ic" style="color:' + color + ";border-color:" + (r ? color : "var(--line)") + '">' + icon(s.icon) + '</span><div><div class="eyebrow">' + esc(brName) + "</div><h2>" + esc(s.name) + '</h2><div class="en">' + s.en + " · ранг " + r + "/" + s.max + '</div><div class="badges">' + badges + "</div></div></div>" +
       (needsReview(s) ? '<div class="chgnote"><b>Змінено після вашого відгуку — потрібне перезатвердження.</b><br>' + esc(s.chg || "") + "</div>" : "") +
+      (function () { var bk = brokenBy(s); return bk ? '<div class="brknote' + (bk.lvl === "dead" ? "" : " weak") + '"><b>' + (bk.lvl === "dead" ? "Не працює" : "Послаблено") + ": капстоун «" + esc(bk.by) + "».</b> " + esc(bk.why) + (r ? " Скинути цю навичку можна біля Кузні Ерідію за " + RESET_ONE + " Ерідію." : "") + "</div>" : ""; })() +
       '<p class="desc">' + esc(s.desc) + "</p>" +
       '<div class="ranks">' + rows + "</div>" + req +
       '<div class="actions"><button class="btn primary" data-learn="' + s.id + '"' + (canLearn(s) ? "" : " disabled") + ">+ Вивчити ранг</button>" +
       '<button class="btn" data-unlearn="' + s.id + '"' + (canUnlearn(s) ? "" : " disabled") + ">− Зняти</button>" +
+      '<button class="btn" data-reset="' + s.id + '"' + (canResetSkill(s) ? "" : " disabled") + ' title="Біля Кузні Ерідію: усі ранги навички">Скинути навичку · ' + RESET_ONE + " Ерідію</button>" +
       '<span class="chip' + (free < 0 ? " bad" : "") + '">Вільних очок <b>' + free + "</b></span></div>" +
       (v ? '<div class="viz">' + v + "</div>" : "") +
       (syn ? '<div class="synlist"><span class="eyebrow">Симбіози</span>' + syn + "</div>" : "") +
@@ -1664,6 +1714,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
   }
 
   function render() {
+    var rs = document.getElementById("resetSpent"); if (rs) rs.textContent = st.resetSpent || 0;
     tabs.innerHTML = ORDER.map(function (k) { var n = reviewList(k).length; return '<button class="tab" role="tab" data-cls="' + k + '" aria-selected="' + (k === st.cls) + '">' + CLASSES[k].tab + (CLASSES[k].approved ? " ✓" : "") + (n ? ' <span style="color:var(--warn)">· ' + n + " змін</span>" : "") + "</button>"; }).join("") +
       SOON.map(function (n) { return '<button class="tab" role="tab" aria-selected="false" disabled title="Ще не розписано">' + n + "</button>"; }).join("");
     document.getElementById("wTitle").textContent = C.title + " · майстерність";
