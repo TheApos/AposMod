@@ -1238,8 +1238,8 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
 
   // ===================================================================================
   // CROSSBOWS (vanilla: bolt sets damage — stone 50, iron 59, steel AP 63, flaming 38, exploding 250; crossbow +200% damage,
-  // compound +25; magazine 1, reload ×0.5 (slow). Mod: Mark — bolt marks a zombie for 10 s, +20% from all your damage;
-  // Pin — a wall within 3 m behind the zombie nails it until death, elites for 10 s)
+  // compound +25; magazine 1, reload ×0.5 (slow). Mod: Mark — bolt marks a zombie for 10 s, +20% from all your damage.
+  // Branch B "Sticky Charge": the bolt sticks and explodes after a delay (area damage as a real hit, like Shrapnel / Explosive elites)
   // ===================================================================================
   var XBOW_LIST = [["Залізний арбалет", 177], ["Блочний арбалет", 252]];
   function markViz(S) {
@@ -1250,32 +1250,38 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
       rings += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="9" fill="none" stroke="var(--a)" stroke-width="2"/><circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="2.5" fill="var(--a)"/>';
     }
     return '<div class="loop"><svg viewBox="0 0 120 120" width="110" height="110" role="img" aria-label="Позначені зомбі"><circle cx="60" cy="60" r="56" fill="none" stroke="var(--line)" stroke-dasharray="3 3"/>' + rings + "</svg>" +
-      '<div style="display:grid;gap:4px">' + (S.markOff ? '<div class="big" style="color:var(--bad)">вимкнено<small>Гарпун вимикає Мітку</small></div>' :
+      '<div style="display:grid;gap:4px">' + (S.markOff ? '<div class="big" style="color:var(--bad)">вимкнено<small>Касета вимикає Мітку</small></div>' :
       '<div class="big">+' + S.markBonus + "%<small>уся ваша шкода по позначеному" + (S.pack ? " · Зграя ×2" : "") + "</small></div>" +
       '<div class="mono" style="font-size:12px">мітка ' + S.markTime + " с · " + (S.markRadius ? "усі в " + S.markRadius + " м від влучання" : "лише ціль") + "</div>" +
       '<div class="mono" style="font-size:12px">' + (S.weak ? "влучання в тіло = хедшот для інших класів: " + S.weak + "% · " : "") + (S.elem ? "стихії на позначеному +50%, ×2 довше · " : "") + (S.transfer ? "мітка перескакує " + S.transfer + "× · " : "") + (S.reloadKill ? "вбивство позначеного → перезарядка +" + S.reloadKill + "% · " : "") + "</div>") + "</div></div>";
   }
-  function pinViz(S) {
-    return '<div class="loop"><svg viewBox="0 0 120 60" width="150" height="75" role="img" aria-label="Болт прибиває зомбі до стіни"><rect x="104" y="4" width="10" height="52" fill="#55575c"/><path d="M8 30H100" stroke="var(--b)" stroke-dasharray="4 3"/><circle cx="' + (100 - S.pinDist * 6) + '" cy="30" r="7" fill="none" stroke="var(--b)" stroke-width="2"/><path d="M' + (100 - S.pinDist * 6) + ' 30H104" stroke="var(--gold)" stroke-width="2"/></svg>' +
-      '<div style="display:grid;gap:4px">' + (S.pinOff ? '<div class="big" style="color:var(--bad)">вимкнено<small>Мисливська зграя вимикає Цвях</small></div>' :
-      '<div class="big">' + (S.harpoon ? "8 м" : S.pinDist + " м") + "<small>" + (S.harpoon ? "Гарпун тягне до стіни і прибиває" : "до стіни за зомбі — прибиває") + "</small></div>" +
-      '<div class="mono" style="font-size:12px">' + (S.knock ? "відкидання " + S.knock + " м" + (S.knockDown ? " і збиває з ніг" : "") + " · " : "") + (S.iron ? "еліти — до смерті, прибиті +50% · " : "еліти — 10 с · ") + (S.tear ? (S.tear > 1 ? "сильна кровотеча до смерті · " : "кровотеча 5 с · ") : "") + (S.skewer ? "шампур: до " + S.skewer + " зомбі без стіни · " : "") + "</div>") + "</div></div>";
+  function chargeViz(S) {
+    var r = S.chargeOff ? 0 : S.chargeRadius, rr = Math.round(r * 14), dots = "";
+    var n = S.cluster ? 3 : 1;
+    for (var i = 0; i < n; i++) {
+      var x = n === 1 ? 60 : 60 + Math.cos(i * 2.1) * 30, y = n === 1 ? 50 : 50 + Math.sin(i * 2.1) * 22;
+      dots += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + Math.max(4, rr) + '" fill="rgba(255,122,47,.18)" stroke="var(--fire)" stroke-dasharray="3 2"/><circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="4" fill="var(--b)"/>';
+    }
+    return '<div class="loop"><svg viewBox="0 0 120 100" width="130" height="108" role="img" aria-label="Заряд у зомбі і радіус вибуху">' + dots + "</svg>" +
+      '<div style="display:grid;gap:4px">' + (S.chargeOff ? '<div class="big" style="color:var(--bad)">вимкнено<small>Мисливська зграя: заряди не вибухають</small></div>' : !S.charge ? '<div class="big" style="color:var(--muted)">—<small>заряд відкриває навичка «Липкий заряд»</small></div>' :
+      '<div class="big">' + S.charge + "%<small>шкоди болта по всіх у " + S.chargeRadius + " м через " + S.fuse + " с" + (S.cluster ? " · Касета ×3" : "") + "</small></div>" +
+      '<div class="mono" style="font-size:12px">' + (S.fire ? "підпал " + S.fire + "%" + (S.shock ? " і шок 1 с" : "") + " · " : "") + (S.detonator ? "ланцюгова детонація · " : "") + (S.knock ? (S.knock > 1 ? "відкидає й валить на 2 с · " : "відкидає · ") : "") + (S.mines ? "міни: до " + S.mines + " · " : "") + "</div>") + "</div></div>";
   }
   function xbowTable(S) {
     var rows = XBOW_LIST.map(function (b) {
-      var bolt = Math.round(b[1] * (1 + S.boltDmg / 100) * (S.pack ? 0.6 : 1));
-      return '<div class="bar"><span>' + b[0] + '</span><span class="tr"><span class="B" style="width:' + Math.round(bolt / 500 * 100) + '%"></span></span><span class="v">' + bolt + "</span></div>";
+      var bolt = Math.round(b[1] * (S.pack ? 0.6 : 1)), ch = S.charge && !S.chargeOff ? Math.round(bolt * S.charge / 100) : 0;
+      return '<div class="bar"><span>' + b[0] + '</span><span class="tr"><span class="B" style="width:' + Math.round(ch / 260 * 100) + '%"></span></span><span class="v">' + bolt + " / " + ch + "</span></div>";
     }).join("");
-    return '<div class="eyebrow" style="margin-bottom:6px">Болт (залізний, якість 1, без хедшоту)</div><div class="bars">' + rows + "</div>" + foot("Перезарядка " + (S.reload ? "+" + S.reload + "% швидше" : "ванільна (повільна)") + ".");
+    return '<div class="eyebrow" style="margin-bottom:6px">Болт / вибух заряду (залізний болт, якість 1)</div><div class="bars">' + rows + "</div>" + foot("Перезарядка " + (S.reload ? "+" + S.reload + "% швидше" : "ванільна (повільна)") + ". Вибух не ламає блоки.");
   }
 
   var XBOWS = {
     tab: "Арбалети", title: "Арбалет", sub: "Ловкість · залізний і блочний арбалет",
-    base: { name: "Мітка і Цвях", en: "Mark & Pin", icon: "crossbow", text: "Діє з 0 рівня. Мітка: болт позначає зомбі на 10 с, уся ваша шкода по ньому (будь-якою зброєю) +20%. Цвях: якщо за зомбі до 3 м стіна, болт прибиває його до смерті (еліту — на 10 с). Гілка A розвиває Мітку (підтримка всієї зброї), гілка B — Цвях (важкий болт).",
-      note: "Зараз бонус Мітки росте від перка Archery (+20% → +120%), а на 5 рівні болт позначає всіх у 4 м («Hunting Party»). У новій системі це переходить у гілку A. Перк Archery спільний з луками, але дерева окремі." },
+    base: { name: "Мітка", en: "Mark", icon: "crossbow", text: "Діє з 0 рівня: болт позначає зомбі на 10 с, уся ваша шкода по ньому (будь-якою зброєю) +20%. Гілка A розвиває Мітку (підтримка всієї зброї), гілка B робить з болта липкий заряд, що вибухає.",
+      note: "Зараз бонус Мітки росте від перка Archery (+20% → +120%), а на 5 рівні болт позначає всіх у 4 м («Hunting Party») — це переходить у гілку A. Нинішній «Pin» (прибивання до стіни) не підтверджений у грі; у новому дереві його немає." },
     br: {
       A: { name: "Мітка", en: "Mark", idea: "Підтримка: позначені зомбі отримують більше від усієї вашої зброї; мітка ширша, довша, перескакує, працює зі стихіями й хедшотами інших класів." },
-      B: { name: "Цвях", en: "Nail", idea: "Важкий болт: сира шкода, відкидання до стіни, прибивання еліт, «шампур» з кількох зомбі, гарпун." }
+      B: { name: "Липкий заряд", en: "Sticky Charge", idea: "Болт застрягає і вибухає: радіус, запал, стихії, ланцюгова детонація, міни. Арбалет як точний гранатомет." }
     },
     attr: { name: "Сприйняття", skill: "A2", per: [0, 0.5, 1, 2], cap: 20, unit: " с", label: "до тривалості мітки", note: "Атрибут «чужий» для арбалета (Ловкість — його рідний), тож білд на Мітку тягне в Сприйняття. Сприйняття 10, ранг 3 = мітка 10 + 20 = 30 с." },
     skills: [
@@ -1304,74 +1310,74 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
         desc: "Вбивство позначеного зомбі (будь-якою зброєю) прискорює наступну перезарядку арбалета на 5 с.",
         ranks: ["Перезарядка +30%", "Перезарядка +100% (удвічі швидше)"] },
       { id: "A8", br: "A", tier: 5, col: 0, span: 2, max: 1, icon: "star", cap: true, name: "Мисливська зграя", en: "Hunting Party",
-        desc: "Капстоун. Бонус Мітки подвоюється, а кожне вбивство позначеного позначає 3 найближчих зомбі в 8 м. Мінус: Цвях (друга половина фішки класу) вимикається, і сам болт −40% шкоди: арбалет стає підтримкою.",
-        ranks: ["Мітка ×2, вбивство позначеного → мітка ще 3; Цвях вимкнено, болт −40%"],
-        syn: [{ t: "S6", w: "B1", x: "Важкий болт з гілки B частково гасить −40%." }] },
+        desc: "Капстоун. Бонус Мітки подвоюється, а кожне вбивство позначеного позначає 3 найближчих зомбі в 8 м. Мінус: сам болт −40% шкоди, і заряди гілки B не вибухають — арбалет стає чистою підтримкою.",
+        ranks: ["Мітка ×2, вбивство позначеного → мітка ще 3; болт −40%, без зарядів"],
+        syn: [{ t: "S6", w: "B1", x: "Усе, що вкладено в заряди, стає марним: чиста підтримка." }] },
 
-      { id: "B1", br: "B", tier: 1, col: 0, max: 3, icon: "muscle", name: "Важкий болт", en: "Heavy Bolt",
-        desc: "Болт б'є сильніше.",
-        ranks: ["+15% шкоди болта", "+30%", "+60%"] },
-      { id: "B2", br: "B", tier: 1, col: 1, max: 3, icon: "wall", name: "Довгий цвях", en: "Long Nail",
-        desc: "Болт прибиває зомбі до стіни, що далі за ним (базово 3 м).",
-        ranks: ["4 м", "5 м", "8 м"] },
-      { id: "B3", br: "B", tier: 2, col: 0, max: 3, icon: "boot", name: "Відкидання", en: "Knockback",
-        desc: "Болт відкидає зомбі назад — до стіни, де його прибиває Цвях.",
-        ranks: ["Відкидає на 1 м", "На 2 м", "На 4 м і збиває з ніг"],
-        syn: [{ t: "S1", w: "B2", x: "Довгий цвях: відкидання доносить зомбі до стіни, і він прибитий." }] },
+      { id: "B1", br: "B", tier: 1, col: 0, max: 3, icon: "burst", name: "Липкий заряд", en: "Sticky Charge",
+        desc: "Болт застрягає в зомбі (або в стіні чи землі) і через 2 с вибухає: шкода по всіх навколо, як справжній удар від вас (дає досвід, не ламає блоки).",
+        ranks: ["Вибух: 30% шкоди болта в 2 м", "50% в 2.5 м", "100% в 3 м"] },
+      { id: "B2", br: "B", tier: 1, col: 1, max: 3, icon: "timer", name: "Короткий запал", en: "Short Fuse",
+        desc: "Заряд вибухає швидше (базово 2 с) — зомбі не встигає дійти до вас із зарядом.",
+        ranks: ["1.5 с", "1 с", "0.3 с (майже одразу)"] },
+      { id: "B3", br: "B", tier: 2, col: 0, max: 3, icon: "flame", name: "Запальна суміш", en: "Incendiary Mix",
+        desc: "Вибух заряду підпалює тих, кого зачепив (S3).",
+        ranks: ["Підпал 25%", "Підпал 50%", "Підпал завжди і шок 1 с"],
+        syn: [{ t: "S3", x: "Вогонь + шок від одного вибуху = реакція «Confusion» по всій групі." }] },
       { id: "B4", br: "B", tier: 2, col: 1, max: 3, icon: "reload", name: "Швидкий ворот", en: "Quick Crank",
         desc: "Арбалет перезаряджається швидше (у ванілі — повільно).",
         ranks: ["+15% перезарядки", "+30%", "+60%"] },
-      { id: "B5", br: "B", tier: 3, col: 0, max: 1, icon: "gavel", notable: true, name: "Залізний цвях", en: "Iron Nail",
-        desc: "Еліти теж прибиті до смерті (а не на 10 с), і кожен прибитий зомбі отримує +50% шкоди від усіх ваших атак.",
-        ranks: ["Еліти прибиті до смерті; прибиті +50% шкоди"],
-        syn: [{ t: "S1", w: "H1", x: "Прибита мітка: прибитий і позначений — обидва бонуси разом." }] },
-      { id: "B6", br: "B", tier: 3, col: 1, max: 2, icon: "blood", name: "Рвана рана", en: "Tearing Bolt",
-        desc: "Прибитий зомбі кровоточить (кровотеча — 4-та стихія).",
-        ranks: ["Кровотеча 5 с", "Сильна кровотеча до смерті"],
-        syn: [{ t: "S3", x: "Кровотеча + вогонь = «Запікання», + кислота = «Сепсис»." }] },
-      { id: "B7", br: "B", tier: 4, col: 0, span: 2, max: 2, icon: "pierce", name: "Шампур", en: "Skewer",
-        desc: "Якщо за ціллю до 2 м стоїть інший зомбі, болт пробиває обох і прибиває їх один до одного — стіна не потрібна.",
-        ranks: ["До 2 зомбі на одному болті", "До 4 зомбі"] },
-      { id: "B8", br: "B", tier: 5, col: 0, span: 2, max: 1, icon: "chain", cap: true, name: "Гарпун", en: "Harpoon",
-        desc: "Капстоун. Болт на тросі тягне зомбі до найближчої стіни в 8 м і прибиває; болти по прибитих ×2 шкоди. Мінус: Мітка (друга половина фішки класу) вимикається.",
-        ranks: ["Тягне до стіни в 8 м і прибиває; по прибитих ×2; Мітки немає"],
-        syn: [{ t: "S6", w: "A1", x: "Усе, що вкладено в Мітку, стає марним: чистий цвях." }] },
+      { id: "B5", br: "B", tier: 3, col: 0, max: 1, icon: "chain", notable: true, name: "Детонатор", en: "Detonator",
+        desc: "Вибух одразу підриває всі ваші інші заряди в його радіусі — ланцюгова реакція по натовпу і мінах.",
+        ranks: ["Вибух підриває сусідні заряди"],
+        syn: [{ t: "S1", w: "B7", x: "Міни: один постріл підриває все мінне поле." }] },
+      { id: "B6", br: "B", tier: 3, col: 1, max: 2, icon: "boot", name: "Ударна хвиля", en: "Shockwave",
+        desc: "Вибух відкидає зомбі від центру.",
+        ranks: ["Відкидає", "Відкидає і валить з ніг на 2 с"] },
+      { id: "B7", br: "B", tier: 4, col: 0, span: 2, max: 2, icon: "ground", name: "Мінне поле", en: "Minefield",
+        desc: "Заряд, що влучив у стіну або землю, не вибухає одразу, а чекає 30 с і спрацьовує, коли зомбі підходить ближче 2 м.",
+        ranks: ["До 2 мін одночасно", "До 5 мін одночасно"] },
+      { id: "B8", br: "B", tier: 5, col: 0, span: 2, max: 1, icon: "pellets", cap: true, name: "Касета", en: "Cluster Bolt",
+        desc: "Капстоун. Болт розпадається на 3 заряди, які прилипають до трьох найближчих зомбі в 5 м. Мінус: Мітка (фішка класу) вимикається.",
+        ranks: ["3 заряди з одного болта; Мітки немає"],
+        syn: [{ t: "S6", w: "A1", x: "Усе, що вкладено в Мітку, стає марним: чистий підривник." }, { t: "S1", w: "B5", x: "Детонатор: три заряди підривають один одного." }] },
 
-      { id: "H1", br: "H", row: 3, need: 5, max: 1, icon: "target", name: "Прибита мітка", en: "Nailed Mark",
-        desc: "Гібрид. Прибитий зомбі автоматично позначений, і мітка не спадає, поки він прибитий.",
-        ranks: ["Прибитий = позначений до смерті"],
-        syn: [{ t: "S1", w: "A1", x: "Глибока мітка: прибита еліта весь бій отримує +80% від усього." }] },
-      { id: "H2", br: "H", row: 4, need: 5, max: 1, icon: "burst", name: "Приманка", en: "Lure",
-        desc: "Гібрид. Прибитий позначений зомбі кричить: зомбі в 8 м 4 с біжать до нього, а не до вас.",
-        ranks: ["Прибитий позначений збирає натовп довкола себе на 4 с"],
-        syn: [{ t: "S4", w: "X_EXPL", x: "Вибухівка або вибуховий болт у зібраний натовп." }] },
-      { id: "H3", br: "H", row: 1, need: 8, max: 1, big: true, icon: "star", name: "Трофей", en: "Trophy",
-        desc: "Великий гібрид (≥8 очок у кожній гілці). Вбивство прибитого позначеного зомбі розриває болт: усі в 6 м позначені й отримують 100% шкоди болта.",
-        ranks: ["Вбивство прибитого позначеного → мітка і 100% болта всім у 6 м"],
-        syn: [{ t: "S1", w: "A6", x: "Перескок мітки: ланцюг міток іде далі від кожного трофея." }] }
+      { id: "H1", br: "H", row: 3, need: 5, max: 1, icon: "target", name: "Мічений вибух", en: "Marking Blast",
+        desc: "Гібрид. Вибух заряду позначає всіх, кого зачепив.",
+        ranks: ["Вибух = мітка всім у радіусі"],
+        syn: [{ t: "S1", w: "A1", x: "Глибока мітка: уся група після вибуху отримує до +80% від усього." }] },
+      { id: "H2", br: "H", row: 4, need: 5, max: 1, icon: "eye", name: "Приманка", en: "Lure",
+        desc: "Гібрид. Позначений зомбі із зарядом кричить: зомбі в 8 м біжать до нього, поки заряд не вибухне.",
+        ranks: ["Позначений із зарядом збирає натовп до вибуху"],
+        syn: [{ t: "S4", w: "X_EXPL", x: "Вибухівка в зібраний натовп — або просто дочекатися заряду." }] },
+      { id: "H3", br: "H", row: 1, need: 8, max: 1, big: true, icon: "star", name: "Феєрверк", en: "Fireworks",
+        desc: "Великий гібрид (≥8 очок у кожній гілці). Вбивство позначеного зомбі вибухом заряду ставить новий заряд у найближчого зомбі в 6 м і позначає його — ланцюг, поки є кого вбивати.",
+        ranks: ["Вбивство позначеного вибухом → новий заряд і мітка на сусіда"],
+        syn: [{ t: "S1", w: "A6", x: "Перескок мітки: ланцюг міток і зарядів іде далі." }] }
     ],
     external: {
       X_PISTOL: { cls: "X", icon: "target", name: "Пістолет · Мисливець за головами" },
       X_RIFLE: { cls: "X", icon: "burst", name: "Гвинтівка · Рикошет" },
       X_BOW: { cls: "X", icon: "bow", name: "Лук · Мисливська рана" },
-      X_EXPL: { cls: "X", icon: "burst", name: "Вибухівка / вибуховий болт" },
+      X_EXPL: { cls: "X", icon: "burst", name: "Вибухівка" },
       E_ELEM: { cls: "E", icon: "flame", name: "Стихії: вогонь, шок, кислота, кровотеча", c: "var(--fire)" }
     },
     pairs: [
-      { a: "A8", b: "B8", t: "S6", anti: true, title: "Мисливська зграя ✕ Гарпун", text: function () { return "Капстоуни вимикають половини фішки: Зграя — Цвях, Гарпун — Мітку."; } },
+      { a: "A8", b: "B8", t: "S6", anti: true, title: "Мисливська зграя ✕ Касета", text: function () { return "Капстоуни взаємовиключні: Зграя вимикає заряди, Касета — Мітку."; } },
       { a: "A4", b: "X_PISTOL", t: "S4", title: "Слабке місце + пістолет", text: function (r, s) { return "Влучання в тіло позначеного рахуються в серію Мисливця: " + s.weak + "%."; } },
       { a: "A4", b: "X_RIFLE", t: "S4", title: "Слабке місце + гвинтівка", text: function (r, s) { return "Рикошет від влучання в тіло позначеного: " + s.weak + "%."; } },
       { a: "A1", b: "X_BOW", t: "S4", title: "Глибока мітка + Мисливська рана лука", text: function (r, s) { return "Мітка +" + s.markBonus + "% і рана лука до +100% складаються: еліта тане від будь-якої зброї."; } },
       { a: "A5", b: "E_ELEM", t: "S3", title: "Мітка стихій + стихійна зброя", text: function () { return "Стихії на позначеному +50% і вдвічі довше."; } },
-      { a: "B3", b: "B2", t: "S1", title: "Відкидання + Довгий цвях", text: function (r, s) { return "Відкидання на " + s.knock + " м доносить зомбі до стіни в " + s.pinDist + " м — і він прибитий."; } },
-      { a: "H1", b: "B5", t: "S1", title: "Прибита мітка + Залізний цвях", text: function (r, s) { return "Прибита еліта до смерті: +" + s.markBonus + "% мітки і +50% цвяха."; } },
-      { a: "H3", b: "A6", t: "S1", title: "Трофей + Перескок мітки", text: function () { return "Кожен трофей позначає натовп, мітки перескакують далі — ланцюг."; } },
-      { a: "H2", b: "X_EXPL", t: "S4", title: "Приманка + вибухівка", text: function () { return "Натовп сам збирається біля прибитого: один вибух на всіх."; } },
+      { a: "A5", b: "B3", t: "S1", title: "Мітка стихій + Запальна суміш", text: function (r, s) { return "Підпал від вибуху (" + s.fire + "%) по позначених: +50% і вдвічі довше."; } },
+      { a: "B5", b: "B7", t: "S1", title: "Детонатор + Мінне поле", text: function (r, s) { return "Один постріл підриває всі " + s.mines + " мін ланцюгом."; } },
+      { a: "H1", b: "A1", t: "S1", title: "Мічений вибух + Глибока мітка", text: function (r, s) { return "Вибух позначає групу: кожен отримує +" + s.markBonus + "% від усього."; } },
+      { a: "H3", b: "A6", t: "S1", title: "Феєрверк + Перескок мітки", text: function () { return "Ланцюг заряд → вбивство → новий заряд і мітка далі."; } },
+      { a: "H2", b: "X_EXPL", t: "S4", title: "Приманка + вибухівка", text: function () { return "Натовп сам збирається біля зомбі із зарядом: один вибух на всіх."; } },
       { a: "A2", b: "ATTR", t: "S2", title: "Довга мітка + Сприйняття", text: function (r, s) { return "Сприйняття " + s.attr + " × " + [0, 0.5, 1, 2][r.A2] + " с = <b>+" + s.attrVal + " с</b> мітки (разом " + s.markTime + " с)."; } }
     ],
     presets: [
       { n: "Мітка (A18 + B7)", r: { A1: 3, A2: 3, A3: 3, A4: 3, A5: 1, A6: 2, A7: 2, A8: 1, B1: 3, B2: 3, B3: 1 } },
-      { n: "Цвях (B18 + A7)", r: { B1: 3, B2: 3, B3: 3, B4: 3, B5: 1, B6: 2, B7: 2, B8: 1, A1: 3, A2: 3, A3: 1 } },
+      { n: "Заряд (B18 + A7)", r: { B1: 3, B2: 3, B3: 3, B4: 3, B5: 1, B6: 2, B7: 2, B8: 1, A1: 3, A2: 3, A3: 1 } },
       { n: "Гібрид (11 + 11 + 3)", r: { A1: 3, A2: 2, A3: 2, A4: 2, A5: 1, A6: 1, B1: 3, B2: 2, B3: 2, B4: 2, B5: 1, B6: 1, H1: 1, H2: 1, H3: 1 } }
     ],
     stats: function (r, attr) {
@@ -1379,22 +1385,23 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
       return {
         attr: attr, attrVal: extra, markTime: 10 + extra,
         markBonus: [20, 35, 50, 80][r.A1] * (r.A8 ? 2 : 1), markRadius: [0, 2, 3, 5][r.A3], weak: [0, 25, 50, 100][r.A4],
-        elem: r.A5 > 0, transfer: [0, 1, 4][r.A6], reloadKill: [0, 30, 100][r.A7], pack: r.A8 > 0, pinOff: r.A8 > 0,
-        boltDmg: [0, 15, 30, 60][r.B1], pinDist: [3, 4, 5, 8][r.B2], knock: [0, 1, 2, 4][r.B3], knockDown: r.B3 >= 3,
-        reload: [0, 15, 30, 60][r.B4], iron: r.B5 > 0, tear: r.B6, skewer: [0, 2, 4][r.B7], harpoon: r.B8 > 0, markOff: r.B8 > 0
+        elem: r.A5 > 0, transfer: [0, 1, 4][r.A6], reloadKill: [0, 30, 100][r.A7], pack: r.A8 > 0, chargeOff: r.A8 > 0,
+        charge: [0, 30, 50, 100][r.B1], chargeRadius: [0, 2, 2.5, 3][r.B1], fuse: [2, 1.5, 1, 0.3][r.B2],
+        fire: [0, 25, 50, 100][r.B3], shock: r.B3 >= 3, reload: [0, 15, 30, 60][r.B4], detonator: r.B5 > 0,
+        knock: r.B6, mines: [0, 2, 5][r.B7], cluster: r.B8 > 0, markOff: r.B8 > 0
       };
     },
     viz: function (s, S) {
-      if (s.id === "base") return markViz(S) + pinViz(S) + xbowTable(S);
-      if (s.id === "B1" || s.id === "B4" || s.id === "A8") return (s.br === "A" ? markViz(S) : pinViz(S)) + xbowTable(S);
+      if (s.id === "base") return markViz(S) + xbowTable(S);
+      if (s.id === "B1" || s.id === "B4" || s.id === "A8" || s.id === "B8") return (s.br === "A" ? markViz(S) : chargeViz(S)) + xbowTable(S);
       if (s.br === "A") return markViz(S);
-      if (s.br === "B") return pinViz(S);
-      return markViz(S) + pinViz(S);
+      if (s.br === "B") return chargeViz(S);
+      return markViz(S) + chargeViz(S);
     },
     cards: function (S) {
       return [
         { t: "Мітка · зараз", h: markViz(S) },
-        { t: "Цвях · зараз", h: pinViz(S) + xbowTable(S) }
+        { t: "Липкий заряд · зараз", h: chargeViz(S) + xbowTable(S) }
       ];
     }
   };
