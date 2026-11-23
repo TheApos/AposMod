@@ -301,7 +301,7 @@ public class AposEliteCommand : ConsoleCmdAbstract
 
     public override string getDescription()
     {
-        return "AposMod elites: aposelite on|off | health N (max health x N, 1-50) | drop [biome] N (weapon drop chance %, 0-100; biomes: pine, burnt, desert, snow, wasteland) | weapons (list what elites can drop) | make [1|2|3|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
+        return "AposMod elites: aposelite on|off | announce on|off | health A B C / damage A B C (x for 1/2/3 stars) | drop [biome] N (weapon drop chance %, 0-100; biomes: pine, burnt, desert, snow, wasteland) | weapons [search] (what elites can drop, one per line) | exclude <name> / include <name> (weaponExclude) | make [1|2|3|modifier names]. Modifiers: " + string.Join(", ", AposElites.Modifiers);
     }
 
     public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
@@ -331,8 +331,18 @@ public class AposEliteCommand : ConsoleCmdAbstract
         }
         if (_params.Count > 0 && _params[0] == "weapons")
         {
-            List<string> pool = AposElites.WeaponPool();
-            console.Output("Elites can drop " + pool.Count + " weapons (Settings.xml weaponExclude=\"" + AposSettings.EliteWeaponExclude + "\"): " + string.Join(", ", pool.ToArray()));
+            ListWeapons(console, _params.Count > 1 ? string.Join(" ", _params.GetRange(1, _params.Count - 1).ToArray()) : null);
+            return;
+        }
+        if (_params.Count > 0 && (_params[0] == "exclude" || _params[0] == "include"))
+        {
+            if (_params.Count != 2)
+            {
+                console.Output("Usage: aposelite " + _params[0] + " <item name or name start>, e.g. aposelite " + _params[0] + " gunExplosives"
+                    + "  (names: aposelite weapons [search])");
+                return;
+            }
+            ChangeExclude(console, _params[1], _params[0] == "exclude");
             return;
         }
         if (_params.Count > 0 && (_params[0] == "health" || _params[0] == "damage"))
@@ -381,6 +391,67 @@ public class AposEliteCommand : ConsoleCmdAbstract
         }
         console.Output("Elite names: " + (AposSettings.EliteTags ? "on" : "off") + ", banner: " + (AposSettings.EliteAnnounce ? "on" : "off") + ", health by stars: x" + Stars(AposSettings.EliteHealth)
             + ", damage by stars: x" + Stars(AposSettings.EliteDamage) + ", " + AposSettings.DescribeDrop());
+    }
+
+    // One weapon per line ("  Pistol  (gunHandgunT1Pistol)"), sorted by the in-game name; an optional search matches
+    // the in-game or the internal name. Excluded weapons are listed after the pool.
+    static void ListWeapons(SdtdConsole console, string search)
+    {
+        List<string> all = AposElites.AllWeapons();
+        List<KeyValuePair<string, string>> pool = new List<KeyValuePair<string, string>>();
+        List<KeyValuePair<string, string>> excluded = new List<KeyValuePair<string, string>>();
+        foreach (string n in all)
+        {
+            string shown = Localization.Get(n);
+            if (search != null && n.IndexOf(search, StringComparison.OrdinalIgnoreCase) < 0
+                && shown.IndexOf(search, StringComparison.OrdinalIgnoreCase) < 0) continue;
+            (AposElites.IsExcluded(n) ? excluded : pool).Add(new KeyValuePair<string, string>(shown, n));
+        }
+        pool.Sort((a, b) => string.Compare(a.Key, b.Key, StringComparison.CurrentCultureIgnoreCase));
+        excluded.Sort((a, b) => string.Compare(a.Key, b.Key, StringComparison.CurrentCultureIgnoreCase));
+        int total = AposElites.WeaponPool().Count;
+        console.Output(search == null
+            ? "Elites can drop " + total + " weapons:"
+            : "Elites can drop " + pool.Count + " of " + total + " weapons matching \"" + search + "\":");
+        foreach (KeyValuePair<string, string> w in pool) console.Output("  " + w.Key + "  (" + w.Value + ")");
+        if (excluded.Count > 0)
+        {
+            console.Output("Excluded by weaponExclude (" + excluded.Count + "):");
+            foreach (KeyValuePair<string, string> w in excluded) console.Output("  " + w.Key + "  (" + w.Value + ")");
+        }
+        console.Output("weaponExclude=\"" + AposSettings.EliteWeaponExclude + "\". Search: aposelite weapons <text>. Remove from the pool: aposelite exclude <name or name start>; bring back: aposelite include <name>.");
+    }
+
+    // aposelite exclude gunExplosives / include gunExplosives: edits weaponExclude and saves Settings.xml
+    static void ChangeExclude(SdtdConsole console, string entry, bool add)
+    {
+        List<string> list = AposElites.ExcludeList();
+        int at = list.FindIndex(x => string.Equals(x, entry, StringComparison.OrdinalIgnoreCase));
+        if (add)
+        {
+            int hits = AposElites.AllWeapons().FindAll(n => n.StartsWith(entry, StringComparison.OrdinalIgnoreCase)).Count;
+            if (hits == 0)
+            {
+                console.Output("No weapon name starts with \"" + entry + "\". See the internal names in brackets: aposelite weapons [search]");
+                return;
+            }
+            if (at < 0) list.Add(entry);
+            console.Output("Excluded \"" + entry + "\" (" + hits + " weapon" + (hits == 1 ? "" : "s") + ").");
+        }
+        else
+        {
+            if (at < 0)
+            {
+                console.Output("\"" + entry + "\" is not in weaponExclude=\"" + AposSettings.EliteWeaponExclude + "\". Use one of its entries.");
+                return;
+            }
+            list.RemoveAt(at);
+            if (AposElites.IsExcludedBy(entry, list)) console.Output("Removed \"" + entry + "\", but another entry still excludes it.");
+            else console.Output("\"" + entry + "\" can drop again.");
+        }
+        AposSettings.EliteWeaponExclude = string.Join(",", list.ToArray());
+        AposSettings.Save();
+        console.Output("Elites can drop " + AposElites.WeaponPool().Count + " weapons. weaponExclude=\"" + AposSettings.EliteWeaponExclude + "\"");
     }
 
     static string Stars(float[] v)

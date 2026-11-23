@@ -171,13 +171,15 @@ public class AposElites : MonoBehaviour
     {
         if (weapons != null && weaponsExclude == AposSettings.EliteWeaponExclude) return weapons;
         weaponsExclude = AposSettings.EliteWeaponExclude;
-        List<string> exclude = new List<string>();
-        foreach (string part in (weaponsExclude ?? "").Split(','))
-        {
-            string t = part.Trim();
-            if (t.Length > 0) exclude.Add(t);
-        }
         weapons = new List<string>();
+        foreach (string n in AllWeapons()) if (!IsExcluded(n)) weapons.Add(n);
+        return weapons;
+    }
+
+    // every player weapon an elite could drop before weaponExclude (no NPC-only, admin or test items)
+    public static List<string> AllWeapons()
+    {
+        List<string> all = new List<string>();
         foreach (ItemClass ic in ItemClass.list)
         {
             if (ic == null || AposAffixes.Kind(ic) == 0) continue;
@@ -185,14 +187,40 @@ public class AposElites : MonoBehaviour
             string n = ic.Name;
             if (n.Contains("Admin") || n.Contains("Test") || n.Contains("Debug") || n.Contains("Candy")) continue;
             if (!Localization.Exists(n, false)) continue;
-            bool excluded = false;
-            foreach (string x in exclude)
-            {
-                if (n.StartsWith(x, System.StringComparison.OrdinalIgnoreCase)) excluded = true;
-            }
-            if (!excluded) weapons.Add(n);
+            all.Add(n);
         }
-        return weapons;
+        return all;
+    }
+
+    // weaponExclude entries: comma-separated item names or name starts
+    public static List<string> ExcludeList()
+    {
+        List<string> list = new List<string>();
+        foreach (string part in (AposSettings.EliteWeaponExclude ?? "").Split(','))
+        {
+            string t = part.Trim();
+            if (t.Length > 0) list.Add(t);
+        }
+        return list;
+    }
+
+    // would another weaponExclude entry still exclude this name?
+    public static bool IsExcludedBy(string name, List<string> entries)
+    {
+        foreach (string x in entries)
+        {
+            if (name.StartsWith(x, System.StringComparison.OrdinalIgnoreCase)) return true;
+        }
+        return false;
+    }
+
+    public static bool IsExcluded(string name)
+    {
+        foreach (string x in ExcludeList())
+        {
+            if (name.StartsWith(x, System.StringComparison.OrdinalIgnoreCase)) return true;
+        }
+        return false;
     }
 
     static ItemStack RandomWeapon(int quality)
