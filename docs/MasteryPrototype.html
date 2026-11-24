@@ -1600,7 +1600,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
   }
 
   var CLUBS = {
-    tab: "Біти", title: "Біта", sub: "Сила · дерев'яна дубинка, бейсбольна біта, сталева дубинка",
+    tab: "Біти", title: "Біта", approved: true, sub: "Сила · дерев'яна дубинка, бейсбольна біта, сталева дубинка",
     base: { name: "Хоумран", en: "Home Run", icon: "sledge", text: "Діє з 0 рівня: звичайний удар з шансом 15% оглушує на 1 с, силовий удар у голову підкидає зомбі й валить з ніг (сила 800). Після оглушення зомбі 3 с не оглушується знову — нескінченного оглушення не буде. Гілка A розвиває силовий удар і контроль, гілка B — Лють: стаки шкоди й швидкості від вбивств звичайними ударами.",
       note: "Зараз оглушення, сила відкидання й бонус по оглушених ростуть від перка Pummel Pete, а Лють — окремий перк Rage (спільний з кувалдами). У новій системі обидва переходять у дерево: Pummel Pete — у гілку A, Лють — у гілку B (у кувалди буде свій варіант)." },
     br: {
@@ -1657,8 +1657,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
         ranks: ["12 с", "20 с"] },
       { id: "B7", br: "B", tier: 4, col: 0, span: 2, max: 2, icon: "burst", name: "Хвиля люті", en: "Rage Wave",
         desc: "Вбивство на максимумі стаків оглушає всіх зомбі навколо. Хвиля спрацьовує не частіше ніж раз на 5 с, а щойно оглушений зомбі 3 с не оглушується знову (як і від будь-якого оглушення біти) — тож натовп не застрягне в оглушенні.",
-        ranks: ["У 3 м, раз на 5 с", "У 5 м і відкидає, раз на 5 с"], rev: 2,
-        chg: "Відповідь на ваше питання: так, без обмежень хвиля від кожного вбивства тримала б натовп в оглушенні постійно. Додано: хвиля не частіше ніж раз на 5 с, і після будь-якого оглушення біти зомбі 3 с не оглушується знову (це правило й у фішці класу, воно ж стримує «Грозу натовпу»)." },
+        ranks: ["У 3 м, раз на 5 с", "У 5 м і відкидає, раз на 5 с"] },
       { id: "B8", br: "B", tier: 5, col: 0, span: 2, max: 1, icon: "duel", cap: true, name: "Берсерк", en: "Berserk",
         desc: "Капстоун. Максимум стаків Люті подвоюється (до 16), а кожен стак ще й лікує: +1 HP за удар за кожні 4 стаки. Мінус: отримана шкода +25%.",
         ranks: ["Стаків ×2, лікування від ударів; отримана шкода +25%"],
@@ -1722,9 +1721,155 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
     }
   };
 
-  var CLASSES = { pistols: PISTOLS, shotguns: SHOTGUNS, rifles: RIFLES, mgs: MGS, bows: BOWS, xbows: XBOWS, knives: KNIVES, clubs: CLUBS };
-  var ORDER = ["pistols", "shotguns", "rifles", "mgs", "bows", "xbows", "knives", "clubs"];
-  var SOON = ["Кувалди", "Списи", "Кастети", "Кийки"];
+  // ===================================================================================
+  // SLEDGEHAMMERS (vanilla: stone 18 at 50 attacks/min, iron 32 and steel 55 at 34/min; power attack ×2; +10..50% by quality.
+  // Mod: Earthquake — normal hit 20% knockdown; power hit knocks down everyone in 3 m, each takes 10% of the hit; 4 s cooldown;
+  // power hit costs +50% stamina (Skull Crusher scales it now))
+  // ===================================================================================
+  var SLEDGE_LIST = [["Кам'яна кувалда", 18], ["Залізна кувалда", 32], ["Сталева кувалда", 55]];
+  function quakeViz(S) {
+    var rr = Math.round(S.radius * 9);
+    return '<div class="loop"><svg viewBox="0 0 120 120" width="110" height="110" role="img" aria-label="Радіус землетрусу"><circle cx="60" cy="60" r="' + rr + '" fill="rgba(217,98,74,.12)" stroke="var(--a)" stroke-dasharray="4 3"/>' + (S.aftershock ? '<circle cx="60" cy="60" r="' + Math.round(rr * 0.8) + '" fill="none" stroke="var(--a)"/>' : "") + '<rect x="54" y="52" width="12" height="16" fill="var(--gold)"/></svg>' +
+      '<div style="display:grid;gap:4px"><div class="big">' + S.radius + " м<small>силовий валить усіх · перезарядка " + S.cooldown + " с" + (S.aftershock ? " · Афтершок" : "") + "</small></div>" +
+      '<div class="mono" style="font-size:12px">кожен збитий: ' + S.share + "% силового удару · звичайний валить " + S.trip + "%</div>" +
+      '<div class="mono" style="font-size:12px">' + (S.elemental ? "розносить стихії цілі на збитих · " : "") + (S.downLonger ? "лежать +" + S.downLonger + " с · " : "") + (S.rift ? "розлом сповільнює на " + S.rift + "% 4 с · " : "") + "</div></div></div>";
+  }
+  function crushViz(S) {
+    return '<div class="bars">' + bar("Силовий удар", S.heavy, 80, "B") + bar("Ламання броні", S.armorBreak, 40, "B") + bar("Розмах (3 удари)", S.momentum * 3, 75, "B") + bar("По збитих", S.crush, 120, "B") + bar("Витривалість за удар", -S.attrVal, 80, "B", null, true) + "</div>" +
+      foot((S.overkill ? "Надлишок шкоди від вбивства силовим переходить на найближчого. " : "") + (S.cripple ? "Силовий ламає ноги з шансом " + S.cripple + "%. " : "") + (S.execute ? "Страта: силовий по зомбі з HP &lt; 40% (еліти &lt; 20%) — одразу; силовий +50% витривалості." : ""));
+  }
+  function sledgeTable(S) {
+    var rows = SLEDGE_LIST.map(function (k) {
+      var hit = Math.round(k[1] * 2 * (1 + S.heavy / 100));
+      return '<div class="bar"><span>' + k[0] + '</span><span class="tr"><span class="B" style="width:' + Math.min(100, Math.round(hit / 200 * 100)) + '%"></span></span><span class="v">' + hit + " / " + Math.round(hit * S.share / 100) + "</span></div>";
+    }).join("");
+    return '<div class="eyebrow" style="margin-bottom:6px">Силовий удар / шкода кожному збитому (якість 1)</div><div class="bars">' + rows + "</div>";
+  }
+
+  var SLEDGES = {
+    tab: "Кувалди", title: "Кувалда", sub: "Сила · кам'яна, залізна, сталева кувалда",
+    base: { name: "Землетрус", en: "Earthquake", icon: "sledge", text: "Діє з 0 рівня: звичайний удар з шансом 20% валить ціль; силовий удар валить усіх зомбі в 3 м і кожному завдає 10% своєї шкоди (перезарядка 4 с, силовий удар +50% витривалості). Гілка A розвиває Землетрус (натовп), гілка B — удар по одній цілі.",
+      note: "Зараз радіус, шанс збити і шкода збитим ростуть від перка Skull Crusher, а на 5 рівні збиті ще 3 с оглушені («Aftershock»). У новій системі це переходить у гілку A. Лють (перк Rage) у кувалди своя не потрібна: її роль у гілці B грає «Розмах»." },
+    br: {
+      A: { name: "Землетрус", en: "Earthquake", idea: "Натовп: ширший і частіший поштовх, сильніший по збитих, розносить стихії, розлом, афтершок." },
+      B: { name: "Руйнівник", en: "Wrecker", idea: "Одна ціль: величезний силовий удар, ламання броні, розмах, надлишок шкоди далі, страта." }
+    },
+    attr: { name: "Стійкість", skill: "B2", per: [0, 2, 4, 8], cap: 80, unit: "%", label: "менше витривалості за удар", note: "Атрибут «чужий» для кувалди (Сила — її рідний). Стійкість 10, ранг 3 = −80% витривалості: кувалдою можна махати довго." },
+    skills: [
+      { id: "A1", br: "A", tier: 1, col: 0, max: 3, icon: "spread", name: "Широкий поштовх", en: "Wide Quake",
+        desc: "Землетрус валить зомбі далі (базово 3 м).",
+        ranks: ["3.5 м", "4 м", "6 м"] },
+      { id: "A2", br: "A", tier: 1, col: 1, max: 3, icon: "burst", name: "Ударна сила", en: "Shockforce",
+        desc: "Кожен збитий землетрусом зомбі отримує більшу частку шкоди силового удару (базово 10%).",
+        ranks: ["20%", "35%", "60%"] },
+      { id: "A3", br: "A", tier: 2, col: 0, max: 3, icon: "timer", name: "Часті поштовхи", en: "Frequent Quakes",
+        desc: "Землетрус перезаряджається швидше (базово 4 с).",
+        ranks: ["3 с", "2 с", "1 с"] },
+      { id: "A4", br: "A", tier: 2, col: 1, max: 3, icon: "ground", name: "Похитування", en: "Stagger",
+        desc: "Звичайний удар частіше валить ціль (базово 20%).",
+        ranks: ["25%", "30%", "45%"] },
+      { id: "A5", br: "A", tier: 3, col: 0, max: 1, icon: "flame", notable: true, name: "Стихійний поштовх", en: "Elemental Quake",
+        desc: "Землетрус розносить стихії з цілі (вогонь, шок, кислоту, кровотечу) на всіх, кого збив.",
+        ranks: ["Стихії цілі → усім збитим"],
+        syn: [{ t: "S3", w: "E_ELEM", x: "Одна підпалена ціль — і весь натовп горить; дві стихії — реакції по групі." }] },
+      { id: "A6", br: "A", tier: 3, col: 1, max: 2, icon: "boot", name: "Земля тремтить", en: "Trembling Ground",
+        desc: "Збиті зомбі лежать довше.",
+        ranks: ["+1 с", "+2.5 с"],
+        syn: [{ t: "S4", w: "X_RIFLE", x: "Гвинтівка: лежачий зомбі — легка ціль для хедшоту." }, { t: "S4", w: "X_KNIFE", x: "Ніж: Добивання по збитих — гарантований крит." }] },
+      { id: "A7", br: "A", tier: 4, col: 0, span: 2, max: 2, icon: "crack", name: "Розлом", en: "Rift",
+        desc: "Після землетрусу земля в його радіусі 4 с сповільнює зомбі.",
+        ranks: ["−30% швидкості", "−60% швидкості"] },
+      { id: "A8", br: "A", tier: 5, col: 0, span: 2, max: 1, icon: "star", cap: true, name: "Афтершок", en: "Aftershock",
+        desc: "Капстоун. Через 1.5 с після землетрусу — другий поштовх тієї ж сили, а збиті ще 3 с оглушені після того, як підведуться. Мінус: перезарядка землетрусу +2 с.",
+        ranks: ["Другий поштовх через 1.5 с, оглушення 3 с після підйому; перезарядка +2 с"],
+        syn: [{ t: "S6", w: "A3", x: "Часті поштовхи гасять +2 с перезарядки." }] },
+
+      { id: "B1", br: "B", tier: 1, col: 0, max: 3, icon: "sledge", name: "Тяжкий молот", en: "Heavy Hammer",
+        desc: "Силовий удар б'є сильніше.",
+        ranks: ["+20%", "+40%", "+80%"] },
+      { id: "B2", br: "B", tier: 1, col: 1, max: 3, icon: "muscle", name: "Залізні легені", en: "Iron Lungs",
+        desc: "Удари кувалдою витрачають менше витривалості. Залежить від атрибута Стійкість: ранг × рівень Стійкості.",
+        ranks: ["−2% × Стійкість (до −20%)", "−4% × Стійкість (до −40%)", "−8% × Стійкість (до −80%)"],
+        syn: [{ t: "S2", x: "Резонанс з «чужим» атрибутом: Стійкість, а не Сила." }] },
+      { id: "B3", br: "B", tier: 2, col: 0, max: 3, icon: "crack", name: "Ламання броні", en: "Armor Break",
+        desc: "Удар знімає з зомбі частину броні на 10 с (у ванілі броня: робітник і байкер 20%, солдат 50%, Demolisher 60%).",
+        ranks: ["−10% броні", "−20% броні", "−40% броні і половинний захист Броньованих еліт"] },
+      { id: "B4", br: "B", tier: 2, col: 1, max: 3, icon: "chain", name: "Розмах", en: "Momentum",
+        desc: "Кожен наступний удар по тій самій цілі сильніший (до 3 поспіль, скидається через 3 с без удару).",
+        ranks: ["+10% за удар", "+15% за удар", "+25% за удар (до +75%)"] },
+      { id: "B5", br: "B", tier: 3, col: 0, max: 1, icon: "burst", notable: true, name: "Надлишок", en: "Overkill",
+        desc: "Шкода силового удару понад здоров'я цілі не пропадає: переходить на найближчого зомбі в 4 м (як Overkill від Сили 10, але для кувалди — завжди).",
+        ranks: ["Надлишок силового → найближчому в 4 м"] },
+      { id: "B6", br: "B", tier: 3, col: 1, max: 2, icon: "ground", name: "Розтрощення", en: "Crush",
+        desc: "Силовий удар по збитому з ніг зомбі б'є сильніше.",
+        ranks: ["+50%", "+120%"] },
+      { id: "B7", br: "B", tier: 4, col: 0, span: 2, max: 2, icon: "boot", name: "Кістколам", en: "Bonebreaker",
+        desc: "Силовий удар може зламати ноги: зомбі повзе (−50% швидкості) до смерті.",
+        ranks: ["25% шанс", "60% шанс"] },
+      { id: "B8", br: "B", tier: 5, col: 0, span: 2, max: 1, icon: "gavel", cap: true, name: "Страта", en: "Execution",
+        desc: "Капстоун. Силовий удар по зомбі, у якого менше 40% здоров'я, вбиває одразу; еліту — менше 20%. Мінус: силовий удар коштує ще +50% витривалості.",
+        ranks: ["Силовий: HP &lt; 40% (еліти &lt; 20%) — одразу; силовий +50% витривалості"],
+        syn: [{ t: "S6", w: "B2", x: "Залізні легені гасять мінус витривалості." }] },
+
+      { id: "H1", br: "H", row: 3, need: 5, max: 1, icon: "crack", name: "Розколина", en: "Fault Line",
+        desc: "Гібрид. Землетрус накладає Ламання броні на всіх, кого збив.",
+        ranks: ["Збиті землетрусом — з Ламанням броні"],
+        syn: [{ t: "S1", w: "B3", x: "Ламання броні 3/3: увесь натовп без 40% броні." }] },
+      { id: "H2", br: "H", row: 4, need: 5, max: 1, icon: "chain", name: "Важкий поштовх", en: "Heavy Quake",
+        desc: "Гібрид. Шкода землетрусу по збитих рахується з бонусами Тяжкого молота й Розмаху.",
+        ranks: ["Землетрус з бонусами Тяжкого молота й Розмаху"],
+        syn: [{ t: "S1", w: "A2", x: "Ударна сила 60% від посиленого удару." }] },
+      { id: "H3", br: "H", row: 1, need: 8, max: 1, big: true, icon: "star", name: "Кінець світу", en: "Doomsday",
+        desc: "Великий гібрид (≥8 очок у кожній гілці). Вбивство силовим ударом одразу запускає землетрус без перезарядки, і цей поштовх б'є кожного збитого на 100% удару.",
+        ranks: ["Вбивство силовим → землетрус без перезарядки, 100% удару кожному"],
+        syn: [{ t: "S1", w: "B5", x: "Надлишок: вбивство летить далі — і ще поштовх." }] }
+    ],
+    external: {
+      X_RIFLE: { cls: "X", icon: "burst", name: "Гвинтівка · хедшот" },
+      X_KNIFE: { cls: "X", icon: "knife", name: "Ніж · Добивання" },
+      E_ELEM: { cls: "E", icon: "flame", name: "Стихії: вогонь, шок, кислота, кровотеча", c: "var(--fire)" }
+    },
+    pairs: [
+      { a: "A8", b: "B8", t: "S6", anti: true, title: "Афтершок ✕ Страта", text: function () { return "Обидва капстоуни не взяти: подвійний поштовх по натовпу або страта однієї цілі."; } },
+      { a: "A5", b: "E_ELEM", t: "S3", title: "Стихійний поштовх + стихії", text: function () { return "Стихії цілі розносяться на всіх збитих."; } },
+      { a: "A6", b: "X_RIFLE", t: "S4", title: "Земля тремтить + гвинтівка", text: function (r, s) { return "Збиті лежать +" + s.downLonger + " с — легкі хедшоти."; } },
+      { a: "A6", b: "X_KNIFE", t: "S4", title: "Земля тремтить + ніж", text: function () { return "Лежачих добиває ніж гарантованим критом."; } },
+      { a: "H1", b: "B3", t: "S1", title: "Розколина + Ламання броні", text: function (r, s) { return "Увесь збитий натовп без " + s.armorBreak + "% броні."; } },
+      { a: "B6", b: "A4", t: "S1", title: "Розтрощення + Похитування", text: function (r, s) { return "Звичайний удар валить (" + s.trip + "%) — силовий по лежачому +" + s.crush + "%."; } },
+      { a: "B2", b: "ATTR", t: "S2", title: "Залізні легені + Стійкість", text: function (r, s) { return "Стійкість " + s.attr + " × " + [0, 2, 4, 8][r.B2] + "% = <b>−" + s.attrVal + "%</b> витривалості за удар."; } }
+    ],
+    presets: [
+      { n: "Землетрус (A18 + B7)", r: { A1: 3, A2: 3, A3: 3, A4: 3, A5: 1, A6: 2, A7: 2, A8: 1, B1: 3, B2: 3, B3: 1 } },
+      { n: "Руйнівник (B18 + A7)", r: { B1: 3, B2: 3, B3: 3, B4: 3, B5: 1, B6: 2, B7: 2, B8: 1, A1: 3, A2: 3, A3: 1 } },
+      { n: "Гібрид (11 + 11 + 3)", r: { A1: 3, A2: 2, A3: 2, A4: 2, A5: 1, A6: 1, B1: 3, B2: 2, B3: 2, B4: 2, B5: 1, B6: 1, H1: 1, H2: 1, H3: 1 } }
+    ],
+    stats: function (r, attr) {
+      var stam = Math.min(80, [0, 2, 4, 8][r.B2] * attr);
+      return {
+        attr: attr, attrVal: stam,
+        radius: [3, 3.5, 4, 6][r.A1], share: [10, 20, 35, 60][r.A2], cooldown: [4, 3, 2, 1][r.A3] + (r.A8 ? 2 : 0), trip: [20, 25, 30, 45][r.A4],
+        elemental: r.A5 > 0, downLonger: [0, 1, 2.5][r.A6], rift: [0, 30, 60][r.A7], aftershock: r.A8 > 0,
+        heavy: [0, 20, 40, 80][r.B1], armorBreak: [0, 10, 20, 40][r.B3], momentum: [0, 10, 15, 25][r.B4], overkill: r.B5 > 0,
+        crush: [0, 50, 120][r.B6], cripple: [0, 25, 60][r.B7], execute: r.B8 > 0
+      };
+    },
+    viz: function (s, S) {
+      if (s.id === "base" || s.id === "A2" || s.id === "B1") return (s.br === "B" ? crushViz(S) : quakeViz(S)) + sledgeTable(S);
+      if (s.br === "A") return quakeViz(S);
+      if (s.br === "B") return crushViz(S);
+      return quakeViz(S) + crushViz(S);
+    },
+    cards: function (S) {
+      return [
+        { t: "Землетрус · зараз", h: quakeViz(S) + sledgeTable(S) },
+        { t: "Руйнівник · зараз", h: crushViz(S) }
+      ];
+    }
+  };
+
+  var CLASSES = { pistols: PISTOLS, shotguns: SHOTGUNS, rifles: RIFLES, mgs: MGS, bows: BOWS, xbows: XBOWS, knives: KNIVES, clubs: CLUBS, sledges: SLEDGES };
+  var ORDER = ["pistols", "shotguns", "rifles", "mgs", "bows", "xbows", "knives", "clubs", "sledges"];
+  var SOON = ["Списи", "Кастети", "Кийки"];
 
   // ===== state =====
   var STORE = "aposMasteryProto2";
