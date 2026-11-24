@@ -2071,7 +2071,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
   }
 
   var KNUCKLES = {
-    tab: "Кастети", title: "Кастети", sub: "Стійкість · шкіряні, залізні, сталеві кастети",
+    tab: "Кастети", title: "Кастети", approved: true, sub: "Стійкість · шкіряні, залізні, сталеві кастети",
     base: { name: "Контрудар", en: "Counter Punch", icon: "duel", text: "Діє з 0 рівня: кожен отриманий удар дає заряд (максимум 2, без таймера). Звичайний удар витрачає 1 заряд і б'є +25%; силовий витрачає всі, +50% за кожен, і валить з ніг. Гілка A — танк: вас б'ють, ви повертаєте; гілка B — навпаки: серія, поки вас не зачепили.",
       note: "Зараз кількість зарядів і шанс повернути заряд ростуть від перка The Brawler (2 → 7), а на 5 рівні силовий на повних зарядах вбиває не-еліту («Knockout»). У новій системі це переходить у гілку A." },
     br: {
@@ -2119,8 +2119,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
         ranks: ["+10%", "+20%", "+40%"] },
       { id: "B4", br: "B", tier: 2, col: 1, max: 3, icon: "eye", name: "Ухил", en: "Slip",
         desc: "Від 5 ударів серії удар зомбі по вас може промахнутися — серія не згорає.",
-        ranks: ["15% шанс", "25% шанс", "40% шанс"], rev: 2,
-        chg: "Збалансовано із Залізною шкірою (гілка A, −40%). Залізна шкіра діє майже весь бій (заряд є майже завжди, бо вас б'ють), але потребує Стійкості 10. Ухил діє лише від 5 ударів серії (≈ половину бою), атрибута не потребує, і серію ще захищає Стіна ударів. З 60% Ухил давав ≈ −33% шкоди в середньому і повний імунітет у вдалі моменти — сильніше за танка; з 40% ≈ −20…25% у середньому, плюс збережена серія." },
+        ranks: ["15% шанс", "25% шанс", "40% шанс"] },
       { id: "B5", br: "B", tier: 3, col: 0, max: 1, icon: "wall", notable: true, name: "Стіна ударів", en: "Wall of Fists",
         desc: "На серії 10+ кожен ваш удар збиває замах цілі: поки ви б'єте її без зупинки, вона не встигає вдарити у відповідь. Інші зомбі навколо — можуть.",
         ranks: ["Серія 10+: ціль не може атакувати, поки ви б'єте"] },
@@ -2142,8 +2141,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
         syn: [{ t: "S1", w: "A1", x: "Більше зарядів — більше «життів» серії." }] },
       { id: "H2", br: "H", row: 4, need: 5, max: 1, icon: "steady", name: "Клінч", en: "Clinch",
         desc: "Гібрид. Поки ви ведете серію 5+ по одному зомбі, він не може вас збити з ніг чи оглушити, а його удари по вас −25%. Без зарядів — тримаєте ціль впритул і не відпускаєте.",
-        ranks: ["Серія 5+ по цілі: вона не збиває й не оглушує вас, її удари −25%"], rev: 2,
-        chg: "Замість «Ритму бійця» (дуже схожий на «Удар у відповідь»: обидва міняли заряди на серію). Клінч зв'язує гілки інакше: захист танка (A) — під час серії (B), без зарядів.",
+        ranks: ["Серія 5+ по цілі: вона не збиває й не оглушує вас, її удари −25%"],
         syn: [{ t: "S1", w: "B5", x: "Стіна ударів: на 10+ ціль і так не б'є — Клінч прикриває від 5 до 10." }] },
       { id: "H3", br: "H", row: 1, need: 8, max: 1, big: true, icon: "star", name: "Король рингу", en: "King of the Ring",
         desc: "Великий гібрид (≥8 очок у кожній гілці). На повних зарядах і серії 10+ силовий удар валить усіх у 3 м і кожному завдає 50% своєї шкоди.",
@@ -2190,9 +2188,163 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
     }
   };
 
-  var CLASSES = { pistols: PISTOLS, shotguns: SHOTGUNS, rifles: RIFLES, mgs: MGS, bows: BOWS, xbows: XBOWS, knives: KNIVES, clubs: CLUBS, sledges: SLEDGES, spears: SPEARS, knuckles: KNUCKLES };
-  var ORDER = ["pistols", "shotguns", "rifles", "mgs", "bows", "xbows", "knives", "clubs", "sledges", "spears", "knuckles"];
-  var SOON = ["Кийки"];
+  // ===================================================================================
+  // BATONS (Intellect). Vanilla: pipe baton 12 dmg / 60 apm, stun baton 20 / 70 (charges in 4 hits, charged hit shocks).
+  // Mod: Chain Lightning — normal hit shocks the target briefly, power hit shocks everyone around (3 s cooldown)
+  // ===================================================================================
+  var BATON_LIST = [["Трубний кийок", 12, 60], ["Електрокийок", 20, 70]];
+  function chainViz(S) {
+    var R = 46, rr = Math.min(R, S.radius / 6 * R), dots = "";
+    [[20, -14], [-26, 8], [6, 30], [-8, -32], [34, 18], [-40, -20], [44, -30]].forEach(function (p, i) {
+      var d = Math.sqrt(p[0] * p[0] + p[1] * p[1]) / R * 6, inR = d <= S.radius, jump = !inR && i - 4 < S.jumps;
+      dots += '<circle cx="' + (60 + p[0]) + '" cy="' + (50 + p[1]) + '" r="4" fill="' + (inR || jump ? "var(--shock)" : "var(--muted)") + '"/>' + (jump ? '<path d="M60 50 L' + (60 + p[0]) + " " + (50 + p[1]) + '" stroke="var(--shock)" stroke-dasharray="2 2"/>' : "");
+    });
+    return '<div class="loop"><svg viewBox="0 0 120 100" width="150" height="125" role="img" aria-label="Радіус Ланцюгової блискавки"><circle cx="60" cy="50" r="' + rr + '" fill="rgba(120,170,255,.12)" stroke="var(--shock)"/>' + dots + '<circle cx="60" cy="50" r="5" fill="var(--a)"/></svg>' +
+      '<div style="display:grid;gap:4px"><div class="big">' + S.radius + " м<small>Ланцюгова блискавка · шок " + S.powerShock + " с · раз на " + S.cd + " с</small></div>" +
+      '<div class="mono" style="font-size:12px">' + (S.jumps ? "перескок ще на " + S.jumps + " · " : "") + (S.cage ? "клітка 3 с · " : "") + (S.feed ? "+" + S.feed + " витривалості за зомбі · " : "") + (S.circuit ? "смерть під шоком шокує " + S.circuit + " м · " : "") + (S.storm ? "Буря: 40% удару кожному, вбивство скидає перезарядку" : "") + "</div></div></div>";
+  }
+  function voltViz(S) {
+    var pips = ""; for (var i = 0; i < 4; i++) pips += '<span class="pip' + (i < 3 ? " f" : "") + '" style="border-color:var(--b);' + (i < 3 ? "background:var(--b)" : "") + '"></span>';
+    return '<div class="loop"><div><div class="eyebrow">Удари по одній цілі</div><div class="pipset" style="margin-top:4px">' + pips + '</div><div class="mono" style="font-size:11px;color:var(--muted)">звичайний шок ' + S.normalShock + " с · змінили ціль — лічильник з нуля" + (S.carry ? " (після вбивства лишається " + S.carry + ")" : "") + "</div></div>" +
+      '<span class="arrow">=</span><div class="big">+' + S.pierce + "%<small>4-й удар — Пробій" + (S.highVolt ? " · Висока напруга" : "") + "</small></div></div>" +
+      foot((S.onShocked ? "По шокованому +" + S.onShocked + "%. " : "") + (S.isolate ? "Коли поруч (4 м) нікого — +" + S.isolate + "%. " : "") + (S.paralysis ? "3 удари поспіль по шокованому — параліч 2 с (раз на 10 с). " : "") + (S.detonate ? "Силовий по шокованому: +" + S.detonate + "% за кожну секунду шоку, що лишилась, шок згорає. " : "") + (S.highVolt ? "Висока напруга: звичайний по шокованому +100% і подовжує шок на 0.5 с; радіус блискавки ×0.5." : ""));
+  }
+  function batonTable(S) {
+    var rows = BATON_LIST.map(function (k) {
+      var mult = (1 + S.onShocked / 100) * (1 + S.isolate / 100) * (1 + S.pierce / 400) * (S.highVolt ? 2 : 1);
+      var dps = k[1] * k[2] / 60 * mult;
+      return '<div class="bar"><span>' + k[0] + '</span><span class="tr"><span class="B" style="width:' + Math.min(100, Math.round(dps / 80 * 100)) + '%"></span></span><span class="v">' + Math.round(dps) + "/с</span></div>";
+    }).join("");
+    return '<div class="eyebrow" style="margin-bottom:6px">Звичайні удари по одній шокованій цілі, шкода за секунду (якість 1)</div><div class="bars">' + rows + "</div>";
+  }
+
+  var BATONS = {
+    tab: "Кийки", title: "Кийок", sub: "Інтелект · трубний кийок, електрокийок",
+    base: { name: "Ланцюгова блискавка", en: "Chain Lightning", icon: "bolt", text: "Діє з 0 рівня: звичайний удар шокує ціль на 0.5 с, силовий — усіх зомбі в 3 м на 2 с (перезарядка 3 с, силовий коштує +50% витривалості). Шок — стихія: щосекунди 15% від удару. Гілка A — натовп: блискавка ширша, частіша, з перескоками; гілка B — одна ціль: б'єте того самого зомбі, поки він під шоком.",
+      note: "Зараз тривалість шоку й радіус ростуть від перка Calculated Attack (звичайний до 1 с, радіус до 5.5 м, шок до 4 с), а на 5 рівні кожен 4-й звичайний удар теж запускає блискавку. У новій системі радіус і тривалість — у гілку A, «кожен 4-й удар» — у гілку B (Пробій). Ванільний заряд електрокийка (4 удари → заряджений удар) і перк Electrocutioner не чіпаємо." },
+    br: {
+      A: { name: "Буря", en: "Storm", idea: "Натовп: силовий у гущу — радіус, тривалість, перескоки, клітка, витривалість з натовпу, коротке замикання." },
+      B: { name: "Перевантаження", en: "Overload", idea: "Одна ціль: шокуєте й добиваєте того самого зомбі — Пробій на 4-й удар, параліч, підрив шоку силовим." }
+    },
+    attr: { name: "Інтелект", skill: "A4", per: [0, 2, 3, 5], cap: 50, unit: "%", label: "коротша перезарядка Ланцюгової блискавки", note: "Інтелект 10, ранг 3 = −50%: блискавка раз на 1.5 с замість 3 с." },
+    external: {
+      E_SHOCK: { cls: "E", icon: "bolt", name: "Шок", c: "var(--shock)" },
+      X_TURRET: { cls: "X", icon: "target", name: "Турелі й дрон (Інтелект)" }
+    },
+    skills: [
+      { id: "A1", br: "A", tier: 1, col: 0, max: 3, icon: "burst", name: "Широкий розряд", en: "Wide Arc",
+        desc: "Радіус Ланцюгової блискавки (базово 3 м).",
+        ranks: ["+0.5 м", "+1 м", "+2 м (5 м)"] },
+      { id: "A2", br: "A", tier: 1, col: 1, max: 3, icon: "timer", name: "Довга напруга", en: "Sustained Charge",
+        desc: "Силовий шок триває довше (базово 2 с) — натовп довше стоїть і горить.",
+        ranks: ["+0.5 с", "+1 с", "+2 с (4 с)"],
+        syn: [{ t: "S3", w: "E_SHOCK", x: "Шок: що довше, то більше тіків по 15% від удару." }] },
+      { id: "A3", br: "A", tier: 2, col: 0, max: 3, icon: "chain", name: "Перескок", en: "Arc Jump",
+        desc: "Блискавка перескакує з шокованих на зомбі за межами радіусу (до 4 м від шокованого).",
+        ranks: ["ще 1 зомбі", "ще 2 зомбі", "ще 4 зомбі"] },
+      { id: "A4", br: "A", tier: 2, col: 1, max: 3, icon: "reload", name: "Конденсатор", en: "Capacitor",
+        desc: "Коротша перезарядка Ланцюгової блискавки. Залежить від атрибута Інтелект: ранг × рівень Інтелекту.",
+        ranks: ["−2% × Інтелект (до −20%)", "−3% × Інтелект (до −30%)", "−5% × Інтелект (до −50%)"],
+        syn: [{ t: "S2", x: "Резонанс: Інтелект знову важить для кийків." }] },
+      { id: "A5", br: "A", tier: 3, col: 0, max: 1, icon: "wall", notable: true, name: "Електрична клітка", en: "Tesla Cage",
+        desc: "Після блискавки 3 с навколо вас лишається поле: кожен зомбі, що заходить у радіус, шокується на 1 с. Стійте в гущі, а не тікайте.",
+        ranks: ["Поле 3 с у радіусі блискавки: вхід — шок 1 с"] },
+      { id: "A6", br: "A", tier: 3, col: 1, max: 2, icon: "refund", name: "Живлення з натовпу", en: "Crowd Feed",
+        desc: "Кожен зомбі, якого вдарила блискавка, повертає витривалість — що більший натовп, то дешевший силовий.",
+        ranks: ["+2 за зомбі", "+5 за зомбі"] },
+      { id: "A7", br: "A", tier: 4, col: 0, span: 2, max: 2, icon: "frag", name: "Коротке замикання", en: "Short Circuit",
+        desc: "Зомбі, що вмирає під шоком, розряджається: шокує всіх навколо на 1 с.",
+        ranks: ["у 2 м", "у 4 м"] },
+      { id: "A8", br: "A", tier: 5, col: 0, span: 2, max: 1, icon: "star", cap: true, name: "Буря", en: "Thunderstorm",
+        desc: "Капстоун. Ланцюгова блискавка завдає кожному шокованому 40% шкоди силового удару, а кожне вбивство нею скидає перезарядку. Мінус: ви — зброя для натовпу: коли в 3 м немає інших зомбі, ваші удари −25%.",
+        ranks: ["Блискавка 40% удару кожному, вбивство скидає перезарядку; сам на сам −25%"],
+        breaks: [{ ids: ["B4"], lvl: "weak", why: "Ізоляція дає бонус, коли поруч нікого, а Буря саме тоді знімає 25%." }],
+        syn: [{ t: "S6", w: "A6", x: "Живлення з натовпу: скинута перезарядка = частіший силовий, витривалість повертає натовп." }] },
+
+      { id: "B1", br: "B", tier: 1, col: 0, max: 3, icon: "bolt", name: "Удар по шокованому", en: "Live Wire",
+        desc: "Звичайні й силові удари по шокованому зомбі б'ють сильніше. Спершу шок — потім шкода.",
+        ranks: ["+10%", "+15%", "+30%"],
+        syn: [{ t: "S3", w: "E_SHOCK", x: "Діє й на шок від Tesla-моду, Storm Fist, Thunderclap." }] },
+      { id: "B2", br: "B", tier: 1, col: 1, max: 3, icon: "timer", name: "Тримати під струмом", en: "Hold the Current",
+        desc: "Шок від звичайного удару триває довше (базово 0.5 с) — ціль не виходить з-під шоку, поки ви б'єте.",
+        ranks: ["+0.25 с", "+0.5 с", "+1 с (1.5 с)"] },
+      { id: "B3", br: "B", tier: 2, col: 0, max: 3, icon: "target", name: "Пробій", en: "Breakdown",
+        desc: "Кожен 4-й звичайний удар поспіль по тому самому зомбі б'є сильніше. Змінили ціль — лічильник з нуля.",
+        ranks: ["+50%", "+100%", "+200%"] },
+      { id: "B4", br: "B", tier: 2, col: 1, max: 3, icon: "eye", name: "Ізоляція", en: "Isolation",
+        desc: "Коли в 4 м від цілі немає інших зомбі, ви б'єте сильніше — відводьте одного від натовпу.",
+        ranks: ["+10%", "+20%", "+40%"] },
+      { id: "B5", br: "B", tier: 3, col: 0, max: 1, icon: "steady", notable: true, name: "Параліч", en: "Paralysis",
+        desc: "Три удари поспіль по шокованому зомбі паралізують його на 2 с: не рухається й не б'є. Та сама ціль — раз на 10 с.",
+        ranks: ["3 удари по шокованому: параліч 2 с"] },
+      { id: "B6", br: "B", tier: 3, col: 1, max: 2, icon: "chain", name: "Залишковий заряд", en: "Residual Charge",
+        desc: "Після вбивства лічильник Пробою не обнуляється: наступна ціль починає з кількох ударів.",
+        ranks: ["з 1 удару", "з 3 ударів"] },
+      { id: "B7", br: "B", tier: 4, col: 0, span: 2, max: 2, icon: "burst", name: "Підрив шоку", en: "Discharge",
+        desc: "Силовий удар по шокованому зомбі «підриває» шок: бонус за кожну секунду, що лишилась, шок згорає. Шокуйте звичайними — добивайте силовим.",
+        ranks: ["+25% за секунду шоку", "+60% за секунду шоку"] },
+      { id: "B8", br: "B", tier: 5, col: 0, span: 2, max: 1, icon: "star", cap: true, name: "Висока напруга", en: "High Voltage",
+        desc: "Капстоун. Звичайний удар по шокованому зомбі б'є +100% і подовжує його шок на 0.5 с — поки ви не відпускаєте ціль, шок не закінчується. Мінус: уся енергія в одну ціль — радіус Ланцюгової блискавки вдвічі менший.",
+        ranks: ["Звичайний по шокованому +100% і +0.5 с шоку; радіус блискавки ×0.5"],
+        breaks: [{ ids: ["A1", "A5"], lvl: "weak", why: "Радіус блискавки (і поле клітки) вдвічі менший." }],
+        syn: [{ t: "S6", w: "B2", x: "Тримати під струмом: шок і так довгий — Висока напруга не дає йому згаснути." }] },
+
+      { id: "H1", br: "H", row: 3, need: 5, max: 1, icon: "ground", name: "Заземлення", en: "Grounding",
+        desc: "Гібрид. Шоковані вами зомбі б'ють вас на 30% слабше — і в натовпі, і сам на сам.",
+        ranks: ["Удари шокованих зомбі по вас −30%"] },
+      { id: "H2", br: "H", row: 4, need: 5, max: 1, icon: "squad", name: "Технар", en: "Technician",
+        desc: "Гібрид. Зомбі, шоковані вашим кийком, отримують +25% шкоди від ваших турелей і дрона. Інтелект-білд: кийок тримає, турелі стріляють.",
+        ranks: ["Шоковані: +25% від ваших турелей і дрона"],
+        syn: [{ t: "S4", w: "X_TURRET", x: "Турелі (Junk Turret, Sledge Turret) і дрон — теж Інтелект." }] },
+      { id: "H3", br: "H", row: 1, need: 8, max: 1, big: true, icon: "star", name: "Тесла-котушка", en: "Tesla Coil",
+        desc: "Великий гібрид (≥8 очок у кожній гілці). Кожен Пробій (4-й удар по цілі) запускає Ланцюгову блискавку без перезарядки — одна ціль живить усю бурю навколо.",
+        ranks: ["Пробій запускає блискавку без перезарядки"],
+        syn: [{ t: "S1", w: "B3", x: "Пробій: що частіше 4-й удар, то частіше блискавка." }] }
+    ],
+    pairs: [
+      { a: "A8", b: "B8", t: "S6", anti: true, title: "Буря ✕ Висока напруга", text: function () { return "Обидва капстоуни не взяти: або натовп, або одна ціль."; } },
+      { a: "A5", b: "A1", t: "S1", title: "Клітка + Широкий розряд", text: function (r, s) { return "Поле радіусом " + s.radius + " м шокує кожного, хто заходить."; } },
+      { a: "A7", b: "A2", t: "S1", title: "Коротке замикання + Довга напруга", text: function (r, s) { return "Шок " + s.powerShock + " с: більше зомбі помирає під шоком і розряджається далі."; } },
+      { a: "B5", b: "B1", t: "S1", title: "Параліч + Удар по шокованому", text: function (r, s) { return "Паралізована ціль не б'є, а ви — +" + s.onShocked + "%."; } },
+      { a: "B7", b: "B2", t: "S1", title: "Підрив шоку + Тримати під струмом", text: function (r, s) { return "Шок " + s.normalShock + " с від звичайного: силовий — до +" + Math.round(s.detonate * s.normalShock) + "%."; } },
+      { a: "H3", b: "B3", t: "S1", title: "Тесла-котушка + Пробій", text: function (r, s) { return "Кожен 4-й удар: +" + s.pierce + "% по цілі і блискавка " + s.radius + " м навколо."; } },
+      { a: "H2", b: "X_TURRET", t: "S4", title: "Технар + Турелі", text: function () { return "Кийок шокує — турелі б'ють шокованих на +25%."; } },
+      { a: "A4", b: "ATTR", t: "S2", title: "Конденсатор + Інтелект", text: function (r, s) { return "Інтелект " + s.attr + " × " + [0, 2, 3, 5][r.A4] + "% = <b>−" + s.attrVal + "%</b>: блискавка раз на " + s.cd + " с."; } }
+    ],
+    presets: [
+      { n: "Буря (A18 + B7)", r: { A1: 3, A2: 3, A3: 3, A4: 3, A5: 1, A6: 2, A7: 2, A8: 1, B1: 3, B2: 3, B3: 1 } },
+      { n: "Перевантаження (B18 + A7)", r: { B1: 3, B2: 3, B3: 3, B4: 3, B5: 1, B6: 2, B7: 2, B8: 1, A1: 3, A2: 3, A3: 1 } },
+      { n: "Гібрид (11 + 11 + 3)", r: { A1: 3, A2: 2, A3: 2, A4: 2, A5: 1, A6: 1, B1: 3, B2: 2, B3: 2, B4: 2, B5: 1, B6: 1, H1: 1, H2: 1, H3: 1 } }
+    ],
+    stats: function (r, attr) {
+      var cdr = Math.min(50, [0, 2, 3, 5][r.A4] * attr), hv = r.B8 > 0;
+      var radius = (3 + [0, 0.5, 1, 2][r.A1]) * (hv ? 0.5 : 1);
+      return {
+        attr: attr, attrVal: cdr,
+        radius: Math.round(radius * 10) / 10, powerShock: 2 + [0, 0.5, 1, 2][r.A2], jumps: [0, 1, 2, 4][r.A3], cd: Math.round(3 * (1 - cdr / 100) * 10) / 10,
+        cage: r.A5 > 0, feed: [0, 2, 5][r.A6], circuit: [0, 2, 4][r.A7], storm: r.A8 > 0,
+        onShocked: [0, 10, 15, 30][r.B1], normalShock: 0.5 + [0, 0.25, 0.5, 1][r.B2], pierce: [0, 50, 100, 200][r.B3], isolate: [0, 10, 20, 40][r.B4],
+        paralysis: r.B5 > 0, carry: [0, 1, 3][r.B6], detonate: [0, 25, 60][r.B7], highVolt: hv
+      };
+    },
+    viz: function (s, S) {
+      if (s.id === "base") return chainViz(S) + voltViz(S);
+      if (s.id === "B1" || s.id === "B3" || s.id === "B8") return voltViz(S) + batonTable(S);
+      if (s.br === "A") return chainViz(S);
+      if (s.br === "B") return voltViz(S);
+      return chainViz(S) + voltViz(S);
+    },
+    cards: function (S) {
+      return [
+        { t: "Буря · зараз", h: chainViz(S) },
+        { t: "Перевантаження · зараз", h: voltViz(S) + batonTable(S) }
+      ];
+    }
+  };
+
+  var CLASSES = { pistols: PISTOLS, shotguns: SHOTGUNS, rifles: RIFLES, mgs: MGS, bows: BOWS, xbows: XBOWS, knives: KNIVES, clubs: CLUBS, sledges: SLEDGES, spears: SPEARS, knuckles: KNUCKLES, batons: BATONS };
+  var ORDER = ["pistols", "shotguns", "rifles", "mgs", "bows", "xbows", "knives", "clubs", "sledges", "spears", "knuckles", "batons"];
+  var SOON = [];
 
   // ===== state =====
   var STORE = "aposMasteryProto2";
@@ -2542,6 +2694,7 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
     sledge: { n: "Кувалда", a: [{ i: "hammer", c: "#d9624a", t: "Землетрус", lbl: "4 с" }, { i: "chain", c: "#4fa3c7", t: "Розмах", v: 2, m: 3, lbl: "+30%" }], d: [] },
     spear: { n: "Спис", a: [{ i: "chain", c: "#4fa3c7", t: "Серія уколів", v: 4, m: 5, lbl: "+32%" }, { i: "pierce", c: "#d9624a", t: "Вістря в рані", lbl: "+50%" }], d: [] },
     knuckles: { n: "Кастети", a: [{ i: "chain", c: "#4fa3c7", t: "Серія", v: 7, m: 10, lbl: "+42%" }], d: [{ i: "fist", c: "#d9624a", t: "заряди", v: 4, m: 7, lbl: "4/7" }, { i: "shield", c: "#d9624a", t: "Залізна шкіра", lbl: "−28%" }] },
+    baton: { n: "Кийок", a: [{ i: "target", c: "#d9624a", t: "Пробій", v: 3, m: 4, lbl: "3/4" }, { i: "bolt", c: "#4fa3c7", t: "Блискавка", lbl: "1.5 с" }], d: [] },
     mg: { n: "Автомат", a: [{ i: "spin", c: "#4fa3c7", t: "Розкрутка", v: 4, m: 5, lbl: "+28%" }], d: [] },
     xbow: { n: "Арбалет", a: [], d: [], ring: true },
     bow: { n: "Лук", a: [], d: [], ring: true, wound: true }
