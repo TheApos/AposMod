@@ -1,0 +1,7 @@
+<configs>
+	<!-- Weapon Mastery: "+N" in the top right corner of a weapon's slot (toolbelt, backpack, containers) when its class has
+	     N unspent skill points. Text set by Source/AposMastery.cs (AposMasteryBadgePatch). -->
+	<append xpath="/templates/item_stack/rect">
+		<label depth="9" name="aposMasteryBadge" pos="2,-2" width="${-6+cell_size}" height="24" font_size="22" justify="right" color="255,210,77,255" effect="outline" effect_color="0,0,0,255" effect_distance="1,1" text="" />
+	</append>
+</configs>

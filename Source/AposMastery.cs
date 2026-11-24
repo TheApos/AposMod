@@ -163,6 +163,14 @@ public class AposMastery : MonoBehaviour
         return n;
     }
 
+    // unspent points of a class (0 while its tree is not ported yet)
+    public static int FreePoints(int cls)
+    {
+        if (!HasTree(cls)) return 0;
+        Progress p = progress[cls];
+        return Mathf.Max(0, Level(p) - Spent(p));
+    }
+
     // rank of a skill of the class (0 if the class has no such skill)
     public static int Rank(int cls, string id)
     {
@@ -376,6 +384,8 @@ public class AposMastery : MonoBehaviour
             file = null;
             HeldClass = -1;
             AposPistol.Reset();
+            AposMasteryBadgePatch.Forget();
+            hintRect = null;
             return;
         }
         string dir = AposSettings.PlayerDataDir();
@@ -384,11 +394,40 @@ public class AposMastery : MonoBehaviour
         if (path != file) Load(path);
         if (dirty && Time.time >= saveAt) Save();
         UpdateHeld(player);
+        UpdateHint(player);
 
         LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(player);
         if (ui == null || ui.windowManager.IsInputActive()) return;
         bool alt = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
         if (alt && Input.GetKeyDown(KeyCode.K)) XUiC_AposMastery.OpenFor(ui, null);
+    }
+
+    // "+N / Alt+K" right of the toolbelt while the held weapon's class has unspent points (windows.xml aposMasteryHint)
+    static LocalPlayerUI hintUi;
+    static XUiController hintRect;
+    static XUiV_Label hintLabel;
+    static string hintText;
+
+    static void UpdateHint(EntityPlayerLocal p)
+    {
+        LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(p);
+        if (ui == null || ui.xui == null) return;
+        if (ui != hintUi || hintRect == null)
+        {
+            hintUi = ui;
+            hintText = null;
+            XUiV_Window w = ui.xui.GetWindow("windowToolbelt");
+            hintRect = w != null && w.Controller != null ? w.Controller.GetChildById("aposMasteryHint") : null;
+            XUiController c = hintRect != null ? hintRect.GetChildById("aposMasteryHintLabel") : null;
+            hintLabel = c != null ? c.ViewComponent as XUiV_Label : null;
+            if (hintRect == null || hintLabel == null) { hintRect = null; return; }
+        }
+        int free = HeldClass >= 0 ? FreePoints(HeldClass) : 0;
+        string text = free > 0 ? "[FFD24D]+" + free + "[-] Alt+K" : "";
+        if (text == hintText) return;
+        hintText = text;
+        hintLabel.Text = text;
+        hintRect.ViewComponent.IsVisible = free > 0;
     }
 
     static void MarkDirty()
@@ -754,7 +793,41 @@ public static class AposMasteryInfoShowPatch
 {
     static void Postfix(XUiC_ItemInfoWindow __instance, ItemClass ___itemClass)
     {
+        int cls = AposMastery.ClassOf(___itemClass);
         XUiController button = __instance.GetChildById("aposMasteryButton");
-        if (button != null) button.ViewComponent.IsVisible = AposMastery.ClassOf(___itemClass) >= 0;
+        if (button != null) button.ViewComponent.IsVisible = cls >= 0;
+        XUiController badge = __instance.GetChildById("aposMasteryButtonBadge");
+        XUiV_Label label = badge != null ? badge.ViewComponent as XUiV_Label : null;
+        if (label != null)
+        {
+            int free = cls >= 0 ? AposMastery.FreePoints(cls) : 0;
+            label.Text = free > 0 ? "+" + free : "";
+        }
+    }
+}
+
+// "+N" in the corner of every weapon slot whose class has unspent points (templates.xml aposMasteryBadge)
+[HarmonyPatch(typeof(XUiC_ItemStack), "Update")]
+public static class AposMasteryBadgePatch
+{
+    static readonly Dictionary<XUiC_ItemStack, XUiV_Label> labels = new Dictionary<XUiC_ItemStack, XUiV_Label>();
+
+    public static void Forget() { labels.Clear(); } // leaving the game: the slot controllers are gone
+
+    static void Postfix(XUiC_ItemStack __instance)
+    {
+        XUiV_Label label;
+        if (!labels.TryGetValue(__instance, out label))
+        {
+            XUiController c = __instance.GetChildById("aposMasteryBadge");
+            label = c != null ? c.ViewComponent as XUiV_Label : null;
+            labels[__instance] = label;
+        }
+        if (label == null) return;
+        ItemStack stack = __instance.ItemStack;
+        int cls = stack != null && !stack.IsEmpty() ? AposMastery.ClassOf(stack.itemValue.ItemClass) : -1;
+        int free = cls >= 0 ? AposMastery.FreePoints(cls) : 0;
+        string text = free > 0 ? "+" + free : "";
+        if (label.Text != text) label.Text = text;
     }
 }
