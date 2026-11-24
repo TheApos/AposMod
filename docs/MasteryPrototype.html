@@ -218,6 +218,37 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
 .brknote { padding: 8px 10px; font-size: 12.5px; border: 1px solid var(--bad); background: rgba(255,111,97,.08); }
 .brknote.weak { border-color: var(--warn); background: rgba(232,176,74,.08); }
 .brknote b { color: var(--bad); } .brknote.weak b { color: var(--warn); }
+
+/* ===== HUD mockup: where stacks, charges and series go on the game screen ===== */
+.hudctl { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+.hudctl select, .hudctl input[type=range] { accent-color: var(--gold); }
+.hudctl select { background: var(--panel2); color: var(--fg); border: 1px solid var(--line); padding: 4px 6px; font: inherit; }
+.screen { position: relative; aspect-ratio: 16 / 9; width: 100%; overflow: hidden; border: 1px solid var(--line);
+  background: radial-gradient(ellipse at 50% 60%, #3a4038 0%, #23271f 45%, #121410 100%); }
+.screen .sky { position: absolute; inset: 0 0 55% 0; background: linear-gradient(180deg, #4c5a63 0%, #2c3438 100%); opacity: .55; }
+.screen .zed { position: absolute; width: 4.2%; height: 22%; bottom: 30%; background: #1a1c18; border-radius: 40% 40% 10% 10%; }
+.screen .zed::before { content: ""; position: absolute; left: 25%; top: -18%; width: 50%; height: 22%; border-radius: 50%; background: #1a1c18; }
+.screen .ring { position: absolute; width: 3.2%; aspect-ratio: 1; border: 2px solid #ff4a3d; border-radius: 50%; transform: translate(-50%, -50%); }
+.screen .cross { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; transform: translate(-50%, -50%); }
+.screen .cross::before, .screen .cross::after { content: ""; position: absolute; background: rgba(255,255,255,.85); }
+.screen .cross::before { left: 10px; top: 0; width: 2px; height: 22px; } .screen .cross::after { top: 10px; left: 0; height: 2px; width: 22px; }
+.screen .compass { position: absolute; top: 2%; left: 35%; right: 35%; height: 3.4%; border-bottom: 2px solid rgba(255,255,255,.25); font: 600 11px var(--f-mono); color: rgba(255,255,255,.6); display: flex; justify-content: space-around; }
+.screen .stats { position: absolute; left: 1.5%; bottom: 3%; width: 21%; display: grid; gap: 4px; }
+.screen .stats i { display: block; height: 10px; background: #2a2c2e; border: 1px solid #000; position: relative; }
+.screen .stats i::after { content: ""; position: absolute; inset: 0 30% 0 0; background: var(--c); }
+.screen .belt { position: absolute; left: 30%; right: 30%; bottom: 2%; height: 7%; display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; }
+.screen .belt span { background: rgba(20,20,20,.75); border: 1px solid #000; }
+.screen .belt span.on { outline: 2px solid var(--gold); }
+.screen .vbuffs { position: absolute; left: 1.5%; bottom: 13%; display: grid; grid-template-columns: repeat(2, 26px); gap: 3px; }
+.screen .vbuffs span { width: 26px; height: 26px; background: rgba(20,20,20,.8); border: 1px solid #555; display: grid; place-items: center; color: #ddd; }
+.screen .vbuffs svg { width: 16px; height: 16px; }
+.hw { position: absolute; display: flex; gap: 6px; align-items: center; pointer-events: none; }
+.hw .it { display: flex; align-items: center; gap: 4px; padding: 2px 5px; background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.12); color: #fff; font: 700 13px var(--f-mono); white-space: nowrap; }
+.hw .it svg { width: 16px; height: 16px; }
+.hw .it.max { box-shadow: 0 0 10px var(--c); border-color: var(--c); }
+.hw .pp { display: flex; gap: 2px; } .hw .pp b { width: 6px; height: 10px; background: rgba(255,255,255,.18); } .hw .pp b.f { background: var(--c); }
+.hw.def { left: 1.5%; bottom: 10.5%; }
+.hudnote { font-size: 12px; color: var(--muted); }
 .tip { position: fixed; z-index: 20; pointer-events: none; max-width: 260px; background: #0b0b0c; border: 1px solid var(--gold); padding: 6px 8px; font-size: 12px; }
 </style>
 
@@ -272,6 +303,22 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
   <section class="card">
     <h3>Типи симбіозу</h3>
     <div class="legend" id="legend"></div>
+  </section>
+  <section class="card" id="hudCard">
+    <h3>Екран: де показувати стаки, заряди й серії (макет)</h3>
+    <p class="foot" style="margin:0">Макет екрана гри зі зброєю в руках. Атака — біля прицілу, захист — над смужками HP. Перемкніть «Як зараз», щоб порівняти з ванільною смужкою баффів, де все змішано.</p>
+    <div class="hudctl">
+      <label class="eyebrow">Зброя в руках
+        <select id="hudWeapon"></select></label>
+      <label class="eyebrow">Атака біля прицілу
+        <select id="hudPos"><option value="below">під прицілом</option><option value="right">праворуч</option><option value="left">ліворуч</option></select></label>
+      <label class="eyebrow">Розмір <input type="range" id="hudSize" min="70" max="140" value="100"></label>
+      <label class="eyebrow"><input type="checkbox" id="hudNums" checked> Числа</label>
+      <label class="eyebrow"><input type="checkbox" id="hudMax"> Стан «максимум»</label>
+      <label class="eyebrow"><input type="checkbox" id="hudOld"> Як зараз (ванільна смужка)</label>
+    </div>
+    <div class="screen" id="hudScreen" role="img" aria-label="Макет екрана гри"></div>
+    <div class="hudnote" id="hudNote"></div>
   </section>
   <section class="card">
     <h3>Відгук для Claude</h3>
@@ -2473,6 +2520,68 @@ h1, h2, h3 { font-family: var(--f-disp); font-weight: 500; letter-spacing: .04em
   });
 
   setClass(st.cls);
+  render();
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  // HUD mockup: example widgets per weapon class. a = next to the crosshair (attack), d = above HP (defence)
+  var ICON = {
+    target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>', blood: '<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z"/>',
+    flame: '<path d="M12 22a7 7 0 0 0 7-7c0-4-3-6-4-10-2 2-3 4-3 6-1-1-2-2-2-4-3 3-5 5-5 8a7 7 0 0 0 7 7z"/>', chain: '<rect x="2" y="9" width="10" height="6" rx="3"/><rect x="12" y="9" width="10" height="6" rx="3"/>',
+    shield: '<path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/>', bolt: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>', heart: '<path d="M12 20s-8-5-8-11a4 4 0 0 1 8-2 4 4 0 0 1 8 2c0 6-8 11-8 11z"/>',
+    spin: '<path d="M20 12a8 8 0 1 1-3-6.2"/><path d="M20 3v5h-5"/>', fist: '<rect x="5" y="8" width="14" height="10" rx="2"/><path d="M8 8V5M12 8V4M16 8V5"/>', hammer: '<rect x="3" y="4" width="12" height="7" rx="1"/><path d="M9 11v10"/>', pierce: '<path d="M2 12h20M17 7l5 5-5 5"/>'
+  };
+  function ic(n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + (ICON[n] || ICON.target) + "</svg>"; }
+  var W = {
+    pistol: { n: "Пістолет", a: [{ i: "target", c: "#d9624a", t: "Мисливець", v: 3, m: 5, lbl: "3/5" }, { i: "bolt", c: "#e8b04a", t: "посилені", lbl: "9" }], d: [] },
+    smg: { n: "ПП (гілка Шквал)", a: [{ i: "flame", c: "#4fa3c7", t: "Гарячий ствол", lbl: "+21%" }], d: [] },
+    knife: { n: "Ніж", a: [{ i: "blood", c: "#d9624a", t: "Кровопивця", v: 6, m: 8, lbl: "+90%" }], d: [{ i: "heart", c: "#7fc46a", t: "регенерація", lbl: "+6/с" }] },
+    club: { n: "Біта", a: [{ i: "flame", c: "#4fa3c7", t: "Лють", v: 5, m: 8, lbl: "5/8" }], d: [{ i: "shield", c: "#4fa3c7", t: "Буйство", lbl: "", onlyMax: true }] },
+    sledge: { n: "Кувалда", a: [{ i: "hammer", c: "#d9624a", t: "Землетрус", lbl: "4 с" }, { i: "chain", c: "#4fa3c7", t: "Розмах", v: 2, m: 3, lbl: "+30%" }], d: [] },
+    spear: { n: "Спис", a: [{ i: "chain", c: "#4fa3c7", t: "Серія уколів", v: 4, m: 5, lbl: "+32%" }, { i: "pierce", c: "#d9624a", t: "Вістря в рані", lbl: "+50%" }], d: [] },
+    knuckles: { n: "Кастети", a: [{ i: "chain", c: "#4fa3c7", t: "Серія", v: 7, m: 10, lbl: "+42%" }], d: [{ i: "fist", c: "#d9624a", t: "заряди", v: 4, m: 7, lbl: "4/7" }, { i: "shield", c: "#d9624a", t: "Залізна шкіра", lbl: "−28%" }] },
+    mg: { n: "Автомат", a: [{ i: "spin", c: "#4fa3c7", t: "Розкрутка", v: 4, m: 5, lbl: "+28%" }], d: [] },
+    xbow: { n: "Арбалет", a: [], d: [], ring: true },
+    bow: { n: "Лук", a: [], d: [], ring: true, wound: true }
+  };
+  var sel = document.getElementById("hudWeapon"), pos = document.getElementById("hudPos"), size = document.getElementById("hudSize"),
+    nums = document.getElementById("hudNums"), mx = document.getElementById("hudMax"), old = document.getElementById("hudOld"),
+    scr = document.getElementById("hudScreen"), note = document.getElementById("hudNote");
+  if (!sel || !scr) return;
+  sel.innerHTML = Object.keys(W).map(function (k) { return '<option value="' + k + '">' + W[k].n + "</option>"; }).join("");
+  sel.value = "knuckles";
+  function item(x, isMax) {
+    var full = isMax && x.m;
+    var pips = x.m ? '<span class="pp">' + Array.apply(null, Array(x.m)).map(function (_, i) { return "<b" + (i < (full ? x.m : x.v) ? ' class="f"' : "") + "></b>"; }).join("") + "</span>" : "";
+    var lbl = nums.checked ? (full && x.m ? (x.lbl.indexOf("/") > 0 ? x.m + "/" + x.m : x.lbl) : x.lbl) : "";
+    return '<span class="it' + (full || (isMax && x.onlyMax) ? " max" : "") + '" style="--c:' + x.c + ';color:' + x.c + '" title="' + x.t + '">' + ic(x.i) + pips + (lbl ? '<span style="color:#fff">' + lbl + "</span>" : "") + "</span>";
+  }
+  function render() {
+    var w = W[sel.value], k = size.value / 100, isMax = mx.checked;
+    var h = '<div class="sky"></div><div class="compass"><span>W</span><span>NW</span><span>N</span><span>NE</span><span>E</span></div>' +
+      '<div class="zed" style="left:44%"></div><div class="zed" style="left:57%;bottom:32%"></div><div class="zed" style="left:66%;bottom:29%;transform:scale(.85)"></div><div class="cross"></div>' +
+      '<div class="stats"><i style="--c:#c0392b"></i><i style="--c:#2e86c1"></i></div><div class="belt">' + Array.apply(null, Array(10)).map(function (_, i) { return "<span" + (i === 0 ? ' class="on"' : "") + "></span>"; }).join("") + "</div>";
+    if (w.ring) h += '<div class="ring" style="left:46.1%;top:47%"></div>' + (w.wound ? '<div class="hw" style="left:44%;top:39%;transform:scale(' + k + ');transform-origin:left top"><span class="it" style="--c:#4fa3c7;color:#4fa3c7">' + ic("blood") + '<span class="pp"><b class="f"></b><b' + (isMax ? ' class="f"' : "") + "></b></span></span></div>" : "");
+    if (old.checked) {
+      var all = ["target", "bolt", "blood", "heart", "flame", "chain", "fist", "shield", "spin", "hammer", "pierce", "target"];
+      h += '<div class="vbuffs">' + all.map(function (n) { return "<span>" + ic(n) + "</span>"; }).join("") + "</div>";
+      note.textContent = "Як зараз: усі бойові баффи (і від зброї, яку ви не тримаєте) в одній колонці над HP без підписів — незрозуміло, що звідки і що зараз важливо.";
+    } else {
+      var atk = w.a.map(function (x) { return item(x, isMax); }).join("");
+      var dfn = w.d.filter(function (x) { return !x.onlyMax || isMax; }).map(function (x) { return item(x, isMax); }).join("");
+      var p = pos.value, style = p === "below" ? "left:50%;top:55%;transform:translateX(-50%) scale(" + k + ");transform-origin:center top"
+        : p === "right" ? "left:53%;top:50%;transform:translateY(-50%) scale(" + k + ");transform-origin:left center"
+        : "right:53%;top:50%;transform:translateY(-50%) scale(" + k + ");transform-origin:right center";
+      if (atk) h += '<div class="hw" style="' + style + ';flex-direction:' + (p === "below" ? "row" : "column") + ';align-items:' + (p === "left" ? "flex-end" : p === "right" ? "flex-start" : "center") + '">' + atk + "</div>";
+      if (dfn) h += '<div class="hw def" style="transform:scale(' + k + ');transform-origin:left bottom">' + dfn + "</div>";
+      note.textContent = w.ring ? "Арбалет і лук: мітка й рани показуються над самим зомбі (кільце, як зараз), тож біля прицілу нічого зайвого." :
+        "Біля прицілу — лише лічильники атаки поточної зброї (" + w.n + "), над HP — захист. Сховали зброю — віджети зникли. «Максимум» підсвічує повні заряди/стаки; на порозі значок блимає один раз.";
+    }
+    scr.innerHTML = h;
+  }
+  [sel, pos, size, nums, mx, old].forEach(function (el) { el.addEventListener("input", render); el.addEventListener("change", render); });
   render();
 })();
 </script>
