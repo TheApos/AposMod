@@ -520,62 +520,66 @@ $extra['aposWardrobeSetPartial'] = 'Set "{0}": {1}/4, {2} more for the set bonus
 $extra['aposWardrobeSetFull']   = '[40FF60]Set "{0}" 4/4, bonus active:[-]', '[40FF60]Сет «{0}» 4/4, бонус активен:[-]'
 $extra['aposWardrobeTip']      = 'Tip: keep up to 3 outfits and change in 1.5 s with Alt+1 / Alt+2 / Alt+3. Alt+0 or the Wardrobe button in the character window shows them.', 'Совет: можно держать до 3 комплектов одежды и переодеваться за 1.5 с клавишами Alt+1 / Alt+2 / Alt+3. Alt+0 или кнопка «Гардероб» в окне персонажа показывает их.'
 
-# Weapon Mastery (Source/AposMastery.cs): window, classes, node kinds (aposMK<Kind> = description with {0}, ...Short = button)
+# Weapon Mastery 2.0 (Source/AposMastery.cs): window, classes; skill texts aposMS_<Class>_<Id> (name), _D (description), _R1.._R3 (ranks)
 $extra['aposMasteryTitle']      = 'WEAPON MASTERY', 'МАСТЕРСТВО ОРУЖИЯ'
 $extra['aposMasteryNoWeapon']   = 'Take a weapon in your hands.', 'Возьмите оружие в руки.'
 $extra['aposMasteryLevel']      = 'Mastery {0} / {1}', 'Мастерство {0} / {1}'
 $extra['aposMasteryKills']      = 'Kills: {0} / {1}', 'Убийств: {0} / {1}'
 $extra['aposMasteryKillsMax']   = 'Kills: {0} (max level)', 'Убийств: {0} (максимум)'
-$extra['aposMasteryPoints']     = 'Free points: {0}   (learned {1} of {2})', 'Свободных очков: {0}   (изучено {1} из {2})'
-$extra['aposMasteryPick']       = 'Click a skill to see it. Gold = learned, green = can be learned, grey = not reachable yet.', 'Нажмите на навык, чтобы его увидеть. Золотой — изучен, зелёный — можно изучить, серый — пока недоступен.'
-$extra['aposMasteryLearn']      = 'Learn', 'Изучить'
-$extra['aposMasteryLearned']    = 'Learned.', 'Изучено.'
-$extra['aposMasteryLocked']     = 'Learn a connected skill first.', 'Сначала изучите соседний навык.'
-$extra['aposMasteryNoPoints']   = 'No free points: kill more with this weapon.', 'Нет свободных очков: убивайте этим оружием.'
-$extra['aposMasteryReset']      = 'Reset the tree ({0} Eridium)', 'Сбросить дерево ({0} эридия)'
+$extra['aposMasteryPoints']     = 'Free points: {0}   (spent {1})', 'Свободных очков: {0}   (вложено {1})'
+$extra['aposMasteryLearn']      = 'Learn a rank', 'Изучить ранг'
+$extra['aposMasteryMaxed']      = 'All ranks learned.', 'Все ранги изучены.'
+$extra['aposMasteryNeedTier']   = 'Needs {0} points in the lower tiers of branch {1} (now {2}).', 'Нужно {0} очков в нижних ярусах ветки {1} (сейчас {2}).'
+$extra['aposMasteryNeedHybrid'] = 'Hybrid: needs {0} points in each branch (A: {1}, B: {2}).', 'Гибрид: нужно {0} очков в каждой ветке (A: {1}, B: {2}).'
+$extra['aposMasteryNoPoints']   = 'No free points: kill more with this class of weapon.', 'Нет свободных очков: убивайте оружием этого класса.'
+$extra['aposMasteryResetOne']   = 'Reset this skill ({0} Eridium)', 'Сбросить навык ({0} эридия)'
+$extra['aposMasteryResetAll']   = 'Reset the whole tree ({0} Eridium)', 'Сбросить всё дерево ({0} эридия)'
 $extra['aposMasteryResetHint']  = 'Reset works within 5 m of an Eridium Forge.', 'Сброс работает в 5 м от Кузни эридия.'
+$extra['aposMasteryResetBlocked'] = 'This skill cannot be reset alone: a learned skill above needs its points.', 'Этот навык не сбросить отдельно: на его очках держится изученный навык выше.'
+$extra['aposMasteryBaseHint']   = 'Class trait: always on, the tree makes it stronger.', 'Особенность класса: работает всегда, дерево её усиливает.'
+$extra['aposMasterySoon']       = 'The skill tree of this class comes in a later update. Kills already count towards its level.', 'Дерево навыков этого класса появится в следующем обновлении. Убийства уже идут в его уровень.'
 $extra['aposMasteryLevelUp']    = '{0}: mastery {1}! Alt+K - skill tree', '{0}: мастерство {1}! Alt+K - дерево навыков'
 $extra['aposMasteryBannerTitle'] = 'WEAPON MASTERY {0}!', 'МАСТЕРСТВО ОРУЖИЯ {0}!'
 $extra['aposMasteryBannerHint']  = 'new skill point: Alt+K or the item info panel', 'новое очко навыка: Alt+K или панель предмета'
-$extra['buffAposMasteryHasteDesc'] = 'Faster attacks and reload after a kill.', 'Быстрее атаки и перезарядка после убийства.'
+$extra['aposMasteryBannerSoon']  = 'the tree of this class comes in a later update', 'дерево этого класса появится в следующем обновлении'
 $masteryClasses = [ordered]@{
-  Blades = 'Blades', 'Клинки'; Clubs = 'Clubs', 'Дубинки'; Sledges = 'Sledgehammers', 'Кувалды'; Spears = 'Spears', 'Копья'
-  Knuckles = 'Knuckles', 'Кастеты'; Batons = 'Batons', 'Жезлы'; Pistols = 'Pistols', 'Пистолеты'; Shotguns = 'Shotguns', 'Дробовики'
-  Rifles = 'Rifles', 'Винтовки'; MG = 'Machine guns', 'Автоматы'; Bows = 'Bows', 'Луки'; Crossbows = 'Crossbows', 'Арбалеты'
-  Explosives = 'Explosives', 'Взрывчатка' }
+  Pistols = 'Pistols and SMGs', 'Пистолеты и ПП'; Shotguns = 'Shotguns', 'Дробовики'; Rifles = 'Rifles', 'Винтовки'
+  MG = 'Machine guns', 'Автоматы'; Bows = 'Bows', 'Луки'; Crossbows = 'Crossbows', 'Арбалеты'; Blades = 'Knives and machetes', 'Ножи и мачете'
+  Clubs = 'Clubs and bats', 'Дубинки и биты'; Sledges = 'Sledgehammers', 'Кувалды'; Spears = 'Spears', 'Копья'
+  Knuckles = 'Knuckles', 'Кастеты'; Batons = 'Batons', 'Жезлы' }
 foreach ($k in $masteryClasses.Keys) { $extra["aposMasteryClass$k"] = $masteryClasses[$k] }
-# kind = short EN, short RU, long EN, long RU
-$masteryKinds = [ordered]@{
-  Dmg       = 'Damage', 'Урон', 'Damage +{0}%.', 'Урон +{0}%.'
-  Speed     = 'Speed', 'Скорость', 'Attack / fire rate +{0}%.', 'Скорость атаки / стрельбы +{0}%.'
-  Stamina   = 'Stamina', 'Выносл.', 'Stamina cost of attacks -{0}%.', 'Расход выносливости на атаки -{0}%.'
-  Reload    = 'Reload', 'Перезар.', 'Reload speed +{0}%.', 'Скорость перезарядки +{0}%.'
-  Mag       = 'Magazine', 'Магазин', 'Magazine size +{0}%.', 'Размер магазина +{0}%.'
-  Handling  = 'Handling', 'Точность', 'Spread and recoil -{0}%.', 'Разброс и отдача -{0}%.'
-  Dismember = 'Dismember', 'Расчлен.', 'Dismember chance +{0}%.', 'Шанс расчленения +{0}%.'
-  Crit      = 'Crit', 'Крит', '{0}% chance of a critical hit: x2 damage.', 'Шанс {0}% критического удара: x2 урона.'
-  CritDmg   = 'Crit power', 'Сила крита', 'Critical hits deal +{0}% more (x2 becomes more).', 'Критические удары наносят ещё +{0}% (x2 становится больше).'
-  Execute   = 'Execute', 'Добивание', '+{0}% damage to enemies below 35% health.', '+{0}% урона по врагам с здоровьем ниже 35%.'
-  Opener    = 'First strike', 'Первый удар', '+{0}% damage to enemies at full health.', '+{0}% урона по врагам с полным здоровьем.'
-  Head      = 'Headshot', 'В голову', 'Headshot damage +{0}%.', 'Урон в голову +{0}%.'
-  Combo     = 'Combo', 'Комбо', 'Every hit within 3 s of the last one adds +{0}% damage, up to 5 stacks.', 'Каждый удар в течение 3 с после прошлого добавляет +{0}% урона, до 5 раз.'
-  Nth       = '5th hit', '5-й удар', 'Every 5th hit deals +{0}% damage.', 'Каждый 5-й удар наносит +{0}% урона.'
-  Leech     = 'Leech', 'Вампиризм', 'Hits heal you by {0}% of the damage dealt.', 'Удары лечат вас на {0}% нанесённого урона.'
-  Splash    = 'Splash', 'Осколки', '{0}% of the hit also damages every zombie within 3 m.', '{0}% удара ранят и всех зомби в радиусе 3 м.'
-  Bleed     = 'Bleeding', 'Кровотеч.', '{0}% chance to cause bleeding.', 'Шанс {0}% вызвать кровотечение.'
-  DeepBleed = 'Deep bleed', 'Глуб. кровь', '{0}% chance of deep bleeding: 15% of the hit per second for 10 s.', 'Шанс {0}% глубокого кровотечения: 15% удара в секунду 10 с.'
-  Burn      = 'Fire', 'Поджог', '{0}% chance to set the enemy on fire.', 'Шанс {0}% поджечь врага.'
-  Shock     = 'Shock', 'Шок', '{0}% chance to shock the enemy for 3 s.', 'Шанс {0}% ударить врага током на 3 с.'
-  Acid      = 'Acid', 'Кислота', '{0}% chance to corrode the enemy for 6 s (-25 armor, acid damage).', 'Шанс {0}% разъесть врага на 6 с (-25 брони, урон кислотой).'
-  Stun      = 'Stun', 'Оглушение', '{0}% chance to stun for 1.5 s.', 'Шанс {0}% оглушить на 1.5 с.'
-  Knock     = 'Knockdown', 'Сбить с ног', '{0}% chance to knock the enemy down.', 'Шанс {0}% сбить врага с ног.'
-  Haste     = 'Haste', 'Ускорение', 'A kill gives +{0}% attack / fire rate and reload speed for 6 s.', 'Убийство даёт +{0}% скорости атаки / стрельбы и перезарядки на 6 с.'
-  Ammo      = 'Ammo', 'Патроны', 'A kill puts {0} rounds into the magazine.', 'Убийство заряжает {0} патр. в магазин.'
+
+# Pistols / SMGs (Source/AposPistol.cs)
+$extra['aposMB_Pistols_A'] = 'Headhunter', 'Охотник за головами'
+$extra['aposMB_Pistols_B'] = 'Lead Storm', 'Свинцовый шквал'
+# id = name EN, name RU, description EN, description RU, then ranks: EN, RU pairs
+$masterySkills = [ordered]@{
+  Pistols_Base = 'Headhunter', 'Охотник за головами', '5 headshots in a row start the Headhunter mode: the next 6 shots are empowered (+20% damage, almost no spread). A miss or a body hit breaks the streak. Branch A makes the mode stronger, branch B and the hybrids feed it from the side.', '5 попаданий в голову подряд включают режим Охотника: следующие 6 выстрелов усилены (+20% урона, почти без разброса). Промах или попадание в тело обрывает серию. Ветка A усиливает режим, ветка B и гибриды подпитывают его сбоку.'
+  Pistols_A1 = 'Keen Eye', 'Меткий глаз', 'More headshot damage with any shot, not only in the mode.', 'Больше урона в голову любым выстрелом, не только в режиме.', '+8% headshot damage', '+8% урона в голову', '+16% headshot damage', '+16% урона в голову', '+30% headshot damage', '+30% урона в голову'
+  Pistols_A2 = 'Steady Hand', 'Твёрдая рука', 'Less spread: fewer stray misses, so the streak breaks less often.', 'Меньше разброс: меньше случайных промахов, серия рвётся реже.', '-10% spread', '-10% разброса', '-20% spread', '-20% разброса', '-35% spread', '-35% разброса'
+  Pistols_A3 = 'The Hunt Goes On', 'Охота продолжается', 'More empowered shots in one mode.', 'Больше усиленных выстрелов за один режим.', '+3 empowered shots (9)', '+3 усиленных выстрела (9)', '+6 empowered shots (12)', '+6 усиленных выстрелов (12)', '+9 empowered shots (15); a headshot kill in the mode adds 2 more', '+9 усиленных (15); убийство в голову в режиме даёт ещё +2'
+  Pistols_A4 = 'Cold Blood', 'Хладнокровие', 'The streak is easier to start and harder to lose.', 'Серию легче начать и труднее потерять.', 'The mode needs 4 headshots, not 5', 'Режиму нужно 4 попадания в голову, а не 5', 'A miss or a body hit takes away 1 headshot instead of the whole streak', 'Промах или попадание в тело снимает 1 попадание, а не всю серию', 'The mode needs 3 headshots', 'Режиму нужно 3 попадания в голову'
+  Pistols_A5 = "Marksman's Eye", 'Глаз стрелка', 'In the Headhunter mode the heads of zombies within 40 m are marked, even behind cover.', 'В режиме Охотника головы зомби в 40 м отмечены, даже за укрытием.', 'Head marks in the mode', 'Метки голов в режиме'
+  Pistols_A6 = 'Lethal Precision', 'Смертельная точность', 'Empowered shots hit harder.', 'Усиленные выстрелы бьют сильнее.', 'Empowered shots +40% instead of +20%', 'Усиленные выстрелы +40% вместо +20%', 'Empowered shots +70%', 'Усиленные выстрелы +70%'
+  Pistols_A7 = 'Verdict', 'Приговор', 'An empowered headshot on a zombie below 35% health may kill it at once. Not elites.', 'Усиленный выстрел в голову по зомби с здоровьем ниже 35% может убить его сразу. Не элиту.', '15% chance', 'Шанс 15%', '35% chance', 'Шанс 35%'
+  Pistols_A8 = 'Duel', 'Дуэль', 'Capstone. Empowered shots deal x2. Downside: a body hit in the mode ends the mode at once.', 'Капстоун. Усиленные выстрелы наносят x2. Минус: попадание в тело в режиме сразу обрывает режим.', 'Empowered x2; a body hit ends the mode', 'Усиленные x2; попадание в тело обрывает режим'
+  Pistols_B1 = 'Quick Finger', 'Быстрый палец', 'Higher fire rate.', 'Выше темп стрельбы.', '+18% fire rate', '+18% темпа', '+36% fire rate', '+36% темпа', '+55% fire rate', '+55% темпа'
+  Pistols_B2 = 'Extended Mag', 'Расширенный магазин', 'More rounds in the magazine: rounds or percent, whichever is more. Pistols gain more from rounds, SMGs from percent.', 'Больше патронов в магазине: штуки или проценты, что больше. Пистолетам выгоднее штуки, ПП — проценты.', '+2 rounds or +15%', '+2 патрона или +15%', '+4 rounds or +30%', '+4 патрона или +30%', '+6 rounds or +45%', '+6 патронов или +45%'
+  Pistols_B3 = 'Speed Loader', 'Быстрая перезарядка', 'Faster reload.', 'Быстрее перезарядка.', '+12% reload speed', '+12% скорости перезарядки', '+24% reload speed', '+24% скорости перезарядки', '+45% reload speed', '+45% скорости перезарядки'
+  Pistols_B4 = 'Lead Shackles', 'Свинцовые кандалы', 'Every hit slows the target for 3 s. Strength = rank x your Agility level, up to 80%.', 'Каждое попадание замедляет цель на 3 с. Сила = ранг x уровень вашей Ловкости, до 80%.', '3% x Agility (max 30%)', '3% x Ловкость (макс. 30%)', '5% x Agility (max 50%)', '5% x Ловкость (макс. 50%)', '8% x Agility (max 80%)', '8% x Ловкость (макс. 80%)'
+  Pistols_B5 = 'Hot Barrel', 'Горячий ствол', 'Every hit: +3% fire rate, up to +30%. Without hits the bonus melts by 3% per second instead of vanishing.', 'Каждое попадание: +3% темпа, до +30%. Без попаданий бонус тает на 3% в секунду, а не пропадает сразу.', '+3% per hit, up to +30%', '+3% за попадание, до +30%'
+  Pistols_B6 = 'Spare Rounds', 'Запасная обойма', 'Kills and torn-off limbs put rounds back into the magazine (never above full).', 'Убийства и оторванные конечности возвращают патроны в магазин (не больше полного).', '+1 per kill, +3 per limb', '+1 за убийство, +3 за конечность', '+2 per kill, +5 per limb', '+2 за убийство, +5 за конечность'
+  Pistols_B7 = 'Lead Rain', 'Свинцовый дождь', 'The second half of the magazine hits harder.', 'Вторая половина магазина бьёт сильнее.', 'Last 50% of the magazine: +15%', 'Последние 50% магазина: +15%', 'Last 50% of the magazine: +40%', 'Последние 50% магазина: +40%'
+  Pistols_B8 = 'Bottomless Mag', 'Бездонная обойма', 'Capstone. 25% of shots cost no round, 50% against shocked zombies. Downside: +30% spread.', 'Капстоун. 25% выстрелов не тратят патрон, по шокированным зомби — 50%. Минус: +30% разброса.', '25% free shots (50% vs shocked); +30% spread', '25% бесплатных выстрелов (50% по шокированным); +30% разброса'
+  Pistols_H1 = 'Firing Squad', 'Расстрел', 'Hybrid. Every 8th hit in a row without a miss counts as a headshot: headshot damage and +1 to the Headhunter streak. A hail of bullets starts the mode by itself.', 'Гибрид. Каждое 8-е попадание подряд без промаха считается выстрелом в голову: урон как в голову и +1 к серии Охотника. Шквал пуль сам включает режим.', 'Every 8th hit in a row = a headshot', 'Каждое 8-е попадание подряд = в голову'
+  Pistols_H2 = 'Gunfighter', 'Ганфайтер', 'Hybrid. A headshot puts 1 round back into the magazine and gives +15% fire rate for 3 s.', 'Гибрид. Попадание в голову возвращает 1 патрон в магазин и даёт +15% темпа на 3 с.', 'Headshot: +1 round, +15% fire rate for 3 s', 'В голову: +1 патрон, +15% темпа на 3 с'
+  Pistols_H3 = 'Blood Fireworks', 'Кровавый фейерверк', 'Big hybrid (8 points in each branch). A headshot kill in the Headhunter mode bursts the head: zombies within 3 m are slowed by 80% and stunned for 1 s, and you get +3 rounds in the magazine.', 'Большой гибрид (8 очков в каждой ветке). Убийство в голову в режиме Охотника разрывает голову: зомби в 3 м замедлены на 80% и оглушены на 1 с, а вам +3 патрона в магазин.', 'Headshot kill in the mode: head burst, 3 m slow and stun, +3 rounds', 'Убийство в голову в режиме: взрыв головы, 3 м замедление и оглушение, +3 патрона'
 }
-foreach ($k in $masteryKinds.Keys) {
-  $v = $masteryKinds[$k]
-  $extra["aposMK${k}Short"] = $v[0], $v[1]
-  $extra["aposMK$k"] = $v[2], $v[3]
+foreach ($k in $masterySkills.Keys) {
+  $v = $masterySkills[$k]
+  $extra["aposMS_$k"] = $v[0], $v[1]
+  $extra["aposMS_${k}_D"] = $v[2], $v[3]
+  for ($r = 1; 4 + 2 * $r -le $v.Count; $r++) { $extra["aposMS_${k}_R$r"] = $v[2 + 2 * $r], $v[3 + 2 * $r] }
 }
 
 function Csv($s) { '"' + $s.Replace('"', '""') + '"' }

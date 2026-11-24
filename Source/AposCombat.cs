@@ -102,7 +102,7 @@ public static class AposCombat
             leech += SiphonShare * AposAffixes.Level(attacker, "perkSiphoningStrikes");
         }
         // Weapon Mastery: hit nodes and kill progress (AposMastery.cs)
-        leech += AposMastery.AfterHit(attacker, target, source, dealt, response.Fatal);
+        leech += AposMastery.AfterHit(attacker, target, source, response, dealt);
         if (response.Fatal) AposMastery.CountKill(attacker, target);
         if (leech > 0f)
         {
@@ -122,12 +122,6 @@ public static class AposCombat
                 && attacker.inventory.holdingItem == weaponClass)
             {
                 AposAmmo.LoadRounds(attacker as EntityPlayerLocal, 2);
-            }
-            // Gunslinger 5: a headshot kill during Headhunter adds 2 empowered shots
-            if ((response.HitBodyPart & EnumBodyPartHit.Head) != 0 && attacker.Buffs.HasBuff("buffAposHeadhunter")
-                && AposAffixes.Level(attacker, "perkGunslinger") >= 5)
-            {
-                attacker.Buffs.SetCustomVar("aposHHShots", attacker.Buffs.GetCustomVar("aposHHShots") + 2f);
             }
             // Demolitions Expert 5 "Chain Reaction": a zombie killed by your explosive blows up too
             if (IsExplosive(weaponClass) && AposAffixes.Level(attacker, "perkDemolitionsExpert") >= 5)

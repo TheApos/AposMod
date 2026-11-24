@@ -1,11 +1,13 @@
-// Weapon Mastery: every weapon (item class, any quality: a machete of quality 2 and 6 share it) gains mastery from
-// kills made while it is in your hands, up to level 10. Each level gives 1 point for that weapon's skill tree:
-// 20 nodes, so about half can be taken. The tree shape is shared by a weapon class (blades, clubs, ... 13 classes);
-// the points are per weapon. Alt+K opens the window for the weapon in hand (XUiC_AposMastery). Resetting a tree costs
-// Eridium and works only within 5 m of an Eridium Forge.
-// - Stat nodes go to cvars on the player (aposM*), read by buffAposMastery (buffs.xml) while that weapon is held.
-// - Hit nodes (crit, combo, elements, ...) are applied from AposCombatDamagePatch (AposCombat.cs).
-// Progress is saved in <save game folder>/AposMastery.dat (text: item name, kills, learned nodes as a bit mask).
+// Weapon Mastery 2.0 (docs/Design-Mastery2.md): kills made with a weapon in your hands give mastery to its whole CLASS
+// (every pistol and SMG shares one level and one tree). Levels 1..25, one point per level. Each class has a tree of
+// two branches (A, B: tiers 1-5, skills with 1-3 ranks) and three hybrids in the middle. A tier opens after 0/3/6/9/12
+// points in the lower tiers of its branch; hybrids need 5 (the big one 8) points in each branch.
+// Alt+K opens the window for the weapon in hand (XUiC_AposMastery). Near an Eridium Forge one skill can be reset for
+// 20 Eridium, the whole tree for 250.
+// - The skills of a class are applied by that class's file (AposPistol.cs, ...) while a weapon of the class is held.
+// - Progress is saved in <save>/AposMastery.dat (a co-op client: its local folder for that server, AposSettings.PlayerDataDir):
+//   "v2", then one line per class: name, kills, ranks. A file of the old 20-node trees (item name, kills, bit mask) is
+//   converted once: kills of all weapons of a class are added up, the old points come back (the trees are new).
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,114 +18,32 @@ using UnityEngine;
 
 public class AposMastery : MonoBehaviour
 {
-    public const int MaxLevel = 10;
-    public const int NodeCount = 20;
-    public const int ResetCostPerPoint = 5;
+    public const int MaxLevel = 25;
+    public const int ResetOneCost = 20;
+    public const int ResetAllCost = 250;
     public const float ForgeRange = 5f;
     const string FileName = "AposMastery.dat";
+    const string Version = "v2";
     const int EliteKills = 5;
-    const float ComboWindow = 3f;
-    const int ComboMax = 5;
-    const int NthHit = 5;
-    const float ExecuteBelow = 0.35f;
-    const float SplashRadius = 3f;
     const float SaveDelay = 10f;
 
-    // kills needed for levels 1..10
-    public static readonly int[] KillsFor = { 4, 12, 24, 40, 60, 90, 120, 160, 210, 260 };
+    // kills needed for levels 1..25
+    public static readonly int[] KillsFor =
+        { 4, 12, 24, 40, 60, 90, 120, 160, 210, 260, 320, 390, 470, 560, 660, 770, 890, 1020, 1160, 1310, 1470, 1640, 1820, 2010, 2200 };
+    // points needed in the lower tiers of the same branch, by tier (1..5)
+    public static readonly int[] TierNeed = { 0, 0, 3, 6, 9, 12 };
 
-    // ===== tree layout: 5 columns x 6 rows (row 0 at the bottom). Branches A (column 0), B (2), C (4) go up from the
-    // root; links (columns 1 and 3) join them on rows 1 and 3. Row 3 = notable, row 5 = keystone. =====
-    public static readonly int[] Col = { 2, 0, 1, 2, 3, 4, 0, 2, 4, 0, 1, 2, 3, 4, 0, 2, 4, 0, 2, 4 };
-    public static readonly int[] Row = { 0, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5 };
-    static readonly int[][] Edges =
-    {
-        new[] { 0, 1 }, new[] { 0, 3 }, new[] { 0, 5 },
-        new[] { 1, 2 }, new[] { 2, 3 }, new[] { 3, 4 }, new[] { 4, 5 },
-        new[] { 1, 6 }, new[] { 3, 7 }, new[] { 5, 8 },
-        new[] { 6, 9 }, new[] { 7, 11 }, new[] { 8, 13 },
-        new[] { 9, 10 }, new[] { 10, 11 }, new[] { 11, 12 }, new[] { 12, 13 },
-        new[] { 9, 14 }, new[] { 11, 15 }, new[] { 13, 16 },
-        new[] { 14, 17 }, new[] { 15, 18 }, new[] { 16, 19 },
-    };
-
-    public static bool IsBig(int node) { return Row[node] == 3 || Row[node] == 5; }
-
-    // ===== node kinds =====
-    public enum Kind
-    {
-        Dmg, Speed, Stamina, Reload, Mag, Handling, Dismember,                       // stats (buffAposMastery)
-        Crit, CritDmg, Execute, Opener, Head, Combo, Nth, Leech, Splash,              // hit damage / effects
-        Bleed, DeepBleed, Burn, Shock, Acid, Stun, Knock,                             // chance to apply a buff
-        Haste, Ammo,                                                                  // on kill
-    }
-
-    public struct Node
-    {
-        public Kind Kind;
-        public int Value;
-    }
-
-    // ===== weapon classes and their trees (20 nodes, index order as Col/Row above) =====
+    // ===== classes =====
+    public const int Pistols = 0, Shotguns = 1, Rifles = 2, MG = 3, Bows = 4, Crossbows = 5,
+                     Blades = 6, Clubs = 7, Sledges = 8, Spears = 9, Knuckles = 10, Batons = 11;
     public static readonly string[] Classes =
-        { "Blades", "Clubs", "Sledges", "Spears", "Knuckles", "Batons", "Pistols", "Shotguns", "Rifles", "MG", "Bows", "Crossbows", "Explosives" };
-
-    static readonly string[] TreeText =
-    {
-        // Blades: A speed, B bleeding, C crits
-        "Dmg 5|Speed 5|Stamina -10|Dmg 6|Dismember 10|Crit 5|Speed 6|Bleed 20|Leech 3|Haste 20|Dmg 6|Execute 30|Crit 5|Opener 60|Stamina -15|Bleed 20|Leech 4|Combo 8|DeepBleed 35|CritDmg 100",
-        // Clubs: A stun, B knock / splash, C tempo
-        "Dmg 5|Stun 8|Dmg 5|Dmg 6|Stamina -10|Speed 5|Stun 8|Dismember 15|Stamina -10|Execute 30|Crit 5|Knock 10|Speed 5|Haste 20|Dmg 8|Dmg 8|Speed 6|Nth 150|Splash 30|Combo 8",
-        // Sledges: A knockdown, B raw damage, C tempo
-        "Dmg 5|Knock 8|Stamina -10|Dmg 6|Dismember 15|Speed 5|Knock 8|Dmg 6|Stamina -12|Splash 25|Dmg 6|Execute 35|Stun 8|Haste 25|Splash 15|Dmg 10|Speed 6|Nth 200|Opener 100|Combo 10",
-        // Spears: A tempo, B reach / splash, C crits
-        "Dmg 5|Speed 5|Dismember 10|Dmg 6|Stamina -10|Crit 5|Speed 5|Bleed 15|Crit 5|Haste 20|Dmg 6|Splash 20|Knock 8|Head 40|Stamina -15|Dmg 8|Crit 6|Combo 8|Splash 35|CritDmg 100",
-        // Knuckles: A combo, B damage, C control / leech
-        "Speed 5|Speed 5|Stamina -10|Dmg 6|Leech 3|Stun 6|Combo 4|Dmg 6|Stun 6|Haste 25|Crit 5|Execute 30|Leech 3|Knock 10|Speed 6|Dmg 8|Stamina -15|Combo 10|Nth 150|Leech 8",
-        // Batons: A shock, B damage, C control
-        "Dmg 5|Shock 10|Speed 5|Dmg 6|Stamina -10|Stun 6|Shock 10|Dmg 6|Stun 6|Splash 20|Crit 5|Execute 30|Speed 5|Knock 10|Shock 15|Dmg 8|Stamina -15|Splash 40|Nth 150|Combo 8",
-        // Pistols: A headshots, B reload / ammo, C tempo
-        "Dmg 5|Head 15|Handling 10|Reload 10|Mag 15|Speed 5|Head 15|Reload 10|Speed 6|Crit 8|Dmg 6|Ammo 2|Handling 10|Haste 20|Head 20|Mag 20|Dmg 8|CritDmg 100|Combo 6|Nth 150",
-        // Shotguns: A damage / fire, B reload, C control
-        "Dmg 5|Dismember 15|Handling 10|Reload 10|Mag 20|Knock 6|Dmg 6|Reload 10|Knock 6|Execute 30|Dmg 6|Ammo 1|Stun 6|Opener 50|Dmg 8|Mag 25|Splash 15|Burn 25|Nth 100|Splash 30",
-        // Rifles: A headshots, B reload / ammo, C first shot
-        "Dmg 5|Head 15|Handling 15|Reload 10|Dmg 5|Opener 30|Head 15|Reload 10|Opener 30|Crit 8|Handling 10|Ammo 1|Mag 20|Execute 30|Head 25|Speed 10|Dmg 8|CritDmg 150|Splash 40|Opener 100",
-        // Machine guns: A control, B magazine, C tempo
-        "Dmg 5|Handling 10|Speed 5|Mag 15|Reload 10|Dmg 5|Handling 10|Mag 15|Speed 5|Combo 3|Dmg 5|Ammo 3|Crit 5|Shock 8|Handling 15|Reload 15|Speed 6|Combo 8|Mag 40|Burn 25",
-        // Bows: A headshots, B splinters, C bleeding / fire
-        "Dmg 5|Head 15|Speed 5|Dmg 6|Handling 10|Bleed 15|Head 15|Dmg 6|Bleed 15|Crit 8|Opener 50|Splash 20|Speed 5|Acid 15|Head 20|Dmg 8|Burn 15|CritDmg 150|Splash 40|DeepBleed 30",
-        // Crossbows: A headshots, B damage / knock, C reload / shock
-        "Dmg 5|Head 15|Reload 10|Dmg 6|Handling 10|Reload 10|Head 15|Dmg 6|Reload 15|Crit 8|Opener 60|Knock 10|Stun 8|Haste 20|Head 25|Dmg 10|Shock 15|CritDmg 150|Splash 40|Combo 8",
-        // Explosives: A damage, B elements, C reload
-        "Dmg 5|Dmg 6|Reload 10|Burn 10|Knock 8|Reload 10|Dmg 6|Burn 10|Stun 8|Execute 30|Dmg 6|Shock 15|Knock 8|Ammo 1|Dmg 10|Acid 15|Reload 20|Opener 60|Splash 20|Crit 15",
-    };
-
-    public static readonly Node[][] Trees = ParseTrees();
-
-    static Node[][] ParseTrees()
-    {
-        Node[][] trees = new Node[TreeText.Length][];
-        for (int t = 0; t < TreeText.Length; t++)
-        {
-            string[] parts = TreeText[t].Split('|');
-            if (parts.Length != NodeCount) throw new Exception("AposMastery: tree " + Classes[t] + " has " + parts.Length + " nodes");
-            trees[t] = new Node[NodeCount];
-            for (int i = 0; i < NodeCount; i++)
-            {
-                string[] kv = parts[i].Split(' ');
-                trees[t][i] = new Node { Kind = (Kind)Enum.Parse(typeof(Kind), kv[0]), Value = int.Parse(kv[1], CultureInfo.InvariantCulture) };
-            }
-        }
-        return trees;
-    }
-
-    // ===== weapon -> class =====
+        { "Pistols", "Shotguns", "Rifles", "MG", "Bows", "Crossbows", "Blades", "Clubs", "Sledges", "Spears", "Knuckles", "Batons" };
     static readonly string[] ClassTags =
-        { "perkDeepCuts", "perkPummelPete", "perkSkullCrusher", "perkJavelinMaster", "perkBrawler", "perkFlurryOfIntellect",
-          "perkGunslinger", "perkBoomstick", "perkDeadEye", "perkMachineGunner", "perkArchery", "perkArchery", "perkDemolitionsExpert" };
+        { "perkGunslinger", "perkBoomstick", "perkDeadEye", "perkMachineGunner", "perkArchery", "perkArchery",
+          "perkDeepCuts", "perkPummelPete", "perkSkullCrusher", "perkJavelinMaster", "perkBrawler", "perkFlurryOfIntellect" };
     static FastTags<TagGroup.Global>[] classTags;
 
-    // -1 = not a mastery weapon (tools, fists, turrets)
+    // -1 = not a mastery weapon (tools, fists, turrets, explosives)
     public static int ClassOf(ItemClass ic)
     {
         if (ic == null || ic.ItemTags.IsEmpty) return -1;
@@ -135,39 +55,99 @@ public class AposMastery : MonoBehaviour
         for (int i = 0; i < ClassTags.Length; i++)
         {
             if (!ic.ItemTags.Test_AnySet(classTags[i])) continue;
-            if (ClassTags[i] == "perkArchery")
+            if (i == Bows || i == Crossbows)
             {
                 // bows are catapults, crossbows are launchers
                 bool bow = ic.Actions != null && ic.Actions.Length > 0 && ic.Actions[0] is ItemActionCatapult;
-                return bow ? Array.IndexOf(Classes, "Bows") : Array.IndexOf(Classes, "Crossbows");
+                return bow ? Bows : Crossbows;
             }
             return i;
         }
         return -1;
     }
 
-    // ===== progress per weapon =====
+    // ===== trees =====
+    // Skill: id, branch (A / B / H = hybrid), tier (1..5; for a hybrid the row it is drawn on), ranks, hybrid points needed
+    public class Skill
+    {
+        public string Id;
+        public char Branch;
+        public int Tier;
+        public int Max;
+        public int Need;
+    }
+
+    // "id branch tier ranks [need]" separated by |; order = order in the window (A1..A8, B1..B8, H1..H3)
+    static readonly string[] TreeText =
+    {
+        // Pistols / SMG: A Headhunter, B Lead Storm (AposPistol.cs)
+        "A1 A 1 3|A2 A 1 3|A3 A 2 3|A4 A 2 3|A5 A 3 1|A6 A 3 2|A7 A 4 2|A8 A 5 1|" +
+        "B1 B 1 3|B2 B 1 3|B3 B 2 3|B4 B 2 3|B5 B 3 1|B6 B 3 2|B7 B 4 2|B8 B 5 1|" +
+        "H1 H 3 1 5|H2 H 4 1 5|H3 H 5 1 8",
+        null, null, null, null, null, null, null, null, null, null, null,
+    };
+
+    public static readonly Skill[][] Trees = ParseTrees();
+    static readonly Dictionary<string, int>[] SkillIndex = IndexTrees();
+
+    static Skill[][] ParseTrees()
+    {
+        Skill[][] trees = new Skill[Classes.Length][];
+        for (int t = 0; t < Classes.Length; t++)
+        {
+            string text = t < TreeText.Length ? TreeText[t] : null;
+            if (text == null) { trees[t] = new Skill[0]; continue; }
+            string[] parts = text.Split('|');
+            trees[t] = new Skill[parts.Length];
+            for (int i = 0; i < parts.Length; i++)
+            {
+                string[] f = parts[i].Split(' ');
+                trees[t][i] = new Skill
+                {
+                    Id = f[0],
+                    Branch = f[1][0],
+                    Tier = int.Parse(f[2], CultureInfo.InvariantCulture),
+                    Max = int.Parse(f[3], CultureInfo.InvariantCulture),
+                    Need = f.Length > 4 ? int.Parse(f[4], CultureInfo.InvariantCulture) : 0,
+                };
+            }
+        }
+        return trees;
+    }
+
+    static Dictionary<string, int>[] IndexTrees()
+    {
+        Dictionary<string, int>[] idx = new Dictionary<string, int>[Classes.Length];
+        for (int t = 0; t < Classes.Length; t++)
+        {
+            idx[t] = new Dictionary<string, int>();
+            for (int i = 0; i < Trees[t].Length; i++) idx[t][Trees[t][i].Id] = i;
+        }
+        return idx;
+    }
+
+    public static bool HasTree(int cls) { return cls >= 0 && Trees[cls].Length > 0; }
+
+    // ===== progress per class =====
     public class Progress
     {
         public int Kills;
-        public int Mask;
+        public int[] Ranks;
     }
 
-    static readonly Dictionary<string, Progress> weapons = new Dictionary<string, Progress>();
+    static readonly Progress[] progress = NewProgress();
     static string file;
     static bool dirty;
     static float saveAt;
 
-    public static Progress Get(string itemName)
+    static Progress[] NewProgress()
     {
-        Progress p;
-        if (!weapons.TryGetValue(itemName, out p))
-        {
-            p = new Progress();
-            weapons[itemName] = p;
-        }
+        Progress[] p = new Progress[Classes.Length];
+        for (int i = 0; i < p.Length; i++) p[i] = new Progress { Ranks = new int[Trees[i].Length] };
         return p;
     }
+
+    public static Progress Get(int cls) { return progress[cls]; }
 
     public static int Level(Progress p)
     {
@@ -179,188 +159,153 @@ public class AposMastery : MonoBehaviour
     public static int Spent(Progress p)
     {
         int n = 0;
-        for (int i = 0; i < NodeCount; i++) if ((p.Mask & (1 << i)) != 0) n++;
+        for (int i = 0; i < p.Ranks.Length; i++) n += p.Ranks[i];
         return n;
     }
 
-    public static bool Has(Progress p, int node) { return (p.Mask & (1 << node)) != 0; }
-
-    // the root is always open; any other node needs a learned neighbour
-    public static bool CanReach(Progress p, int node)
+    // rank of a skill of the class (0 if the class has no such skill)
+    public static int Rank(int cls, string id)
     {
-        if (node == 0) return true;
-        for (int i = 0; i < Edges.Length; i++)
+        int i;
+        return cls >= 0 && SkillIndex[cls].TryGetValue(id, out i) ? progress[cls].Ranks[i] : 0;
+    }
+
+    // points in a branch, counting only tiers below maxTier
+    public static int PointsIn(int cls, char branch, int belowTier)
+    {
+        Skill[] tree = Trees[cls];
+        int[] ranks = progress[cls].Ranks;
+        int n = 0;
+        for (int i = 0; i < tree.Length; i++)
         {
-            int a = Edges[i][0], b = Edges[i][1];
-            if ((a == node && Has(p, b)) || (b == node && Has(p, a))) return true;
+            if (tree[i].Branch == branch && tree[i].Tier < belowTier) n += ranks[i];
         }
-        return false;
+        return n;
     }
 
-    public static bool CanLearn(Progress p, int node)
+    // is the skill's requirement met (tier points or hybrid points)?
+    public static bool Unlocked(int cls, int skill)
     {
-        return !Has(p, node) && CanReach(p, node) && Spent(p) < Level(p);
+        Skill s = Trees[cls][skill];
+        if (s.Branch == 'H') return PointsIn(cls, 'A', 99) >= s.Need && PointsIn(cls, 'B', 99) >= s.Need;
+        return PointsIn(cls, s.Branch, s.Tier) >= TierNeed[s.Tier];
     }
 
-    public static void Learn(string itemName, int node)
+    public static bool CanLearn(int cls, int skill)
     {
-        Progress p = Get(itemName);
-        if (!CanLearn(p, node)) return;
-        p.Mask |= 1 << node;
-        appliedFor = null; // refresh the stat cvars
+        Progress p = progress[cls];
+        return p.Ranks[skill] < Trees[cls][skill].Max && Spent(p) < Level(p) && Unlocked(cls, skill);
+    }
+
+    public static void Learn(int cls, int skill)
+    {
+        if (!CanLearn(cls, skill)) return;
+        progress[cls].Ranks[skill]++;
+        Changed();
         Save();
     }
 
-    public static void Reset(string itemName)
+    // a skill can be reset only if every other learned skill still meets its requirement without it
+    public static bool CanResetSkill(int cls, int skill)
     {
-        Get(itemName).Mask = 0;
-        appliedFor = null;
+        int[] ranks = progress[cls].Ranks;
+        if (ranks[skill] == 0) return false;
+        int keep = ranks[skill];
+        ranks[skill] = 0;
+        bool ok = true;
+        for (int i = 0; i < ranks.Length && ok; i++)
+        {
+            if (ranks[i] > 0 && !Unlocked(cls, i)) ok = false;
+        }
+        ranks[skill] = keep;
+        return ok;
+    }
+
+    public static void ResetSkill(int cls, int skill)
+    {
+        if (!CanResetSkill(cls, skill)) return;
+        progress[cls].Ranks[skill] = 0;
+        Changed();
         Save();
     }
 
-    // ===== the held weapon's learned nodes =====
-    static string appliedFor;
-    static int appliedMask = -1;
-    static int heldClass = -1;
-    static readonly int[] held = new int[Enum.GetValues(typeof(Kind)).Length];
-
-    static float Sum(Kind k) { return held[(int)k]; }
-
-    static void Recalc(ItemClass ic)
+    public static void ResetAll(int cls)
     {
-        Array.Clear(held, 0, held.Length);
-        heldClass = ClassOf(ic);
-        if (heldClass < 0) return;
-        Progress p = Get(ic.Name);
-        Node[] tree = Trees[heldClass];
-        for (int i = 0; i < NodeCount; i++)
+        Array.Clear(progress[cls].Ranks, 0, progress[cls].Ranks.Length);
+        Changed();
+        Save();
+    }
+
+    // ===== the held weapon's class =====
+    public static int HeldClass = -1;
+    public static int RankVersion; // bumps on every change of ranks, so class files can refresh their cached values
+
+    static void Changed() { RankVersion++; }
+
+    // stat cvars read by buffAposMastery (buffs.xml); the held class's file sets them every frame, otherwise they are 0
+    public const int StatDmg = 0, StatSpeed = 1, StatReload = 2, StatSpread = 3, StatMag = 4;
+    static readonly string[] StatVars = { "aposMDmg", "aposMSpeed", "aposMReload", "aposMSpread", "aposMMagAdd" };
+    static readonly float[] stats = new float[StatVars.Length];
+
+    public static void SetStat(int stat, float value) { stats[stat] = value; }
+
+    static void UpdateHeld(EntityPlayerLocal player)
+    {
+        HeldClass = ClassOf(player.inventory.holdingItem);
+        if (!player.Buffs.HasBuff("buffAposMastery")) player.Buffs.AddBuff("buffAposMastery");
+        Array.Clear(stats, 0, stats.Length);
+        AposPistol.Tick(player, HeldClass == Pistols);
+        for (int i = 0; i < StatVars.Length; i++)
         {
-            if (Has(p, i)) held[(int)tree[i].Kind] += tree[i].Value;
+            if (player.Buffs.GetCustomVar(StatVars[i]) != stats[i]) player.Buffs.SetCustomVar(StatVars[i], stats[i]);
         }
     }
 
-    static void ApplyStats(EntityPlayerLocal player)
-    {
-        ItemClass ic = player.inventory.holdingItem;
-        string name = ic != null ? ic.Name : "";
-        int mask = ClassOf(ic) >= 0 ? Get(name).Mask : 0;
-        if (name == appliedFor && mask == appliedMask) return;
-        appliedFor = name;
-        appliedMask = mask;
-        Recalc(ic);
-        player.Buffs.SetCustomVar("aposMDmg", Sum(Kind.Dmg) / 100f);
-        player.Buffs.SetCustomVar("aposMSpeed", Sum(Kind.Speed) / 100f);
-        player.Buffs.SetCustomVar("aposMStam", Sum(Kind.Stamina) / 100f);
-        player.Buffs.SetCustomVar("aposMReload", Sum(Kind.Reload) / 100f);
-        player.Buffs.SetCustomVar("aposMMag", Sum(Kind.Mag) / 100f);
-        player.Buffs.SetCustomVar("aposMSpread", -Sum(Kind.Handling) / 100f);
-        player.Buffs.SetCustomVar("aposMDism", Sum(Kind.Dismember) / 100f);
-    }
-
-    // ===== hits by the local player with the held weapon (AposCombatDamagePatch) =====
-    static int comboStacks;
-    static float comboTime;
-    static int hitCount;
-
-    static bool Applies(EntityPlayer attacker, EntityAlive target, DamageSource source)
+    // ===== hits by the local player (AposCombatDamagePatch) =====
+    public static bool IsLocalWeaponHit(EntityPlayer attacker, EntityAlive target, DamageSource source)
     {
         GameManager gm = GameManager.Instance;
         return attacker != null && target != null && !(target is EntityPlayer) && gm.World != null
-            && attacker == gm.World.GetPrimaryPlayer() && heldClass >= 0
-            && attacker.inventory.holdingItem != null && attacker.inventory.holdingItem.Name == appliedFor
-            && (AposShadow.IsWeaponHit(source) || source.GetDamageType() == EnumDamageTypes.Heat && heldClass == Array.IndexOf(Classes, "Explosives"));
+            && attacker == gm.World.GetPrimaryPlayer() && attacker.inventory.holdingItem != null
+            && ClassOf(attacker.inventory.holdingItem) == HeldClass && HeldClass >= 0
+            && AposShadow.IsWeaponHit(source);
     }
 
     // Prefix: damage before it is applied
     public static int ModifyHit(EntityPlayer attacker, EntityAlive target, DamageSource source, int strength)
     {
-        if (!Applies(attacker, target, source)) return strength;
-        float mult = 1f;
-        float max = target.GetMaxHealth();
-        if (Sum(Kind.Execute) > 0 && target.Health < max * ExecuteBelow) mult += Sum(Kind.Execute) / 100f;
-        if (Sum(Kind.Opener) > 0 && target.Health >= max) mult += Sum(Kind.Opener) / 100f;
-        if (Sum(Kind.Head) > 0 && (source.GetEntityDamageBodyPart(target) & EnumBodyPartHit.Head) != 0) mult += Sum(Kind.Head) / 100f;
-
-        if (Sum(Kind.Combo) > 0)
-        {
-            if (Time.time - comboTime > ComboWindow) comboStacks = 0;
-            mult += comboStacks * Sum(Kind.Combo) / 100f;
-            comboStacks = Math.Min(ComboMax, comboStacks + 1);
-            comboTime = Time.time;
-        }
-        if (Sum(Kind.Nth) > 0)
-        {
-            hitCount++;
-            if (hitCount >= NthHit)
-            {
-                hitCount = 0;
-                mult += Sum(Kind.Nth) / 100f;
-            }
-        }
-        if (Sum(Kind.Crit) > 0 && UnityEngine.Random.value * 100f < Sum(Kind.Crit))
-        {
-            mult *= 2f + Sum(Kind.CritDmg) / 100f;
-        }
-        return Mathf.Max(1, Mathf.RoundToInt(strength * mult));
+        if (!IsLocalWeaponHit(attacker, target, source)) return strength;
+        if (HeldClass == Pistols) return AposPistol.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
+        return strength;
     }
 
-    // Postfix: after the damage (dealt = health actually lost); returns the extra leech share
-    public static float AfterHit(EntityPlayer attacker, EntityAlive target, DamageSource source, int dealt, bool fatal)
+    // Postfix: after the damage (dealt = health actually lost); returns an extra leech share
+    public static float AfterHit(EntityPlayer attacker, EntityAlive target, DamageSource source, DamageResponse response, int dealt)
     {
-        if (!Applies(attacker, target, source)) return 0f;
-        if (!fatal)
-        {
-            Chance(target, Kind.Bleed, "buffInjuryBleeding", -1f);
-            Chance(target, Kind.DeepBleed, "buffAposDeepBleed", -1f);
-            Chance(target, Kind.Burn, "buffBurningElement", -1f);
-            Chance(target, Kind.Shock, "buffShocked", 3f);
-            Chance(target, Kind.Acid, "buffAposCorroded", 6f);
-            Chance(target, Kind.Stun, "buffInjuryStunned01", 1.5f);
-            Chance(target, Kind.Knock, "buffInjuryKnockdown01", -1f);
-        }
-        if (Sum(Kind.Splash) > 0 && dealt > 0)
-        {
-            int share = Mathf.RoundToInt(dealt * Sum(Kind.Splash) / 100f);
-            if (share > 0) AposCombat.SplashAround(target, SplashRadius, share, attacker.entityId);
-        }
-        if (fatal) OnKill(attacker as EntityPlayerLocal, target);
-        return Sum(Kind.Leech) / 100f;
+        if (!IsLocalWeaponHit(attacker, target, source)) return 0f;
+        if (HeldClass == Pistols) AposPistol.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
+        return 0f;
     }
 
-    static void Chance(EntityAlive target, Kind kind, string buff, float duration)
-    {
-        if (Sum(kind) <= 0 || UnityEngine.Random.value * 100f >= Sum(kind)) return;
-        target.Buffs.AddBuff(buff, -1, true, false, duration);
-    }
-
-    static void OnKill(EntityPlayerLocal player, EntityAlive target)
-    {
-        if (player == null) return;
-        if (Sum(Kind.Haste) > 0)
-        {
-            player.Buffs.SetCustomVar("aposMHaste", Sum(Kind.Haste) / 100f);
-            player.Buffs.AddBuff("buffAposMasteryHaste");
-        }
-        if (Sum(Kind.Ammo) > 0) AposAmmo.LoadRounds(player, (int)Sum(Kind.Ammo));
-    }
-
-    // A kill with the held weapon (any damage type: burning from it counts too) gives mastery
+    // A kill with the held weapon (any damage type: burning from it counts too) gives mastery to its class
     public static void CountKill(EntityPlayer attacker, EntityAlive target)
     {
         GameManager gm = GameManager.Instance;
         if (attacker == null || target == null || target is EntityPlayer || gm.World == null || attacker != gm.World.GetPrimaryPlayer()) return;
         ItemClass ic = attacker.inventory.holdingItem;
-        if (ClassOf(ic) < 0) return;
-        Progress p = Get(ic.Name);
+        int cls = ClassOf(ic);
+        if (cls < 0) return;
+        Progress p = progress[cls];
         int before = Level(p);
         p.Kills += AposElites.IsElite(target) ? EliteKills : 1;
         int after = Level(p);
         if (after > before)
         {
-            GameManager.ShowTooltip(attacker as EntityPlayerLocal, string.Format(Localization.Get("aposMasteryLevelUp"), ic.GetLocalizedItemName(), after));
+            string className = Localization.Get("aposMasteryClass" + Classes[cls]);
+            GameManager.ShowTooltip(attacker as EntityPlayerLocal, string.Format(Localization.Get("aposMasteryLevelUp"), className, after));
             Audio.Manager.PlayInsidePlayerHead("ui_challenge_complete", attacker.entityId);
             bannerTitle = string.Format(Localization.Get("aposMasteryBannerTitle"), after);
-            bannerText = ic.GetLocalizedItemName() + "  -  " + Localization.Get("aposMasteryBannerHint");
+            bannerText = className + "  -  " + Localization.Get(HasTree(cls) ? "aposMasteryBannerHint" : "aposMasteryBannerSoon");
             bannerStart = Time.time;
             Save();
         }
@@ -375,6 +320,11 @@ public class AposMastery : MonoBehaviour
 
     void OnGUI()
     {
+        if (Event.current.type == EventType.Repaint)
+        {
+            GameManager gm = GameManager.Instance;
+            AposPistol.Draw(gm != null && gm.World != null ? gm.World.GetPrimaryPlayer() : null);
+        }
         float t = Time.time - bannerStart;
         if (t > BannerTime || bannerTitle == null || Event.current.type != EventType.Repaint) return;
         if (bannerStyle == null)
@@ -415,7 +365,7 @@ public class AposMastery : MonoBehaviour
         return false;
     }
 
-    // ===== MonoBehaviour: load/save, hotkey, stat cvars =====
+    // ===== MonoBehaviour: load/save, hotkey =====
     void Update()
     {
         GameManager gm = GameManager.Instance;
@@ -424,7 +374,8 @@ public class AposMastery : MonoBehaviour
         {
             if (dirty) Save();
             file = null;
-            appliedFor = null;
+            HeldClass = -1;
+            AposPistol.Reset();
             return;
         }
         string dir = AposSettings.PlayerDataDir();
@@ -432,9 +383,7 @@ public class AposMastery : MonoBehaviour
         string path = Path.Combine(dir, FileName);
         if (path != file) Load(path);
         if (dirty && Time.time >= saveAt) Save();
-
-        if (!player.Buffs.HasBuff("buffAposMastery")) player.Buffs.AddBuff("buffAposMastery");
-        ApplyStats(player);
+        UpdateHeld(player);
 
         LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(player);
         if (ui == null || ui.windowManager.IsInputActive()) return;
@@ -448,31 +397,64 @@ public class AposMastery : MonoBehaviour
         dirty = true;
     }
 
+    static void Clear()
+    {
+        for (int i = 0; i < progress.Length; i++)
+        {
+            progress[i].Kills = 0;
+            Array.Clear(progress[i].Ranks, 0, progress[i].Ranks.Length);
+        }
+        Changed();
+    }
+
     static void Load(string path)
     {
         file = path;
-        weapons.Clear();
-        appliedFor = null;
+        Clear();
         dirty = false;
         if (!File.Exists(path)) return;
         try
         {
-            foreach (string line in File.ReadAllLines(path))
+            string[] lines = File.ReadAllLines(path);
+            if (lines.Length > 0 && lines[0].Trim() == Version)
+            {
+                for (int l = 1; l < lines.Length; l++)
+                {
+                    string[] f = lines[l].Split('\t');
+                    int cls = Array.IndexOf(Classes, f[0]);
+                    if (f.Length < 2 || cls < 0) continue;
+                    progress[cls].Kills = int.Parse(f[1], CultureInfo.InvariantCulture);
+                    if (f.Length < 3 || f[2] == "") continue;
+                    string[] r = f[2].Split(',');
+                    for (int i = 0; i < r.Length && i < progress[cls].Ranks.Length; i++)
+                    {
+                        progress[cls].Ranks[i] = Mathf.Clamp(int.Parse(r[i], CultureInfo.InvariantCulture), 0, Trees[cls][i].Max);
+                    }
+                }
+                return;
+            }
+            // old format (one line per weapon: item name, kills, bit mask of the old 20-node tree): kills go to the
+            // weapon's class, the old points are given back
+            foreach (string line in lines)
             {
                 string[] f = line.Split('\t');
                 if (f.Length != 3) continue;
-                weapons[f[0]] = new Progress
-                {
-                    Kills = int.Parse(f[1], CultureInfo.InvariantCulture),
-                    Mask = int.Parse(f[2], CultureInfo.InvariantCulture),
-                };
+                int cls = ClassOf(ItemClass.GetItemClass(f[0], true));
+                if (cls >= 0) progress[cls].Kills += int.Parse(f[1], CultureInfo.InvariantCulture);
             }
+            File.Copy(path, path + ".v1", true);
+            Debug.Log("[AposMod] Mastery file converted to per-class progress; the old one is kept as " + path + ".v1");
+            Save();
         }
         catch (Exception e)
         {
             Debug.LogError("[AposMod] Mastery file could not be read, it was kept as " + path + ".bad: " + e.Message);
             try { File.Copy(path, path + ".bad", true); } catch (Exception) { }
-            weapons.Clear();
+            Clear();
+        }
+        finally
+        {
+            Changed();
         }
     }
 
@@ -483,11 +465,18 @@ public class AposMastery : MonoBehaviour
         try
         {
             StringBuilder sb = new StringBuilder();
-            foreach (KeyValuePair<string, Progress> kv in weapons)
+            sb.Append(Version).Append('\n');
+            for (int c = 0; c < progress.Length; c++)
             {
-                if (kv.Value.Kills == 0 && kv.Value.Mask == 0) continue;
-                sb.Append(kv.Key).Append('\t').Append(kv.Value.Kills.ToString(CultureInfo.InvariantCulture))
-                  .Append('\t').Append(kv.Value.Mask.ToString(CultureInfo.InvariantCulture)).Append('\n');
+                Progress p = progress[c];
+                if (p.Kills == 0 && Spent(p) == 0) continue;
+                sb.Append(Classes[c]).Append('\t').Append(p.Kills.ToString(CultureInfo.InvariantCulture)).Append('\t');
+                for (int i = 0; i < p.Ranks.Length; i++)
+                {
+                    if (i > 0) sb.Append(',');
+                    sb.Append(p.Ranks[i].ToString(CultureInfo.InvariantCulture));
+                }
+                sb.Append('\n');
             }
             string tmp = file + ".tmp";
             File.WriteAllText(tmp, sb.ToString());
@@ -501,31 +490,19 @@ public class AposMastery : MonoBehaviour
         }
     }
 
-    // ===== texts =====
-    public static string NodeShort(Node n)
-    {
-        return Localization.Get("aposMK" + n.Kind + "Short") + "\n" + ValueText(n);
-    }
-
-    public static string NodeLong(Node n)
-    {
-        return string.Format(Localization.Get("aposMK" + n.Kind), Math.Abs(n.Value));
-    }
-
-    static string ValueText(Node n)
-    {
-        if (n.Kind == Kind.Ammo) return "+" + n.Value;
-        return (n.Value > 0 ? "+" : "") + n.Value + "%";
-    }
+    // ===== texts: aposMS_<Class>_<Id> (name), ..._D (description), ..._R1.._R3 (ranks); ..._Base = class trait =====
+    public static string SkillKey(int cls, string id) { return "aposMS_" + Classes[cls] + "_" + id; }
 }
 
-// Mastery window (Alt+K): the tree of the weapon in hand, its level, a node's description, Learn and Reset
+// Mastery window (Alt+K): the tree of the held weapon's class. Node 0 is the class trait, nodes 1..19 the skills in
+// tree order (A1..A8, B1..B8, H1..H3). Info panel: level, points, the selected skill, Learn, Reset skill / Reset all.
 public class XUiC_AposMastery : XUiController
 {
-    readonly XUiC_SimpleButton[] nodes = new XUiC_SimpleButton[AposMastery.NodeCount];
-    XUiV_Label weaponLabel, levelLabel, pointsLabel, nodeTitle, nodeDesc, resetHint;
-    XUiC_SimpleButton learn, reset;
-    int selected = -1;
+    const int NodeCount = 20;
+    readonly XUiC_SimpleButton[] nodes = new XUiC_SimpleButton[NodeCount];
+    XUiV_Label weaponLabel, levelLabel, pointsLabel, nodeTitle, nodeDesc, resetHint, branchA, branchB;
+    XUiC_SimpleButton learn, resetOne, resetAll;
+    int selected = -1; // node index (0 = class trait)
     float nextRefresh, nextForgeCheck;
     bool nearForge;
 
@@ -538,6 +515,8 @@ public class XUiC_AposMastery : XUiController
         nodeTitle = Label(this, "lblNodeTitle");
         nodeDesc = Label(this, "lblNodeDesc");
         resetHint = Label(this, "lblResetHint");
+        branchA = Label(this, "lblBranchA");
+        branchB = Label(this, "lblBranchB");
         for (int i = 0; i < nodes.Length; i++)
         {
             int n = i;
@@ -545,20 +524,32 @@ public class XUiC_AposMastery : XUiController
         }
         learn = Button("btnLearn", () =>
         {
-            ItemClass ic = Held();
-            if (ic != null && selected >= 0) AposMastery.Learn(ic.Name, selected);
+            int cls = Class();
+            if (cls >= 0 && selected > 0) AposMastery.Learn(cls, selected - 1);
         });
-        reset = Button("btnReset", () =>
+        resetOne = Button("btnReset", () =>
         {
-            EntityPlayerLocal p = xui.playerUI.entityPlayer;
-            ItemClass ic = Held();
-            if (p == null || ic == null || !nearForge) return;
-            int cost = ResetCost(ic);
-            if (cost <= 0 || XUiC_AposForge.Count(p, AposElites.Eridium) < cost) return;
-            XUiC_AposForge.Take(p, AposElites.Eridium, cost);
-            AposMastery.Reset(ic.Name);
+            int cls = Class();
+            if (cls < 0 || selected <= 0 || !AposMastery.CanResetSkill(cls, selected - 1) || !Pay(AposMastery.ResetOneCost)) return;
+            AposMastery.ResetSkill(cls, selected - 1);
+        });
+        resetAll = Button("btnResetAll", () =>
+        {
+            int cls = Class();
+            if (cls < 0 || AposMastery.Spent(AposMastery.Get(cls)) == 0 || !Pay(AposMastery.ResetAllCost)) return;
+            AposMastery.ResetAll(cls);
         });
         SetText(learn, Localization.Get("aposMasteryLearn"));
+        SetText(resetOne, string.Format(Localization.Get("aposMasteryResetOne"), AposMastery.ResetOneCost));
+        SetText(resetAll, string.Format(Localization.Get("aposMasteryResetAll"), AposMastery.ResetAllCost));
+    }
+
+    bool Pay(int cost)
+    {
+        EntityPlayerLocal p = xui.playerUI.entityPlayer;
+        if (p == null || !nearForge || XUiC_AposForge.Count(p, AposElites.Eridium) < cost) return false;
+        XUiC_AposForge.Take(p, AposElites.Eridium, cost);
+        return true;
     }
 
     XUiC_SimpleButton Button(string id, Action onPress)
@@ -586,7 +577,12 @@ public class XUiC_AposMastery : XUiController
         if (l != null) l.Text = text;
     }
 
-    // set by the item info window's mastery button: show that weapon's tree instead of the one in hand
+    static void SetLabel(XUiV_Label l, string text)
+    {
+        if (l != null) l.Text = text;
+    }
+
+    // set by the item info window's mastery button: show that weapon's class instead of the one in hand
     public static ItemClass ViewItem;
 
     public static void OpenFor(LocalPlayerUI ui, ItemClass ic)
@@ -595,12 +591,11 @@ public class XUiC_AposMastery : XUiController
         ui.windowManager.Open("aposMastery", true);
     }
 
-    ItemClass Held()
+    int Class()
     {
-        if (ViewItem != null) return AposMastery.ClassOf(ViewItem) >= 0 ? ViewItem : null;
+        if (ViewItem != null) return AposMastery.ClassOf(ViewItem);
         EntityPlayerLocal p = xui != null && xui.playerUI != null ? xui.playerUI.entityPlayer : null;
-        ItemClass ic = p != null ? p.inventory.holdingItem : null;
-        return AposMastery.ClassOf(ic) >= 0 ? ic : null;
+        return p != null ? AposMastery.ClassOf(p.inventory.holdingItem) : -1;
     }
 
     public override void OnClose()
@@ -609,15 +604,10 @@ public class XUiC_AposMastery : XUiController
         ViewItem = null;
     }
 
-    static int ResetCost(ItemClass ic)
-    {
-        return AposMastery.Spent(AposMastery.Get(ic.Name)) * AposMastery.ResetCostPerPoint;
-    }
-
     public override void OnOpen()
     {
         base.OnOpen();
-        selected = -1;
+        selected = 0;
         nextForgeCheck = 0f;
         Refresh();
     }
@@ -630,6 +620,8 @@ public class XUiC_AposMastery : XUiController
         Refresh();
     }
 
+    static string L(string key) { return Localization.Get(key); }
+
     void Refresh()
     {
         EntityPlayerLocal p = xui != null && xui.playerUI != null ? xui.playerUI.entityPlayer : null;
@@ -639,72 +631,109 @@ public class XUiC_AposMastery : XUiController
             nextForgeCheck = Time.time + 2f;
             nearForge = AposMastery.NearForge(p);
         }
-        ItemClass ic = Held();
-        if (ic == null)
+        int cls = Class();
+        if (cls < 0)
         {
-            if (weaponLabel != null) weaponLabel.Text = Localization.Get("aposMasteryNoWeapon");
-            if (levelLabel != null) levelLabel.Text = "";
-            if (pointsLabel != null) pointsLabel.Text = "";
-            if (nodeTitle != null) nodeTitle.Text = "";
-            if (nodeDesc != null) nodeDesc.Text = "";
-            if (resetHint != null) resetHint.Text = "";
-            for (int i = 0; i < nodes.Length; i++) SetText(nodes[i], "");
-            if (learn != null) learn.Enabled = false;
-            if (reset != null) reset.Enabled = false;
+            SetLabel(weaponLabel, L("aposMasteryNoWeapon"));
+            foreach (XUiV_Label l in new[] { levelLabel, pointsLabel, nodeTitle, nodeDesc, resetHint, branchA, branchB }) SetLabel(l, "");
+            for (int i = 0; i < nodes.Length; i++) Show(nodes[i], false);
+            Enable(learn, false); Enable(resetOne, false); Enable(resetAll, false);
             return;
         }
 
-        int cls = AposMastery.ClassOf(ic);
-        AposMastery.Node[] tree = AposMastery.Trees[cls];
-        AposMastery.Progress pr = AposMastery.Get(ic.Name);
+        AposMastery.Skill[] tree = AposMastery.Trees[cls];
+        AposMastery.Progress pr = AposMastery.Get(cls);
         int level = AposMastery.Level(pr), spent = AposMastery.Spent(pr);
+        bool hasTree = tree.Length > 0;
 
-        if (weaponLabel != null) weaponLabel.Text = ic.GetLocalizedItemName() + "\n[A0A0A0]" + Localization.Get("aposMasteryClass" + AposMastery.Classes[cls]) + "[-]";
-        if (levelLabel != null)
-        {
-            string next = level < AposMastery.MaxLevel
-                ? string.Format(Localization.Get("aposMasteryKills"), pr.Kills, AposMastery.KillsFor[level])
-                : string.Format(Localization.Get("aposMasteryKillsMax"), pr.Kills);
-            levelLabel.Text = string.Format(Localization.Get("aposMasteryLevel"), level, AposMastery.MaxLevel) + "\n" + next;
-        }
-        if (pointsLabel != null) pointsLabel.Text = string.Format(Localization.Get("aposMasteryPoints"), level - spent, spent, AposMastery.NodeCount);
+        SetLabel(weaponLabel, L("aposMasteryClass" + AposMastery.Classes[cls]));
+        string next = level < AposMastery.MaxLevel
+            ? string.Format(L("aposMasteryKills"), pr.Kills, AposMastery.KillsFor[level])
+            : string.Format(L("aposMasteryKillsMax"), pr.Kills);
+        SetLabel(levelLabel, string.Format(L("aposMasteryLevel"), level, AposMastery.MaxLevel) + "\n" + next);
+        SetLabel(pointsLabel, hasTree ? string.Format(L("aposMasteryPoints"), level - spent, spent) : "");
+        string bKey = "aposMB_" + AposMastery.Classes[cls] + "_";
+        SetLabel(branchA, hasTree ? "[E0A040]A · " + L(bKey + "A") + "[-]  " + AposMastery.PointsIn(cls, 'A', 99) : "");
+        SetLabel(branchB, hasTree ? "[50A8E0]B · " + L(bKey + "B") + "[-]  " + AposMastery.PointsIn(cls, 'B', 99) : "");
 
-        for (int i = 0; i < nodes.Length; i++)
+        // node 0 = class trait; nodes 1.. = skills
+        SetText(nodes[0], (selected == 0 ? "> " : "") + "[FFD24D]" + L(AposMastery.SkillKey(cls, "Base")) + "[-]");
+        Show(nodes[0], true);
+        for (int i = 1; i < nodes.Length; i++)
         {
-            string color = AposMastery.Has(pr, i) ? "[FFD24D]" : AposMastery.CanReach(pr, i) ? "[7CFF7C]" : "[C8C8C8]";
-            string text = AposMastery.NodeShort(tree[i]);
-            if (AposMastery.IsBig(i)) text = "[b]" + text + "[/b]";
-            if (i == selected) text = "> " + text.Replace("\n", " <\n");
-            SetText(nodes[i], color + text + "[-]");
+            int s = i - 1;
+            if (s >= tree.Length) { Show(nodes[i], false); continue; }
+            Show(nodes[i], true);
+            int r = pr.Ranks[s];
+            string color = r >= tree[s].Max ? "[FFD24D]" : r > 0 ? "[F0C060]" : AposMastery.CanLearn(cls, s) ? "[7CFF7C]"
+                : AposMastery.Unlocked(cls, s) ? "[D8D8D8]" : "[808080]";
+            string text = color + L(AposMastery.SkillKey(cls, tree[s].Id)) + "\n" + r + "/" + tree[s].Max + "[-]";
+            if (i == selected) text = "> " + text;
+            SetText(nodes[i], text);
         }
 
-        if (selected >= 0)
+        if (!hasTree)
         {
-            AposMastery.Node n = tree[selected];
-            string state = AposMastery.Has(pr, selected) ? Localization.Get("aposMasteryLearned")
-                : !AposMastery.CanReach(pr, selected) ? Localization.Get("aposMasteryLocked")
-                : level - spent <= 0 ? Localization.Get("aposMasteryNoPoints") : "";
-            string kindTitle = Localization.Get("aposMK" + n.Kind + "Short");
-            if (AposMastery.IsBig(selected)) kindTitle = "[FFD24D]" + kindTitle + "[-]";
-            if (nodeTitle != null) nodeTitle.Text = kindTitle;
-            if (nodeDesc != null) nodeDesc.Text = AposMastery.NodeLong(n) + (state != "" ? "\n\n[A0A0A0]" + state + "[-]" : "");
+            SetLabel(nodeTitle, "");
+            SetLabel(nodeDesc, "[A0A0A0]" + L("aposMasterySoon") + "[-]");
+            Enable(learn, false); Enable(resetOne, false); Enable(resetAll, false);
+            SetLabel(resetHint, "");
+            return;
         }
-        else
-        {
-            if (nodeTitle != null) nodeTitle.Text = "";
-            if (nodeDesc != null) nodeDesc.Text = "[A0A0A0]" + Localization.Get("aposMasteryPick") + "[-]";
-        }
-        if (learn != null) learn.Enabled = selected >= 0 && AposMastery.CanLearn(pr, selected);
 
-        int cost = ResetCost(ic);
-        SetText(reset, string.Format(Localization.Get("aposMasteryReset"), cost));
-        if (reset != null) reset.Enabled = cost > 0 && nearForge && XUiC_AposForge.Count(p, AposElites.Eridium) >= cost;
-        if (resetHint != null) resetHint.Text = nearForge ? "" : "[A0A0A0]" + Localization.Get("aposMasteryResetHint") + "[-]";
+        if (selected == 0)
+        {
+            SetLabel(nodeTitle, "[FFD24D]" + L(AposMastery.SkillKey(cls, "Base")) + "[-]");
+            SetLabel(nodeDesc, L(AposMastery.SkillKey(cls, "Base") + "_D") + "\n\n[A0A0A0]" + L("aposMasteryBaseHint") + "[-]");
+            Enable(learn, false);
+            Enable(resetOne, false);
+        }
+        else if (selected - 1 < tree.Length)
+        {
+            int s = selected - 1;
+            AposMastery.Skill sk = tree[s];
+            string key = AposMastery.SkillKey(cls, sk.Id);
+            int r = pr.Ranks[s];
+            SetLabel(nodeTitle, "[FFD24D]" + L(key) + "[-]  " + r + "/" + sk.Max);
+            StringBuilder sb = new StringBuilder(L(key + "_D"));
+            sb.Append("\n");
+            for (int k = 1; k <= sk.Max; k++)
+            {
+                string line = k + "/" + sk.Max + ": " + L(key + "_R" + k);
+                sb.Append('\n').Append(k <= r ? "[FFD24D]" + line + "[-]" : k == r + 1 ? line : "[A0A0A0]" + line + "[-]");
+            }
+            string state;
+            if (r >= sk.Max) state = L("aposMasteryMaxed");
+            else if (!AposMastery.Unlocked(cls, s))
+                state = sk.Branch == 'H'
+                    ? string.Format(L("aposMasteryNeedHybrid"), sk.Need, AposMastery.PointsIn(cls, 'A', 99), AposMastery.PointsIn(cls, 'B', 99))
+                    : string.Format(L("aposMasteryNeedTier"), AposMastery.TierNeed[sk.Tier], sk.Branch, AposMastery.PointsIn(cls, sk.Branch, sk.Tier));
+            else if (level - spent <= 0) state = L("aposMasteryNoPoints");
+            else state = "";
+            if (state != "") sb.Append("\n\n[A0A0A0]").Append(state).Append("[-]");
+            SetLabel(nodeDesc, sb.ToString());
+            Enable(learn, AposMastery.CanLearn(cls, s));
+            Enable(resetOne, nearForge && AposMastery.CanResetSkill(cls, s) && XUiC_AposForge.Count(p, AposElites.Eridium) >= AposMastery.ResetOneCost);
+            if (r > 0 && !AposMastery.CanResetSkill(cls, s)) SetLabel(resetHint, "[A0A0A0]" + L("aposMasteryResetBlocked") + "[-]");
+        }
+        Enable(resetAll, nearForge && spent > 0 && XUiC_AposForge.Count(p, AposElites.Eridium) >= AposMastery.ResetAllCost);
+        if (selected <= 0 || pr.Ranks[selected - 1] == 0 || AposMastery.CanResetSkill(cls, selected - 1))
+            SetLabel(resetHint, nearForge ? "" : "[A0A0A0]" + L("aposMasteryResetHint") + "[-]");
+    }
+
+    static void Enable(XUiC_SimpleButton b, bool on)
+    {
+        if (b != null) b.Enabled = on;
+    }
+
+    static void Show(XUiC_SimpleButton b, bool on)
+    {
+        if (b != null) b.ViewComponent.IsVisible = on;
     }
 }
 
 // "Mastery" button next to Stats / Description in the item info panel (Config/XUi_InGame/windows.xml):
-// visible for mastery weapons, opens the tree of the weapon shown there
+// visible for mastery weapons, opens the tree of the weapon's class
 [HarmonyPatch(typeof(XUiC_ItemInfoWindow), "Init")]
 public static class AposMasteryInfoInitPatch
 {

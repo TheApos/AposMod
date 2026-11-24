@@ -349,52 +349,13 @@
 			<triggered_effect trigger="onSelfAttackedOther" action="ModifyCVar" cvar="aposCounterPower" operation="multiply" value=".5"/>
 		</effect_group>
 
-		<!-- ===== Pistols / SMG: "Headhunter" — scales with Gunslinger ===== -->
-		<!-- aposHHStreak = headshots in a row; 5 in a row (4 with the Gunslinger set) -> buffAposHeadhunter for aposHHShots empowered shots
-		     (10 + 2 per level), +25% damage + 10% per level (aposHHDamage), almost no spread -->
-		<effect_group name="AposMod pistol headhunter">
-			<requirement name="HoldingItemHasTags" tags="handgunSkill"/>
-			<!-- streak: headshot +1, body shot or miss resets (not counted while Headhunter is active) -->
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHStreak" operation="add" value="1">
-				<requirement name="HitLocation" body_parts="Head"/>
-				<requirement name="!HasBuff" buff="buffAposHeadhunter"/>
-			</triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHStreak" operation="set" value="0">
-				<requirement name="!HitLocation" body_parts="Head"/>
-			</triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayMiss" action="ModifyCVar" cvar="aposHHStreak" operation="set" value="0"/>
-			<triggered_effect trigger="onSelfPrimaryActionMissEntity" action="ModifyCVar" cvar="aposHHStreak" operation="set" value="0"/>
-			<!-- activation: 5 headshots in a row (4 with the full Gunslinger set: aposHHNeed) -->
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHNeed" operation="set" value="5"/>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHNeed" operation="set" value="4">
-				<requirement name="HasBuff" buff="buffEnforcerSetBonus"/>
-			</triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHShots" operation="set" value="10"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="0"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHShots" operation="set" value="12"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="1"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHShots" operation="set" value="14"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="2"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHShots" operation="set" value="16"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="3"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHShots" operation="set" value="18"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="4"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHShots" operation="set" value="20"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="5"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHDamage" operation="set" value=".25"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="0"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHDamage" operation="set" value=".35"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="1"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHDamage" operation="set" value=".45"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="2"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHDamage" operation="set" value=".55"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="3"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHDamage" operation="set" value=".65"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="4"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHDamage" operation="set" value=".75"><requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/><requirement name="ProgressionLevel" progression_name="perkGunslinger" operation="Equals" value="5"/></triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="AddBuff" buff="buffAposHeadhunter">
-				<requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/>
-			</triggered_effect>
-			<triggered_effect trigger="onSelfPrimaryActionRayHit" action="ModifyCVar" cvar="aposHHStreak" operation="set" value="0">
-				<requirement name="CVarCompare" cvar="aposHHStreak" operation="GTE" value="@aposHHNeed"/>
-			</triggered_effect>
-			<!-- every shot while active spends one; the shot after the last one ends the buff before it deals damage -->
-			<triggered_effect trigger="onSelfRangedBurstShotStart" action="ModifyCVar" cvar="aposHHShots" operation="add" value="-1">
-				<requirement name="HasBuff" buff="buffAposHeadhunter"/>
-			</triggered_effect>
-			<triggered_effect trigger="onSelfRangedBurstShotStart" action="RemoveBuff" buff="buffAposHeadhunter">
-				<requirement name="CVarCompare" cvar="aposHHShots" operation="LT" value="0"/>
-			</triggered_effect>
-			<!-- Gunslinger 5: every HEADSHOT kill during Headhunter gives +2 shots (Source/AposCombat.cs knows the hit body part) -->
+		<!-- ===== Pistols / SMG: "Headhunter" and the mastery tree live in Source/AposPistol.cs (Weapon Mastery 2.0).
+		     XML only reports shots and misses to it: aposPShot / aposPMiss on the player (C# reads and clears them). ===== -->
+		<effect_group name="AposMod pistol events">
+			<requirement name="HoldingItemHasTags" tags="perkGunslinger"/>
+			<triggered_effect trigger="onSelfRangedBurstShotStart" action="ModifyCVar" cvar="aposPShot" operation="add" value="1"/>
+			<triggered_effect trigger="onSelfPrimaryActionRayMiss" action="ModifyCVar" cvar="aposPMiss" operation="add" value="1"/>
+			<triggered_effect trigger="onSelfPrimaryActionMissEntity" action="ModifyCVar" cvar="aposPMiss" operation="add" value="1"/>
 		</effect_group>
 
 		<!-- ===== Rifles: "Ricochet" — scales with Dead Eye ===== -->
