@@ -105,7 +105,7 @@ public static class AposReactions
             float cy = y + i * rowH;
             if (l.Type >= Emp)
             {
-                // proc: [source] >> [icon] -damage xN
+                // proc: [source] [icon] -damage xN
                 Texture2D pic; Color pc; string source;
                 switch (l.Type)
                 {
@@ -118,12 +118,11 @@ public static class AposReactions
                     default: pic = shield; pc = new Color(0.8f, 0.8f, 0.85f); source = Localization.Get("aposProcShrapnel"); break;
                 }
                 string dmg = "-" + l.Damage + count;
-                float sw = style.CalcSize(new GUIContent(source)).x, aw = style.CalcSize(new GUIContent(">>")).x, dw = style.CalcSize(new GUIContent(dmg)).x;
-                float w = sw + aw + icon + dw + gap * 6;
+                float sw = style.CalcSize(new GUIContent(source)).x, dw = style.CalcSize(new GUIContent(dmg)).x;
+                float w = sw + icon + dw + gap * 5;
                 float px = right - w;
                 Background(px, cy, w, icon, gap, k, alpha);
                 px = DrawText(source, new Color(1f, 0.82f, 0.3f), px, cy, icon, alpha) + gap;
-                px = DrawText(">>", Color.white, px, cy, icon, alpha) + gap;
                 px = DrawIcon(pic, pc, px - icon * (pop - 1f) / 2f, cy - icon * (pop - 1f) / 2f, icon * pop, alpha) + gap;
                 DrawText(dmg, pc, px, cy, icon, alpha);
                 continue;
