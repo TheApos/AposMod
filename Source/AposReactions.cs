@@ -13,7 +13,8 @@ using UnityEngine;
 
 public static class AposReactions
 {
-    public const int Explosion = 1, Confusion = 2, Miasma = 3, Emp = 4, Overkill = 5, ChainReaction = 6, Shrapnel = 7;
+    public const int Explosion = 1, Confusion = 2, Miasma = 3, Emp = 4, Overkill = 5, ChainReaction = 6, Shrapnel = 7,
+                     Pierce = 8, SplinterMine = 9, StickyCharge = 10;
     const float Life = 4f;
     const int MaxLines = 4;
 
@@ -111,6 +112,9 @@ public static class AposReactions
                     case Emp: pic = shock; pc = ShockColor; source = Localization.Get("aposProcEmp"); break;
                     case Overkill: pic = carry; pc = new Color(1f, 0.55f, 0.35f); source = Localization.Get("aposProcOverkill"); break;
                     case ChainReaction: pic = blast; pc = BlastColor; source = Localization.Get("aposProcChain"); break;
+                    case Pierce: pic = carry; pc = new Color(1f, 0.82f, 0.3f); source = Localization.Get("aposMS_Bows_B2"); break;
+                    case SplinterMine: pic = blast; pc = BlastColor; source = Localization.Get("aposMS_Bows_A7"); break;
+                    case StickyCharge: pic = blast; pc = FireColor; source = Localization.Get("aposMS_Crossbows_B1"); break;
                     default: pic = shield; pc = new Color(0.8f, 0.8f, 0.85f); source = Localization.Get("aposProcShrapnel"); break;
                 }
                 string dmg = "-" + l.Damage + count;

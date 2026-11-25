@@ -1,4 +1,4 @@
-// Bows (ItemActionCatapult; crossbows are Launchers and keep vanilla behaviour):
+// Bows (ItemActionCatapult) and crossbows (ItemActionLauncher with the "crossbow" tag; only the auto-reload):
 // - R opens the arrow wheel at once. Vanilla waits XUiC_Radial.displayDelay (0.25 s) and treats a short tap as reload;
 //   a bow reloads by itself here, so R is only for picking arrows (hold R, point, release).
 // - The bow nocks the next arrow by itself while in hand. Vanilla does it only when you try to shoot an empty bow
@@ -10,13 +10,16 @@ public class AposBow : MonoBehaviour
 {
     float nextCheck;
 
-    // The bow in the local player's hand and its action data, or null
-    public static ItemActionCatapult Held(EntityPlayerLocal p, out ItemActionData data)
+    static readonly FastTags<TagGroup.Global> CrossbowTag = FastTags<TagGroup.Global>.Parse("crossbow");
+
+    // The bow or crossbow in the local player's hand and its action data, or null
+    public static ItemActionRanged Held(EntityPlayerLocal p, out ItemActionData data)
     {
         data = null;
         if (p == null || p.inventory == null) return null;
         ItemClass ic = p.inventory.holdingItem;
-        ItemActionCatapult bow = ic != null && ic.Actions != null && ic.Actions.Length > 0 ? ic.Actions[0] as ItemActionCatapult : null;
+        ItemActionRanged bow = ic != null && ic.Actions != null && ic.Actions.Length > 0 ? ic.Actions[0] as ItemActionRanged : null;
+        if (bow != null && !(bow is ItemActionCatapult) && !ic.ItemTags.Test_AnySet(CrossbowTag)) bow = null;
         if (bow == null || p.inventory.holdingItemData == null || p.inventory.holdingItemData.actionData == null) return null;
         data = p.inventory.holdingItemData.actionData[0];
         return data != null ? bow : null;
@@ -36,7 +39,7 @@ public class AposBow : MonoBehaviour
     public static string State(EntityPlayerLocal p)
     {
         ItemActionData data;
-        ItemActionCatapult bow = Held(p, out data);
+        ItemActionRanged bow = Held(p, out data);
         ItemActionRanged.ItemActionDataRanged r = data as ItemActionRanged.ItemActionDataRanged;
         if (bow == null || r == null) return "no bow in hand";
         string running = "";
@@ -63,7 +66,7 @@ public class AposBow : MonoBehaviour
         if (p == null || p.IsDead() || p.inventory.IsHandSwitching()) return;
 
         ItemActionData data;
-        ItemActionCatapult bow = Held(p, out data);
+        ItemActionRanged bow = Held(p, out data);
         ItemActionRanged.ItemActionDataRanged ranged = data as ItemActionRanged.ItemActionDataRanged;
         if (bow == null || ranged == null) return;
 
@@ -71,7 +74,8 @@ public class AposBow : MonoBehaviour
         // them only when the first-person reload animation exits) and would block the backpack and vehicles forever.
         // While the game waits to open the backpack, half a second is enough.
         bool reloading = ItemActionRanged.Reloading(ranged);
-        float limit = p.CancellingInventoryActions ? 0.5f : StuckReload;
+        // a crossbow reload is long (3.4 s base): give it more time
+        float limit = p.CancellingInventoryActions ? 0.5f : bow is ItemActionCatapult ? StuckReload : StuckReload * 3f;
         if (!reloading) reloadSince = -1f;
         else if (reloadSince < 0f) reloadSince = Time.time;
         else if (Time.time - reloadSince > limit)
@@ -150,7 +154,7 @@ public class AposBowCommand : ConsoleCmdAbstract
         GameManager gm = GameManager.Instance;
         EntityPlayerLocal p = gm != null && gm.World != null ? gm.World.GetPrimaryPlayer() : null;
         ItemActionData data;
-        ItemActionCatapult bow = AposBow.Held(p, out data);
+        ItemActionRanged bow = AposBow.Held(p, out data);
         ItemActionRanged.ItemActionDataRanged r = data as ItemActionRanged.ItemActionDataRanged;
         if (bow == null || r == null)
         {

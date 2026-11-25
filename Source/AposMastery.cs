@@ -492,6 +492,7 @@ public class AposMastery : MonoBehaviour
             AposShotgun.Draw(lp);
             AposRifle.Draw(lp);
             AposFx.Draw(lp);
+            AposStatus.Draw(lp);
         }
         float t = Time.time - bannerStart;
         if (t > BannerTime || bannerTitle == null || Event.current.type != EventType.Repaint) return;
@@ -556,6 +557,7 @@ public class AposMastery : MonoBehaviour
             AposKnuckles.Reset();
             AposBaton.Reset();
             AposFx.Clear();
+            AposStatus.Clear();
             grandSlamChecked = false;
             AposMasteryBadgePatch.Forget();
             hintRect = null;

@@ -108,7 +108,11 @@ public static class AposBowTree
             if (R("B7") > 0 && Random.value < Recovery[R("B7")] && lastAmmo != null)
             {
                 ItemValue arrow = ItemClass.GetItem(lastAmmo);
-                if (arrow != null && !arrow.IsEmpty()) player.bag.AddItem(new ItemStack(arrow, 1));
+                if (arrow != null && !arrow.IsEmpty())
+                {
+                    player.bag.AddItem(new ItemStack(arrow, 1));
+                    Debug.Log("[AposMod] Arrow Recovery: " + lastAmmo + " back (killed " + target.EntityName + ")");
+                }
             }
             // Shadow: a silent kill (the zombie did not see you) hides you for 5 s, the next arrow counts as from stealth
             if (R("B5") > 0 && (target.IsSleeping || target.GetAttackTarget() != player))
@@ -175,14 +179,16 @@ public static class AposBowTree
             if (along <= far - 0.3f || along > far + 15f) continue;
             if ((v - dir * along).magnitude <= 1.2f) line.Add(new KeyValuePair<float, EntityAlive>(along, e));
         }
-        Debug.Log("[AposMod] Piercing Arrow: " + line.Count + " zombie(s) behind the target");
         line.Sort((a, b) => a.Key.CompareTo(b.Key));
+        int pierceDmg = Mathf.Max(1, Mathf.RoundToInt(lastArrowDmg * share)), n = 0;
         for (int i = 0; i < line.Count && i < max; i++)
         {
             EntityAlive e = line[i].Value;
-            AposSplash.Deal(e, Mathf.Max(1, Mathf.RoundToInt(lastArrowDmg * share)), player.entityId, EnumDamageTypes.Piercing);
+            AposSplash.Deal(e, pierceDmg, player.entityId, EnumDamageTypes.Piercing);
             if (!e.IsDead() && (lance || R("B3") > 0)) Wound(e);
+            n++;
         }
+        if (n > 0) AposReactions.Add(AposReactions.Pierce, pierceDmg, n);
     }
 
     // splinters from a point: each to one of the nearest zombies (not the centre one); chain = may split again
@@ -227,7 +233,11 @@ public static class AposBowTree
     }
 
     // ===== Splinter Mine: a second wave from where the arrow stuck =====
-    class Mine { public float At; public Vector3 Pos; public bool Full; public string Element; public float Dmg; public EntityAlive Body; }
+    // an arrow in a zombie bursts 1.5 s later; an arrow in a wall / the ground is a trap (Trap): it waits up to 30 s
+    // for a zombie within 3 m, bursts 0.3 s later (or by itself when the time is up); at most 5 traps, oldest go first
+    class Mine { public float At; public Vector3 Pos; public bool Full; public string Element; public float Dmg; public EntityAlive Body; public bool Trap; public float Expires; }
+    const float TrapWait = 30f, TrapRadius = 3f;
+    const int MaxTraps = 5;
     static readonly List<Mine> mines = new List<Mine>();
 
     static void RunMines(EntityPlayerLocal player)
@@ -235,6 +245,11 @@ public static class AposBowTree
         for (int i = mines.Count - 1; i >= 0; i--)
         {
             Mine m = mines[i];
+            if (m.Trap && m.At == float.MaxValue)
+            {
+                if (Time.time > m.Expires) m.At = Time.time;
+                else foreach (EntityAlive e in Around(m.Pos, TrapRadius)) { m.At = Time.time + 0.3f; break; }
+            }
             if (Time.time < m.At) continue;
             mines.RemoveAt(i);
             AposFx.Unmark(m);
@@ -244,7 +259,8 @@ public static class AposBowTree
             lastArrowDmg = m.Dmg;
             int n = Splinters(player);
             if (R("A7") < 2) n = Mathf.Max(1, n / 2);
-            BurstWide(player, m.Pos, n, m.Element, m.Full, R("A7") >= 2 ? 1.5f : 1f);
+            int hits = BurstWide(player, m.Pos, n, m.Element, m.Full, R("A7") >= 2 ? 1.5f : 1f);
+            if (hits > 0) AposReactions.Add(AposReactions.SplinterMine, Mathf.RoundToInt(Mathf.Max(SplMin[R("A2")], m.Dmg * SplShare[R("A2")])), hits);
             lastArrowDmg = keep;
         }
     }
@@ -256,7 +272,7 @@ public static class AposBowTree
         AposFx.Mark(m, m.Pos + Vector3.up * 0.3f, m.Body);
     }
 
-    static void BurstWide(EntityPlayerLocal player, Vector3 pos, int n, string element, bool full, float radiusMult)
+    static int BurstWide(EntityPlayerLocal player, Vector3 pos, int n, string element, bool full, float radiusMult)
     {
         // the mine's radius can be 1.5x: temporarily widen by bursting from the point with the bigger radius
         float radius = SplRadius[R("A3")] * radiusMult;
@@ -269,14 +285,19 @@ public static class AposBowTree
         {
             foreach (EntityAlive e in Around(pos, 8f)) e.SetInvestigatePosition(pos, 80, false);
         }
+        return hits;
     }
 
-    // an arrow stuck in a wall or the ground (AposProjectiles): with Splinter Mine it bursts there 1.5 s later
+    // an arrow stuck in a wall or the ground (AposProjectiles): with Splinter Mine it becomes a trap
     public static void OnGroundImpact(EntityPlayerLocal player, Vector3 pos, string ammo)
     {
         if (R("A7") <= 0) return;
         lastAmmo = ammo;
-        AddMine(new Mine { At = Time.time + 1.5f, Pos = pos, Full = FullShot(), Element = ammo != null && ammo.Contains("Flaming") ? "buffBurningFlamingArrow" : null, Dmg = Mathf.Max(lastArrowDmg, 40f) });
+        int traps = 0;
+        foreach (Mine x in mines) if (x.Trap) traps++;
+        for (int i = 0; i < mines.Count && traps >= MaxTraps; i++)
+            if (mines[i].Trap) { AposFx.Unmark(mines[i]); mines.RemoveAt(i); traps--; i--; }
+        AddMine(new Mine { Trap = true, At = float.MaxValue, Expires = Time.time + TrapWait, Pos = pos, Full = FullShot(), Element = ammo != null && ammo.Contains("Flaming") ? "buffBurningFlamingArrow" : null, Dmg = Mathf.Max(lastArrowDmg, 40f) });
     }
 
     static readonly FastTags<TagGroup.Global> TraderTag = FastTags<TagGroup.Global>.Parse("trader");

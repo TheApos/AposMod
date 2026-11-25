@@ -140,6 +140,7 @@ public static class AposCrossbow
             foreach (EntityAlive e in AposBowTree.Around(body.position, 8f)) if (e != body) e.SetInvestigatePosition(body.position, 80, true);
         }
         Add(new ChargeOn { Body = body, Pos = pos, At = Time.time + fuse, Dmg = lastBoltDmg, Power = power, Inner = inner });
+        Debug.Log("[AposMod] Sticky Charge: stuck in " + (body != null ? body.EntityName : "a wall") + ", " + fuse + " s, bolt " + Mathf.RoundToInt(lastBoltDmg));
     }
 
     // every charge waiting to go off has a pulsing marker (AposFx) until it explodes or is removed
@@ -187,7 +188,7 @@ public static class AposCrossbow
             ChargeOn c = charges[i];
             if (c.Mine && !c.Armed)
             {
-                if (Time.time > c.Expires) { RemoveAt(i); continue; }
+                if (Time.time > c.Expires) { RemoveAt(i); Explode(player, c); continue; }   // self-destruct after 60 s
                 foreach (EntityAlive e in AposBowTree.Around(c.Pos, 5f)) { c.Armed = true; c.At = Time.time + 1f; break; }
                 continue;
             }
@@ -226,6 +227,8 @@ public static class AposCrossbow
             if (b6 > 0) AposKnock.Ragdoll(e, pos, b6 >= 2 ? 400f : 250f, b6 >= 2 ? 2f : 0.5f);
             if (R("H1") > 0) Mark(player, e);                    // Marking Blast
         }
+        Debug.Log("[AposMod] Sticky Charge: exploded, " + hit.Count + " zombie(s), " + dmg + " each");
+        if (hit.Count > 0) AposReactions.Add(AposReactions.StickyCharge, dmg, hit.Count);
         // Inner Charge kill: the head bursts and the blast knocks down everyone in the radius
         if (innerKill) foreach (EntityAlive e in AposBowTree.Around(pos, radius)) AposKnock.Ragdoll(e, pos, 400f, 2f);
         // Fireworks: a marked zombie killed by a charge passes a new charge and the mark to the nearest one within 6 m
