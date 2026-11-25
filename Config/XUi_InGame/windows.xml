@@ -300,10 +300,10 @@
 				<label style="header.name" text="WEAPON MASTERY" text_key="aposMasteryTitle"/>
 			</rect>
 			<rect pos="0,-46" width="960" height="514">
-				<sprite depth="1" name="background" color="18,18,18,240" type="sliced"/>
+				<sprite depth="1" name="background" sprite="menu_empty" color="16,16,16,245" type="sliced"/>
 				<sprite depth="2" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false"/>
-				<sprite depth="2" pos="6,-20" width="224" height="384" sprite="menu_empty" color="224,160,64,28" type="sliced"/>
-				<sprite depth="2" pos="342,-20" width="224" height="384" sprite="menu_empty" color="80,168,224,28" type="sliced"/>
+				<sprite depth="2" pos="6,-20" width="224" height="384" sprite="menu_empty" color="224,160,64,45" type="sliced"/>
+				<sprite depth="2" pos="342,-20" width="224" height="384" sprite="menu_empty" color="80,168,224,45" type="sliced"/>
 				<label depth="3" name="lblBranchA" pos="8,-406" width="222" height="24" font_size="17" text="" />
 				<label depth="3" name="lblBranchB" pos="344,-406" width="222" height="24" font_size="17" text="" />
 				<rect name="btnNode0" pos="236,-420" width="100" height="56" controller="SimpleButton">
@@ -408,9 +408,9 @@
 				</rect>
 				<label depth="3" name="lblWeapon" pos="590,-12" width="358" height="30" font_size="24" text="" />
 				<label depth="3" name="lblLevel" pos="590,-46" width="358" height="50" font_size="19" text="" />
-				<label depth="3" name="lblPoints" pos="590,-100" width="358" height="26" font_size="19" text="" />
+				<label depth="3" name="lblPoints" pos="590,-100" width="350" height="26" font_size="19" text="" />
 				<label depth="3" name="lblNodeTitle" pos="590,-132" width="358" height="30" font_size="22" text="" />
-				<label depth="3" name="lblNodeDesc" pos="590,-166" width="358" height="190" font_size="17" text="" />
+				<label depth="3" name="lblNodeDesc" pos="590,-166" width="350" height="190" font_size="17" text="" />
 				<rect name="btnLearn" pos="590,-362" width="358" height="34" controller="SimpleButton">
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
