@@ -219,7 +219,7 @@
 		</buff>
 
 		<!-- Knuckles: shown while there are counter charges; the number = charges left -->
-		<buff name="buffAposCounter" name_key="buffAposCounterName" description_key="buffAposCounterDesc" icon="ui_game_symbol_boxer" icon_color="255,180,0">
+		<buff name="buffAposCounter" hidden="true" name_key="buffAposCounterName" description_key="buffAposCounterDesc" icon="ui_game_symbol_boxer" icon_color="255,180,0">
 			<stack_type value="ignore"/>
 			<display_value value="aposCounterHits"/>
 			<effect_group>
@@ -639,6 +639,8 @@
 				<!-- melee trees: stamina of power / normal swings -->
 				<passive_effect name="StaminaLoss" operation="perc_add" value="@aposMStamPower" tags="secondary"/>
 				<passive_effect name="StaminaLoss" operation="perc_add" value="@aposMStamNormal" tags="primary"/>
+				<!-- spear tree: the power hit goes through more zombies -->
+				<passive_effect name="EntityPenetrationCount" operation="base_add" value="@aposMPiercePower"><requirement name="IsSecondaryAttack"/></passive_effect>
 			</effect_group>
 		</buff>
 		<!-- bow mastery "Hunter's Wound": slows the zombie (aposWoundSlow, negative); the damage bonus is in Source/AposCombat.cs -->
@@ -676,6 +678,24 @@
 			<duration value="10"/>
 			<effect_group>
 				<triggered_effect trigger="onSelfBuffRemove" action="RemoveCVar" cvar="aposArmorBreak"/>
+			</effect_group>
+		</buff>
+		<!-- spear mastery "Hit and Back": faster for 2 s after a hit (aposRetreat) -->
+		<buff name="buffAposSpearRetreat" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="2"/>
+			<effect_group>
+				<passive_effect name="WalkSpeed" operation="perc_add" value="@aposRetreat"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value="@aposRetreat"/>
+			</effect_group>
+		</buff>
+		<!-- knuckle mastery: Light Feet / Knockout move speed (aposKnuckleMove), refreshed while it applies -->
+		<buff name="buffAposKnuckleMove" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="0.5"/>
+			<effect_group>
+				<passive_effect name="WalkSpeed" operation="perc_add" value="@aposKnuckleMove"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value="@aposKnuckleMove"/>
 			</effect_group>
 		</buff>
 		<!-- shotgun mastery "Shattered": knocked down by a shotgun, +50% damage from everyone (Source/AposCombat.cs) -->

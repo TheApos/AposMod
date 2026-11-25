@@ -41,6 +41,7 @@ public static class AposCombat
         if (target is EntityPlayer)
         {
             if (!response.Fatal) SecondWind(target as EntityPlayer, healthBefore - response.Strength);
+            if (target is EntityPlayerLocal) AposKnuckles.Taken(target as EntityPlayerLocal, world.GetEntity(source.getEntityId()) as EntityAlive, Math.Min(response.Strength, healthBefore));
             // Vampire elite heals by half the damage it deals
             EntityAlive biter = world.GetEntity(source.getEntityId()) as EntityAlive;
             if (biter != null && !biter.IsDead() && AposElites.IsElite(biter) && AposElites.Has(biter, "Vampire"))
@@ -256,7 +257,14 @@ public static class AposCombatDamagePatch
         if (_damageSource != null && _damageSource.GetDamageType() == EnumDamageTypes.BloodLoss && AposSplash.IsLocal(_damageSource.getEntityId()))
             _strength = Mathf.RoundToInt(_strength * (1f + AposKnife.OpenWounds[AposKnife.R("A4")]));
         // club mastery "Berserk": the player takes +25% while holding a club
-        if (__instance is EntityPlayerLocal) _strength = Mathf.RoundToInt(_strength * AposClub.Incoming(__instance as EntityPlayerLocal));
+        if (__instance is EntityPlayerLocal && _damageSource != null)
+            _strength = AposMastery.PlayerIncoming(__instance as EntityPlayerLocal, GameManager.Instance.World.GetEntity(_damageSource.getEntityId()) as EntityAlive, _strength);
+        // baton mastery "Technician": your turrets and drone deal +200% to shocked zombies
+        if (_damageSource != null && !(__instance is EntityPlayer) && __instance.Buffs != null && AposBaton.Technician() && AposBaton.Shocked(__instance))
+        {
+            Entity from = GameManager.Instance.World.GetEntity(_damageSource.getEntityId());
+            if (_damageSource.BlockPosition != Vector3i.zero || from is EntityTurret || from is EntityDrone) _strength *= 3;
+        }
         // shotgun mastery "Shattered": a zombie knocked down by a shotgun takes +50% from everyone, any weapon
         if (_damageSource != null && __instance.Buffs != null && __instance.Buffs.HasBuff("buffAposShattered") && AposSplash.Depth == 0)
         {
