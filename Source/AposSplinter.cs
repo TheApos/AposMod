@@ -30,7 +30,11 @@ public class AposSplinter : MonoBehaviour
         if (gm == null || gm.World == null) return;
         AposSplash.ProcessXml(gm.World); // Ricochet and other XML area damage
         EntityPlayerLocal player = gm.World.GetPrimaryPlayer();
-        if (player == null) return;
+        if (player == null)
+        {
+            AposReactions.Clear();
+            return;
+        }
 
         List<Entity> list = gm.World.Entities.list;
         for (int i = 0; i < list.Count; i++)
@@ -38,6 +42,7 @@ public class AposSplinter : MonoBehaviour
             EntityAlive hit = list[i] as EntityAlive;
             if (hit == null || hit is EntityPlayer) continue;
             if ((hit.position - player.position).sqrMagnitude > Range * Range) continue;
+            AposReactions.Watch(hit, player); // Confusion / Miasma for the reaction feed
 
             // Explosion reaction (fire + acid, buffAposElementCheck): 50% of the last hit, at least 60,
             // to the zombie and everyone within 4 m
@@ -49,7 +54,9 @@ public class AposSplinter : MonoBehaviour
                 Debug.Log("[AposMod] Explosion reaction on " + hit.EntityName + " (" + hit.entityId + "): fire " + Source(hit, FireBuffs)
                     + ", acid " + Source(hit, new[] { "buffAposCorroded" }) + ", blast " + Mathf.RoundToInt(-blast));
                 // copy: dealing damage can change the shared list
-                foreach (EntityAlive e in Near(list, hit, ExplodeRadius).ToArray()) Splash(e, blast, by, EnumDamageTypes.Heat);
+                EntityAlive[] around = Near(list, hit, ExplodeRadius).ToArray();
+                if (AposReactions.Mine(hit, player)) AposReactions.Add(AposReactions.Explosion, Mathf.RoundToInt(-blast), around.Length + 1);
+                foreach (EntityAlive e in around) Splash(e, blast, by, EnumDamageTypes.Heat);
                 Splash(hit, blast, by, EnumDamageTypes.Heat);
             }
 
@@ -71,6 +78,11 @@ public class AposSplinter : MonoBehaviour
             hit.Buffs.SetCustomVar(CountVar, 0f);
             Scatter(list, hit, fragments, damage);
         }
+    }
+
+    void OnGUI()
+    {
+        if (Event.current.type == EventType.Repaint) AposReactions.Draw();
     }
 
     void Scatter(List<Entity> list, EntityAlive hit, int fragments, float damage)

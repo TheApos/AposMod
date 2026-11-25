@@ -535,6 +535,10 @@ $extra['aposWardrobeSetPartial'] = 'Set "{0}": {1}/4, {2} more for the set bonus
 $extra['aposWardrobeSetFull']   = '[40FF60]Set "{0}" 4/4, bonus active:[-]', '[40FF60]Сет «{0}» 4/4, бонус активен:[-]'
 $extra['aposWardrobeTip']      = 'Tip: keep up to 3 outfits and change in 1.5 s with Alt+1 / Alt+2 / Alt+3. Alt+0 or the Wardrobe button in the character window shows them.', 'Совет: можно держать до 3 комплектов одежды и переодеваться за 1.5 с клавишами Alt+1 / Alt+2 / Alt+3. Alt+0 или кнопка «Гардероб» в окне персонажа показывает их.'
 
+# Reaction feed on the right of the screen (Source/AposReactions.cs)
+$extra['aposReactConfusion'] = 'Confusion', 'Замешательство'
+$extra['aposReactMiasma']    = 'Miasma', 'Миазмы'
+
 # Weapon Mastery 2.0 (Source/AposMastery.cs): window, classes; skill texts aposMS_<Class>_<Id> (name), _D (description), _R1.._R3 (ranks)
 $extra['aposMasteryTitle']      = 'WEAPON MASTERY', 'МАСТЕРСТВО ОРУЖИЯ'
 $extra['aposMasteryNoWeapon']   = 'Take a weapon in your hands.', 'Возьмите оружие в руки.'

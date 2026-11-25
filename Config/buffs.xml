@@ -98,6 +98,12 @@
 					<requirement name="CVarCompare" cvar="aposPreacher" operation="GTE" value="1"/>
 				</triggered_effect>
 				<!-- Confusion -->
+				<!-- the reaction feed on the right of the screen (Source/AposReactions.cs): 2 = Confusion, 3 = Miasma -->
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="aposReactShow" operation="set" value="2">
+					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
+					<requirement name="HasBuff" buff="buffShocked"/>
+					<requirement name="!HasBuff" buff="buffAposReactionCD,buffAposReactionCDShort"/>
+				</triggered_effect>
 				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposConfused">
 					<requirement name="HasBuff" buff="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov"/>
 					<requirement name="HasBuff" buff="buffShocked"/>
@@ -115,6 +121,12 @@
 					<requirement name="CVarCompare" cvar="aposPreacher" operation="GTE" value="1"/>
 				</triggered_effect>
 				<!-- Miasma -->
+				<!-- the reaction feed on the right of the screen (Source/AposReactions.cs): 2 = Confusion, 3 = Miasma -->
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="aposReactShow" operation="set" value="3">
+					<requirement name="HasBuff" buff="buffShocked"/>
+					<requirement name="HasBuff" buff="buffAposCorroded"/>
+					<requirement name="!HasBuff" buff="buffAposReactionCD,buffAposReactionCDShort"/>
+				</triggered_effect>
 				<triggered_effect trigger="onSelfBuffStart" action="AddBuff" buff="buffAposMiasma">
 					<requirement name="HasBuff" buff="buffShocked"/>
 					<requirement name="HasBuff" buff="buffAposCorroded"/>

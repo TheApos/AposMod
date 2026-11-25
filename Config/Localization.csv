@@ -446,6 +446,8 @@ aposWardrobeNoSet,buffs,Buff,,,"No armor set","Без комплекта бро�
 aposWardrobeSetPartial,buffs,Buff,,,"Set ""{0}"": {1}/4, {2} more for the set bonus","Сет «{0}»: {1}/4, до бонуса не хватает {2}"
 aposWardrobeSetFull,buffs,Buff,,,"[40FF60]Set ""{0}"" 4/4, bonus active:[-]","[40FF60]Сет «{0}» 4/4, бонус активен:[-]"
 aposWardrobeTip,buffs,Buff,,,"Tip: keep up to 3 outfits and change in 1.5 s with Alt+1 / Alt+2 / Alt+3. Alt+0 or the Wardrobe button in the character window shows them.","Совет: можно держать до 3 комплектов одежды и переодеваться за 1.5 с клавишами Alt+1 / Alt+2 / Alt+3. Alt+0 или кнопка «Гардероб» в окне персонажа показывает их."
+aposReactConfusion,buffs,Buff,,,"Confusion","Замешательство"
+aposReactMiasma,buffs,Buff,,,"Miasma","Миазмы"
 aposMasteryTitle,buffs,Buff,,,"WEAPON MASTERY","МАСТЕРСТВО ОРУЖИЯ"
 aposMasteryNoWeapon,buffs,Buff,,,"Take a weapon in your hands.","Возьмите оружие в руки."
 aposMasteryLevel,buffs,Buff,,,"Mastery {0} / {1}","Мастерство {0} / {1}"
