@@ -53,7 +53,11 @@ public static class AposKnuckles
         Color gold = new Color(1f, 0.82f, 0.3f);
         AposHud.Add(true, "boxer", charges + "/" + cap, charges > 0 ? new Color(1f, 0.6f, 0.2f) : new Color(0.6f, 0.6f, 0.6f), charges >= cap);
         if (R("A2") > 0 && charges > 0) AposHud.Add(true, "defense", "-" + Mathf.RoundToInt(SkinPct(player) * 100f) + "%", new Color(1f, 0.6f, 0.2f), false);
-        if (R("B1") > 0 && combo > 0) AposHud.Add(false, "twitch_strength_melee", combo + "/" + ComboMax(), new Color(0.4f, 0.75f, 1f), combo >= 10);
+        if (R("B1") > 0 && combo > 0)
+        {
+            AposHud.Add(false, "twitch_strength_melee", combo + "/" + ComboMax(), new Color(0.4f, 0.75f, 1f), combo >= 10);
+            AposStatus.Target(comboTarget, "twitch_strength_melee", combo + "/" + ComboMax(), new Color(0.4f, 0.75f, 1f));
+        }
         if (R("B6") > 0 && Time.time - lastTaken >= 5f) AposHud.Add(false, "sneak_attack", "x" + Opener[R("B6")], gold, true);
     }
 

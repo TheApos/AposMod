@@ -61,7 +61,11 @@ public static class AposBaton
         AposMastery.SetStat(AposMastery.StatStamPower, 0.5f);
         float left = ready - Time.time;
         AposHud.Add(false, "electric_power", left > 0f ? Mathf.CeilToInt(left) + "s" : "OK", left > 0f ? new Color(0.6f, 0.6f, 0.6f) : new Color(0.4f, 0.8f, 1f), left <= 0f);
-        if (R("B3") > 0 && bdHits > 0) AposHud.Add(false, "hard_target", bdHits + "/4", new Color(1f, 0.5f, 0.3f), bdHits >= 3);
+        if (R("B3") > 0 && bdHits > 0)
+        {
+            AposHud.Add(false, "hard_target", bdHits + "/4", new Color(1f, 0.5f, 0.3f), bdHits >= 3);
+            AposStatus.Target(bdTarget, "hard_target", bdHits + "/4", new Color(1f, 0.5f, 0.3f));
+        }
     }
 
     // incoming damage for the player: Grounding (zombies you shocked hit 30% weaker)

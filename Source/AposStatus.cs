@@ -44,11 +44,27 @@ public static class AposStatus
 
     static void Add(string icon, string text, Color c) { tags.Add(new Tag { Sprite = "ui_game_symbol_" + icon, Text = text, Color = c }); }
 
+    // ===== stacks the weapon classes keep on one target (thrust chain, combo, momentum, Breakdown...) =====
+    // Every frame AposMastery.Update calls Begin(), then the held class's Tick adds its counter with Target().
+    static readonly Dictionary<int, List<Tag>> perTarget = new Dictionary<int, List<Tag>>();
+
+    public static void Begin() { perTarget.Clear(); }
+
+    public static void Target(int entityId, string icon, string text, Color c)
+    {
+        if (entityId < 0) return;
+        List<Tag> l;
+        if (!perTarget.TryGetValue(entityId, out l)) { l = new List<Tag>(); perTarget[entityId] = l; }
+        l.Add(new Tag { Sprite = "ui_game_symbol_" + icon, Text = text, Color = c });
+    }
+
     static string Pct(float v) { return Mathf.RoundToInt(v * 100f) + "%"; }
 
     static void Collect(EntityPlayerLocal p, EntityAlive e)
     {
         tags.Clear();
+        List<Tag> own;
+        if (perTarget.TryGetValue(e.entityId, out own)) tags.AddRange(own);
         EntityBuffs b = e.Buffs;
         if (b.HasBuff("buffAposMark")) Add("hard_target", "+" + Pct(p.Buffs.GetCustomVar("aposMarkBonus")), new Color(1f, 0.82f, 0.3f));
         float slow = 0f;
@@ -58,6 +74,8 @@ public static class AposStatus
         if (slow > 0.001f) Add("run", "-" + Pct(slow), new Color(0.45f, 0.75f, 1f));
         if (b.HasBuff("buffAposWound")) Add("drop", "x" + Mathf.Max(1, (int)b.GetCustomVar("aposWound")), new Color(1f, 0.35f, 0.3f));
         if (b.HasBuff("buffAposShattered")) Add("block_damage", "+50%", new Color(1f, 0.6f, 0.2f));
+        // spear "Tip in the Wound": +25% per hit on it, up to +100%
+        if (b.GetCustomVar("aposTip") > 0f && b.GetCustomVar("aposTipHits") > 0f) Add("spear", "+" + Mathf.RoundToInt(25f * b.GetCustomVar("aposTipHits")) + "%", new Color(1f, 0.5f, 0.3f));
         if (b.HasBuff("buffAposArmorBreak")) Add("armor_iron", "-" + Pct(b.GetCustomVar("aposArmorBreak")), new Color(0.8f, 0.8f, 0.8f));
         if (b.HasBuff("buffAposConcussed")) Add("concussion", "", new Color(1f, 0.9f, 0.4f));
         Effects(b);
@@ -98,7 +116,17 @@ public static class AposStatus
             }
         }
         for (int k = 0; k < kindOn.Length; k++)
-            if (kindOn[k]) Add(KindIcon[k], kindLeft[k] >= 0.5f ? Mathf.CeilToInt(kindLeft[k]) + "s" : "", KindColor[k]);
+        {
+            if (!kindOn[k]) continue;
+            string text = kindLeft[k] >= 0.5f ? Mathf.CeilToInt(kindLeft[k]) + "s" : "";
+            // bleeding: also how much it takes per second (the bigger of the vanilla bleed and the deep bleed tick)
+            if (k == 1)
+            {
+                float tick = Mathf.Max(b.HasBuff("buffInjuryBleeding") ? -b.GetCustomVar("aposBleedTick") : 0f, b.HasBuff("buffAposDeepBleed") ? -b.GetCustomVar("aposDeepBleedTick") : 0f);
+                if (tick >= 1f) text = "-" + Mathf.RoundToInt(tick) + "/s" + (text.Length > 0 ? " " + text : "");
+            }
+            Add(KindIcon[k], text, KindColor[k]);
+        }
     }
 
     public static void Draw(EntityPlayerLocal p)

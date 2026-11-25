@@ -318,6 +318,7 @@ public class AposMastery : MonoBehaviour
         if (!player.Buffs.HasBuff("buffAposMastery")) player.Buffs.AddBuff("buffAposMastery");
         Array.Clear(stats, 0, stats.Length);
         AposHud.Begin();
+        AposStatus.Begin();
         AposPistol.Tick(player, HeldClass == Pistols);
         AposShotgun.Tick(player, HeldClass == Shotguns);
         AposRifle.Tick(player, HeldClass == Rifles);
