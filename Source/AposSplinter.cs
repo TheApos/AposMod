@@ -46,6 +46,8 @@ public class AposSplinter : MonoBehaviour
                 hit.Buffs.SetCustomVar(ExplodeVar, 0f);
                 float blast = -Mathf.Max(ExplodeMin, hit.Buffs.GetCustomVar("aposHitDmg") * ExplodeShare);
                 int by = HitBy(hit);
+                Debug.Log("[AposMod] Explosion reaction on " + hit.EntityName + " (" + hit.entityId + "): fire " + Source(hit, FireBuffs)
+                    + ", acid " + Source(hit, new[] { "buffAposCorroded" }) + ", blast " + Mathf.RoundToInt(-blast));
                 // copy: dealing damage can change the shared list
                 foreach (EntityAlive e in Near(list, hit, ExplodeRadius).ToArray()) Splash(e, blast, by, EnumDamageTypes.Heat);
                 Splash(hit, blast, by, EnumDamageTypes.Heat);
@@ -105,5 +107,20 @@ public class AposSplinter : MonoBehaviour
     static void Splash(EntityAlive e, float damage, int attackerId, EnumDamageTypes type)
     {
         AposSplash.Deal(e, Mathf.RoundToInt(-damage), attackerId, type);
+    }
+
+    static readonly string[] FireBuffs = { "buffBurningElement", "buffBurningFlamingArrow", "buffBurningMolotov" };
+
+    // for the log: which of the buffs the zombie has and who put it there
+    static string Source(EntityAlive e, string[] buffs)
+    {
+        foreach (string name in buffs)
+        {
+            BuffValue b = e.Buffs.GetBuff(name);
+            if (b == null) continue;
+            Entity from = GameManager.Instance.World.GetEntity(b.InstigatorId);
+            return name + " from " + (from != null ? from.GetDebugName() + " (" + b.InstigatorId + ")" : "id " + b.InstigatorId);
+        }
+        return "none";
     }
 }
