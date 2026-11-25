@@ -116,7 +116,11 @@ public static class AposCombat
             if (excess > 0 && weaponClass.ItemTags.Test_AnySet(StrengthTag) && AposAffixes.Level(attacker, "attStrength") >= 10)
             {
                 EntityAlive next = Nearest(world, target, OverkillRadius);
-                if (next != null) Splash(next, excess, attacker.entityId);
+                if (next != null)
+                {
+                    if (AposSplash.IsLocal(attacker.entityId)) AposReactions.Add(AposReactions.Overkill, excess, 1);
+                    Splash(next, excess, attacker.entityId);
+                }
             }
             if (weaponClass.ItemTags.Test_AnySet(ShotgunTag) && AposAffixes.Level(attacker, "perkBoomstick") >= 5
                 && attacker.inventory.holdingItem == weaponClass)
@@ -128,7 +132,9 @@ public static class AposCombat
             {
                 target.Buffs.AddBuff("buffAposChainBlast"); // visual only
                 int blast = Mathf.Max(ChainDamage, Mathf.RoundToInt(response.Strength * ChainShare));
-                foreach (EntityAlive e in Around(world, target, ChainRadius)) Splash(e, blast, attacker.entityId);
+                List<EntityAlive> hit = new List<EntityAlive>(Around(world, target, ChainRadius));
+                if (hit.Count > 0 && AposSplash.IsLocal(attacker.entityId)) AposReactions.Add(AposReactions.ChainReaction, blast, hit.Count);
+                foreach (EntityAlive e in hit) Splash(e, blast, attacker.entityId);
             }
         }
 
@@ -137,7 +143,9 @@ public static class AposCombat
             int share = Mathf.RoundToInt(dealt * ShrapnelShare);
             if (share > 0)
             {
-                foreach (EntityAlive e in Around(world, target, ShrapnelRadius)) Splash(e, share, attacker.entityId);
+                List<EntityAlive> hit = new List<EntityAlive>(Around(world, target, ShrapnelRadius));
+                if (hit.Count > 0 && AposSplash.IsLocal(attacker.entityId)) AposReactions.Add(AposReactions.Shrapnel, share, hit.Count);
+                foreach (EntityAlive e in hit) Splash(e, share, attacker.entityId);
             }
         }
     }
@@ -259,6 +267,13 @@ public static class AposSplash
     public static int Depth;
     public static readonly Dictionary<int, int> LastHit = new Dictionary<int, int>(); // attacker id -> damage of the last weapon hit
 
+    public static bool IsLocal(int entityId)
+    {
+        World world = GameManager.Instance.World;
+        EntityPlayerLocal p = world != null ? world.GetPrimaryPlayer() : null;
+        return p != null && p.entityId == entityId;
+    }
+
     public static void Deal(EntityAlive target, int damage, int attackerId, EnumDamageTypes type)
     {
         if (target == null || damage <= 0 || target.IsDead()) return;
@@ -296,7 +311,15 @@ public static class AposSplash
                 e.Buffs.SetCustomVar("aposSplashPct", 0f);
                 if (b != null && LastHit.TryGetValue(b.InstigatorId, out last)) dmg = Mathf.Min(dmg, -last * pct);
             }
-            Deal(e, Mathf.RoundToInt(-dmg), b != null ? b.InstigatorId : -1, EnumDamageTypes.Piercing);
+            int instigator = b != null ? b.InstigatorId : -1;
+            // aposSplashKind 1 = EMP (Intellect 10): shown in the reaction feed of the player who released it
+            float kind = e.Buffs.GetCustomVar("aposSplashKind");
+            if (kind > 0f)
+            {
+                e.Buffs.SetCustomVar("aposSplashKind", 0f);
+                if (IsLocal(instigator)) AposReactions.Add(AposReactions.Emp, Mathf.RoundToInt(-dmg), 1);
+            }
+            Deal(e, Mathf.RoundToInt(-dmg), instigator, EnumDamageTypes.Piercing);
         }
     }
 }

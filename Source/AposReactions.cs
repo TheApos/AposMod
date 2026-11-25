@@ -1,5 +1,9 @@
-// Reaction feed: when an elemental reaction caused by the local player happens, a line appears on the right of the
-// screen for a few seconds: element icon + element icon = result, and what it did.
+// Reaction feed: when an elemental reaction or a big area proc caused by the local player happens, a line appears on
+// the right of the screen for a few seconds.
+// Reactions: element icon + element icon = result, and what it did.
+// Procs: source (INT 10, STR 10, perk 5) >> icon, damage per zombie and how many it hit:
+//   EMP (Intellect 10, XML: aposSplashKind = 1 on the targets, AposSplash.ProcessXml), Overkill (Strength 10),
+//   Chain Reaction (Demolitions Expert 5), Shrapnel (Penetrator 5) - all three from AposCombat.cs.
 //   fire + acid  = Explosion: damage per zombie and how many it hit (AposSplinter.cs reports it)
 //   fire + shock = Confusion (buffs.xml sets aposReactShow = 2 on the zombie)
 //   shock + acid = Miasma    (aposReactShow = 3)
@@ -9,7 +13,7 @@ using UnityEngine;
 
 public static class AposReactions
 {
-    public const int Explosion = 1, Confusion = 2, Miasma = 3;
+    public const int Explosion = 1, Confusion = 2, Miasma = 3, Emp = 4, Overkill = 5, ChainReaction = 6, Shrapnel = 7;
     const float Life = 4f;
     const int MaxLines = 4;
 
@@ -22,7 +26,7 @@ public static class AposReactions
     }
 
     static readonly List<Line> lines = new List<Line>();
-    static Texture2D fire, acid, shock, blast;
+    static Texture2D fire, acid, shock, blast, carry, shield;
     static GUIStyle style;
 
     static readonly Color FireColor = new Color(1f, 0.45f, 0.1f);
@@ -80,6 +84,7 @@ public static class AposReactions
         if (style == null)
         {
             fire = Icon("Burning"); acid = Icon("Acidic"); shock = Icon("Electric"); blast = Icon("Explosive");
+            carry = Icon("Fast"); shield = Icon("Armored");
             style = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleLeft };
         }
         float k = Screen.height / 1080f;
@@ -95,6 +100,31 @@ public static class AposReactions
             float alpha = Mathf.Clamp01(Life - age);           // fades over the last second
             float pop = 1f + 0.25f * Mathf.Clamp01(1f - age / 0.2f);
 
+            string count = l.Targets > 1 ? "  x" + l.Targets : "";
+            float cy = y + i * rowH;
+            if (l.Type >= Emp)
+            {
+                // proc: [source] >> [icon] -damage xN
+                Texture2D pic; Color pc; string source;
+                switch (l.Type)
+                {
+                    case Emp: pic = shock; pc = ShockColor; source = Localization.Get("aposProcEmp"); break;
+                    case Overkill: pic = carry; pc = new Color(1f, 0.55f, 0.35f); source = Localization.Get("aposProcOverkill"); break;
+                    case ChainReaction: pic = blast; pc = BlastColor; source = Localization.Get("aposProcChain"); break;
+                    default: pic = shield; pc = new Color(0.8f, 0.8f, 0.85f); source = Localization.Get("aposProcShrapnel"); break;
+                }
+                string dmg = "-" + l.Damage + count;
+                float sw = style.CalcSize(new GUIContent(source)).x, aw = style.CalcSize(new GUIContent(">>")).x, dw = style.CalcSize(new GUIContent(dmg)).x;
+                float w = sw + aw + icon + dw + gap * 6;
+                float px = right - w;
+                Background(px, cy, w, icon, gap, k, alpha);
+                px = DrawText(source, new Color(1f, 0.82f, 0.3f), px, cy, icon, alpha) + gap;
+                px = DrawText(">>", Color.white, px, cy, icon, alpha) + gap;
+                px = DrawIcon(pic, pc, px - icon * (pop - 1f) / 2f, cy - icon * (pop - 1f) / 2f, icon * pop, alpha) + gap;
+                DrawText(dmg, pc, px, cy, icon, alpha);
+                continue;
+            }
+
             Texture2D a, b, r;
             Color ca, cb, cr;
             string text;
@@ -102,26 +132,23 @@ public static class AposReactions
             {
                 case Explosion:
                     a = fire; ca = FireColor; b = acid; cb = AcidColor; r = blast; cr = BlastColor;
-                    text = "-" + l.Damage + (l.Targets > 1 ? "  x" + l.Targets : "");
+                    text = "-" + l.Damage + count;
                     break;
                 case Confusion:
                     a = fire; ca = FireColor; b = shock; cb = ShockColor; r = null; cr = new Color(1f, 0.6f, 1f);
-                    text = Localization.Get("aposReactConfusion") + (l.Targets > 1 ? "  x" + l.Targets : "");
+                    text = Localization.Get("aposReactConfusion") + count;
                     break;
                 default:
                     a = shock; ca = ShockColor; b = acid; cb = AcidColor; r = null; cr = new Color(0.7f, 0.95f, 0.5f);
-                    text = Localization.Get("aposReactMiasma") + (l.Targets > 1 ? "  x" + l.Targets : "");
+                    text = Localization.Get("aposReactMiasma") + count;
                     break;
             }
-            // laid out right to left: [a] + [b] = [result] text
+            // laid out left to right: [a] + [b] = [result] text, right-aligned
             float textW = style.CalcSize(new GUIContent(text)).x;
             float plusW = style.CalcSize(new GUIContent("+")).x, eqW = style.CalcSize(new GUIContent("=")).x;
             float width = icon * 2 + plusW + eqW + gap * 6 + textW + (r != null ? icon + gap : 0f);
             float x = right - width;
-            float cy = y + i * rowH;
-
-            GUI.color = new Color(0f, 0f, 0f, 0.45f * alpha);
-            GUI.DrawTexture(new Rect(x - gap * 2, cy - 4f * k, width + gap * 4, icon + 8f * k), Texture2D.whiteTexture);
+            Background(x, cy, width, icon, gap, k, alpha);
 
             x = DrawIcon(a, ca, x, cy, icon, alpha) + gap;
             x = DrawText("+", Color.white, x, cy, icon, alpha) + gap;
@@ -131,6 +158,12 @@ public static class AposReactions
             DrawText(text, cr, x, cy, icon, alpha);
         }
         GUI.color = old;
+    }
+
+    static void Background(float x, float y, float w, float icon, float gap, float k, float alpha)
+    {
+        GUI.color = new Color(0f, 0f, 0f, 0.45f * alpha);
+        GUI.DrawTexture(new Rect(x - gap * 2, y - 4f * k, w + gap * 4, icon + 8f * k), Texture2D.whiteTexture);
     }
 
     static float DrawIcon(Texture2D tex, Color c, float x, float y, float size, float alpha)

@@ -538,6 +538,10 @@ $extra['aposWardrobeTip']      = 'Tip: keep up to 3 outfits and change in 1.5 s 
 # Reaction feed on the right of the screen (Source/AposReactions.cs)
 $extra['aposReactConfusion'] = 'Confusion', 'Замешательство'
 $extra['aposReactMiasma']    = 'Miasma', 'Миазмы'
+$extra['aposProcEmp']        = 'INT 10', 'ИНТ 10'
+$extra['aposProcOverkill']   = 'STR 10', 'СИЛ 10'
+$extra['aposProcChain']      = ($loc['perkDemolitionsExpertName'] + ' 5'), ($locRu['perkDemolitionsExpertName'] + ' 5')
+$extra['aposProcShrapnel']   = ($loc['perkPenetratorName'] + ' 5'), ($locRu['perkPenetratorName'] + ' 5')
 
 # Weapon Mastery 2.0 (Source/AposMastery.cs): window, classes; skill texts aposMS_<Class>_<Id> (name), _D (description), _R1.._R3 (ranks)
 $extra['aposMasteryTitle']      = 'WEAPON MASTERY', 'МАСТЕРСТВО ОРУЖИЯ'

@@ -111,6 +111,10 @@
 			<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="otherAOE" range="8" target_tags="zombie,animal" cvar="aposSplashPct" operation="set" value=".5">
 				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
 			</triggered_effect>
+			<!-- the reaction feed shows it as EMP (Source/AposReactions.cs) -->
+			<triggered_effect trigger="onSelfDamagedOther" action="ModifyCVar" target="otherAOE" range="8" target_tags="zombie,animal" cvar="aposSplashKind" operation="set" value="1">
+				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
+			</triggered_effect>
 			<triggered_effect trigger="onSelfDamagedOther" action="AddBuff" target="otherAOE" range="8" target_tags="zombie,animal" buff="buffAposSplash">
 				<requirement name="CVarCompare" cvar="aposEmp" operation="GTE" value="10"/>
 			</triggered_effect>
