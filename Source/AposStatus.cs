@@ -1,7 +1,8 @@
 // Status row above zombies (drawn from AposMastery.OnGUI): the mod's own hidden debuffs on a zombie, as a vanilla UI
 // icon (taken from the game's UI atlas, XUi.GetAtlasByName) plus the number that matters:
 // Mark (+N% your damage), slowed (-N% speed: Shackles / Hunter's Wound / Suppression, the strongest), Wound stacks,
-// Shattered, Armor Break, Concussed, Corroded, Shocked. Only within 30 m and in line of sight; settings: aposhud off hides it.
+// Shattered, Armor Break, Concussed; effects (burning, bleeding, stun / knockdown, crippled, shock, acid, confusion, miasma)
+// with the seconds left. Only within 30 m and in line of sight; settings: aposhud off hides it.
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -59,8 +60,45 @@ public static class AposStatus
         if (b.HasBuff("buffAposShattered")) Add("block_damage", "+50%", new Color(1f, 0.6f, 0.2f));
         if (b.HasBuff("buffAposArmorBreak")) Add("armor_iron", "-" + Pct(b.GetCustomVar("aposArmorBreak")), new Color(0.8f, 0.8f, 0.8f));
         if (b.HasBuff("buffAposConcussed")) Add("concussion", "", new Color(1f, 0.9f, 0.4f));
-        if (b.HasBuff("buffAposCorroded")) Add("drop", "", new Color(0.5f, 1f, 0.35f));
-        if (b.HasBuff("buffShocked")) Add("electric_power", "", new Color(0.4f, 0.9f, 1f));
+        Effects(b);
+    }
+
+    // ===== effects (vanilla and ours): one icon per kind with the seconds left (the longest buff of that kind) =====
+    // name prefix -> kind; the first match wins. Cooldowns, particles and the player-only hazard buff are skipped.
+    static readonly string[] EffectPrefix = { "buffBurning", "buffInjuryBleeding", "buffAposDeepBleed", "buffInjuryStunned0", "buffInjuryKnockdown0",
+                                              "buffInjuryCrippled01", "buffShocked", "buffAposCorroded", "buffAposAcidSlow", "buffAposEmp", "buffAposConfused", "buffAposMiasma" };
+    static readonly int[] EffectKind = { 0, 1, 1, 2, 2, 3, 4, 5, 5, 4, 6, 7 };
+    static readonly string[] KindIcon = { "fire", "critical", "stunned", "run", "electric_power", "drop", "twitch_confused_controls", "infection" };
+    static readonly Color[] KindColor =
+    {
+        new Color(1f, 0.5f, 0.1f), new Color(1f, 0.2f, 0.2f), new Color(1f, 0.6f, 0.1f), new Color(1f, 0.45f, 0.45f),
+        new Color(0.4f, 0.9f, 1f), new Color(0.5f, 1f, 0.35f), new Color(1f, 0.6f, 1f), new Color(0.7f, 0.95f, 0.5f),
+    };
+    static readonly float[] kindLeft = new float[8];
+    static readonly bool[] kindOn = new bool[8];
+
+    static void Effects(EntityBuffs b)
+    {
+        for (int k = 0; k < kindOn.Length; k++) { kindOn[k] = false; kindLeft[k] = 0f; }
+        List<BuffValue> active = b.ActiveBuffs;
+        for (int i = 0; i < active.Count; i++)
+        {
+            BuffValue v = active[i];
+            string n = v != null ? v.BuffName : null;
+            if (n == null || v.Remove || n.EndsWith("Cooldown") || n.EndsWith("Particle") || n.EndsWith("CHTrigger") || n == "buffBurningHazardPlayer") continue;
+            for (int k = 0; k < EffectPrefix.Length; k++)
+            {
+                if (!n.StartsWith(EffectPrefix[k])) continue;
+                int kind = EffectKind[k];
+                kindOn[kind] = true;
+                BuffClass bc = v.BuffClass;
+                float left = bc != null && bc.DurationMax > 0f ? bc.DurationMax - v.DurationInSeconds : 0f;
+                if (left > kindLeft[kind]) kindLeft[kind] = left;
+                break;
+            }
+        }
+        for (int k = 0; k < kindOn.Length; k++)
+            if (kindOn[k]) Add(KindIcon[k], kindLeft[k] >= 0.5f ? Mathf.CeilToInt(kindLeft[k]) + "s" : "", KindColor[k]);
     }
 
     public static void Draw(EntityPlayerLocal p)
