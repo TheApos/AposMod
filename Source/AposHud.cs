@@ -1,8 +1,10 @@
 // Combat HUD (docs/Design-Mastery2.md 5к): counters of the held weapon's class.
 // - attack (streaks, stacks, charges of a strike) next to the crosshair: window windowAposHud (Center anchor)
-// - defence (shields, damage reduction, regeneration): a column at the left edge above the health bars, window
-//   windowAposHudDef (BottomLeft anchor). Dim while idle; Flash(icon) (or a widget turning "full") lights it up
-//   for a second, then it fades back.
+// - defence (shields, damage reduction, regeneration, defensive cooldowns): a row at the bottom, left of the toolbelt,
+//   growing to the left, window windowAposHudDef (Bottom anchor). Dim while idle; Flash(icon) (or a widget turning
+//   "full") lights it up for a second, then it fades back.
+// - ModBuffs: the mod's own player buffs (attribute / perk highlights, legendaries) in the same two rows, so they are
+//   seen where you look: stacks and charges at the crosshair, shields and defensive cooldowns at the bottom.
 // Both windows live in the vanilla "toolbelt" window group, so they show and hide with the HUD.
 // Every frame AposMastery.Update calls Begin(), then the held class's file (AposPistol.Tick, ...) adds its widgets.
 // Settings: aposhud on|off, size N (0.6-1.6), pos below|right|left (Settings.xml <Hud>).
@@ -47,14 +49,73 @@ public static class AposHud
 
     public static void Add(bool defense, string icon, string text, Color color, bool glow)
     {
-        (defense ? Defense : Attack).Add(new Widget { Icon = "ui_game_symbol_" + icon, Text = text, Color = color, Glow = glow });
+        AddSprite(defense, "ui_game_symbol_" + icon, text, color, glow);
+    }
+
+    public static void AddSprite(bool defense, string sprite, string text, Color color, bool glow)
+    {
+        (defense ? Defense : Attack).Add(new Widget { Icon = sprite, Text = text, Color = color, Glow = glow });
+    }
+
+    // ===== the mod's own player buffs =====
+    // buff, defence row?, what the number is: cvar (with an optional "/max" or "%"), or "time" = seconds left, "" = icon only
+    class ModBuff { public string Buff, Cvar, Suffix; public bool Defense; public int Full; }
+    static readonly ModBuff[] modBuffs =
+    {
+        new ModBuff { Buff = "buffAposThunderCharge", Cvar = "aposThunder", Suffix = "/3", Full = 3 },
+        new ModBuff { Buff = "buffAposAdrenaline", Cvar = "aposAdrenaline", Suffix = "/3", Full = 3 },
+        new ModBuff { Buff = "buffAposEmp", Cvar = "aposEmp", Suffix = "/10", Full = 10 },
+        new ModBuff { Buff = "buffAposPipeVeteran", Cvar = "aposPipeBonus", Suffix = "%" },
+        new ModBuff { Buff = "buffAposShadow", Cvar = "", Suffix = "x2", Full = -1 },
+        new ModBuff { Buff = "buffAposFrenzyPerception", Cvar = "time" },
+        new ModBuff { Buff = "buffAposFrenzyStrength", Cvar = "time" },
+        new ModBuff { Buff = "buffAposFrenzyFortitude", Cvar = "time" },
+        new ModBuff { Buff = "buffAposFrenzyAgility", Cvar = "time" },
+        new ModBuff { Buff = "buffAposJackpot", Cvar = "time" },
+        new ModBuff { Buff = "buffAposShieldUp", Cvar = "time", Defense = true, Full = -1 },
+        new ModBuff { Buff = "buffAposGuardian", Cvar = "", Defense = true },
+        new ModBuff { Buff = "buffAposEvasion", Cvar = "time", Defense = true },
+        new ModBuff { Buff = "buffAposVampire", Cvar = "aposVampHP", Suffix = " HP", Defense = true },
+        new ModBuff { Buff = "buffAposSecondWindCD", Cvar = "time", Defense = true },
+        new ModBuff { Buff = "buffAposSecondLungsCD", Cvar = "time", Defense = true },
+        new ModBuff { Buff = "buffAposAcidArmor", Cvar = "time", Defense = true },
+    };
+
+    public static void ModBuffs(EntityPlayerLocal p)
+    {
+        EntityBuffs b = p.Buffs;
+        foreach (ModBuff m in modBuffs)
+        {
+            BuffValue v = b.GetBuff(m.Buff);
+            if (v == null || v.Remove) continue;
+            BuffClass bc = v.BuffClass;
+            if (bc == null || string.IsNullOrEmpty(bc.Icon)) continue;
+            string text = "";
+            bool full = m.Full < 0;
+            if (m.Cvar == "time")
+            {
+                float left = bc.DurationMax > 0f ? bc.DurationMax - v.DurationInSeconds : 0f;
+                if (left >= 0.5f) text = Mathf.CeilToInt(left) + "s";
+            }
+            else if (m.Cvar.Length > 0)
+            {
+                int n = Mathf.RoundToInt(b.GetCustomVar(m.Cvar));
+                text = n + (m.Suffix ?? "");
+                if (m.Full > 0 && n >= m.Full) full = true;
+            }
+            else if (m.Suffix != null) text = m.Suffix;
+            Color c = bc.IconColor;
+            if (c.r + c.g + c.b < 0.05f) c = Color.white;
+            c.a = 1f;
+            AddSprite(m.Defense, bc.Icon, text, c, full);
+        }
     }
 }
 
 // one row of up to 4 widget slots (atk0..atk3 in windows.xml)
 public class XUiC_AposHud : XUiController
 {
-    const int Slots = 4;
+    const int Slots = 6;
     const int SlotW = 78;
     protected virtual bool IsDefense { get { return false; } }
 
@@ -118,7 +179,7 @@ public class XUiC_AposHud : XUiController
         }
     }
 
-    // attack row: centred under the crosshair, or a column to the right / left of it; defence: a column going up
+    // attack row: centred under the crosshair, or a column to the right / left of it; defence: a row left of the toolbelt
     int laidOut = -1;
     void Layout(int n)
     {
@@ -128,7 +189,7 @@ public class XUiC_AposHud : XUiController
             appliedScale = scale;
             ViewComponent.UiTransform.localScale = Vector3.one * scale;
         }
-        string pos = IsDefense ? "column" : AposHud.AttackAt.HasValue ? "at" + AposHud.AttackAt.Value : AposSettings.HudPos;
+        string pos = IsDefense ? "belt" : AposHud.AttackAt.HasValue ? "at" + AposHud.AttackAt.Value : AposSettings.HudPos;
         if (n == laidOut && pos == appliedPos) return;
         laidOut = n;
         appliedPos = pos;
@@ -138,7 +199,7 @@ public class XUiC_AposHud : XUiController
             Vector2i p;
             if (pos == "right") p = new Vector2i(40, 30 - i * 32);
             else if (pos == "left") p = new Vector2i(-40 - SlotW, 30 - i * 32);
-            else if (pos == "column") p = new Vector2i(0, i * 32);
+            else if (pos == "belt") p = new Vector2i(-388 - (i + 1) * SlotW, 59);   // left of the toolbelt (753 wide, top at 84)
             else if (pos.StartsWith("at")) p = new Vector2i(AposHud.AttackAt.Value.x + i * SlotW, AposHud.AttackAt.Value.y);
             else p = new Vector2i(-n * SlotW / 2 + i * SlotW, -34);
             slot[i].ViewComponent.Position = p;

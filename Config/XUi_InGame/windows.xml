@@ -609,8 +609,8 @@
 		<button depth="4" name="aposMasteryButton" style="icon30px, press" pos="108,-22" sprite="ui_game_symbol_skills" pivot="center" tooltip_key="aposMasteryTitle" sound="[paging_click]" />
 		<label depth="5" name="aposMasteryButtonBadge" pos="118,-4" width="40" height="22" font_size="18" color="255,210,77,255" effect="outline" text="" />
 	</append>
-	<!-- Combat HUD (Source/AposHud.cs): counters of the held weapon class. Attack next to the crosshair, defence above
-	     the health bars. Both are in the vanilla "toolbelt" window group (xui.xml). -->
+	<!-- Combat HUD (Source/AposHud.cs): counters of the held weapon class and the mod's own buffs. Attack next to the
+	     crosshair, defence at the bottom, left of the toolbelt. Both are in the vanilla "toolbelt" window group (xui.xml). -->
 	<append xpath="/windows">
 		<window name="windowAposHud" anchor="Center" controller="AposHud, AposMod">
 			<rect name="row" pos="0,0">
@@ -638,10 +638,22 @@
 					<sprite depth="2" name="icon" pos="3,-3" width="22" height="22" sprite="ui_game_symbol_skills" globalopacitymod="0" foregroundlayer="true" />
 					<label depth="2" name="text" pos="28,-3" width="46" height="24" font_size="18" effect="outline" effect_color="0,0,0,255" text="" />
 				</rect>
+				<rect name="slot4" pos="312,0" width="74" height="28" visible="false">
+					<sprite depth="1" name="bg" sprite="menu_empty" color="0,0,0,70" type="sliced" globalopacitymod="0" />
+					<sprite depth="3" name="glow" sprite="menu_empty3px" color="255,210,77,255" type="sliced" fillcenter="false" globalopacitymod="0" visible="false" />
+					<sprite depth="2" name="icon" pos="3,-3" width="22" height="22" sprite="ui_game_symbol_skills" globalopacitymod="0" foregroundlayer="true" />
+					<label depth="2" name="text" pos="28,-3" width="46" height="24" font_size="18" effect="outline" effect_color="0,0,0,255" text="" />
+				</rect>
+				<rect name="slot5" pos="390,0" width="74" height="28" visible="false">
+					<sprite depth="1" name="bg" sprite="menu_empty" color="0,0,0,70" type="sliced" globalopacitymod="0" />
+					<sprite depth="3" name="glow" sprite="menu_empty3px" color="255,210,77,255" type="sliced" fillcenter="false" globalopacitymod="0" visible="false" />
+					<sprite depth="2" name="icon" pos="3,-3" width="22" height="22" sprite="ui_game_symbol_skills" globalopacitymod="0" foregroundlayer="true" />
+					<label depth="2" name="text" pos="28,-3" width="46" height="24" font_size="18" effect="outline" effect_color="0,0,0,255" text="" />
+				</rect>
 			</rect>
 		</window>
-		<window name="windowAposHudDef" anchor="BottomLeft" controller="AposHudDef, AposMod">
-			<rect name="row" pos="9,196">
+		<window name="windowAposHudDef" anchor="Bottom" controller="AposHudDef, AposMod">
+			<rect name="row" pos="0,0">
 				<rect name="slot0" pos="0,0" width="74" height="28" visible="false">
 					<sprite depth="1" name="bg" sprite="menu_empty" color="0,0,0,70" type="sliced" globalopacitymod="0" />
 					<sprite depth="3" name="glow" sprite="menu_empty3px" color="255,210,77,255" type="sliced" fillcenter="false" globalopacitymod="0" visible="false" />
@@ -661,6 +673,18 @@
 					<label depth="2" name="text" pos="28,-3" width="46" height="24" font_size="18" effect="outline" effect_color="0,0,0,255" text="" />
 				</rect>
 				<rect name="slot3" pos="234,0" width="74" height="28" visible="false">
+					<sprite depth="1" name="bg" sprite="menu_empty" color="0,0,0,70" type="sliced" globalopacitymod="0" />
+					<sprite depth="3" name="glow" sprite="menu_empty3px" color="255,210,77,255" type="sliced" fillcenter="false" globalopacitymod="0" visible="false" />
+					<sprite depth="2" name="icon" pos="3,-3" width="22" height="22" sprite="ui_game_symbol_skills" globalopacitymod="0" foregroundlayer="true" />
+					<label depth="2" name="text" pos="28,-3" width="46" height="24" font_size="18" effect="outline" effect_color="0,0,0,255" text="" />
+				</rect>
+				<rect name="slot4" pos="312,0" width="74" height="28" visible="false">
+					<sprite depth="1" name="bg" sprite="menu_empty" color="0,0,0,70" type="sliced" globalopacitymod="0" />
+					<sprite depth="3" name="glow" sprite="menu_empty3px" color="255,210,77,255" type="sliced" fillcenter="false" globalopacitymod="0" visible="false" />
+					<sprite depth="2" name="icon" pos="3,-3" width="22" height="22" sprite="ui_game_symbol_skills" globalopacitymod="0" foregroundlayer="true" />
+					<label depth="2" name="text" pos="28,-3" width="46" height="24" font_size="18" effect="outline" effect_color="0,0,0,255" text="" />
+				</rect>
+				<rect name="slot5" pos="390,0" width="74" height="28" visible="false">
 					<sprite depth="1" name="bg" sprite="menu_empty" color="0,0,0,70" type="sliced" globalopacitymod="0" />
 					<sprite depth="3" name="glow" sprite="menu_empty3px" color="255,210,77,255" type="sliced" fillcenter="false" globalopacitymod="0" visible="false" />
 					<sprite depth="2" name="icon" pos="3,-3" width="22" height="22" sprite="ui_game_symbol_skills" globalopacitymod="0" foregroundlayer="true" />

@@ -331,6 +331,7 @@ public class AposMastery : MonoBehaviour
         AposSpear.Tick(player, HeldClass == Spears);
         AposKnuckles.Tick(player, HeldClass == Knuckles);
         AposBaton.Tick(player, HeldClass == Batons);
+        AposHud.ModBuffs(player);
         RefundGrandSlam(player);
         for (int i = 0; i < StatVars.Length; i++)
         {
