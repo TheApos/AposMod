@@ -270,6 +270,7 @@ public static class AposPistol
 
     // ===== Marksman's Eye: while the mode runs, heads of zombies within 40 m are marked, even behind cover =====
     static readonly List<EntityAlive> marked = new List<EntityAlive>();
+    static readonly List<bool> seen = new List<bool>(); // in sight: cyan ring; behind cover: dim grey (no false alarm)
     static float nextScan;
     static Texture2D ring;
 
@@ -282,22 +283,27 @@ public static class AposPistol
         {
             nextScan = Time.time + 0.2f;
             marked.Clear();
+            seen.Clear();
             List<Entity> list = GameManager.Instance.World.Entities.list;
             for (int i = 0; i < list.Count; i++)
             {
                 EntityEnemy e = list[i] as EntityEnemy;
-                if (e != null && !e.IsDead() && (e.position - player.position).sqrMagnitude <= MarkRange * MarkRange) marked.Add(e);
+                if (e == null || e.IsDead() || (e.position - player.position).sqrMagnitude > MarkRange * MarkRange) continue;
+                marked.Add(e);
+                seen.Add(player.CanEntityBeSeen(e, false));
             }
         }
         if (ring == null) ring = MakeRing(32);
         Color old = GUI.color;
-        GUI.color = new Color(0.2f, 0.9f, 1f, 0.85f);
         for (int i = 0; i < marked.Count; i++)
         {
             EntityAlive e = marked[i];
             if (e == null || e.IsDead()) continue;
-            // scene-space position (floating origin)
-            Vector3 v = cam.WorldToViewportPoint(e.transform.position + Vector3.up * e.height * 0.9f);
+            GUI.color = seen[i] ? new Color(0.2f, 0.9f, 1f, 0.85f) : new Color(0.7f, 0.7f, 0.7f, 0.35f);
+            // the head bone (scene space, floating origin); the body height as a fallback
+            Transform head = e.emodel != null ? e.emodel.GetHeadTransform() : null;
+            Vector3 at = head != null ? head.position : e.transform.position + Vector3.up * e.height * 0.9f;
+            Vector3 v = cam.WorldToViewportPoint(at);
             if (v.z <= 0f) continue;
             float size = Mathf.Clamp(Screen.height * 0.6f / Mathf.Max(1f, v.z), 10f, 48f);
             GUI.DrawTexture(new Rect(v.x * Screen.width - size / 2f, (1f - v.y) * Screen.height - size / 2f, size, size), ring);
