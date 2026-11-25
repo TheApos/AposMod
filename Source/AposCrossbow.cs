@@ -169,16 +169,24 @@ public static class AposCrossbow
             if (R("B7") > 0)
             {
                 // Minefield: waits up to 60 s for a zombie within 5 m, then goes off 1 s later; oldest mines go first
-                while (MinesOut() >= MaxMines[R("B7")]) RemoveOldestMine();
+                while (MinesOut() >= MaxMines[R("B7")]) RemoveOldestMine(player);
                 Add(new ChargeOn { Pos = p, Dmg = dmg, Power = power, Mine = true, Expires = Time.time + 60f, At = float.MaxValue });
             }
             else Add(new ChargeOn { Pos = p, At = Time.time + Fuse[R("B2")], Dmg = dmg, Power = power });
         }
     }
 
-    static void RemoveOldestMine()
+    // over the limit: the oldest mine goes off right away (not just disappears)
+    static void RemoveOldestMine(EntityPlayerLocal player)
     {
-        for (int i = 0; i < charges.Count; i++) if (charges[i].Mine) { RemoveAt(i); return; }
+        for (int i = 0; i < charges.Count; i++)
+        {
+            if (!charges[i].Mine) continue;
+            ChargeOn c = charges[i];
+            RemoveAt(i);
+            Explode(player, c);
+            return;
+        }
     }
 
     static void RunCharges(EntityPlayerLocal player)

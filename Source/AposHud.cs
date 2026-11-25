@@ -34,10 +34,15 @@ public static class AposHud
     public static readonly List<Widget> Attack = new List<Widget>();
     public static readonly List<Widget> Defense = new List<Widget>();
 
+    // a class may move the attack row for this frame (the bow: to the right end of the vanilla draw bar)
+    public static Vector2i? AttackAt;
+    public static readonly Vector2i BesideDrawBar = new Vector2i(345, -147);
+
     public static void Begin()
     {
         Attack.Clear();
         Defense.Clear();
+        AttackAt = null;
     }
 
     public static void Add(bool defense, string icon, string text, Color color, bool glow)
@@ -123,7 +128,7 @@ public class XUiC_AposHud : XUiController
             appliedScale = scale;
             ViewComponent.UiTransform.localScale = Vector3.one * scale;
         }
-        string pos = IsDefense ? "column" : AposSettings.HudPos;
+        string pos = IsDefense ? "column" : AposHud.AttackAt.HasValue ? "at" + AposHud.AttackAt.Value : AposSettings.HudPos;
         if (n == laidOut && pos == appliedPos) return;
         laidOut = n;
         appliedPos = pos;
@@ -134,6 +139,7 @@ public class XUiC_AposHud : XUiController
             if (pos == "right") p = new Vector2i(40, 30 - i * 32);
             else if (pos == "left") p = new Vector2i(-40 - SlotW, 30 - i * 32);
             else if (pos == "column") p = new Vector2i(0, i * 32);
+            else if (pos.StartsWith("at")) p = new Vector2i(AposHud.AttackAt.Value.x + i * SlotW, AposHud.AttackAt.Value.y);
             else p = new Vector2i(-n * SlotW / 2 + i * SlotW, -34);
             slot[i].ViewComponent.Position = p;
         }

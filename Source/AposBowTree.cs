@@ -58,6 +58,7 @@ public static class AposBowTree
         float speed = QuickDraw[R("B4")] / 100f;
         AposMastery.SetStat(AposMastery.StatSpeed, speed);
         AposMastery.SetStat(AposMastery.StatReload, speed);
+        if (strain > 0f) AposHud.AttackAt = AposHud.BesideDrawBar;   // next to the vanilla draw bar, not over it
         if (player.Buffs.HasBuff("buffAposBowShadow")) AposHud.Add(false, "stealth", "", new Color(0.6f, 0.6f, 1f), true);
         if (R("B1") > 0 && strain >= 0.97f) AposHud.Add(false, "archery", "+" + Mathf.RoundToInt(DrawBonus(player) * 100f) + "%", new Color(1f, 0.82f, 0.3f), true);
     }
@@ -233,11 +234,12 @@ public static class AposBowTree
     }
 
     // ===== Shock Trap: the stuck arrow discharges electricity =====
-    // an arrow in a zombie discharges 1.5 s later; an arrow in a wall / the ground is a trap (Trap): it waits up to 30 s
-    // for a zombie within 3 m and discharges 0.3 s later (unused, it just goes out); at most 5 traps, oldest go first.
+    // an arrow in a zombie discharges 1.5 s later; an arrow in a wall / the ground is a trap (Trap): it waits up to 10 s
+    // for a zombie within 3 m and discharges 0.3 s later (unused, it just goes out after 10 s); at most 5 traps: a new one
+    // over the limit makes the oldest discharge at once.
     // The discharge: everyone within 3 m (rank 2: 4.5 m) takes 50% (100%) of a splinter as electrical damage, shocked 2 (4) s.
     class Mine { public float At; public Vector3 Pos; public float Dmg; public EntityAlive Body; public bool Trap; public float Expires; }
-    const float TrapWait = 30f, TrapRadius = 3f;
+    const float TrapWait = 10f, TrapRadius = 3f;
     const int MaxTraps = 5;
     static readonly Color TrapColor = new Color(0.4f, 0.85f, 1f);
     static readonly List<Mine> mines = new List<Mine>();
@@ -301,7 +303,12 @@ public static class AposBowTree
         int traps = 0;
         foreach (Mine x in mines) if (x.Trap) traps++;
         for (int i = 0; i < mines.Count && traps >= MaxTraps; i++)
-            if (mines[i].Trap) { AposFx.Unmark(mines[i]); mines.RemoveAt(i); traps--; i--; }
+        {
+            if (!mines[i].Trap) continue;
+            Mine old = mines[i];
+            AposFx.Unmark(old); mines.RemoveAt(i); traps--; i--;
+            Discharge(player, old);
+        }
         AddMine(new Mine { Trap = true, At = float.MaxValue, Expires = Time.time + TrapWait, Pos = pos, Dmg = Mathf.Max(lastArrowDmg, 40f) });
     }
 
