@@ -147,7 +147,7 @@ public static class AposCrossbow
     static void Add(ChargeOn c)
     {
         charges.Add(c);
-        AposFx.Mark(c, c.Pos + Vector3.up * 0.3f, c.Body);
+        AposFx.Mark(c, c.Pos, c.Body);
     }
 
     static void RemoveAt(int i)

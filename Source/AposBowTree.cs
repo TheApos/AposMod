@@ -269,7 +269,7 @@ public static class AposBowTree
     static void AddMine(Mine m)
     {
         mines.Add(m);
-        AposFx.Mark(m, m.Pos + Vector3.up * 0.3f, m.Body);
+        AposFx.Mark(m, m.Pos, m.Body);   // exactly where the arrow stuck (no lift: it showed off the arrow up close)
     }
 
     static int BurstWide(EntityPlayerLocal player, Vector3 pos, int n, string element, bool full, float radiusMult)
