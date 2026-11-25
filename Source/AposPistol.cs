@@ -290,7 +290,7 @@ public static class AposPistol
                 EntityEnemy e = list[i] as EntityEnemy;
                 if (e == null || e.IsDead() || (e.position - player.position).sqrMagnitude > MarkRange * MarkRange) continue;
                 marked.Add(e);
-                seen.Add(player.CanEntityBeSeen(e, false));
+                seen.Add(AposElites.InSight(player, e)); // a clear line to the head, not just to some part of the body
             }
         }
         if (ring == null) ring = MakeRing(32);
@@ -305,9 +305,10 @@ public static class AposPistol
             Vector3 at = head != null ? head.position : e.transform.position + Vector3.up * e.height * 0.9f;
             Vector3 v = cam.WorldToViewportPoint(at);
             if (v.z <= 0f) continue;
-            // the ring frames the head: big up close, small far away (a head is about 0.35 m across)
-            Vector3 top = cam.WorldToViewportPoint(at + cam.transform.up * 0.35f);
-            float size = Mathf.Max(8f, Mathf.Abs(top.y - v.y) * Screen.height * 1.6f);
+            // the ring frames the head: big up close, small far away
+            // the ring (80% of the texture) is ~0.3 m across, a little wider than a zombie head
+            Vector3 top = cam.WorldToViewportPoint(at + cam.transform.up * 0.3f);
+            float size = Mathf.Max(8f, Mathf.Abs(top.y - v.y) * Screen.height * 1.25f);
             GUI.DrawTexture(new Rect(v.x * Screen.width - size / 2f, (1f - v.y) * Screen.height - size / 2f, size, size), ring);
         }
         GUI.color = old;

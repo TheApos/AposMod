@@ -529,7 +529,7 @@ public class AposElites : MonoBehaviour
     // Line of sight for the name tag: nothing between the player's head and the elite's head. (The vanilla
     // EntityAlive.CanSee is the AI's sight: it depends on sight range and light and hits the target's own collider,
     // so the tag almost never showed.) The ray starts a bit in front of the player and stops short of the target.
-    static bool InSight(EntityPlayerLocal p, EntityAlive e)
+    public static bool InSight(EntityPlayerLocal p, EntityAlive e)
     {
         Vector3 from = p.getHeadPosition(), to = e.getHeadPosition();
         Vector3 d = to - from;
