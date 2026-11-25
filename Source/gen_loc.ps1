@@ -535,6 +535,7 @@ $renamed = [ordered]@{
 foreach ($k in $renamed.Keys) { $extra[$k] = $renamed[$k] }
 
 # Wardrobe (Source/AposWardrobe.cs)
+$extra['aposParryToast']       = 'Parry!', 'Парирование!'
 $extra['aposWardrobeTitle']    = 'WARDROBE', 'ГАРДЕРОБ'
 $extra['aposWardrobeTab']      = 'Outfit {0}', 'Комплект {0}'
 $extra['aposWardrobeWorn']     = 'worn now', 'надет сейчас'

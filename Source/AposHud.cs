@@ -1,6 +1,8 @@
 // Combat HUD (docs/Design-Mastery2.md 5к): counters of the held weapon's class.
 // - attack (streaks, stacks, charges of a strike) next to the crosshair: window windowAposHud (Center anchor)
-// - defence (shields, damage reduction, regeneration) above the health bar: window windowAposHudDef (BottomLeft anchor)
+// - defence (shields, damage reduction, regeneration): a column at the left edge above the health bars, window
+//   windowAposHudDef (BottomLeft anchor). Dim while idle; Flash(icon) (or a widget turning "full") lights it up
+//   for a second, then it fades back.
 // Both windows live in the vanilla "toolbelt" window group, so they show and hide with the HUD.
 // Every frame AposMastery.Update calls Begin(), then the held class's file (AposPistol.Tick, ...) adds its widgets.
 // Settings: aposhud on|off, size N (0.6-1.6), pos below|right|left (Settings.xml <Hud>).
@@ -14,7 +16,19 @@ public static class AposHud
         public string Icon;   // vanilla UI sprite, e.g. ui_game_symbol_head_shot
         public string Text;
         public Color Color;
-        public bool Glow;     // full stacks / mode active: a coloured frame
+        public bool Glow;     // full stacks / mode active: brighter
+    }
+
+    // icon sprite -> time it last triggered (shown bright, then fading)
+    static readonly Dictionary<string, float> flashAt = new Dictionary<string, float>();
+    public static void Flash(string icon) { flashAt["ui_game_symbol_" + icon] = Time.time; }
+    public static void FlashSprite(string sprite) { flashAt[sprite] = Time.time; }
+    // 1 right after the trigger, held 0.8 s, then fading to 0 over 1 s
+    public static float FlashLevel(string sprite)
+    {
+        float at;
+        if (!flashAt.TryGetValue(sprite, out at)) return 0f;
+        return Mathf.Clamp01(1f - (Time.time - at - 0.8f));
     }
 
     public static readonly List<Widget> Attack = new List<Widget>();
@@ -42,6 +56,7 @@ public class XUiC_AposHud : XUiController
     readonly XUiController[] slot = new XUiController[Slots];
     readonly XUiV_Sprite[] icon = new XUiV_Sprite[Slots], glow = new XUiV_Sprite[Slots];
     readonly XUiV_Label[] text = new XUiV_Label[Slots];
+    readonly Dictionary<string, bool> wasGlow = new Dictionary<string, bool>();
     float appliedScale = -1f;
     string appliedPos;
 
@@ -74,21 +89,31 @@ public class XUiC_AposHud : XUiController
             if (slot[i].ViewComponent.IsVisible != on) slot[i].ViewComponent.IsVisible = on;
             if (!on) continue;
             AposHud.Widget w = list[i];
+            // a defence widget that just became full / ready flashes like a trigger
+            bool was;
+            if (IsDefense && w.Glow && (!wasGlow.TryGetValue(w.Icon, out was) || !was)) AposHud.FlashSprite(w.Icon);
+            wasGlow[w.Icon] = w.Glow;
+            // dim by default (no frames): idle 55-65%, full / active 85%, a trigger 100% fading back
+            float flash = AposHud.FlashLevel(w.Icon);
+            float k = Mathf.Max(w.Glow ? 0.85f : (IsDefense ? 0.55f : 0.65f), flash);
+            Color c = new Color(w.Color.r * k + (1f - k) * 0.35f, w.Color.g * k + (1f - k) * 0.35f, w.Color.b * k + (1f - k) * 0.35f, 0.5f + 0.5f * k);
             if (icon[i] != null)
             {
                 if (icon[i].SpriteName != w.Icon) icon[i].SpriteName = w.Icon;
-                if (icon[i].Color != w.Color) icon[i].Color = w.Color;
+                if (icon[i].Color != c) icon[i].Color = c;
+                if (icon[i].UiTransform != null) icon[i].UiTransform.localScale = Vector3.one * (1f + 0.25f * flash);
             }
-            if (text[i] != null && text[i].Text != w.Text) text[i].Text = w.Text;
-            if (glow[i] != null)
+            if (text[i] != null)
             {
-                if (glow[i].IsVisible != w.Glow) glow[i].IsVisible = w.Glow;
-                if (w.Glow && glow[i].Color != w.Color) glow[i].Color = w.Color;
+                if (text[i].Text != w.Text) text[i].Text = w.Text;
+                Color tc = new Color(1f, 1f, 1f, 0.55f + 0.45f * k);
+                if (text[i].Color != tc) text[i].Color = tc;
             }
+            if (glow[i] != null && glow[i].IsVisible) glow[i].IsVisible = false;
         }
     }
 
-    // attack row: centred under the crosshair, or a column to the right / left of it; defence row: left to right
+    // attack row: centred under the crosshair, or a column to the right / left of it; defence: a column going up
     int laidOut = -1;
     void Layout(int n)
     {
@@ -98,7 +123,7 @@ public class XUiC_AposHud : XUiController
             appliedScale = scale;
             ViewComponent.UiTransform.localScale = Vector3.one * scale;
         }
-        string pos = IsDefense ? "row" : AposSettings.HudPos;
+        string pos = IsDefense ? "column" : AposSettings.HudPos;
         if (n == laidOut && pos == appliedPos) return;
         laidOut = n;
         appliedPos = pos;
@@ -108,7 +133,7 @@ public class XUiC_AposHud : XUiController
             Vector2i p;
             if (pos == "right") p = new Vector2i(40, 30 - i * 32);
             else if (pos == "left") p = new Vector2i(-40 - SlotW, 30 - i * 32);
-            else if (pos == "row") p = new Vector2i(i * SlotW, 0);
+            else if (pos == "column") p = new Vector2i(0, i * 32);
             else p = new Vector2i(-n * SlotW / 2 + i * SlotW, -34);
             slot[i].ViewComponent.Position = p;
         }

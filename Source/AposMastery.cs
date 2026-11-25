@@ -491,6 +491,7 @@ public class AposMastery : MonoBehaviour
             AposPistol.Draw(lp);
             AposShotgun.Draw(lp);
             AposRifle.Draw(lp);
+            AposFx.Draw(lp);
         }
         float t = Time.time - bannerStart;
         if (t > BannerTime || bannerTitle == null || Event.current.type != EventType.Repaint) return;
@@ -554,6 +555,7 @@ public class AposMastery : MonoBehaviour
             AposSpear.Reset();
             AposKnuckles.Reset();
             AposBaton.Reset();
+            AposFx.Clear();
             grandSlamChecked = false;
             AposMasteryBadgePatch.Forget();
             hintRect = null;
@@ -714,7 +716,7 @@ public class XUiC_AposMastery : XUiController
     XUiV_Sprite barA, barB, barLevel, detailIcon;
     readonly XUiV_Label[] tierA = new XUiV_Label[6], tierB = new XUiV_Label[6];
     // per node: border, selection frame, icon, rank pips
-    readonly XUiV_Sprite[] border = new XUiV_Sprite[NodeCount], sel = new XUiV_Sprite[NodeCount], icon = new XUiV_Sprite[NodeCount];
+    readonly XUiV_Sprite[] border = new XUiV_Sprite[NodeCount], sel = new XUiV_Sprite[NodeCount], icon = new XUiV_Sprite[NodeCount], tint = new XUiV_Sprite[NodeCount];
     readonly XUiV_Sprite[,] pips = new XUiV_Sprite[NodeCount, 3];
 
     static readonly Color Gold = new Color(1f, 0.82f, 0.3f), GoldDim = new Color(0.75f, 0.6f, 0.25f), Green = new Color(0.45f, 1f, 0.45f),
@@ -753,6 +755,7 @@ public class XUiC_AposMastery : XUiController
             nodes[i] = Button("btnNode" + i, () => selected = n);
             if (nodes[i] == null) continue;
             border[i] = Sprite(nodes[i], "border");
+            tint[i] = Sprite(nodes[i], "tint");
             sel[i] = Sprite(nodes[i], "sel");
             icon[i] = Sprite(nodes[i], "icon");
             for (int k = 0; k < 3; k++) pips[i, k] = Sprite(nodes[i], "pip" + (k + 1));
@@ -943,7 +946,9 @@ public class XUiC_AposMastery : XUiController
             // a capstone not learned yet is orange
             Color frame = r >= sk.Max ? Gold : r > 0 ? GoldDim : can ? Green : open ? Grey : Dark;
             if (capstone && r == 0 && !can) frame = open ? Cap : new Color(0.45f, 0.28f, 0.1f);
-            Paint(border[i], frame);
+            // a thin soft frame plus a faint fill of the same colour
+            Paint(border[i], new Color(frame.r, frame.g, frame.b, r > 0 || can ? 0.9f : 0.6f));
+            Paint(tint[i], new Color(frame.r, frame.g, frame.b, r > 0 ? 0.16f : can ? 0.12f : 0.05f));
             if (icon[i] != null && icon[i].SpriteName != sk.Icon) icon[i].SpriteName = sk.Icon;
             Paint(icon[i], r > 0 ? Gold : open ? new Color(0.85f, 0.85f, 0.85f) : new Color(0.4f, 0.4f, 0.4f));
             for (int k = 0; k < 3; k++)

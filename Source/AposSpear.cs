@@ -6,7 +6,9 @@
 // - Branch B (fencing): Quick Thrusts (x Agility), Deep Thrust, Head Thrust, Thrust Chain, Parry, Dance, Riposte,
 //   capstone Whirlwind.
 // - Hybrids: Bloody Skewer, Parting Shot, Spear Master.
-// Parry: the zombie's attack animation is playing and has not hit yet (AvatarController).
+// Parry: the zombie's attack animation is playing and has not hit yet (AvatarController); shown as a toast + clang.
+// Breakthrough: starts with the power swing itself (XML counter aposPowerN), if you were running in the last 0.6 s;
+// the player is moved by SetPosition steps (motion does nothing on the local player) and stops at a wall.
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,6 +33,8 @@ public static class AposSpear
     static int chainTarget = -1, chainHits, riposteLeft;
     static float chainAt, sentryReady, dashUntil, noAttackUntil;
     static Vector3 dashDir, lastHitPos;
+    static float lastRunAt = -100f, dashHit, powerN;
+    static readonly HashSet<int> dashHits = new HashSet<int>();
     static bool partingReady;
     class Bowl { public EntityAlive Body; public float At; }
     static readonly List<Bowl> bowls = new List<Bowl>();
@@ -48,8 +52,13 @@ public static class AposSpear
             foreach (EntityAlive e in AposMelee.Around(b.Body.position, 1.3f))
                 if (e != b.Body && Random.value < Bowling[R("A4")]) AposKnock.Ragdoll(e, b.Body.position, 250f, 1.5f);
         }
-        // Breakthrough dash: carry the player forward
-        if (Time.time < dashUntil) player.motion += dashDir * 0.35f;
+        // Breakthrough: a power swing started while running (or a moment after) becomes a dash
+        float n = player.Buffs.GetCustomVar("aposPowerN");
+        bool swing = n != powerN;
+        powerN = n;
+        if (player.IsRunning || HorizontalSpeed(player) > 5f) lastRunAt = Time.time;
+        if (held && swing && R("A8") > 0 && Time.time - lastRunAt < 0.6f && Time.time > dashUntil + 0.5f) StartDash(player);
+        if (Time.time < dashUntil) DashStep(player);
         if (!held) return;
 
         float speed = Mathf.Min(60f, Quick[R("B1")] * AposAffixes.Level(player, "attAgility")) / 100f;
@@ -67,6 +76,7 @@ public static class AposSpear
             foreach (EntityAlive e in AposMelee.Around(player.position, 2f))
             {
                 sentryReady = Time.time + SentryCD[R("A7")];
+                AposHud.Flash("defense");
                 float dmg = EffectManager.GetValue(PassiveEffects.EntityDamage, player.inventory.holdingItemItemValue, 10f, player);
                 AposSplash.Deal(e, Mathf.Max(1, Mathf.RoundToInt(dmg)), player.entityId, EnumDamageTypes.Piercing);
                 if (!e.IsDead()) AposKnock.Ragdoll(e, player.position, Push[R("A1")], 0.2f);
@@ -118,8 +128,6 @@ public static class AposSpear
         // Parry: a hit while the zombie winds up its attack interrupts it, x2
         lastParry = R("B5") > 0 && Winding(target);
         if (lastParry) mult *= 2f;
-        // Breakthrough: a power hit while running forward becomes a dash
-        if (power && R("A8") > 0 && player.IsRunning && Time.time > dashUntil + 0.5f) StartDash(player, strength * mult);
         lastWhirl = R("B8") > 0 && chainHits > 0 && chainHits % 4 == 3;
         if (power)
         {
@@ -145,6 +153,8 @@ public static class AposSpear
         if (lastParry)
         {
             riposteLeft = Riposte[R("B7")];
+            AposFx.Toast(Localization.Get("aposParryToast"), new Color(1f, 0.85f, 0.4f));
+            Audio.Manager.PlayInsidePlayerHead("metalhitmetal", player.entityId);
             if (!response.Fatal) target.Buffs.AddBuff("buffInjuryStunned01", -1, true, false, 0.6f);
             // Spear Master: a parry works like a power hit: thrown 3 m and the line behind pierced
             if (R("H3") > 0)
@@ -201,21 +211,50 @@ public static class AposSpear
         }
     }
 
-    // Breakthrough: 6 m forward through the crowd; everyone on the way x2 and knocked down; 1.5 s without attacks after
-    static void StartDash(EntityPlayerLocal player, float hit)
+    static float HorizontalSpeed(EntityPlayerLocal p)
+    {
+        Vector3 v = p.GetVelocityPerSecond(); v.y = 0f;
+        return v.magnitude;
+    }
+
+    // Breakthrough: 6 m forward through the crowd; everyone on the way x2 (of a power hit) and knocked down;
+    // 1.5 s without attacks after
+    const float DashTime = 0.3f, DashSpeed = 20f;
+    static void StartDash(EntityPlayerLocal player)
     {
         Vector3 f = player.GetLookVector(); f.y = 0f;
         if (f.sqrMagnitude < 0.01f) return;
         dashDir = f.normalized;
-        dashUntil = Time.time + 0.3f;
-        noAttackUntil = Time.time + 1.8f;
-        foreach (EntityAlive e in AposMelee.Around(player.position, 6.5f))
+        dashUntil = Time.time + DashTime;
+        noAttackUntil = Time.time + DashTime + 1.5f;
+        dashHits.Clear();
+        float dmg = EffectManager.GetValue(PassiveEffects.EntityDamage, player.inventory.holdingItemItemValue, 10f, player);
+        dashHit = dmg * 2f * 2f;   // a power hit is about x2, Breakthrough x2
+        Debug.Log("[AposMod] Breakthrough: dash, hit " + Mathf.RoundToInt(dashHit));
+    }
+
+    static void DashStep(EntityPlayerLocal player)
+    {
+        Vector3 next = player.position + dashDir * (DashSpeed * Time.deltaTime);
+        if (Blocked(next + dashDir * 0.4f)) { dashUntil = 0f; return; }
+        player.SetPosition(next, true);
+        foreach (EntityAlive e in AposMelee.Around(next, 1.4f))
         {
-            Vector3 v = e.position - player.position; v.y = 0f;
-            float along = Vector3.Dot(v, dashDir);
-            if (along < 0f || along > 6f || (v - dashDir * along).magnitude > 1.2f) continue;
-            AposSplash.Deal(e, Mathf.Max(1, Mathf.RoundToInt(hit * 2f)), player.entityId, EnumDamageTypes.Piercing);
+            if (!dashHits.Add(e.entityId)) continue;
+            AposSplash.Deal(e, Mathf.Max(1, Mathf.RoundToInt(dashHit)), player.entityId, EnumDamageTypes.Piercing);
             if (!e.IsDead()) AposKnock.Ragdoll(e, player.position, 300f, 2f);
         }
+    }
+
+    // a solid block at knee or chest height in front
+    static bool Blocked(Vector3 pos)
+    {
+        World w = GameManager.Instance.World;
+        for (int i = 0; i < 2; i++)
+        {
+            BlockValue bv = w.GetBlock(World.worldToBlockPos(pos + Vector3.up * (i == 0 ? 0.6f : 1.4f)));
+            if (!bv.isair && bv.Block != null && bv.Block.IsCollideMovement) return true;
+        }
+        return false;
     }
 }

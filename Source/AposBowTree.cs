@@ -6,7 +6,9 @@
 // - Branch B (the arrow, strong targets): Full Draw (x Agility), Piercing Arrow, Hunter's Wound, Quick Draw, Shadow,
 //   Marksmanship, Arrow Recovery, capstone Lance Arrow.
 // - Hybrids: Barbed Splinters, Distraction, Thousand Needles.
-// The draw of the last released arrow is watched every frame (ItemActionCatapult.GetStrainPercent).
+// The draw is watched every frame: while the string is pulled (ItemActionDataCatapult.m_bActivated) it is
+// (now - m_ActivateTime) / m_MaxStrainTime; when it is let go, that value is the draw of the arrow that left.
+// (GetStrainPercent is the LAST shot's draw and never resets, so it is not used for the live value.)
 // Hunter's Wound lives on the zombie (buffAposWound, cvars aposWound / aposWoundDmg); its damage bonus is in AposCombat.
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,7 +36,7 @@ public static class AposBowTree
 
     static bool FullShot() { return lastDraw >= 0.97f && Time.time - releasedAt < 5f; }
 
-    public static void Reset() { strain = lastDraw = 0f; releasedAt = -10f; shadowNext = false; mines.Clear(); }
+    public static void Reset() { strain = lastDraw = 0f; releasedAt = -10f; shadowNext = false; foreach (Mine m in mines) AposFx.Unmark(m); mines.Clear(); }
 
     public static void Tick(EntityPlayerLocal player, bool held)
     {
@@ -43,13 +45,16 @@ public static class AposBowTree
         ItemClass ic = player.inventory.holdingItem;
         ItemActionCatapult cat = ic != null && ic.Actions != null && ic.Actions.Length > 0 ? ic.Actions[0] as ItemActionCatapult : null;
         ItemInventoryData d = player.inventory.holdingItemData;
-        if (cat != null && d != null && d.actionData != null && d.actionData.Count > 0)
+        ItemActionCatapult.ItemActionDataCatapult cd = cat != null && d != null && d.actionData != null && d.actionData.Count > 0
+            ? d.actionData[0] as ItemActionCatapult.ItemActionDataCatapult : null;
+        if (cd != null)
         {
-            float s = cat.GetStrainPercent(d.actionData[0]);
-            // the string went from drawn to slack: an arrow left with the draw it had a frame ago
-            if (strain > 0.05f && s < 0.05f) { lastDraw = strain; releasedAt = Time.time; }
+            float s = cd.m_bActivated && cd.m_MaxStrainTime > 0f ? Mathf.Clamp01((Time.time - cd.m_ActivateTime) / cd.m_MaxStrainTime) : 0f;
+            // the string went from drawn to slack: an arrow left with the draw it had a frame ago (unless cancelled)
+            if (strain > 0.05f && !cd.m_bActivated && !cd.m_bCanceled) { lastDraw = strain; releasedAt = Time.time; }
             strain = s;
         }
+        else strain = 0f;
         float speed = QuickDraw[R("B4")] / 100f;
         AposMastery.SetStat(AposMastery.StatSpeed, speed);
         AposMastery.SetStat(AposMastery.StatReload, speed);
@@ -61,8 +66,8 @@ public static class AposBowTree
 
     static bool IsArrow(DamageSource source)
     {
-        ItemValue iv = source.AttackingItem;
-        return iv != null && iv.ItemClass != null && iv.ItemClass.Name.StartsWith("ammoArrow");
+        string ammo = AposProjectiles.AmmoOf(source);
+        return ammo != null && ammo.StartsWith("ammoArrow");
     }
 
     // ===== hits =====
@@ -87,7 +92,7 @@ public static class AposBowTree
         lastArrowDmg = strength * mult;                         // splinters count from the arrow before Splinter Storm
         if (R("A8") > 0) mult *= 0.5f;
         lastTarget = target.entityId; lastFull = full; lastHead = head;
-        lastAmmo = source.AttackingItem.ItemClass.Name;
+        lastAmmo = AposProjectiles.AmmoOf(source);
         AposProjectiles.NoteEntityHit();
         return Mathf.Max(1, Mathf.RoundToInt(strength * mult));
     }
@@ -120,7 +125,7 @@ public static class AposBowTree
         // Splinters (Lance Arrow: only from shots that were not fully drawn)
         if (!(full && R("B8") > 0)) Burst(player, target.position, target, Splinters(player), Element(target), full, true);
         // Splinter Mine: 1.5 s later the arrow stuck in it bursts again
-        if (R("A7") > 0) mines.Add(new Mine { At = Time.time + 1.5f, Pos = target.position, Full = full, Element = Element(target), Dmg = lastArrowDmg });
+        if (R("A7") > 0) AddMine(new Mine { At = Time.time + 1.5f, Pos = target.position, Full = full, Element = Element(target), Dmg = lastArrowDmg, Body = response.Fatal ? null : target });
     }
 
     static int Splinters(EntityPlayerLocal player)
@@ -153,8 +158,9 @@ public static class AposBowTree
         bool lance = R("B8") > 0;
         int max = lance ? 99 : PierceCount[R("B2")];
         float share = lance ? 1f : PierceDmg[R("B2")];
-        Vector3 from = player.getHeadPosition();
-        Vector3 dir = target.getHeadPosition() - from;
+        // flat line from the player through the target (arrows drop, heads bob: height is ignored, 1.2 m wide)
+        Vector3 from = player.position;
+        Vector3 dir = target.position - from; dir.y = 0f;
         float far = dir.magnitude;
         if (far < 0.1f) return;
         dir /= far;
@@ -162,11 +168,14 @@ public static class AposBowTree
         foreach (EntityAlive e in Around(target.position, 16f))
         {
             if (e == target) continue;
-            Vector3 v = e.getHeadPosition() - from;
+            Vector3 v = e.position - from;
+            if (Mathf.Abs(v.y - (target.position.y - from.y)) > 2.5f) continue;
+            v.y = 0f;
             float along = Vector3.Dot(v, dir);
-            if (along <= far || along > far + 15f) continue;
-            if ((v - dir * along).magnitude <= 0.8f) line.Add(new KeyValuePair<float, EntityAlive>(along, e));
+            if (along <= far - 0.3f || along > far + 15f) continue;
+            if ((v - dir * along).magnitude <= 1.2f) line.Add(new KeyValuePair<float, EntityAlive>(along, e));
         }
+        Debug.Log("[AposMod] Piercing Arrow: " + line.Count + " zombie(s) behind the target");
         line.Sort((a, b) => a.Key.CompareTo(b.Key));
         for (int i = 0; i < line.Count && i < max; i++)
         {
@@ -218,7 +227,7 @@ public static class AposBowTree
     }
 
     // ===== Splinter Mine: a second wave from where the arrow stuck =====
-    class Mine { public float At; public Vector3 Pos; public bool Full; public string Element; public float Dmg; }
+    class Mine { public float At; public Vector3 Pos; public bool Full; public string Element; public float Dmg; public EntityAlive Body; }
     static readonly List<Mine> mines = new List<Mine>();
 
     static void RunMines(EntityPlayerLocal player)
@@ -228,6 +237,9 @@ public static class AposBowTree
             Mine m = mines[i];
             if (Time.time < m.At) continue;
             mines.RemoveAt(i);
+            AposFx.Unmark(m);
+            AposFx.Blast(m.Body != null && !m.Body.IsDead() ? m.Body.position + Vector3.up * 1f : m.Pos);
+            if (m.Body != null) m.Pos = m.Body.position;
             float keep = lastArrowDmg;
             lastArrowDmg = m.Dmg;
             int n = Splinters(player);
@@ -235,6 +247,13 @@ public static class AposBowTree
             BurstWide(player, m.Pos, n, m.Element, m.Full, R("A7") >= 2 ? 1.5f : 1f);
             lastArrowDmg = keep;
         }
+    }
+
+    // the armed arrow: a pulsing marker on it (on the zombie it is stuck in, or where it hit) until it bursts
+    static void AddMine(Mine m)
+    {
+        mines.Add(m);
+        AposFx.Mark(m, m.Pos + Vector3.up * 0.3f, m.Body);
     }
 
     static void BurstWide(EntityPlayerLocal player, Vector3 pos, int n, string element, bool full, float radiusMult)
@@ -257,7 +276,7 @@ public static class AposBowTree
     {
         if (R("A7") <= 0) return;
         lastAmmo = ammo;
-        mines.Add(new Mine { At = Time.time + 1.5f, Pos = pos, Full = FullShot(), Element = ammo != null && ammo.Contains("Flaming") ? "buffBurningFlamingArrow" : null, Dmg = Mathf.Max(lastArrowDmg, 40f) });
+        AddMine(new Mine { At = Time.time + 1.5f, Pos = pos, Full = FullShot(), Element = ammo != null && ammo.Contains("Flaming") ? "buffBurningFlamingArrow" : null, Dmg = Mathf.Max(lastArrowDmg, 40f) });
     }
 
     static readonly FastTags<TagGroup.Global> TraderTag = FastTags<TagGroup.Global>.Parse("trader");

@@ -29,7 +29,7 @@ public static class AposCrossbow
 
     static float rhythmUntil;
 
-    public static void Reset() { charges.Clear(); rhythmUntil = 0f; }
+    public static void Reset() { foreach (ChargeOn c in charges) AposFx.Unmark(c); charges.Clear(); rhythmUntil = 0f; }
 
     // ===== the Mark =====
     public static bool Marked(EntityAlive e) { return e != null && e.Buffs.HasBuff("buffAposMark"); }
@@ -68,8 +68,8 @@ public static class AposCrossbow
 
     static bool IsBolt(DamageSource source)
     {
-        ItemValue iv = source.AttackingItem;
-        return iv != null && iv.ItemClass != null && iv.ItemClass.Name.StartsWith("ammoCrossbowBolt");
+        string ammo = AposProjectiles.AmmoOf(source);
+        return ammo != null && ammo.StartsWith("ammoCrossbowBolt");
     }
 
     // ===== hits =====
@@ -139,7 +139,20 @@ public static class AposCrossbow
             fuse = 3f;
             foreach (EntityAlive e in AposBowTree.Around(body.position, 8f)) if (e != body) e.SetInvestigatePosition(body.position, 80, true);
         }
-        charges.Add(new ChargeOn { Body = body, Pos = pos, At = Time.time + fuse, Dmg = lastBoltDmg, Power = power, Inner = inner });
+        Add(new ChargeOn { Body = body, Pos = pos, At = Time.time + fuse, Dmg = lastBoltDmg, Power = power, Inner = inner });
+    }
+
+    // every charge waiting to go off has a pulsing marker (AposFx) until it explodes or is removed
+    static void Add(ChargeOn c)
+    {
+        charges.Add(c);
+        AposFx.Mark(c, c.Pos + Vector3.up * 0.3f, c.Body);
+    }
+
+    static void RemoveAt(int i)
+    {
+        AposFx.Unmark(charges[i]);
+        charges.RemoveAt(i);
     }
 
     // a bolt stuck in a wall or the ground (AposProjectiles)
@@ -156,15 +169,15 @@ public static class AposCrossbow
             {
                 // Minefield: waits up to 60 s for a zombie within 5 m, then goes off 1 s later; oldest mines go first
                 while (MinesOut() >= MaxMines[R("B7")]) RemoveOldestMine();
-                charges.Add(new ChargeOn { Pos = p, Dmg = dmg, Power = power, Mine = true, Expires = Time.time + 60f, At = float.MaxValue });
+                Add(new ChargeOn { Pos = p, Dmg = dmg, Power = power, Mine = true, Expires = Time.time + 60f, At = float.MaxValue });
             }
-            else charges.Add(new ChargeOn { Pos = p, At = Time.time + Fuse[R("B2")], Dmg = dmg, Power = power });
+            else Add(new ChargeOn { Pos = p, At = Time.time + Fuse[R("B2")], Dmg = dmg, Power = power });
         }
     }
 
     static void RemoveOldestMine()
     {
-        for (int i = 0; i < charges.Count; i++) if (charges[i].Mine) { charges.RemoveAt(i); return; }
+        for (int i = 0; i < charges.Count; i++) if (charges[i].Mine) { RemoveAt(i); return; }
     }
 
     static void RunCharges(EntityPlayerLocal player)
@@ -174,12 +187,12 @@ public static class AposCrossbow
             ChargeOn c = charges[i];
             if (c.Mine && !c.Armed)
             {
-                if (Time.time > c.Expires) { charges.RemoveAt(i); continue; }
+                if (Time.time > c.Expires) { RemoveAt(i); continue; }
                 foreach (EntityAlive e in AposBowTree.Around(c.Pos, 5f)) { c.Armed = true; c.At = Time.time + 1f; break; }
                 continue;
             }
             if (Time.time < c.At) continue;
-            charges.RemoveAt(i);
+            RemoveAt(i);
             Explode(player, c);
         }
     }
@@ -191,6 +204,7 @@ public static class AposCrossbow
         int dmg = Mathf.Max(1, Mathf.RoundToInt(c.Dmg * Charge[R("B1")] * c.Power));
         bool bodyMarked = c.Body != null && Marked(c.Body);
         List<EntityAlive> hit = new List<EntityAlive>(AposBowTree.Around(pos, radius));
+        AposFx.Blast(pos + Vector3.up * (c.Body != null ? 1f : 0.3f));
         if (c.Body != null && !c.Body.IsDead()) c.Body.Buffs.AddBuff("buffAposChainBlast");
         else if (hit.Count > 0) hit[0].Buffs.AddBuff("buffAposChainBlast");
         int b3 = R("B3"), b6 = R("B6");
@@ -222,7 +236,7 @@ public static class AposCrossbow
                 EntityAlive next = Nearest(dead.position, 6f);
                 if (next == null) continue;
                 Mark(player, next);
-                charges.Add(new ChargeOn { Body = next, Pos = next.position, At = Time.time + Fuse[R("B2")], Dmg = c.Dmg, Power = c.Power });
+                Add(new ChargeOn { Body = next, Pos = next.position, At = Time.time + Fuse[R("B2")], Dmg = c.Dmg, Power = c.Power });
             }
         }
     }
@@ -273,13 +287,31 @@ public static class AposProjectiles
     static float lastEntityHit = -10f;
     public static void NoteEntityHit() { lastEntityHit = Time.time; }
 
+    // The game passes the LAUNCHER (bow / crossbow) as the attacking item of an arrow or bolt hit, not the ammo.
+    // The hit happens inside checkCollision, so the ammo of the projectile being checked is kept here meanwhile.
+    static string current;
+    static int currentFrame = -1;
+
+    // the ammo item name of an arrow / bolt hit (or the attacking item's own name for anything else)
+    public static string AmmoOf(DamageSource source)
+    {
+        ItemValue iv = source.AttackingItem;
+        string name = iv != null && iv.ItemClass != null ? iv.ItemClass.Name : null;
+        if (current != null && Time.frameCount == currentFrame && (name == null || !name.StartsWith("ammo"))) return current;
+        return name;
+    }
+
     static void Prefix(ProjectileMoveScript __instance, out ProjectileMoveScript.State __state)
     {
         __state = __instance.state;
+        currentFrame = Time.frameCount;
+        current = __instance.itemValueProjectile != null && __instance.itemValueProjectile.ItemClass != null
+            ? __instance.itemValueProjectile.ItemClass.Name : null;
     }
 
     static void Postfix(ProjectileMoveScript __instance, ProjectileMoveScript.State __state)
     {
+        current = null;
         try
         {
             if (__state != ProjectileMoveScript.State.Active || __instance.state != ProjectileMoveScript.State.Sticky) return;

@@ -158,7 +158,7 @@
 		</buff>
 
 		<!-- Legendary Big Boom: the next rocket costs no ammo -->
-		<buff name="buffAposFreeRocket" name_key="buffAposFreeRocketName" description_key="buffAposFreeRocketDesc" icon="ui_game_symbol_destruction2" icon_color="255,180,0">
+		<buff name="buffAposFreeRocket" name_key="buffAposFreeRocketName" description_key="buffAposFreeRocketDesc" icon="ui_game_symbol_explosion" icon_color="255,180,0">
 			<stack_type value="ignore"/>
 			<effect_group>
 				<passive_effect name="InfiniteAmmo" operation="base_set" value="1"/>

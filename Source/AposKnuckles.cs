@@ -68,7 +68,7 @@ public static class AposKnuckles
         if (R("B4") > 0 && combo >= 5 && Random.value < Slip[R("B4")]) return 0;
         // Clinch: the zombie you keep a 5+ combo on hits 25% weaker
         if (R("H2") > 0 && combo >= 5 && attacker != null && attacker.entityId == comboTarget) m *= 0.75f;
-        if (charges > 0) m *= 1f - SkinPct(p);                  // Iron Skin
+        if (charges > 0 && R("A2") > 0) { m *= 1f - SkinPct(p); AposHud.Flash("defense"); }   // Iron Skin
         if (R("B8") > 0) m *= 1.3f;                              // Hundred Fists downside
         return Mathf.Max(0, Mathf.RoundToInt(strength * m));
     }
@@ -88,6 +88,7 @@ public static class AposKnuckles
         }
         int gain = Random.value < TakeIt[R("A4")] ? 2 : 1;
         charges = Mathf.Min(Cap(p), charges + gain);
+        AposHud.Flash("boxer");
         bloodBank += damage;
         // Recoil: a hit on you at full charges throws the attacker back and stuns it for 1 s
         if (fullBefore && R("A5") > 0 && attacker != null && !(attacker is EntityPlayer))

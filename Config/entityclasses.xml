@@ -9,6 +9,7 @@
 			<requirement name="HoldingItemHasTags" tags="melee"/>
 			<triggered_effect trigger="onSelfPrimaryActionStart" action="ModifyCVar" cvar="aposPower" operation="set" value="0"/>
 			<triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="aposPower" operation="set" value="1"/>
+			<triggered_effect trigger="onSelfSecondaryActionStart" action="ModifyCVar" cvar="aposPowerN" operation="add" value="1"/>
 		</effect_group>
 
 		<!-- ===== Batons, spears, knuckles: traits and mastery trees in Source/AposBaton.cs, AposSpear.cs, AposKnuckles.cs ===== -->
