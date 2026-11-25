@@ -154,6 +154,7 @@ public static class AposBaton
                     if (extra.Count < jumps && !hit.Contains(e) && !extra.Contains(e)) extra.Add(e);
             hit.AddRange(extra);
         }
+        AposFx3D.Discharge(AposFx3D.Chest(center), radius, hit);
         int stormDmg = R("A8") > 0 ? Mathf.Max(1, Mathf.RoundToInt(blow * 0.4f)) : 0;
         int fed = 0;
         bool killed = false;

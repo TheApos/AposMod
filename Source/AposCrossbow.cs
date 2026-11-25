@@ -206,6 +206,7 @@ public static class AposCrossbow
         bool bodyMarked = c.Body != null && Marked(c.Body);
         List<EntityAlive> hit = new List<EntityAlive>(AposBowTree.Around(pos, radius));
         AposFx.Blast(pos + Vector3.up * (c.Body != null ? 1f : 0.3f));
+        AposFx3D.Boom(pos + Vector3.up * 0.5f, radius);
         if (c.Body != null && !c.Body.IsDead()) c.Body.Buffs.AddBuff("buffAposChainBlast");
         else if (hit.Count > 0) hit[0].Buffs.AddBuff("buffAposChainBlast");
         int b3 = R("B3"), b6 = R("B6");

@@ -275,7 +275,9 @@ public static class AposBowTree
         {
             Debug.LogWarning("[AposMod] Shock Trap effect: " + e.Message);
         }
-        foreach (EntityAlive e in new List<EntityAlive>(Around(m.Pos, radius)))
+        List<EntityAlive> near = new List<EntityAlive>(Around(m.Pos, radius));
+        AposFx3D.Discharge(at, radius, near);
+        foreach (EntityAlive e in near)
         {
             AposSplash.Deal(e, d, player.entityId, EnumDamageTypes.Electrical);
             if (!e.IsDead()) e.Buffs.AddBuff("buffShocked", -1, true, false, r2 ? 4f : 2f);

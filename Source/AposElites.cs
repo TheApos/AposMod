@@ -482,7 +482,7 @@ public class AposElites : MonoBehaviour
     // upwards, a thin ring on the ground and a slow pulse (Pulse, every frame). Additive when the shader exists.
     static Texture2D beamTex;
 
-    static Material BeamMaterial()
+    public static Material BeamMaterial()
     {
         if (beamMaterial != null) return beamMaterial;
         Shader shader = Shader.Find("Legacy Shaders/Particles/Additive") ?? Shader.Find("Sprites/Default");
