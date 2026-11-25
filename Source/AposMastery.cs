@@ -75,15 +75,17 @@ public class AposMastery : MonoBehaviour
         public int Tier;
         public int Max;
         public int Need;
+        public string Icon; // a vanilla UI sprite: ui_game_symbol_<Icon>
     }
 
-    // "id branch tier ranks [need]" separated by |; order = order in the window (A1..A8, B1..B8, H1..H3)
+    // "id branch tier ranks need icon" separated by |; order = order in the window (A1..A8, B1..B8, H1..H3);
+    // need = hybrid points in each branch (0 for A / B), icon = ui_game_symbol_<icon>
     static readonly string[] TreeText =
     {
         // Pistols / SMG: A Headhunter, B Lead Storm (AposPistol.cs)
-        "A1 A 1 3|A2 A 1 3|A3 A 2 3|A4 A 2 3|A5 A 3 1|A6 A 3 2|A7 A 4 2|A8 A 5 1|" +
-        "B1 B 1 3|B2 B 1 3|B3 B 2 3|B4 B 2 3|B5 B 3 1|B6 B 3 2|B7 B 4 2|B8 B 5 1|" +
-        "H1 H 3 1 5|H2 H 4 1 5|H3 H 5 1 8",
+        "A1 A 1 3 0 sight|A2 A 1 3 0 hand|A3 A 2 3 0 shape_ammo|A4 A 2 3 0 cold|A5 A 3 1 0 search|A6 A 3 2 0 critical|A7 A 4 2 0 skull|A8 A 5 1 0 gunslinger|" +
+        "B1 B 1 3 0 speed|B2 B 1 3 0 add|B3 B 2 3 0 swap|B4 B 2 3 0 twitch_slow|B5 B 3 1 0 hot|B6 B 3 2 0 bundle|B7 B 4 2 0 twitch_strength_ranged|B8 B 5 1 0 twitch_infinite_ammo|" +
+        "H1 H 3 1 5 run_and_gun|H2 H 4 1 5 pistol|H3 H 5 1 8 explosion",
         null, null, null, null, null, null, null, null, null, null, null,
     };
 
@@ -109,6 +111,7 @@ public class AposMastery : MonoBehaviour
                     Tier = int.Parse(f[2], CultureInfo.InvariantCulture),
                     Max = int.Parse(f[3], CultureInfo.InvariantCulture),
                     Need = f.Length > 4 ? int.Parse(f[4], CultureInfo.InvariantCulture) : 0,
+                    Icon = f.Length > 5 ? "ui_game_symbol_" + f[5] : "ui_game_symbol_skills",
                 };
             }
         }
@@ -127,6 +130,11 @@ public class AposMastery : MonoBehaviour
     }
 
     public static bool HasTree(int cls) { return cls >= 0 && Trees[cls].Length > 0; }
+
+    // class trait icon in the window
+    static readonly string[] ClassIcons =
+        { "head_shot", "shotgun", "rifle", "run_and_gun", "archery", "archery", "knife", "club", "sledge", "spear", "boxer", "electric_power" };
+    public static string ClassIcon(int cls) { return "ui_game_symbol_" + ClassIcons[cls]; }
 
     // ===== progress per class =====
     public class Progress
@@ -571,7 +579,16 @@ public class XUiC_AposMastery : XUiController
 {
     const int NodeCount = 20;
     readonly XUiC_SimpleButton[] nodes = new XUiC_SimpleButton[NodeCount];
-    XUiV_Label weaponLabel, levelLabel, pointsLabel, nodeTitle, nodeDesc, resetHint, branchA, branchB;
+    XUiV_Label weaponLabel, levelLabel, pointsLabel, nodeTitle, nodeSub, nodeDesc, resetHint, branchA, branchB, branchH;
+    XUiV_Sprite barA, barB, barLevel, detailIcon;
+    readonly XUiV_Label[] tierA = new XUiV_Label[6], tierB = new XUiV_Label[6];
+    // per node: border, selection frame, icon, rank pips
+    readonly XUiV_Sprite[] border = new XUiV_Sprite[NodeCount], sel = new XUiV_Sprite[NodeCount], icon = new XUiV_Sprite[NodeCount];
+    readonly XUiV_Sprite[,] pips = new XUiV_Sprite[NodeCount, 3];
+
+    static readonly Color Gold = new Color(1f, 0.82f, 0.3f), GoldDim = new Color(0.75f, 0.6f, 0.25f), Green = new Color(0.45f, 1f, 0.45f),
+        Grey = new Color(0.55f, 0.55f, 0.55f), Dark = new Color(0.28f, 0.28f, 0.28f), Cap = new Color(1f, 0.55f, 0.15f),
+        PipOff = new Color(0.24f, 0.24f, 0.24f);
     XUiC_SimpleButton learn, resetOne, resetAll;
     int selected = -1; // node index (0 = class trait)
     float nextRefresh, nextForgeCheck;
@@ -588,10 +605,26 @@ public class XUiC_AposMastery : XUiController
         resetHint = Label(this, "lblResetHint");
         branchA = Label(this, "lblBranchA");
         branchB = Label(this, "lblBranchB");
+        branchH = Label(this, "lblBranchH");
+        nodeSub = Label(this, "lblNodeSub");
+        barA = Sprite(this, "barBranchA");
+        barB = Sprite(this, "barBranchB");
+        barLevel = Sprite(this, "barLevel");
+        detailIcon = Sprite(this, "detailIcon");
+        for (int t = 2; t <= 5; t++)
+        {
+            tierA[t] = Label(this, "lblTierA" + t);
+            tierB[t] = Label(this, "lblTierB" + t);
+        }
         for (int i = 0; i < nodes.Length; i++)
         {
             int n = i;
             nodes[i] = Button("btnNode" + i, () => selected = n);
+            if (nodes[i] == null) continue;
+            border[i] = Sprite(nodes[i], "border");
+            sel[i] = Sprite(nodes[i], "sel");
+            icon[i] = Sprite(nodes[i], "icon");
+            for (int k = 0; k < 3; k++) pips[i, k] = Sprite(nodes[i], "pip" + (k + 1));
         }
         learn = Button("btnLearn", () =>
         {
@@ -633,6 +666,22 @@ public class XUiC_AposMastery : XUiController
         }
         b.OnPressed += (_sender, _mouseButton) => { onPress(); Refresh(); };
         return b;
+    }
+
+    static XUiV_Sprite Sprite(XUiController parent, string id)
+    {
+        XUiController c = parent.GetChildById(id);
+        return c != null ? c.ViewComponent as XUiV_Sprite : null;
+    }
+
+    static void Paint(XUiV_Sprite s, Color c)
+    {
+        if (s != null && s.Color != c) s.Color = c;
+    }
+
+    static void ShowView(XUiView v, bool on)
+    {
+        if (v != null && v.IsVisible != on) v.IsVisible = on;
     }
 
     static XUiV_Label Label(XUiController parent, string id)
@@ -706,7 +755,7 @@ public class XUiC_AposMastery : XUiController
         if (cls < 0)
         {
             SetLabel(weaponLabel, L("aposMasteryNoWeapon"));
-            foreach (XUiV_Label l in new[] { levelLabel, pointsLabel, nodeTitle, nodeDesc, resetHint, branchA, branchB }) SetLabel(l, "");
+            foreach (XUiV_Label l in new[] { levelLabel, pointsLabel, nodeTitle, nodeSub, nodeDesc, resetHint, branchA, branchB, branchH }) SetLabel(l, "");
             for (int i = 0; i < nodes.Length; i++) Show(nodes[i], false);
             Enable(learn, false); Enable(resetOne, false); Enable(resetAll, false);
             return;
@@ -714,48 +763,86 @@ public class XUiC_AposMastery : XUiController
 
         AposMastery.Skill[] tree = AposMastery.Trees[cls];
         AposMastery.Progress pr = AposMastery.Get(cls);
-        int level = AposMastery.Level(pr), spent = AposMastery.Spent(pr);
+        int level = AposMastery.Level(pr), spent = AposMastery.Spent(pr), free = level - spent;
         bool hasTree = tree.Length > 0;
+        string cName = AposMastery.Classes[cls];
 
-        SetLabel(weaponLabel, L("aposMasteryClass" + AposMastery.Classes[cls]));
+        // info panel header: class, level, kills, bar to the next level, free points
+        SetLabel(weaponLabel, L("aposMasteryClass" + cName));
         string next = level < AposMastery.MaxLevel
             ? string.Format(L("aposMasteryKills"), pr.Kills, AposMastery.KillsFor[level])
             : string.Format(L("aposMasteryKillsMax"), pr.Kills);
         SetLabel(levelLabel, string.Format(L("aposMasteryLevel"), level, AposMastery.MaxLevel) + "\n" + next);
-        SetLabel(pointsLabel, hasTree ? string.Format(L("aposMasteryPoints"), level - spent, spent) : "");
-        string bKey = "aposMB_" + AposMastery.Classes[cls] + "_";
-        SetLabel(branchA, hasTree ? "[E0A040]A · " + L(bKey + "A") + "[-]  " + AposMastery.PointsIn(cls, 'A', 99) : "");
-        SetLabel(branchB, hasTree ? "[50A8E0]B · " + L(bKey + "B") + "[-]  " + AposMastery.PointsIn(cls, 'B', 99) : "");
+        if (barLevel != null)
+        {
+            int from = level == 0 ? 0 : AposMastery.KillsFor[level - 1];
+            barLevel.Fill = level >= AposMastery.MaxLevel ? 1f : Mathf.Clamp01((pr.Kills - from) / (float)(AposMastery.KillsFor[level] - from));
+        }
+        SetLabel(pointsLabel, hasTree ? string.Format(L("aposMasteryPoints"), free > 0 ? "[7CFF7C]" + free + "[-]" : "0", spent) : "");
+
+        // branch headers, bars (18 ranks per branch) and the tier thresholds on the branch spines
+        string bKey = "aposMB_" + cName + "_";
+        int pa = hasTree ? AposMastery.PointsIn(cls, 'A', 99) : 0, pb = hasTree ? AposMastery.PointsIn(cls, 'B', 99) : 0;
+        SetLabel(branchA, hasTree ? "[E0A040]A · " + L(bKey + "A") + "[-]  " + pa : "");
+        SetLabel(branchB, hasTree ? "[50A8E0]B · " + L(bKey + "B") + "[-]  " + pb : "");
+        SetLabel(branchH, hasTree ? "[C0C0C0]" + L("aposMasteryHybrids") + "[-]" : "");
+        if (barA != null) barA.Fill = hasTree ? Mathf.Clamp01(pa / 18f) : 0f;
+        if (barB != null) barB.Fill = hasTree ? Mathf.Clamp01(pb / 18f) : 0f;
+        for (int t = 2; t <= 5; t++)
+        {
+            int need = AposMastery.TierNeed[t];
+            SetLabel(tierA[t], hasTree ? (AposMastery.PointsIn(cls, 'A', t) >= need ? "[FFD24D]" : "[808080]") + need + "[-]" : "");
+            SetLabel(tierB[t], hasTree ? (AposMastery.PointsIn(cls, 'B', t) >= need ? "[FFD24D]" : "[808080]") + need + "[-]" : "");
+        }
 
         // node 0 = class trait; nodes 1.. = skills
-        SetText(nodes[0], (selected == 0 ? "> " : "") + "[FFD24D]" + L(AposMastery.SkillKey(cls, "Base")) + "[-]");
         Show(nodes[0], true);
+        SetText(nodes[0], "[A0A0A0]" + L("aposMasteryBaseShort") + "[-]\n[FFD24D]" + L(AposMastery.SkillKey(cls, "Base")) + "[-]");
+        if (icon[0] != null) icon[0].SpriteName = AposMastery.ClassIcon(cls);
+        ShowView(sel[0], selected == 0);
         for (int i = 1; i < nodes.Length; i++)
         {
             int s = i - 1;
             if (s >= tree.Length) { Show(nodes[i], false); continue; }
             Show(nodes[i], true);
+            AposMastery.Skill sk = tree[s];
             int r = pr.Ranks[s];
-            string color = r >= tree[s].Max ? "[FFD24D]" : r > 0 ? "[F0C060]" : AposMastery.CanLearn(cls, s) ? "[7CFF7C]"
-                : AposMastery.Unlocked(cls, s) ? "[D8D8D8]" : "[808080]";
-            string text = color + L(AposMastery.SkillKey(cls, tree[s].Id)) + "\n" + r + "/" + tree[s].Max + "[-]";
-            if (i == selected) text = "> " + text;
-            SetText(nodes[i], text);
+            bool can = AposMastery.CanLearn(cls, s), open = AposMastery.Unlocked(cls, s), capstone = sk.Tier == 5 && sk.Branch != 'H';
+            // border: gold = all ranks, dim gold = some ranks, green = can learn now, grey = open, dark = locked;
+            // a capstone not learned yet is orange
+            Color frame = r >= sk.Max ? Gold : r > 0 ? GoldDim : can ? Green : open ? Grey : Dark;
+            if (capstone && r == 0 && !can) frame = open ? Cap : new Color(0.45f, 0.28f, 0.1f);
+            Paint(border[i], frame);
+            if (icon[i] != null && icon[i].SpriteName != sk.Icon) icon[i].SpriteName = sk.Icon;
+            Paint(icon[i], r > 0 ? Gold : open ? new Color(0.85f, 0.85f, 0.85f) : new Color(0.4f, 0.4f, 0.4f));
+            for (int k = 0; k < 3; k++)
+            {
+                ShowView(pips[i, k], k < sk.Max);
+                Paint(pips[i, k], k < r ? Gold : can && k == r ? new Color(0.3f, 0.6f, 0.3f) : PipOff);
+            }
+            string nameColor = r > 0 ? "[FFD24D]" : can ? "[A0FFA0]" : open ? "[E0E0E0]" : "[8A8A8A]";
+            SetText(nodes[i], nameColor + L(AposMastery.SkillKey(cls, sk.Id)) + "[-]");
+            ShowView(sel[i], i == selected);
         }
 
         if (!hasTree)
         {
+            if (detailIcon != null) detailIcon.SpriteName = AposMastery.ClassIcon(cls);
             SetLabel(nodeTitle, "");
+            SetLabel(nodeSub, "");
             SetLabel(nodeDesc, "[A0A0A0]" + L("aposMasterySoon") + "[-]");
             Enable(learn, false); Enable(resetOne, false); Enable(resetAll, false);
             SetLabel(resetHint, "");
             return;
         }
 
+        string hint = nearForge ? "" : "[A0A0A0]" + L("aposMasteryResetHint") + "[-]";
         if (selected == 0)
         {
+            if (detailIcon != null) detailIcon.SpriteName = AposMastery.ClassIcon(cls);
             SetLabel(nodeTitle, "[FFD24D]" + L(AposMastery.SkillKey(cls, "Base")) + "[-]");
-            SetLabel(nodeDesc, L(AposMastery.SkillKey(cls, "Base") + "_D") + "\n\n[A0A0A0]" + L("aposMasteryBaseHint") + "[-]");
+            SetLabel(nodeSub, "[A0A0A0]" + L("aposMasteryBaseHint") + "[-]");
+            SetLabel(nodeDesc, L(AposMastery.SkillKey(cls, "Base") + "_D"));
             Enable(learn, false);
             Enable(resetOne, false);
         }
@@ -765,13 +852,18 @@ public class XUiC_AposMastery : XUiController
             AposMastery.Skill sk = tree[s];
             string key = AposMastery.SkillKey(cls, sk.Id);
             int r = pr.Ranks[s];
+            if (detailIcon != null) detailIcon.SpriteName = sk.Icon;
             SetLabel(nodeTitle, "[FFD24D]" + L(key) + "[-]  " + r + "/" + sk.Max);
+            string where = sk.Branch == 'H'
+                ? string.Format(L("aposMasterySubHybrid"), sk.Need)
+                : string.Format(L("aposMasterySubTier"), sk.Branch, L(bKey + sk.Branch), sk.Tier);
+            SetLabel(nodeSub, "[A0A0A0]" + where + "[-]");
             StringBuilder sb = new StringBuilder(L(key + "_D"));
             sb.Append("\n");
             for (int k = 1; k <= sk.Max; k++)
             {
-                string line = k + "/" + sk.Max + ": " + L(key + "_R" + k);
-                sb.Append('\n').Append(k <= r ? "[FFD24D]" + line + "[-]" : k == r + 1 ? line : "[A0A0A0]" + line + "[-]");
+                string line = L(key + "_R" + k);
+                sb.Append('\n').Append(k <= r ? "[FFD24D]+ " + line + "[-]" : k == r + 1 ? "[FFFFFF]> " + line + "[-]" : "[808080]  " + line + "[-]");
             }
             string state;
             if (r >= sk.Max) state = L("aposMasteryMaxed");
@@ -779,17 +871,16 @@ public class XUiC_AposMastery : XUiController
                 state = sk.Branch == 'H'
                     ? string.Format(L("aposMasteryNeedHybrid"), sk.Need, AposMastery.PointsIn(cls, 'A', 99), AposMastery.PointsIn(cls, 'B', 99))
                     : string.Format(L("aposMasteryNeedTier"), AposMastery.TierNeed[sk.Tier], sk.Branch, AposMastery.PointsIn(cls, sk.Branch, sk.Tier));
-            else if (level - spent <= 0) state = L("aposMasteryNoPoints");
+            else if (free <= 0) state = L("aposMasteryNoPoints");
             else state = "";
-            if (state != "") sb.Append("\n\n[A0A0A0]").Append(state).Append("[-]");
+            if (state != "") sb.Append("\n\n[FF9060]").Append(state).Append("[-]");
             SetLabel(nodeDesc, sb.ToString());
             Enable(learn, AposMastery.CanLearn(cls, s));
             Enable(resetOne, nearForge && AposMastery.CanResetSkill(cls, s) && XUiC_AposForge.Count(p, AposElites.Eridium) >= AposMastery.ResetOneCost);
-            if (r > 0 && !AposMastery.CanResetSkill(cls, s)) SetLabel(resetHint, "[A0A0A0]" + L("aposMasteryResetBlocked") + "[-]");
+            if (r > 0 && !AposMastery.CanResetSkill(cls, s)) hint = "[A0A0A0]" + L("aposMasteryResetBlocked") + "[-]";
         }
         Enable(resetAll, nearForge && spent > 0 && XUiC_AposForge.Count(p, AposElites.Eridium) >= AposMastery.ResetAllCost);
-        if (selected <= 0 || pr.Ranks[selected - 1] == 0 || AposMastery.CanResetSkill(cls, selected - 1))
-            SetLabel(resetHint, nearForge ? "" : "[A0A0A0]" + L("aposMasteryResetHint") + "[-]");
+        SetLabel(resetHint, hint);
     }
 
     static void Enable(XUiC_SimpleButton b, bool on)
