@@ -624,7 +624,18 @@
 				<passive_effect name="SpreadMultiplierHip" operation="perc_add" value="@aposMSpread"/>
 				<passive_effect name="KickDegreesVerticalMin" operation="perc_add" value="@aposMSpread"/>
 				<passive_effect name="KickDegreesVerticalMax" operation="perc_add" value="@aposMSpread"/>
+				<!-- shotgun tree: set by C# only for the ammo loaded (slug: pierce; buckshot: pellets, spread, range) -->
+				<passive_effect name="EntityPenetrationCount" operation="base_add" value="@aposMPierce"/>
+				<passive_effect name="RoundRayCount" operation="base_add" value="@aposMRays"/>
+				<passive_effect name="SpreadDegreesVertical" operation="perc_add" value="@aposMBuckSpread"/>
+				<passive_effect name="SpreadDegreesHorizontal" operation="perc_add" value="@aposMBuckSpread"/>
+				<passive_effect name="MaxRange" operation="base_add" value="@aposMRange"/>
 			</effect_group>
+		</buff>
+		<!-- shotgun mastery "Shattered": knocked down by a shotgun, +50% damage from everyone (Source/AposCombat.cs) -->
+		<buff name="buffAposShattered" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="5"/>
 		</buff>
 		<!-- old Weapon Mastery "Haste" node (gone in 2.0): kept empty so saves that still carry it load cleanly -->
 		<buff name="buffAposMasteryHaste" hidden="true">

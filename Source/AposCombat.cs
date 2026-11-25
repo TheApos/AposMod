@@ -103,6 +103,7 @@ public static class AposCombat
         }
         // Weapon Mastery: hit nodes and kill progress (AposMastery.cs)
         leech += AposMastery.AfterHit(attacker, target, source, response, dealt);
+        if (AposShotgun.TakeShred() && !response.Fatal) response.Dismember = true; // Shred: 7 pellets in one zombie
         if (response.Fatal) AposMastery.CountKill(attacker, target);
         if (leech > 0f)
         {
@@ -121,11 +122,6 @@ public static class AposCombat
                     if (AposSplash.IsLocal(attacker.entityId)) AposReactions.Add(AposReactions.Overkill, excess, 1);
                     Splash(next, excess, attacker.entityId);
                 }
-            }
-            if (weaponClass.ItemTags.Test_AnySet(ShotgunTag) && AposAffixes.Level(attacker, "perkBoomstick") >= 5
-                && attacker.inventory.holdingItem == weaponClass)
-            {
-                AposAmmo.LoadRounds(attacker as EntityPlayerLocal, 2);
             }
             // Demolitions Expert 5 "Chain Reaction": a zombie killed by your explosive blows up too
             if (IsExplosive(weaponClass) && AposAffixes.Level(attacker, "perkDemolitionsExpert") >= 5)
@@ -239,6 +235,11 @@ public static class AposCombatDamagePatch
         {
             _strength = AposShadow.OnPlayerHit(attacker, __instance, _damageSource, _strength);
             _strength = AposMastery.ModifyHit(attacker, __instance, _damageSource, _strength); // Weapon Mastery
+        }
+        // shotgun mastery "Shattered": a zombie knocked down by a shotgun takes +50% from everyone, any weapon
+        if (_damageSource != null && __instance.Buffs != null && __instance.Buffs.HasBuff("buffAposShattered") && AposSplash.Depth == 0)
+        {
+            _strength = Mathf.RoundToInt(_strength * 1.5f);
         }
     }
 

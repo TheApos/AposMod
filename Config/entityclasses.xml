@@ -358,6 +358,12 @@
 			<triggered_effect trigger="onSelfPrimaryActionMissEntity" action="ModifyCVar" cvar="aposPMiss" operation="add" value="1"/>
 		</effect_group>
 
+		<!-- ===== Shotguns: the mastery tree lives in Source/AposShotgun.cs; XML only reports shots (aposSShot) ===== -->
+		<effect_group name="AposMod shotgun events">
+			<requirement name="HoldingItemHasTags" tags="perkBoomstick"/>
+			<triggered_effect trigger="onSelfRangedBurstShotStart" action="ModifyCVar" cvar="aposSShot" operation="add" value="1"/>
+		</effect_group>
+
 		<!-- ===== Rifles: "Ricochet" — scales with Dead Eye ===== -->
 		<!-- A headshot hurts every zombie near the hit point (5/7/9/11/13/15 m by level) for 20 + 10 per level HP (aposSplashDmg on each target).
 		     positionAOE = around the hit position (same targeting the molotov uses) -->

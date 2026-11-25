@@ -86,7 +86,11 @@ public class AposMastery : MonoBehaviour
         "A1 A 1 3 0 sight|A2 A 1 3 0 hand|A3 A 2 3 0 shape_ammo|A4 A 2 3 0 cold|A5 A 3 1 0 search|A6 A 3 2 0 critical|A7 A 4 2 0 skull|A8 A 5 1 0 gunslinger|" +
         "B1 B 1 3 0 speed|B2 B 1 3 0 add|B3 B 2 3 0 swap|B4 B 2 3 0 twitch_slow|B5 B 3 1 0 hot|B6 B 3 2 0 bundle|B7 B 4 2 0 twitch_strength_ranged|B8 B 5 1 0 twitch_infinite_ammo|" +
         "H1 H 3 1 5 run_and_gun|H2 H 4 1 5 pistol|H3 H 5 1 8 explosion",
-        null, null, null, null, null, null, null, null, null, null, null,
+        // Shotguns: A slugs, B buckshot (AposShotgun.cs)
+        "A1 A 1 3 0 shape_ammo|A2 A 1 3 0 muscle|A3 A 2 3 0 destruction|A4 A 2 3 0 arrow_right|A5 A 3 1 0 brokenbone|A6 A 3 2 0 bundle|A7 A 4 2 0 stunned|A8 A 5 1 0 hard_target|" +
+        "B1 B 1 3 0 shape_round|B2 B 1 3 0 wind|B3 B 2 3 0 laceration|B4 B 2 3 0 speed|B5 B 3 1 0 broken_arm|B6 B 3 2 0 drop|B7 B 4 2 0 defense|B8 B 5 1 0 fire|" +
+        "H1 H 3 1 5 concussion|H2 H 4 1 5 twitch_hurt|H3 H 5 1 8 explosion",
+        null, null, null, null, null, null, null, null, null, null,
     };
 
     public static readonly Skill[][] Trees = ParseTrees();
@@ -259,8 +263,10 @@ public class AposMastery : MonoBehaviour
     static void Changed() { RankVersion++; }
 
     // stat cvars read by buffAposMastery (buffs.xml); the held class's file sets them every frame, otherwise they are 0
-    public const int StatDmg = 0, StatSpeed = 1, StatReload = 2, StatSpread = 3, StatMag = 4;
-    static readonly string[] StatVars = { "aposMDmg", "aposMSpeed", "aposMReload", "aposMSpread", "aposMMagAdd" };
+    public const int StatDmg = 0, StatSpeed = 1, StatReload = 2, StatSpread = 3, StatMag = 4,
+                     StatPierce = 5, StatRays = 6, StatBuckSpread = 7, StatRange = 8;
+    static readonly string[] StatVars = { "aposMDmg", "aposMSpeed", "aposMReload", "aposMSpread", "aposMMagAdd",
+                                          "aposMPierce", "aposMRays", "aposMBuckSpread", "aposMRange" };
     static readonly float[] stats = new float[StatVars.Length];
 
     public static void SetStat(int stat, float value) { stats[stat] = value; }
@@ -272,6 +278,7 @@ public class AposMastery : MonoBehaviour
         Array.Clear(stats, 0, stats.Length);
         AposHud.Begin();
         AposPistol.Tick(player, HeldClass == Pistols);
+        AposShotgun.Tick(player, HeldClass == Shotguns);
         for (int i = 0; i < StatVars.Length; i++)
         {
             if (player.Buffs.GetCustomVar(StatVars[i]) != stats[i]) player.Buffs.SetCustomVar(StatVars[i], stats[i]);
@@ -325,6 +332,7 @@ public class AposMastery : MonoBehaviour
     {
         if (!IsLocalWeaponHit(attacker, target, source)) return strength;
         if (HeldClass == Pistols) return AposPistol.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
+        if (HeldClass == Shotguns) return AposShotgun.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
         return strength;
     }
 
@@ -333,6 +341,7 @@ public class AposMastery : MonoBehaviour
     {
         if (!IsLocalWeaponHit(attacker, target, source)) return 0f;
         if (HeldClass == Pistols) AposPistol.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
+        if (HeldClass == Shotguns) AposShotgun.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
         return 0f;
     }
 
@@ -372,7 +381,9 @@ public class AposMastery : MonoBehaviour
         if (Event.current.type == EventType.Repaint)
         {
             GameManager gm = GameManager.Instance;
-            AposPistol.Draw(gm != null && gm.World != null ? gm.World.GetPrimaryPlayer() : null);
+            EntityPlayerLocal lp = gm != null && gm.World != null ? gm.World.GetPrimaryPlayer() : null;
+            AposPistol.Draw(lp);
+            AposShotgun.Draw(lp);
         }
         float t = Time.time - bannerStart;
         if (t > BannerTime || bannerTitle == null || Event.current.type != EventType.Repaint) return;
@@ -425,6 +436,7 @@ public class AposMastery : MonoBehaviour
             file = null;
             HeldClass = -1;
             AposPistol.Reset();
+            AposShotgun.Reset();
             AposMasteryBadgePatch.Forget();
             hintRect = null;
             return;

@@ -17,7 +17,7 @@ $traits = @{
   spear  = T 'Battering Ram' 'Normal hit: pushes the target back (harder with Spear Master).\nPower attack: pierces 1 zombie behind the target, +1 per Spear Master level (up to 6), and throws each of them back.'
   knuck  = T 'Counter Punch' 'Taking damage fills Counter Punch charges (2 + The Brawler level), no time limit:\n- normal punch: +25% damage, spends 1 charge (The Brawler: chance to gain a charge);\n- power attack: spends all charges, +50% damage per charge, knocks down.'
   pipe   = T 'Veteran Junk' 'Every kill with a pipe weapon: +2% damage for all pipe weapons (max +1000%).\nRepair with Scrap Iron.'
-  slug   = T 'Slug Knockback' 'Slug and Breaching Slug rounds throw zombies back and knock them down.\nBuckshot does the same point blank (within 3 m); the force grows with Boomstick.'
+  slug   = T 'Slug Knockback' 'Slug and Breaching Slug rounds throw zombies back and knock them down.\nBuckshot does the same point blank (within 3 m). Upgrades: the shotgun mastery tree (Alt+K).'
   nade   = T 'Wide Blast' 'Blast radius against zombies x3. Block damage radius is unchanged.'
   molo   = T 'Busy Burning' 'Burning zombies move 70% slower and lose 4% of their max health every second (at least 15), on top of the normal fire. The fire lasts twice as long.'
   rocket = T 'Early Artillery' 'Sold by traders and found in loot from the start of the game.\nThe final loot chest of every POI contains rockets: 1 at tier 1 up to 4-6 at tier 5.'
@@ -35,7 +35,7 @@ $traitsRu = @{
   spear  = T 'Таран' 'Обычный удар: отталкивает цель (сильнее с «Мастером копья»).\nСиловая атака: пробивает 1 зомби за целью, +1 за каждый уровень «Мастера копья» (до 6), и отбрасывает каждого.'
   knuck  = T 'Контрудар' 'Получая урон, вы набираете заряды Контрудара (2 + уровень «Драчуна»), без ограничения по времени:\n- обычный удар: +25% урона, тратит 1 заряд («Драчун»: шанс получить заряд);\n- силовая атака: тратит все заряды, +50% урона за заряд, сбивает с ног.'
   pipe   = T 'Ветеран-самоделка' 'Каждое убийство самодельным оружием: +2% урона всему самодельному оружию (максимум +1000%).\nЧинится металлоломом.'
-  slug   = T 'Отбрасывание пулей' 'Пули (Slug и Breaching Slug) отбрасывают зомби и сбивают с ног.\nДробь делает то же в упор (до 3 м); сила растёт с «Дробовиком».'
+  slug   = T 'Отбрасывание пулей' 'Пули (Slug и Breaching Slug) отбрасывают зомби и сбивают с ног.\nДробь делает то же в упор (до 3 м). Усиления — в дереве мастерства дробовика (Alt+K).'
   nade   = T 'Широкий взрыв' 'Радиус поражения зомби x3. Радиус разрушения блоков без изменений.'
   molo   = T 'Заняты горением' 'Горящие зомби двигаются на 70% медленнее и каждую секунду теряют 4% максимального здоровья (не меньше 15) сверх обычного огня. Огонь горит вдвое дольше.'
   rocket = T 'Ранняя артиллерия' 'Продаётся у торговцев и встречается в луте с начала игры.\nВ финальном сундуке каждого здания есть ракеты: 1 на уровне 1, до 4-6 на уровне 5.'
@@ -291,6 +291,10 @@ function Remove-LastSentence($t) {
   $first.Substring(0, $i + 1) + '\n' + $parts[1]
 }
 for ($L = 1; $L -le 5; $L++) {
+  $key = "perkBoomstickRank${L}LongDesc"
+  $extra[$key] = ($loc[$key] + '\n\n[FFB400]AposMod:[-] the slug throw and its upgrades are in the shotgun mastery tree: Alt+K.'), ($locRu[$key] + '\n\n[FFB400]AposMod:[-] отброс пулей и его усиления теперь в дереве мастерства дробовика: Alt+K.')
+}
+for ($L = 1; $L -le 5; $L++) {
   $key = "perkGunslingerRank${L}LongDesc"
   $en = $loc[$key]; $ru = $locRu[$key]
   if ($L -ge 3) { $en = Remove-LastSentence $en; $ru = Remove-LastSentence $ru }
@@ -310,7 +314,6 @@ $perkHighlights = [ordered]@{
   perkTreasureHunter     = 5, 'X Marks the Spot: the treasure search circle shrinks almost to a point, and buried treasure also holds a quality 5-6 weapon with affixes.', 'Крестик на карте: круг поиска клада сжимается почти до точки, а в кладе ещё и оружие 5-6 качества с аффиксами.'
   perkSalvageOperations  = 5, 'Junk Genius: salvage tools wear 90% slower.', 'Гений хлама: инструменты для разборки изнашиваются на 90% медленнее.'
   perkPerceptionMastery  = 5, 'Lucky Shot: a hit with a Perception weapon has a 15% chance to deal +100% damage.', 'Удачный выстрел: попадание оружием Восприятия с шансом 15% наносит +100% урона.'
-  perkBoomstick          = 5, 'Pump Action: every shotgun kill loads 2 shells into the magazine.', 'Помпа: каждое убийство из дробовика заряжает 2 патрона в магазин.'
   perkPackMule           = 5, 'Beast of Burden: an overloaded backpack no longer slows you down.', 'Вьючный зверь: перегруз больше не замедляет вас.'
   perkStrengthMastery    = 5, 'Crippling Blows: a club or sledgehammer power attack breaks the legs: the zombie crawls.', 'Калечащие удары: силовая атака дубинкой или кувалдой ломает ноги — зомби ползёт.'
   perkMiner69r           = 5, 'Tunnel Rat: mining tools cost 50% less stamina.', 'Туннельная крыса: инструменты добычи тратят на 50% меньше выносливости.'
@@ -579,6 +582,8 @@ foreach ($k in $masteryClasses.Keys) { $extra["aposMasteryClass$k"] = $masteryCl
 # Pistols / SMGs (Source/AposPistol.cs)
 $extra['aposMB_Pistols_A'] = 'Headhunter', 'Охотник за головами'
 $extra['aposMB_Pistols_B'] = 'Lead Storm', 'Свинцовый шквал'
+$extra['aposMB_Shotguns_A'] = 'Slugs', 'Пули'
+$extra['aposMB_Shotguns_B'] = 'Buckshot', 'Картечь'
 # id = name EN, name RU, description EN, description RU, then ranks: EN, RU pairs
 $masterySkills = [ordered]@{
   Pistols_Base = 'Headhunter', 'Охотник за головами', '5 headshots in a row start the Headhunter mode: the next 6 shots are empowered (+20% damage, almost no spread). A miss or a body hit breaks the streak. Branch A makes the mode stronger, branch B and the hybrids feed it from the side.', '5 попаданий в голову подряд включают режим Охотника: следующие 6 выстрелов усилены (+20% урона, почти без разброса). Промах или попадание в тело обрывает серию. Ветка A усиливает режим, ветка B и гибриды подпитывают его сбоку.'
@@ -601,6 +606,26 @@ $masterySkills = [ordered]@{
   Pistols_H1 = 'Firing Squad', 'Расстрел', 'Hybrid. Every 8th hit in a row without a miss counts as a headshot: headshot damage and +1 to the Headhunter streak. A hail of bullets starts the mode by itself.', 'Гибрид. Каждое 8-е попадание подряд без промаха считается выстрелом в голову: урон как в голову и +1 к серии Охотника. Шквал пуль сам включает режим.', 'Every 8th hit in a row = a headshot', 'Каждое 8-е попадание подряд = в голову'
   Pistols_H2 = 'Gunfighter', 'Ганфайтер', 'Hybrid. A headshot puts 1 round back into the magazine and gives +15% fire rate for 3 s.', 'Гибрид. Попадание в голову возвращает 1 патрон в магазин и даёт +15% темпа на 3 с.', 'Headshot: +1 round, +15% fire rate for 3 s', 'В голову: +1 патрон, +15% темпа на 3 с'
   Pistols_H3 = 'Blood Fireworks', 'Кровавый фейерверк', 'Big hybrid (8 points in each branch). A headshot kill in the Headhunter mode bursts the head: zombies within 3 m are slowed by 80% and stunned for 1 s, and you get +3 rounds in the magazine.', 'Большой гибрид (8 очков в каждой ветке). Убийство в голову в режиме Охотника разрывает голову: зомби в 3 м замедлены на 80% и оглушены на 1 с, а вам +3 патрона в магазин.', 'Headshot kill in the mode: head burst, 3 m slow and stun, +3 rounds', 'Убийство в голову в режиме: взрыв головы, 3 м замедление и оглушение, +3 патрона'
+  Shotguns_Base = 'Sledgehammer in the Barrel', 'Кувалда в стволе', 'Slugs (Slug, Breaching Slug) throw zombies back and knock them down (force 1000). Buckshot does it point blank (within 3 m, force 300). Elites stay on their feet. Branch A makes slugs stronger, branch B buckshot.', 'Пули (Slug, Breaching Slug) отбрасывают и сбивают зомби с ног (сила 1000). Картечь делает это в упор (до 3 м, сила 300). Элиты устоят. Ветка A усиливает пули, ветка B — картечь.'
+  Shotguns_A1 = 'Heavy Slug', 'Тяжёлая пуля', 'More slug damage (Slug and Breaching Slug).', 'Больше урона пулями (Slug и Breaching Slug).', 'Slugs +15% damage', 'Пули +15% урона', 'Slugs +30% damage', 'Пули +30% урона', 'Slugs +50% damage', 'Пули +50% урона'
+  Shotguns_A2 = 'Brawn', 'Мускулы', 'Stronger throw by slugs and point-blank buckshot. Strength = rank x your Strength level.', 'Сильнее отброс пулей и картечью в упор. Сила = ранг x уровень вашей Силы.', '+20 force x Strength (max +200)', '+20 силы x Сила (до +200)', '+35 x Strength (max +350)', '+35 x Сила (до +350)', '+50 x Strength (max +500)', '+50 x Сила (до +500)'
+  Shotguns_A3 = 'Battering Ram', 'Таран', 'A zombie thrown by a slug knocks down other zombies near where it lands.', 'Отброшенный пулей зомби сбивает с ног других зомби рядом с местом, куда упал.', 'Knocks down zombies within 1.5 m', 'Сбивает зомби в 1.5 м', 'Within 2 m', 'В 2 м', 'Within 2.5 m, each takes 25% of the slug damage', 'В 2.5 м, каждый получает 25% урона пули'
+  Shotguns_A4 = 'Through and Through', 'Навылет', 'A slug goes through zombies and flies on.', 'Пуля пробивает зомби и летит дальше.', 'Pierces 3 zombies', 'Пробивает 3 зомби', 'Pierces 6 zombies', 'Пробивает 6 зомби', 'Pierces 10 zombies', 'Пробивает 10 зомби'
+  Shotguns_A5 = 'Shattered', 'Разбитый', 'A zombie knocked down by a shotgun is Shattered (a red "x1.5" above it): while it lies and 3 s after it gets up, all damage to it is +50%, from anyone and any weapon.', 'Зомби, сбитый дробовиком, становится «Разбитым» (красное «x1.5» над ним): пока лежит и ещё 3 с после подъёма, весь урон по нему +50% — от кого угодно и любым оружием.', 'Knocked down by a shotgun: Shattered, +50% damage from everyone', 'Сбит дробовиком: «Разбитый», +50% урона от всех'
+  Shotguns_A6 = 'Pump Action', 'Помпа', 'A slug kill loads shells into the magazine.', 'Убийство пулей заряжает патроны в магазин.', 'Slug kill: +1 shell', 'Убийство пулей: +1 патрон', 'Slug kill: +2 shells', 'Убийство пулей: +2 патрона'
+  Shotguns_A7 = 'Bouncer', 'Вышибала', 'Zombies thrown by a slug stay down longer; at 2/2 elites fall too.', 'Отброшенные пулей зомби лежат дольше; на 2/2 падают и элиты.', 'Down 1.5 s longer', 'Лежат на 1.5 с дольше', 'Down 3 s longer; elites are knocked down too (1.5 s)', 'Лежат на 3 с дольше; элиты тоже падают (1.5 с)'
+  Shotguns_A8 = 'Cannonball', 'Пушечное ядро', 'Capstone. Slugs deal x2 damage, throw x2 and pierce everyone in the line. Downside: buckshot from this weapon -40% damage.', 'Капстоун. Пули наносят x2 урона, отбрасывают x2 и пробивают всех на линии. Минус: картечь этим оружием -40% урона.', 'Slugs x2 damage and throw, unlimited pierce; buckshot -40%', 'Пули x2 урона и отброса, пробивание без лимита; картечь -40%'
+  Shotguns_B1 = 'Extra Pellets', 'Больше картечи', 'More pellets, each weaker: about the same total damage, but more hits - more bleeding, fire and Shred, more zombies in the cone.', 'Больше картечин, каждая слабее: урон почти тот же, но больше попаданий — больше кровотечения, поджога и Разрыва, больше зомби в снопе.', '+3 pellets (13), each -25%', '+3 картечины (13), каждая -25%', '+6 pellets (16), each -50%', '+6 картечин (16), каждая -50%', '+10 pellets (20), each -60%', '+10 картечин (20), каждая -60%'
+  Shotguns_B2 = 'Wide Choke', 'Широкий сноп', 'Buckshot spreads wider and flies farther: more zombies in one shot.', 'Картечь разлетается шире и дальше: больше зомби за один выстрел.', '+30% spread, +2 m range', '+30% разлёта, +2 м дальности', '+60% spread, +4 m', '+60% разлёта, +4 м', '+100% spread, +6 m (10 -> 16 m)', '+100% разлёта, +6 м (10 -> 16 м)'
+  Shotguns_B3 = 'Ragged Wounds', 'Рваные раны', 'Every pellet may cause bleeding.', 'Каждая картечина может вызвать кровотечение.', '5% per pellet', '5% за картечину', '10% per pellet', '10% за картечину', '20% per pellet', '20% за картечину'
+  Shotguns_B4 = 'Quick Pump', 'Быстрая помпа', 'Fire rate and reload.', 'Темп стрельбы и перезарядка.', '+15% fire rate and reload', '+15% темпа и перезарядки', '+30%', '+30%', '+50%', '+50%'
+  Shotguns_B5 = 'Shred', 'Разрыв', 'If 7 or more pellets of one shot hit one zombie, it loses a limb and is stunned for 1 s.', 'Если 7 и больше картечин одного выстрела попали в одного зомби — он теряет конечность и оглушён на 1 с.', '7+ pellets in one zombie: a limb torn off, 1 s stun', '7+ картечин в одного: оторвана конечность, оглушение 1 с'
+  Shotguns_B6 = 'Bloodletting', 'Кровопуск', 'More damage to bleeding zombies.', 'Больше урона по кровоточащим зомби.', '+30% damage to bleeding', '+30% урона по кровоточащим', '+80%', '+80%'
+  Shotguns_B7 = 'Lead Wall', 'Свинцовая стена', 'A shot that hits 5 or more zombies pays off.', 'Выстрел, задевший 5 и больше зомби, вознаграждает.', '5+ zombies in one shot: +1 shell into the magazine', '5+ зомби за выстрел: +1 патрон в магазин', '+1 shell and the next shot +50% damage', '+1 патрон и следующий выстрел +50% урона'
+  Shotguns_B8 = 'Dragon''s Breath', 'Дыхание дракона', 'Capstone. Every pellet has a 20% chance to set the zombie on fire. Downside: slugs from this weapon -40% damage.', 'Капстоун. Каждая картечина с шансом 20% поджигает. Минус: пули этим оружием -40% урона.', 'Pellet: 20% to ignite; slugs -40%', 'Картечина: 20% поджога; пули -40%'
+  Shotguns_H1 = 'Shockwave', 'Ударная волна', 'Hybrid. A shotgun kill (any ammo) knocks down every zombie within 2.5 m of the body for 1.5 s.', 'Гибрид. Убийство из дробовика (любыми патронами) сбивает с ног всех зомби в 2.5 м от тела на 1.5 с.', 'Kill: knockdown within 2.5 m for 1.5 s', 'Убийство: сбивает всех в 2.5 м на 1.5 с'
+  Shotguns_H2 = 'Blood and Bone', 'Кровь и кости', 'Hybrid. Zombies knocked down by a shotgun start bleeding. A zombie that dies bleeding sprays blood: everyone within 3 m bleeds too.', 'Гибрид. Сбитые дробовиком зомби начинают кровоточить. Зомби, умерший с кровотечением, брызжет кровью: все в 3 м тоже кровоточат.', 'Knockdown -> bleeding; a death with bleeding spreads it within 3 m', 'Сбит -> кровотечение; смерть с кровотечением заражает всех в 3 м'
+  Shotguns_H3 = 'Frag Slug', 'Осколочная пуля', 'Big hybrid (8 points in each branch). A slug hit bursts into 6 fragments at the nearest zombies within 5 m: each like a pellet with branch B effects (bleeding, fire, Bloodletting).', 'Большой гибрид (8 очков в каждой ветке). Пуля после попадания разлетается на 6 осколков в ближайших зомби в 5 м: каждый как картечина с эффектами ветки B (кровотечение, поджог, Кровопуск).', 'Slug -> 6 fragments within 5 m with buckshot effects', 'Пуля -> 6 осколков в 5 м с эффектами картечи'
 }
 foreach ($k in $masterySkills.Keys) {
   $v = $masterySkills[$k]
