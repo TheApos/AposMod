@@ -29,7 +29,6 @@ public class AposModInit : IModApi
         GameObject go = new GameObject("AposDamageNumbers");
         Object.DontDestroyOnLoad(go);
         go.AddComponent<AposDamageNumbers>();
-        go.AddComponent<AposPin>();
         go.AddComponent<AposSplinter>();
         go.AddComponent<AposAmmo>();
         go.AddComponent<AposSurvival>();

@@ -376,16 +376,11 @@
 			<triggered_effect trigger="onSelfRangedBurstShotStart" action="ModifyCVar" cvar="aposMShot" operation="add" value="1"/>
 		</effect_group>
 
-		<!-- ===== Crossbows: "Mark" — your damage (any weapon) to a marked zombie: +20% + 20% per Archery level (to +120%) ===== -->
-		<!-- the mark itself is applied by the bolts (items.xml) -->
+		<!-- ===== Crossbows: "Mark" - your damage (any weapon) to a marked zombie: +aposMarkBonus (crossbow mastery tree,
+		     Source/AposCrossbow.cs sets it: 20% base, Deep Mark 35/50/80%, x2 with Hunting Party). The mark is put by the C# part. ===== -->
 		<effect_group name="AposMod crossbow mark bonus">
 			<requirement name="CVarCompare" cvar="aposMarked" operation="Equals" value="1" target="other"/>
-			<passive_effect name="EntityDamage" operation="perc_add" value=".2"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="0"/></passive_effect>
-			<passive_effect name="EntityDamage" operation="perc_add" value=".4"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="1"/></passive_effect>
-			<passive_effect name="EntityDamage" operation="perc_add" value=".6"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="2"/></passive_effect>
-			<passive_effect name="EntityDamage" operation="perc_add" value=".8"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="3"/></passive_effect>
-			<passive_effect name="EntityDamage" operation="perc_add" value="1"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="4"/></passive_effect>
-			<passive_effect name="EntityDamage" operation="perc_add" value="1.2"><requirement name="ProgressionLevel" progression_name="perkArchery" operation="Equals" value="5"/></passive_effect>
+			<passive_effect name="EntityDamage" operation="perc_add" value="@aposMarkBonus"/>
 		</effect_group>
 
 		<!-- ===== Robots: "Guardian Protocol" — scales with Robotics Inventor (perkTurrets) ===== -->

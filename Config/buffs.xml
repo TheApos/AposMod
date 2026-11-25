@@ -642,6 +642,25 @@
 				<passive_effect name="MaxRange" operation="base_add" value="@aposMRange"/>
 			</effect_group>
 		</buff>
+		<!-- bow mastery "Hunter's Wound": slows the zombie (aposWoundSlow, negative); the damage bonus is in Source/AposCombat.cs -->
+		<buff name="buffAposWound" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="8"/>
+			<effect_group>
+				<passive_effect name="WalkSpeed" operation="perc_add" value="@aposWoundSlow"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value="@aposWoundSlow"/>
+				<triggered_effect trigger="onSelfBuffRemove" action="RemoveCVar" cvar="aposWound,aposWoundDmg,aposWoundSlow"/>
+			</effect_group>
+		</buff>
+		<!-- bow mastery "Shadow": after a silent kill zombies do not notice you for 5 s -->
+		<buff name="buffAposBowShadow" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="5"/>
+			<effect_group>
+				<passive_effect name="NoiseMultiplier" operation="perc_add" value="-.9"/>
+				<passive_effect name="LightMultiplier" operation="perc_add" value="-.9"/>
+			</effect_group>
+		</buff>
 		<!-- shotgun mastery "Shattered": knocked down by a shotgun, +50% damage from everyone (Source/AposCombat.cs) -->
 		<buff name="buffAposShattered" hidden="true">
 			<stack_type value="replace"/>

@@ -105,6 +105,7 @@ public static class AposCombat
         leech += AposMastery.AfterHit(attacker, target, source, response, dealt);
         if (AposMastery.TakeDismember() && !response.Fatal) response.Dismember = true; // mastery: shotgun / MG Shred
         if (response.Fatal) AposMastery.CountKill(attacker, target);
+        if (response.Fatal && AposSplash.IsLocal(attacker.entityId)) AposCrossbow.OnMarkedKill(attacker as EntityPlayerLocal, target);
         if (leech > 0f)
         {
             int heal = Mathf.Max(1, Mathf.RoundToInt(dealt * Mathf.Min(leech, LeechCap)));
@@ -235,6 +236,19 @@ public static class AposCombatDamagePatch
         {
             _strength = AposShadow.OnPlayerHit(attacker, __instance, _damageSource, _strength);
             _strength = AposMastery.ModifyHit(attacker, __instance, _damageSource, _strength); // Weapon Mastery
+        }
+        // bow mastery "Hunter's Wound": +N% per wound to every attack of the local player (any weapon)
+        if (_damageSource != null && __instance.Buffs != null && AposSplash.Depth == 0 && __instance.Buffs.HasBuff("buffAposWound")
+            && AposSplash.IsLocal(_damageSource.getEntityId()))
+        {
+            _strength = Mathf.RoundToInt(_strength * (1f + __instance.Buffs.GetCustomVar("aposWoundDmg") * __instance.Buffs.GetCustomVar("aposWound")));
+        }
+        // crossbow mastery "Elemental Mark": elements on a marked zombie hit 50% harder
+        if (_damageSource != null && __instance.Buffs != null && AposSplash.IsLocal(_damageSource.getEntityId()) && AposCrossbow.ElementBonus(__instance))
+        {
+            EnumDamageTypes dt = _damageSource.GetDamageType();
+            if (dt == EnumDamageTypes.Heat || dt == EnumDamageTypes.Electrical || dt == EnumDamageTypes.Corrosive || dt == EnumDamageTypes.BloodLoss)
+                _strength = Mathf.RoundToInt(_strength * 1.5f);
         }
         // shotgun mastery "Shattered": a zombie knocked down by a shotgun takes +50% from everyone, any weapon
         if (_damageSource != null && __instance.Buffs != null && __instance.Buffs.HasBuff("buffAposShattered") && AposSplash.Depth == 0)

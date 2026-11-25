@@ -76,7 +76,7 @@ public static class AposRifle
     public static int ModifyHit(EntityPlayerLocal player, EntityAlive target, DamageSource source, int strength)
     {
         if (player == null) return strength;
-        bool realHead = (source.GetEntityDamageBodyPart(target) & EnumBodyPartHit.Head) != 0;
+        bool realHead = (source.GetEntityDamageBodyPart(target) & EnumBodyPartHit.Head) != 0 || AposCrossbow.BodyAsHead(target); // crossbow Weak Spot
         bool oneShot = R("A8") > 0;
         bool head = realHead || oneShot;
         float mult = 1f;

@@ -182,7 +182,7 @@ public static class AposPistol
             hitsInRow = 0;
             squad = !head;
         }
-        bool asHead = head || squad;
+        bool asHead = head || squad || AposCrossbow.BodyAsHead(target); // crossbow Weak Spot on a marked zombie
         if (squad) mult *= SquadHeadMult;
         if (asHead) mult += KeenEye[R("A1")];
 
