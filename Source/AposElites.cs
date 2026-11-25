@@ -452,7 +452,11 @@ public class AposElites : MonoBehaviour
         foreach (KeyValuePair<int, Transform> kv in glows)
         {
             if (kv.Value == null) goneGlows.Add(kv.Key);
-            else kv.Value.rotation = Quaternion.identity;
+            else
+            {
+                kv.Value.rotation = Quaternion.identity;
+                Pulse(kv.Value, kv.Key * 0.7f);
+            }
         }
         for (int i = 0; i < goneGlows.Count; i++)
         {
@@ -474,6 +478,40 @@ public class AposElites : MonoBehaviour
         return AposAffixes.Kind(ic) != 0 && iv.Stats != null && AposAffixes.Decompose(iv).Count > 0;
     }
 
+    // Borderlands-style beam: a soft wide glow (gradient texture across its width) with a bright thin core, both fading
+    // upwards, a thin ring on the ground and a slow pulse (Pulse, every frame). Additive when the shader exists.
+    static Texture2D beamTex;
+
+    static Material BeamMaterial()
+    {
+        if (beamMaterial != null) return beamMaterial;
+        Shader shader = Shader.Find("Legacy Shaders/Particles/Additive") ?? Shader.Find("Sprites/Default");
+        if (shader == null) return null;
+        beamTex = new Texture2D(4, 64, TextureFormat.RGBA32, false);
+        for (int y = 0; y < 64; y++)
+        {
+            float v = Mathf.Abs((y + 0.5f) / 64f * 2f - 1f);   // 0 in the middle of the beam's width, 1 at its edges
+            float a = Mathf.Pow(1f - v, 2.2f);
+            for (int x = 0; x < 4; x++) beamTex.SetPixel(x, y, new Color(1f, 1f, 1f, a));
+        }
+        beamTex.wrapMode = TextureWrapMode.Clamp;
+        beamTex.Apply();
+        beamMaterial = new Material(shader);
+        beamMaterial.mainTexture = beamTex;
+        return beamMaterial;
+    }
+
+    static LineRenderer Line(GameObject go, Material m)
+    {
+        LineRenderer l = go.AddComponent<LineRenderer>();
+        l.useWorldSpace = false;
+        l.material = m;
+        l.textureMode = LineTextureMode.Stretch;
+        l.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        l.receiveShadows = false;
+        return l;
+    }
+
     static Transform AddGlow(Transform parent, Color color)
     {
         GameObject go = new GameObject("AposEridiumGlow");
@@ -484,27 +522,62 @@ public class AposElites : MonoBehaviour
         light.range = 4f;
         light.intensity = 3f;
 
-        if (beamMaterial == null)
+        Material m = BeamMaterial();
+        if (m == null) return go.transform;
+        // wide soft glow
+        LineRenderer glow = Line(go, m);
+        glow.positionCount = 2;
+        glow.SetPosition(0, Vector3.zero);
+        glow.SetPosition(1, Vector3.up * BeamHeight);
+        glow.startWidth = 0.55f;
+        glow.endWidth = 0.2f;
+        glow.startColor = new Color(color.r, color.g, color.b, 0.55f);
+        glow.endColor = new Color(color.r, color.g, color.b, 0f);
+        // bright core
+        GameObject core = new GameObject("core");
+        core.transform.SetParent(go.transform, false);
+        LineRenderer c = Line(core, m);
+        c.positionCount = 2;
+        c.SetPosition(0, Vector3.zero);
+        c.SetPosition(1, Vector3.up * BeamHeight * 0.8f);
+        c.startWidth = 0.12f;
+        c.endWidth = 0.03f;
+        Color bright = Color.Lerp(color, Color.white, 0.6f);
+        c.startColor = new Color(bright.r, bright.g, bright.b, 1f);
+        c.endColor = new Color(bright.r, bright.g, bright.b, 0f);
+        // ring on the ground (lies flat: the line faces the ring object's Z, turned to point up)
+        GameObject ring = new GameObject("ring");
+        ring.transform.SetParent(go.transform, false);
+        ring.transform.localPosition = Vector3.up * 0.05f;
+        ring.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        LineRenderer r = Line(ring, m);
+        r.alignment = LineAlignment.TransformZ;
+        r.loop = true;
+        r.positionCount = 32;
+        for (int i = 0; i < 32; i++)
         {
-            Shader shader = Shader.Find("Sprites/Default") ?? Shader.Find("Legacy Shaders/Particles/Additive");
-            if (shader != null) beamMaterial = new Material(shader);
+            float t = i / 32f * Mathf.PI * 2f;
+            r.SetPosition(i, new Vector3(Mathf.Cos(t) * 0.45f, Mathf.Sin(t) * 0.45f, 0f));
         }
-        if (beamMaterial != null)
-        {
-            LineRenderer beam = go.AddComponent<LineRenderer>();
-            beam.useWorldSpace = false;
-            beam.positionCount = 2;
-            beam.SetPosition(0, Vector3.zero);
-            beam.SetPosition(1, Vector3.up * BeamHeight);
-            beam.startWidth = 0.12f;
-            beam.endWidth = 0.02f;
-            beam.material = beamMaterial;
-            beam.startColor = new Color(color.r, color.g, color.b, 0.9f);
-            beam.endColor = new Color(color.r, color.g, color.b, 0f);
-            beam.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            beam.receiveShadows = false;
-        }
+        r.startWidth = r.endWidth = 0.1f;
+        r.startColor = r.endColor = new Color(color.r, color.g, color.b, 0.8f);
         return go.transform;
+    }
+
+    // slow breathing of the glow and the ring
+    static void Pulse(Transform t, float phase)
+    {
+        float k = 0.5f + 0.5f * Mathf.Sin(Time.time * 2.4f + phase);
+        LineRenderer glow = t.GetComponent<LineRenderer>();
+        if (glow != null)
+        {
+            Color c = glow.startColor;
+            c.a = 0.4f + 0.25f * k;
+            glow.startColor = c;
+            glow.startWidth = 0.5f + 0.12f * k;
+        }
+        Transform ring = t.Find("ring");
+        if (ring != null) ring.localScale = Vector3.one * (0.9f + 0.2f * k);
     }
 
     static void Summon(World world, EntityAlive caller)

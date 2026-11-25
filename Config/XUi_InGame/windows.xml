@@ -293,21 +293,21 @@
 		<!-- Weapon Mastery window (Source/AposMastery.cs, controller XUiC_AposMastery): Alt+K. Generated layout (Mastery 2.0):
 		     branch A on the left (tiers 1-5 bottom to top), branch B on the right, hybrids in the middle, the class trait
 		     at the bottom (btnNode0). Each skill card: icon, name, rank pips; the border colour shows its state. -->
-		<window name="windowAposMastery" width="960" height="560" panel="Left" cursor_area="true" controller="AposMastery, AposMod">
+		<window name="windowAposMastery" width="960" height="610" panel="Left" cursor_area="true" controller="AposMastery, AposMod">
 			<rect style="header.panel">
 				<headerbg />
 				<sprite style="header.icon" sprite="ui_game_symbol_skills"/>
 				<label style="header.name" text="WEAPON MASTERY" text_key="aposMasteryTitle"/>
 			</rect>
-			<rect pos="0,-46" width="960" height="514">
-				<sprite depth="0" name="panelBg" pos="0,0" width="960" height="514" sprite="menu_empty" color="14,14,14,250" type="sliced"/>
-				<sprite depth="1" pos="0,0" width="960" height="514" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false"/>
-				<sprite depth="1" pos="578,-8" width="2" height="498" sprite="menu_empty" color="60,60,60,255" />
-				<sprite depth="1" pos="6,-38" width="224" height="390" sprite="menu_empty" color="224,160,64,22" type="sliced"/>
-				<sprite depth="1" pos="342,-38" width="224" height="390" sprite="menu_empty" color="80,168,224,22" type="sliced"/>
-				<sprite depth="2" pos="117,-72" width="3" height="320" sprite="menu_empty" color="120,95,50,255"/>
-				<sprite depth="2" pos="453,-72" width="3" height="320" sprite="menu_empty" color="60,95,120,255"/>
-				<sprite depth="2" pos="285,-232" width="3" height="160" sprite="menu_empty" color="90,90,90,255"/>
+			<rect pos="0,-46" width="960" height="564">
+				<sprite depth="0" name="panelBg" pos="0,0" width="960" height="564" sprite="menu_empty" color="14,14,14,245" type="sliced" globalopacitymod="0"/>
+				<sprite depth="1" pos="0,0" width="960" height="564" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false"/>
+				<sprite depth="1" pos="578,-8" width="2" height="548" sprite="menu_empty" color="60,60,60,255" />
+				<sprite depth="1" pos="6,-38" width="224" height="416" sprite="menu_empty" color="224,160,64,22" type="sliced"/>
+				<sprite depth="1" pos="342,-38" width="224" height="416" sprite="menu_empty" color="80,168,224,22" type="sliced"/>
+				<sprite depth="2" pos="117,-74" width="3" height="344" sprite="menu_empty" color="120,95,50,255"/>
+				<sprite depth="2" pos="453,-74" width="3" height="344" sprite="menu_empty" color="60,95,120,255"/>
+				<sprite depth="2" pos="285,-74" width="3" height="172" sprite="menu_empty" color="90,90,90,255"/>
 				<label depth="3" name="lblBranchA" pos="12,-6" width="212" height="22" font_size="16" text="" />
 				<label depth="3" name="lblBranchB" pos="348,-6" width="212" height="22" font_size="16" text="" />
 				<label depth="3" name="lblBranchH" pos="236,-12" width="100" height="22" font_size="14" justify="center" text="" />
@@ -315,30 +315,30 @@
 				<filledsprite depth="4" name="barBranchA" pos="12,-30" width="212" height="5" sprite="menu_empty" color="224,160,64,255" type="filled" fill="0" fillspritepad="true" />
 				<sprite depth="3" pos="348,-30" width="212" height="5" sprite="menu_empty" color="50,50,50,255" type="sliced" />
 				<filledsprite depth="4" name="barBranchB" pos="348,-30" width="212" height="5" sprite="menu_empty" color="80,168,224,255" type="filled" fill="0" fillspritepad="true" />
-				<sprite depth="3" pos="102,-343" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced"/>
-				<label depth="4" name="lblTierA2" pos="102,-343" width="33" height="18" font_size="14" justify="center" text="" />
-				<sprite depth="3" pos="102,-263" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced"/>
-				<label depth="4" name="lblTierA3" pos="102,-263" width="33" height="18" font_size="14" justify="center" text="" />
-				<sprite depth="3" pos="102,-183" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced"/>
-				<label depth="4" name="lblTierA4" pos="102,-183" width="33" height="18" font_size="14" justify="center" text="" />
-				<sprite depth="3" pos="102,-103" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced"/>
-				<label depth="4" name="lblTierA5" pos="102,-103" width="33" height="18" font_size="14" justify="center" text="" />
-				<sprite depth="3" pos="438,-343" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced"/>
-				<label depth="4" name="lblTierB2" pos="438,-343" width="33" height="18" font_size="14" justify="center" text="" />
-				<sprite depth="3" pos="438,-263" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced"/>
-				<label depth="4" name="lblTierB3" pos="438,-263" width="33" height="18" font_size="14" justify="center" text="" />
-				<sprite depth="3" pos="438,-183" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced"/>
-				<label depth="4" name="lblTierB4" pos="438,-183" width="33" height="18" font_size="14" justify="center" text="" />
-				<sprite depth="3" pos="438,-103" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced"/>
-				<label depth="4" name="lblTierB5" pos="438,-103" width="33" height="18" font_size="14" justify="center" text="" />
-				<rect name="btnNode0" pos="180,-440" width="216" height="56" controller="SimpleButton">
+				<sprite depth="3" pos="102,-366" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced" globalopacitymod="0"/>
+				<label depth="4" name="lblTierA2" pos="102,-366" width="33" height="18" font_size="14" justify="center" text="" />
+				<sprite depth="3" pos="102,-280" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced" globalopacitymod="0"/>
+				<label depth="4" name="lblTierA3" pos="102,-280" width="33" height="18" font_size="14" justify="center" text="" />
+				<sprite depth="3" pos="102,-194" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced" globalopacitymod="0"/>
+				<label depth="4" name="lblTierA4" pos="102,-194" width="33" height="18" font_size="14" justify="center" text="" />
+				<sprite depth="3" pos="102,-108" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced" globalopacitymod="0"/>
+				<label depth="4" name="lblTierA5" pos="102,-108" width="33" height="18" font_size="14" justify="center" text="" />
+				<sprite depth="3" pos="438,-366" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced" globalopacitymod="0"/>
+				<label depth="4" name="lblTierB2" pos="438,-366" width="33" height="18" font_size="14" justify="center" text="" />
+				<sprite depth="3" pos="438,-280" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced" globalopacitymod="0"/>
+				<label depth="4" name="lblTierB3" pos="438,-280" width="33" height="18" font_size="14" justify="center" text="" />
+				<sprite depth="3" pos="438,-194" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced" globalopacitymod="0"/>
+				<label depth="4" name="lblTierB4" pos="438,-194" width="33" height="18" font_size="14" justify="center" text="" />
+				<sprite depth="3" pos="438,-108" width="33" height="18" sprite="menu_empty" color="20,20,20,255" type="sliced" globalopacitymod="0"/>
+				<label depth="4" name="lblTierB5" pos="438,-108" width="33" height="18" font_size="14" justify="center" text="" />
+				<rect name="btnNode0" pos="180,-472" width="216" height="56" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="58,46,20,255" disabledcolor="58,46,20,255" hoversprite="ui_game_select_row" hovercolor="90,72,30,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="255,210,77,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="222" height="62" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
 					<sprite depth="6" name="icon" pos="8,-8" width="40" height="40" sprite="ui_game_symbol_skills" color="255,210,77,255" />
 					<label depth="6" name="btnLabel" pos="54,-6" width="158" height="46" font_size="15" justify="left" effect="outline" effect_color="[black]" effect_distance="1,1" text="" />
 				</rect>
-				<rect name="btnNode1" pos="12,-362" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode1" pos="12,-388" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -348,7 +348,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode2" pos="124,-362" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode2" pos="124,-388" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -358,7 +358,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode3" pos="12,-282" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode3" pos="12,-302" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -368,7 +368,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode4" pos="124,-282" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode4" pos="124,-302" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -378,7 +378,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode5" pos="12,-202" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode5" pos="12,-216" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -388,7 +388,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode6" pos="124,-202" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode6" pos="124,-216" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -398,7 +398,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode7" pos="68,-122" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode7" pos="68,-130" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -408,7 +408,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode8" pos="68,-42" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode8" pos="68,-44" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -418,7 +418,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode9" pos="348,-362" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode9" pos="348,-388" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -428,7 +428,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode10" pos="460,-362" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode10" pos="460,-388" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -438,7 +438,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode11" pos="348,-282" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode11" pos="348,-302" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -448,7 +448,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode12" pos="460,-282" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode12" pos="460,-302" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -458,7 +458,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode13" pos="348,-202" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode13" pos="348,-216" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -468,7 +468,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode14" pos="460,-202" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode14" pos="460,-216" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -478,7 +478,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode15" pos="404,-122" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode15" pos="404,-130" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -488,7 +488,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode16" pos="404,-42" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode16" pos="404,-44" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -498,7 +498,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode17" pos="236,-202" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode17" pos="236,-216" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -508,7 +508,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode18" pos="236,-122" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode18" pos="236,-130" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -518,7 +518,7 @@
 					<sprite depth="6" name="pip2" pos="44,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 					<sprite depth="6" name="pip3" pos="59,-52" width="12" height="5" sprite="menu_empty" color="60,60,60,255" />
 				</rect>
-				<rect name="btnNode19" pos="236,-42" width="100" height="60" controller="SimpleButton">
+				<rect name="btnNode19" pos="236,-44" width="100" height="60" controller="SimpleButton">
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="34,34,34,255" disabledcolor="34,34,34,255" hoversprite="ui_game_select_row" hovercolor="70,70,70,255" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="90,90,90,255" type="sliced" fillcenter="false" />
 					<sprite depth="7" name="sel" pos="-3,3" width="106" height="66" sprite="menu_empty3px" color="255,255,255,255" type="sliced" fillcenter="false" visible="false" />
@@ -537,23 +537,23 @@
 				<sprite depth="3" name="detailIcon" pos="590,-138" width="42" height="42" sprite="ui_game_symbol_skills" color="255,210,77,255" />
 				<label depth="3" name="lblNodeTitle" pos="640,-136" width="300" height="26" font_size="21" text="" />
 				<label depth="3" name="lblNodeSub" pos="640,-162" width="300" height="20" font_size="14" text="" />
-				<label depth="3" name="lblNodeDesc" pos="590,-188" width="350" height="168" font_size="16" text="" />
-				<rect name="btnLearn" pos="590,-362" width="350" height="34" controller="SimpleButton">
+				<label depth="3" name="lblNodeDesc" pos="590,-188" width="350" height="210" font_size="16" text="" />
+				<rect name="btnLearn" pos="590,-404" width="350" height="34" controller="SimpleButton">
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<label depth="5" name="btnLabel" pos="0,-6" width="350" height="34" font_size="21" justify="center" text="" />
 				</rect>
-				<rect name="btnReset" pos="590,-402" width="350" height="34" controller="SimpleButton">
+				<rect name="btnReset" pos="590,-444" width="350" height="34" controller="SimpleButton">
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<label depth="5" name="btnLabel" pos="0,-6" width="350" height="34" font_size="18" justify="center" text="" />
 				</rect>
-				<rect name="btnResetAll" pos="590,-442" width="350" height="34" controller="SimpleButton">
+				<rect name="btnResetAll" pos="590,-484" width="350" height="34" controller="SimpleButton">
 					<sprite depth="4" name="border" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
 					<button depth="3" name="clickable" sprite="menu_empty" defaultcolor="[mediumGrey]" disabledcolor="[darkGrey]" hoversprite="ui_game_select_row" hovercolor="[white]" type="sliced" hoverscale="1.0" sound_play_on_hover="[default_hover]" sound="[paging_click]" />
 					<label depth="5" name="btnLabel" pos="0,-6" width="350" height="34" font_size="18" justify="center" text="" />
 				</rect>
-				<label depth="3" name="lblResetHint" pos="590,-480" width="350" height="30" font_size="14" text="" />
+				<label depth="3" name="lblResetHint" pos="590,-522" width="350" height="30" font_size="14" text="" />
 			</rect>
 		</window>	</append>
 	<!-- Wardrobe button under the armor / clothing slots of the character window (Source/AposWardrobe.cs opens Alt+0) -->
