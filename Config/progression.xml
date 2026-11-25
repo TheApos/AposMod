@@ -3,36 +3,22 @@
 	<!-- Remove the 5 vanilla ragdoll groups (the effect_description group has no requirement and stays) -->
 	<remove xpath="/progression/perks/perk[@name='perkGrandSlam']/effect_group[requirement]"/>
 	<set xpath="/progression/perks/perk[@name='perkGrandSlam']/@icon">ui_game_symbol_berserker</set>
-	<append xpath="/progression/perks/perk[@name='perkGrandSlam']">
-		<!-- Kills with clubs/sledges: +1 Rage stack (max = perk level), every kill refreshes 8 s -->
-		<effect_group name="AposMod rage">
-			<requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="GTE" value="1"/>
-			<requirement name="ItemHasTags" tags="perkPummelPete,perkSkullCrusher"/>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="1"/>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="2"><requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="Equals" value="2"/></triggered_effect>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="3"><requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="Equals" value="3"/></triggered_effect>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="4"><requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="Equals" value="4"/></triggered_effect>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="set" value="5"><requirement name="ProgressionLevel" progression_name="perkGrandSlam" operation="Equals" value="5"/></triggered_effect>
-			<!-- full Bruiser set (vanilla Biker): one more Rage stack -->
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageCap" operation="add" value="1"><requirement name="HasBuff" buff="buffBikerSetBonus"/></triggered_effect>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageStacks" operation="add" value="1"/>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageStacks" operation="set" value="@aposRageCap">
-				<requirement name="CVarCompare" cvar="aposRageStacks" operation="GT" value="@aposRageCap"/>
-			</triggered_effect>
-			<!-- bonuses as fractions for perc_add: +10% damage and +5% attack speed per stack -->
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageDamage" operation="set" value="@aposRageStacks"/>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageDamage" operation="multiply" value=".1"/>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageSpeed" operation="set" value="@aposRageStacks"/>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageSpeed" operation="multiply" value=".05"/>
-			<triggered_effect trigger="onSelfKilledOther" action="ModifyCVar" cvar="aposRageTime" operation="set" value="8"/>
-			<triggered_effect trigger="onSelfKilledOther" action="AddBuff" buff="buffAposRage"/>
-		</effect_group>
-	</append>
+	<!-- Weapon Mastery 2.0: Rage lives in the club mastery tree; Grand Slam is hidden and its points are given back
+	     (Source/AposMastery.cs RefundGrandSlam) -->
+	<setattribute xpath="/progression/perks/perk[@name='perkGrandSlam']" name="hidden">true</setattribute>
 
 	<!-- ===== Weapon Mastery 2.0: vanilla perk mechanics that duplicate a mastery tree (docs/Design-Mastery2.md, section 6) ===== -->
 	<!-- Gunslinger 3-5: a few successive hits -> the last one +100% (duplicates Headhunter and Firing Squad) -->
 	<!-- only the two triggers: the same effect_group holds the perk's level descriptions -->
 	<remove xpath="/progression/perks/perk[@name='perkGunslinger']/effect_group/triggered_effect[@cvar='.GunslingerCombo' or @buff='buffPerkGunslinger']"/>
+	<!-- Pummel Pete: +40..200% to stunned (duplicates Kick Them While Down / Concussion) and 3-5 hits -> +100% (duplicates Batting Streak) -->
+	<remove xpath="/progression/perks/perk[@name='perkPummelPete']/effect_group/passive_effect[requirement[@cvar='_stunned']]"/>
+	<remove xpath="/progression/perks/perk[@name='perkPummelPete']/effect_group/triggered_effect[@cvar='.PummelPeteCombo' or @buff='buffPerkPummelPete']"/>
+	<!-- Deep Cuts: every normal knife hit bleeds, even at level 0 (breaks Bloodsucker: bleeding comes from power hits;
+	     normal hits only with the Deep Cuts skill of the knife tree). Power hits keep the vanilla wounds. -->
+	<remove xpath="/progression/perks/perk[@name='perkDeepCuts']/effect_group[@name='primary, always']"/>
+	<remove xpath="/progression/perks/perk[@name='perkDeepCuts']/effect_group/triggered_effect[@trigger='onSelfPrimaryActionRayHit' and @buff='buffInjuryBleeding']"/>
+	<remove xpath="/progression/perks/perk[@name='perkDeepCuts']/effect_group/triggered_effect[@trigger='onSelfPrimaryActionGrazeHit']"/>
 
 	<!-- ===== Vanilla knockdowns that duplicated mod traits (replacements live in entityclasses.xml) ===== -->
 	<!-- Pummel Pete: power attack knocks a stunned foe down (60-100%) -> duplicated Home Run -->

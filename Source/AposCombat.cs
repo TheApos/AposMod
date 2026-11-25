@@ -250,6 +250,13 @@ public static class AposCombatDamagePatch
             if (dt == EnumDamageTypes.Heat || dt == EnumDamageTypes.Electrical || dt == EnumDamageTypes.Corrosive || dt == EnumDamageTypes.BloodLoss)
                 _strength = Mathf.RoundToInt(_strength * 1.5f);
         }
+        // club mastery "Concussion": a stunned zombie takes +50% from everything
+        if (__instance.Buffs != null && __instance.Buffs.HasBuff("buffAposConcussed") && AposSplash.Depth == 0) _strength = Mathf.RoundToInt(_strength * 1.5f);
+        // knife mastery "Open Wounds": your bleeding hits harder
+        if (_damageSource != null && _damageSource.GetDamageType() == EnumDamageTypes.BloodLoss && AposSplash.IsLocal(_damageSource.getEntityId()))
+            _strength = Mathf.RoundToInt(_strength * (1f + AposKnife.OpenWounds[AposKnife.R("A4")]));
+        // club mastery "Berserk": the player takes +25% while holding a club
+        if (__instance is EntityPlayerLocal) _strength = Mathf.RoundToInt(_strength * AposClub.Incoming(__instance as EntityPlayerLocal));
         // shotgun mastery "Shattered": a zombie knocked down by a shotgun takes +50% from everyone, any weapon
         if (_damageSource != null && __instance.Buffs != null && __instance.Buffs.HasBuff("buffAposShattered") && AposSplash.Depth == 0)
         {

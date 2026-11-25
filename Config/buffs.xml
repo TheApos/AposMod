@@ -230,7 +230,7 @@
 		</buff>
 
 		<!-- Rage (replaces Grand Slam): number = stacks; bonuses only with clubs/sledges in hand -->
-		<buff name="buffAposRage" name_key="buffAposRageName" description_key="buffAposRageDesc" icon="ui_game_symbol_berserker" icon_color="255,60,0">
+		<buff name="buffAposRage" name_key="buffAposRageName" description_key="buffAposRageDesc" icon="ui_game_symbol_berserker" icon_color="255,60,0" hidden="true">
 			<stack_type value="ignore"/>
 			<display_value value="aposRageStacks"/>
 			<effect_group>
@@ -240,15 +240,11 @@
 				</triggered_effect>
 				<triggered_effect trigger="onSelfBuffRemove" action="ModifyCVar" cvar="aposRageStacks" operation="set" value="0"/>
 			</effect_group>
+			<!-- damage and speed of the stacks: Source/AposClub.cs (club mastery tree, branch B).
+			     Rampage (aposRampage = 1, max Rage with the skill): no stamina, cannot be stunned or knocked down -->
 			<effect_group>
-				<requirement name="HoldingItemHasTags" tags="perkPummelPete,perkSkullCrusher"/>
-				<passive_effect name="EntityDamage" operation="perc_add" value="@aposRageDamage"/>
-				<passive_effect name="AttacksPerMinute" operation="perc_add" value="@aposRageSpeed"/>
-			</effect_group>
-			<!-- Rage 5 "Rampage": at 5 stacks club/sledge attacks cost no stamina and you cannot be stunned or knocked down -->
-			<effect_group>
-				<requirement name="HoldingItemHasTags" tags="perkPummelPete,perkSkullCrusher"/>
-				<requirement name="CVarCompare" cvar="aposRageStacks" operation="GTE" value="5"/>
+				<requirement name="HoldingItemHasTags" tags="perkPummelPete"/>
+				<requirement name="CVarCompare" cvar="aposRampage" operation="Equals" value="1"/>
 				<passive_effect name="StaminaLoss" operation="perc_add" value="-1"/>
 				<passive_effect name="BuffResistance" operation="base_set" value="100" tags="buffInjuryStunned01,buffInjuryStunned02,buffInjuryStunned03,buffInjuryKnockdown01,buffInjuryKnockdown02"/>
 			</effect_group>
@@ -640,6 +636,9 @@
 				<passive_effect name="SpreadDegreesVertical" operation="perc_add" value="@aposMBuckSpread"/>
 				<passive_effect name="SpreadDegreesHorizontal" operation="perc_add" value="@aposMBuckSpread"/>
 				<passive_effect name="MaxRange" operation="base_add" value="@aposMRange"/>
+				<!-- melee trees: stamina of power / normal swings -->
+				<passive_effect name="StaminaLoss" operation="perc_add" value="@aposMStamPower" tags="secondary"/>
+				<passive_effect name="StaminaLoss" operation="perc_add" value="@aposMStamNormal" tags="primary"/>
 			</effect_group>
 		</buff>
 		<!-- bow mastery "Hunter's Wound": slows the zombie (aposWoundSlow, negative); the damage bonus is in Source/AposCombat.cs -->
@@ -659,6 +658,24 @@
 			<effect_group>
 				<passive_effect name="NoiseMultiplier" operation="perc_add" value="-.9"/>
 				<passive_effect name="LightMultiplier" operation="perc_add" value="-.9"/>
+			</effect_group>
+		</buff>
+		<!-- club mastery: a zombie stunned by a club cannot be stunned again for 3 s -->
+		<buff name="buffAposStunCD" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="4"/>
+		</buff>
+		<!-- club mastery "Concussion": +50% damage from everything (Source/AposCombat.cs) -->
+		<buff name="buffAposConcussed" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="2"/>
+		</buff>
+		<!-- sledge mastery "Armor Break": aposArmorBreak = how much armor your hits ignore (Source/AposSledge.cs) -->
+		<buff name="buffAposArmorBreak" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="10"/>
+			<effect_group>
+				<triggered_effect trigger="onSelfBuffRemove" action="RemoveCVar" cvar="aposArmorBreak"/>
 			</effect_group>
 		</buff>
 		<!-- shotgun mastery "Shattered": knocked down by a shotgun, +50% damage from everyone (Source/AposCombat.cs) -->

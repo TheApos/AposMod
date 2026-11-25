@@ -106,7 +106,19 @@ public class AposMastery : MonoBehaviour
         "A1 A 1 3 0 hard_target|A2 A 1 3 0 clock|A3 A 2 3 0 players|A4 A 2 3 0 head_shot|A5 A 3 1 0 fire|A6 A 3 2 0 arrow_right|A7 A 4 2 0 swap|A8 A 5 1 0 stress_zombie_horde|" +
         "B1 B 1 3 0 explosion|B2 B 1 3 0 clock|B3 B 2 3 0 hot|B4 B 2 3 0 wrench|B5 B 3 1 0 skull|B6 B 3 2 0 concussion|B7 B 4 2 0 traps|B8 B 5 1 0 twitch_bomb|" +
         "H1 H 3 1 5 search|H2 H 4 1 5 noise|H3 H 5 1 8 star",
-        null, null, null, null, null, null,
+        // Knives: A Bloodsucker / bleeding, B crits / back hits (AposKnife.cs)
+        "A1 A 1 3 0 drop|A2 A 1 3 0 laceration|A3 A 2 3 0 hot|A4 A 2 3 0 twitch_hurt|A5 A 3 1 0 infection|A6 A 3 2 0 healing_factor|A7 A 4 2 0 clock|A8 A 5 1 0 siphoning_strikes|" +
+        "B1 B 1 3 0 critical|B2 B 1 3 0 sneak_attack|B3 B 2 3 0 star|B4 B 2 3 0 speed|B5 B 3 1 0 skull|B6 B 3 2 0 pistol|B7 B 4 2 0 deep_cuts|B8 B 5 1 0 knife|" +
+        "H1 H 3 1 5 twitch_leech|H2 H 4 1 5 smell|H3 H 5 1 8 twitch_dancing",
+        // Clubs: A Home Run, B Rage (AposClub.cs)
+        "A1 A 1 3 0 stunned|A2 A 1 3 0 muscle|A3 A 2 3 0 destruction|A4 A 2 3 0 concussion|A5 A 3 1 0 brokenbone|A6 A 3 2 0 run|A7 A 4 2 0 twitch_homerun_derby|A8 A 5 1 0 grand_slam|" +
+        "B1 B 1 3 0 berserker|B2 B 1 3 0 hand|B3 B 2 3 0 hot|B4 B 2 3 0 cardio|B5 B 3 1 0 steroids|B6 B 3 2 0 clock|B7 B 4 2 0 twitch_stay_still|B8 B 5 1 0 twitch_enrage|" +
+        "H1 H 3 1 5 stunned|H2 H 4 1 5 bat|H3 H 5 1 8 stress_zombie_horde",
+        // Sledgehammers: A Earthquake, B one target (AposSledge.cs)
+        "A1 A 1 3 0 destruction2|A2 A 1 3 0 muscle|A3 A 2 3 0 clock|A4 A 2 3 0 twitch_strength_melee|A5 A 3 1 0 fire|A6 A 3 2 0 concussion|A7 A 4 2 0 twitch_slow|A8 A 5 1 0 destruction|" +
+        "B1 B 1 3 0 sledge|B2 B 1 3 0 cardio|B3 B 2 3 0 armor_iron|B4 B 2 3 0 speed|B5 B 3 1 0 arrow_right|B6 B 3 2 0 brokenbone|B7 B 4 2 0 twitch_tough|B8 B 5 1 0 skull|" +
+        "H1 H 3 1 5 block_damage|H2 H 4 1 5 hammer|H3 H 5 1 8 explosion",
+        null, null, null,
     };
 
     public static readonly Skill[][] Trees = ParseTrees();
@@ -280,9 +292,9 @@ public class AposMastery : MonoBehaviour
 
     // stat cvars read by buffAposMastery (buffs.xml); the held class's file sets them every frame, otherwise they are 0
     public const int StatDmg = 0, StatSpeed = 1, StatReload = 2, StatSpread = 3, StatMag = 4,
-                     StatPierce = 5, StatRays = 6, StatBuckSpread = 7, StatRange = 8;
+                     StatPierce = 5, StatRays = 6, StatBuckSpread = 7, StatRange = 8, StatStamPower = 9, StatStamNormal = 10;
     static readonly string[] StatVars = { "aposMDmg", "aposMSpeed", "aposMReload", "aposMSpread", "aposMMagAdd",
-                                          "aposMPierce", "aposMRays", "aposMBuckSpread", "aposMRange" };
+                                          "aposMPierce", "aposMRays", "aposMBuckSpread", "aposMRange", "aposMStamPower", "aposMStamNormal" };
     static readonly float[] stats = new float[StatVars.Length];
 
     public static void SetStat(int stat, float value) { stats[stat] = value; }
@@ -299,6 +311,10 @@ public class AposMastery : MonoBehaviour
         AposMG.Tick(player, HeldClass == MG);
         AposBowTree.Tick(player, HeldClass == Bows);
         AposCrossbow.Tick(player, HeldClass == Crossbows);
+        AposKnife.Tick(player, HeldClass == Blades);
+        AposClub.Tick(player, HeldClass == Clubs);
+        AposSledge.Tick(player, HeldClass == Sledges);
+        RefundGrandSlam(player);
         for (int i = 0; i < StatVars.Length; i++)
         {
             if (player.Buffs.GetCustomVar(StatVars[i]) != stats[i]) player.Buffs.SetCustomVar(StatVars[i], stats[i]);
@@ -337,6 +353,21 @@ public class AposMastery : MonoBehaviour
         return learned;
     }
 
+    // Grand Slam is hidden in Mastery 2.0 (its Rage is in the club tree): points spent in it come back once
+    static bool grandSlamChecked;
+    static void RefundGrandSlam(EntityPlayerLocal player)
+    {
+        if (grandSlamChecked || player.Progression == null) return;
+        grandSlamChecked = true;
+        ProgressionValue pv = player.Progression.GetProgressionValue("perkGrandSlam");
+        if (pv == null || pv.Level <= 0) return;
+        int points = pv.Level;
+        pv.Level = 0;
+        player.Progression.SkillPoints += points;
+        player.Progression.bProgressionStatsChanged = true;
+        Debug.Log("[AposMod] Grand Slam is gone in Weapon Mastery 2.0: " + points + " skill points given back");
+    }
+
     // a class asks for the hit being processed to tear a limb off (AposCombat sets DamageResponse.Dismember)
     static bool dismemberNext;
     public static void RequestDismember() { dismemberNext = true; }
@@ -367,6 +398,9 @@ public class AposMastery : MonoBehaviour
         if (HeldClass == MG) return AposMG.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
         if (HeldClass == Bows) return AposBowTree.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
         if (HeldClass == Crossbows) return AposCrossbow.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
+        if (HeldClass == Blades) return AposKnife.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
+        if (HeldClass == Clubs) return AposClub.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
+        if (HeldClass == Sledges) return AposSledge.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
         return strength;
     }
 
@@ -380,6 +414,9 @@ public class AposMastery : MonoBehaviour
         if (HeldClass == MG) AposMG.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
         if (HeldClass == Bows) AposBowTree.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
         if (HeldClass == Crossbows) AposCrossbow.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
+        if (HeldClass == Blades) AposKnife.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
+        if (HeldClass == Clubs) AposClub.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
+        if (HeldClass == Sledges) AposSledge.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
         return 0f;
     }
 
@@ -480,6 +517,10 @@ public class AposMastery : MonoBehaviour
             AposMG.Reset();
             AposBowTree.Reset();
             AposCrossbow.Reset();
+            AposKnife.Reset();
+            AposClub.Reset();
+            AposSledge.Reset();
+            grandSlamChecked = false;
             AposMasteryBadgePatch.Forget();
             hintRect = null;
             return;

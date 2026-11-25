@@ -42,6 +42,16 @@ public static class AposPistol
 
     static int R(string id) { return AposMastery.Rank(AposMastery.Pistols, id); }
 
+    // knife "Handoff": a stealth knife kill primes the Headhunter streak for 5 s (and 3/3: +20% pistol damage)
+    static int primed;
+    static float primedUntil, handoffBonusUntil;
+    public static void Prime(int streakStart, bool bonus)
+    {
+        primed = streakStart;
+        primedUntil = Time.time + 5f;
+        if (bonus) handoffBonusUntil = Time.time + 5f;
+    }
+
     public static bool InMode { get { return modeShots > 0; } }
 
     public static void Reset()
@@ -108,6 +118,8 @@ public static class AposPistol
         else if (player.Buffs.HasBuff(ModeBuff)) player.Buffs.RemoveBuff(ModeBuff);
 
         if (!held) return;
+        if (primed > 0 && Time.time < primedUntil && modeShots <= 0 && streak < primed) { streak = primed; primed = 0; }
+        if (Time.time < handoffBonusUntil) AposMastery.SetStat(AposMastery.StatDmg, 0.2f);
         Widgets(player);
         float speed = QuickFinger[R("B1")] + hot + (Time.time < gunfighterUntil ? 15f : 0f);
         AposMastery.SetStat(AposMastery.StatSpeed, speed / 100f);
