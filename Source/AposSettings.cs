@@ -25,6 +25,9 @@ public static class AposSettings
     static readonly string[] DropAttrs = { "dropPineForest", "dropBurntForest", "dropDesert", "dropSnow", "dropWasteland" };
     public static readonly float[] EliteBiomeDrop = { 10f, 20f, 30f, 40f, 50f };
     public static string EliteWeaponExclude = "";
+    public static bool HudEnabled = true;   // combat HUD (AposHud.cs): aposhud on|off
+    public static float HudScale = 1f;      // aposhud size N
+    public static string HudPos = "below"; // attack counters: below / right / left of the crosshair
     public static bool LootBagBeam = false; // loot beam above vanilla zombie loot bags (AposElites.UpdateGlows) // item names / name starts elites never drop (AposElites.WeaponPool)
 
     static string file;
@@ -70,6 +73,14 @@ public static class AposSettings
             }
             XmlElement lb = doc.DocumentElement["LootBeam"];
             if (lb != null) LootBagBeam = ReadBool(lb, "bags", LootBagBeam);
+            XmlElement h = doc.DocumentElement["Hud"];
+            if (h != null)
+            {
+                HudEnabled = ReadBool(h, "enabled", HudEnabled);
+                HudScale = Clamp(ReadFloat(h, "scale", HudScale), 0.6f, 1.6f);
+                string hp = h.GetAttribute("pos");
+                if (hp == "below" || hp == "right" || hp == "left") HudPos = hp;
+            }
             XmlElement d = doc.DocumentElement["DamageNumbers"];
             if (d != null)
             {
@@ -129,6 +140,12 @@ public static class AposSettings
             XmlElement lb = doc.CreateElement("LootBeam");
             lb.SetAttribute("bags", LootBagBeam ? "true" : "false");
             root.AppendChild(lb);
+            root.AppendChild(doc.CreateComment(" Combat HUD: counters of the held weapon (streaks, stacks, charges) next to the crosshair and above the health bars. scale 0.6-1.6, pos below|right|left (in game: aposhud on|off, aposhud size N, aposhud pos below|right|left) "));
+            XmlElement h = doc.CreateElement("Hud");
+            h.SetAttribute("enabled", HudEnabled ? "true" : "false");
+            h.SetAttribute("scale", HudScale.ToString("0.##", CultureInfo.InvariantCulture));
+            h.SetAttribute("pos", HudPos);
+            root.AppendChild(h);
             doc.Save(file);
         }
         catch (Exception e)
@@ -516,5 +533,33 @@ public class AposMasteryCommand : ConsoleCmdAbstract
         console.Output(string.Format("{0}: level {1}/{2}, kills {3}, free points {4}, spent {5} (A {6}, B {7}, hybrids {8})",
             AposMastery.Classes[cls], AposMastery.Level(p), AposMastery.MaxLevel, p.Kills, AposMastery.Level(p) - AposMastery.Spent(p),
             AposMastery.Spent(p), AposMastery.PointsIn(cls, 'A', 99), AposMastery.PointsIn(cls, 'B', 99), AposMastery.PointsIn(cls, 'H', 99)));
+    }
+}
+
+// aposhud on|off | size N (0.6-1.6) | pos below|right|left -> combat HUD of the held weapon (AposHud.cs)
+public class AposHudCommand : ConsoleCmdAbstract
+{
+    public override string[] getCommands()
+    {
+        return new string[] { "aposhud" };
+    }
+
+    public override string getDescription()
+    {
+        return "AposMod combat HUD: aposhud [on|off | size N (0.6-1.6) | pos below|right|left]";
+    }
+
+    public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
+    {
+        SdtdConsole console = SingletonMonoBehaviour<SdtdConsole>.Instance;
+        string cmd = _params.Count > 0 ? _params[0].ToLowerInvariant() : "";
+        string arg = _params.Count > 1 ? _params[1].ToLowerInvariant() : "";
+        float f;
+        if (cmd == "on" || cmd == "off") AposSettings.HudEnabled = cmd == "on";
+        else if (cmd == "size" && float.TryParse(arg, NumberStyles.Float, CultureInfo.InvariantCulture, out f)) AposSettings.HudScale = AposSettings.Clamp(f, 0.6f, 1.6f);
+        else if (cmd == "pos" && (arg == "below" || arg == "right" || arg == "left")) AposSettings.HudPos = arg;
+        else if (cmd != "") console.Output(getDescription());
+        if (cmd != "") AposSettings.Save();
+        console.Output("Combat HUD: " + (AposSettings.HudEnabled ? "on" : "off") + ", size " + AposSettings.HudScale.ToString("0.##", CultureInfo.InvariantCulture) + ", attack counters " + AposSettings.HudPos + " the crosshair");
     }
 }

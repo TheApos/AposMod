@@ -257,7 +257,7 @@
 		<!-- ===== Ranged pack ===== -->
 
 		<!-- Pistols "Headhunter": number = empowered shots left. Added / removed and the damage applied by Source/AposPistol.cs -->
-		<buff name="buffAposHeadhunter" name_key="buffAposHeadhunterName" description_key="buffAposHeadhunterDesc" icon="ui_game_symbol_head_shot" icon_color="0,220,255">
+		<buff name="buffAposHeadhunter" name_key="buffAposHeadhunterName" description_key="buffAposHeadhunterDesc" icon="ui_game_symbol_head_shot" icon_color="0,220,255" hidden="true">
 			<stack_type value="ignore"/>
 			<display_value value="aposHHShots"/>
 			<effect_group>

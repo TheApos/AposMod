@@ -13,4 +13,9 @@
 			<window name="windowAposMastery" />
 		</window_group>
 	</append>
+	<!-- Combat HUD (Source/AposHud.cs): shown and hidden together with the vanilla HUD -->
+	<append xpath="/xui/window_group[@name='toolbelt']">
+		<window name="windowAposHud" />
+		<window name="windowAposHudDef" />
+	</append>
 </configs>

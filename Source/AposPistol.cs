@@ -108,11 +108,25 @@ public static class AposPistol
         else if (player.Buffs.HasBuff(ModeBuff)) player.Buffs.RemoveBuff(ModeBuff);
 
         if (!held) return;
+        Widgets(player);
         float speed = QuickFinger[R("B1")] + hot + (Time.time < gunfighterUntil ? 15f : 0f);
         AposMastery.SetStat(AposMastery.StatSpeed, speed / 100f);
         AposMastery.SetStat(AposMastery.StatReload, SpeedLoader[R("B3")] / 100f);
         AposMastery.SetStat(AposMastery.StatSpread, (-SteadyHand[R("A2")] + (R("B8") > 0 ? 30f : 0f)) / 100f);
         AposMastery.SetStat(AposMastery.StatMag, MagBonus(player));
+    }
+
+    static readonly Color Cyan = new Color(0.25f, 0.9f, 1f), Dim = new Color(0.75f, 0.75f, 0.75f), Orange = new Color(1f, 0.55f, 0.15f);
+
+    // combat HUD next to the crosshair (AposHud.cs)
+    static void Widgets(EntityPlayerLocal player)
+    {
+        // Headhunter: the streak (3/5) before the mode, empowered shots left while it runs
+        if (modeShots > 0) AposHud.Add(false, "head_shot", modeShots.ToString(), Cyan, true);
+        else AposHud.Add(false, "head_shot", streak + "/" + Need(player), streak > 0 ? Color.white : Dim, false);
+        if (R("B5") > 0 && hot >= 1f) AposHud.Add(false, "hot", "+" + Mathf.RoundToInt(hot) + "%", Orange, hot >= 29.5f);
+        if (R("H1") > 0) AposHud.Add(false, "run_and_gun", hitsInRow + "/8", hitsInRow >= 7 ? Color.white : Dim, hitsInRow >= 7);
+        if (R("H2") > 0 && Time.time < gunfighterUntil) AposHud.Add(false, "pistol", "+15%", Color.white, false);
     }
 
     // Extended Mag: +rounds or +% of the magazine, whichever is more
