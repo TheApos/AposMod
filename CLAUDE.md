@@ -41,3 +41,4 @@
 - Pictograms drawn by C# (IMGUI): `Icons/*.png` loaded with `ImageConversion.LoadImage` from `AposSettings.ModPath` (elite modifier badges).
 - Tab (backpack) and E (activate) open the same `XUiC_Radial` as the R ammo wheel: a short tap is the normal action, holding past `displayDelay` shows the wheel. Never shorten the delay in `XUiC_Radial.Open` (that broke Tab/E with a bow); the bow patch is on `ItemActionAttack.SetupRadial`.
 - Game logs: `%APPDATA%/7DaysToDie/logs/output_log_client__*.txt`.
+- A perk's `effect_description` lines often sit in the same `effect_group` as its effects (e.g. Gunslinger). Removing the whole group also removes the level descriptions, and the perk window then lists raw passives ("EntityDamage: 110%..."). Remove single `triggered_effect`/`passive_effect` nodes instead.

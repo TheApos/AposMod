@@ -31,7 +31,8 @@
 
 	<!-- ===== Weapon Mastery 2.0: vanilla perk mechanics that duplicate a mastery tree (docs/Design-Mastery2.md, section 6) ===== -->
 	<!-- Gunslinger 3-5: a few successive hits -> the last one +100% (duplicates Headhunter and Firing Squad) -->
-	<remove xpath="/progression/perks/perk[@name='perkGunslinger']/effect_group[triggered_effect[@cvar='.GunslingerCombo']]"/>
+	<!-- only the two triggers: the same effect_group holds the perk's level descriptions -->
+	<remove xpath="/progression/perks/perk[@name='perkGunslinger']/effect_group/triggered_effect[@cvar='.GunslingerCombo' or @buff='buffPerkGunslinger']"/>
 
 	<!-- ===== Vanilla knockdowns that duplicated mod traits (replacements live in entityclasses.xml) ===== -->
 	<!-- Pummel Pete: power attack knocks a stunned foe down (60-100%) -> duplicated Home Run -->

@@ -252,7 +252,6 @@ $perkLines = [ordered]@{
   perkFlurryOfIntellect = { param($L) "Chain Lightning (batons): power attack shocks zombies within $(3 + 0.5 * $L) m for $([math]::Round(2 + 0.4 * $L, 1)) s.", "Цепная молния (жезлы и дубинка из трубы): силовая атака шокирует зомби в радиусе $(3 + 0.5 * $L) м на $([math]::Round(2 + 0.4 * $L, 1)) с." }
   perkJavelinMaster     = { param($L) "Battering Ram (spears): power attack pierces $(1 + $L) zombies behind the target, normal hits push $([int](40 * $L / 1.2))% harder.", "Таран (копья): силовая атака пробивает $(1 + $L) зомби за целью, обычный удар отталкивает на $([int](40 * $L / 1.2))% сильнее." }
   perkBrawler           = { param($L) "Counter Punch (knuckles): up to $(2 + $L) counter charges. Replaces the power stagger / knockdown above: normal punches have a $(10 * $L)% chance to give +1 charge.", "Контрудар (кастеты): до $(2 + $L) зарядов. Заменяет оглушение / сбивание с ног силовой атакой выше: обычный удар с шансом $(10 * $L)% даёт +1 заряд." }
-  perkGunslinger        = { param($L) "Headhunter (handguns): $(10 + 2 * $L) empowered shots with +$(25 + 10 * $L)% damage after 5 headshots in a row.", "Охотник за головами (пистолеты): $(10 + 2 * $L) усиленных выстрелов с +$(25 + 10 * $L)% урона после 5 хедшотов подряд." }
   perkDeadEye           = { param($L) "Ricochet (rifles): a headshot hurts zombies within $(5 + 2 * $L) m for $(20 + 10 * $L) HP or $(5 + 3 * $L)% of the headshot, whichever is more.", "Рикошет (винтовки): хедшот ранит зомби в радиусе $(5 + 2 * $L) м на $(20 + 10 * $L) HP или $(5 + 3 * $L)% урона хедшота, если это больше." }
   perkMachineGunner     = { param($L) "Suppression (machine guns): hits slow targets up to $(10 + 10 * $L)%; every 4th hit puts a round back into the magazine.", "Подавление (автоматы): попадания замедляют цель до $(10 + 10 * $L)%; каждое 4-е попадание возвращает патрон в магазин." }
   perkArchery           = { param($L) "Splinter (bows): $(@(2,3,4,5,6,8)[$L]) fragments, each deals half of the arrow's damage, at least $(40 + 10 * $L + $(if ($L -eq 5) { 10 } else { 0 })) HP. Mark (crossbows): your damage to marked zombies +$(20 + 20 * $L)%.", "Расщепление (луки): осколков — $(@(2,3,4,5,6,8)[$L]), каждый наносит половину урона стрелы, минимум $(40 + 10 * $L + $(if ($L -eq 5) { 10 } else { 0 })) HP. Метка (арбалеты): ваш урон по помеченным зомби +$(20 + 20 * $L)%." }
@@ -265,7 +264,6 @@ $perkFinale = @{
   perkFlurryOfIntellect = 'Every 4th normal baton hit also fires Chain Lightning.', 'Каждый 4-й обычный удар жезлом тоже запускает Цепную молнию.'
   perkJavelinMaster     = 'Skewer: every zombie hit by a spear power attack is knocked down.', 'Насадить: каждый зомби, задетый силовой атакой копья, сбит с ног.'
   perkBrawler           = 'Knockout: a power punch on full charges kills any non-elite zombie.', 'Нокаут: силовой удар на полных зарядах убивает любого не-элитного зомби.'
-  perkGunslinger        = 'Every headshot kill during Headhunter adds 2 more empowered shots.', 'Каждое убийство в голову во время Охотника за головами добавляет 2 усиленных выстрела.'
   perkDeadEye           = 'Ricochet also stuns every zombie it hits for 2 s (once per 4 s).', 'Рикошет также оглушает всех задетых зомби на 2 с (раз в 4 с).'
   perkMachineGunner     = 'Fully suppressed targets take +25% damage from you; every kill gives 5 rounds of the loaded ammo.', 'Полностью подавленные цели получают от вас +25% урона; каждое убийство даёт 5 патронов заряженного типа.'
   perkArchery           = 'A headshot arrow sets the target on fire; a bolt marks every zombie within 4 m.', 'Стрела в голову поджигает цель; болт помечает всех зомби в радиусе 4 м.'
@@ -280,6 +278,23 @@ foreach ($p in $perkLines.Keys) {
     if ($L -eq 5) { $en += '\n[FFB400]Level 5:[-] ' + $perkFinale[$p][0]; $ru += '\n[FFB400]Уровень 5:[-] ' + $perkFinale[$p][1] }
     $extra[$key] = $en, $ru
   }
+}
+
+# Mastery 2.0: Gunslinger is vanilla again without its "successive hits" crit (removed in progression.xml, ranks 3-5);
+# Headhunter lives in the pistol mastery tree
+function Remove-LastSentence($t) {
+  # the texts hold a literal backslash-n (the game turns it into a line break)
+  $parts = $t -split '\\n', 2
+  $first = $parts[0]
+  $i = $first.LastIndexOf('. ', $first.Length - 2)
+  if ($i -lt 0) { throw "No sentence to drop in: $t" }
+  $first.Substring(0, $i + 1) + '\n' + $parts[1]
+}
+for ($L = 1; $L -le 5; $L++) {
+  $key = "perkGunslingerRank${L}LongDesc"
+  $en = $loc[$key]; $ru = $locRu[$key]
+  if ($L -ge 3) { $en = Remove-LastSentence $en; $ru = Remove-LastSentence $ru }
+  $extra[$key] = ($en + '\n\n[FFB400]AposMod:[-] Headhunter (pistols and SMGs) now grows in the weapon mastery tree: Alt+K.'), ($ru + '\n\n[FFB400]AposMod:[-] Охотник за головами (пистолеты и ПП) теперь растёт в дереве мастерства оружия: Alt+K.')
 }
 
 # ===== 1.0: max-rank highlights of the other perks (perk -> max rank, EN, RU), appended to that rank's vanilla text =====
