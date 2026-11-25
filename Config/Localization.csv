@@ -865,7 +865,7 @@ aposMS_Bows_A6_D,buffs,Buff,,,"Splinters slow zombies for 3 s.","Осколки 
 aposMS_Bows_A6_R1,buffs,Buff,,,"-25% speed","-25% скорости"
 aposMS_Bows_A6_R2,buffs,Buff,,,"-60% speed","-60% скорости"
 aposMS_Bows_A7,buffs,Buff,,,"Shock Trap","Электроловушка"
-aposMS_Bows_A7_D,buffs,Buff,,,"An arrow stuck in a zombie discharges electricity 1.5 s later: everyone around is hit and shocked. An arrow in a wall or the ground is a trap: it waits up to 10 s and discharges when a zombie comes within 3 m (up to 5 traps; a 6th sets off the oldest).","Стрела, застрявшая в зомби, через 1.5 с бьёт током: все вокруг получают урон и шок. Стрела в стене или земле — ловушка: ждёт до 10 с и бьёт током, когда зомби подходит ближе 3 м (до 5 ловушек; шестая взрывает самую старую)."
+aposMS_Bows_A7_D,buffs,Buff,,,"An arrow stuck in a zombie discharges electricity 1.5 s later: everyone around is hit and shocked. An arrow in a wall or the ground is a trap: it waits up to 10 s and discharges when a zombie comes within 3 m (one trap at a time: a new one sets off the old one).","Стрела, застрявшая в зомби, через 1.5 с бьёт током: все вокруг получают урон и шок. Стрела в стене или земле — ловушка: ждёт до 10 с и бьёт током, когда зомби подходит ближе 3 м (одна ловушка за раз: новая взрывает старую)."
 aposMS_Bows_A7_R1,buffs,Buff,,,"Discharge within 3 m: 50% of a splinter, shock 2 s","Разряд в 3 м: 50% осколка, шок 2 с"
 aposMS_Bows_A7_R2,buffs,Buff,,,"Discharge within 4.5 m: 100% of a splinter, shock 4 s","Разряд в 4.5 м: 100% осколка, шок 4 с"
 aposMS_Bows_A8,buffs,Buff,,,"Splinter Storm","Осколочная буря"

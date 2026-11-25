@@ -235,12 +235,12 @@ public static class AposBowTree
 
     // ===== Shock Trap: the stuck arrow discharges electricity =====
     // an arrow in a zombie discharges 1.5 s later; an arrow in a wall / the ground is a trap (Trap): it waits up to 10 s
-    // for a zombie within 3 m and discharges 0.3 s later (unused, it just goes out after 10 s); at most 5 traps: a new one
-    // over the limit makes the oldest discharge at once.
+    // for a zombie within 3 m and discharges 0.3 s later (unused, it just goes out after 10 s); one trap at a time: a new
+    // one makes the old one discharge at once.
     // The discharge: everyone within 3 m (rank 2: 4.5 m) takes 50% (100%) of a splinter as electrical damage, shocked 2 (4) s.
     class Mine { public float At; public Vector3 Pos; public float Dmg; public EntityAlive Body; public bool Trap; public float Expires; }
     const float TrapWait = 10f, TrapRadius = 3f;
-    const int MaxTraps = 5;
+    const int MaxTraps = 1;   // one trap at a time (the crossbow's Minefield is the skill for many mines)
     static readonly Color TrapColor = new Color(0.4f, 0.85f, 1f);
     static readonly List<Mine> mines = new List<Mine>();
 
