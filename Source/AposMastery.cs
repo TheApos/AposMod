@@ -94,7 +94,11 @@ public class AposMastery : MonoBehaviour
         "A1 A 1 3 0 head_shot|A2 A 1 3 0 swap|A3 A 2 3 0 star|A4 A 2 3 0 long_shot|A5 A 3 1 0 sneak_attack|A6 A 3 3 0 sight|A7 A 4 1 0 trophy|A8 A 5 1 0 marksmanship|" +
         "B1 B 1 3 0 arrow_compass|B2 B 1 3 0 critical|B3 B 2 3 0 players|B4 B 2 3 0 stunned|B5 B 3 1 0 hard_target|B6 B 3 2 0 fire|B7 B 4 2 0 add|B8 B 5 1 0 explosion|" +
         "H1 H 3 1 5 percent|H2 H 4 1 5 search|H3 H 5 1 8 arrow_right",
-        null, null, null, null, null, null, null, null, null,
+        // Machine guns: A suppression, B spin-up (AposMG.cs)
+        "A1 A 1 3 0 twitch_slow|A2 A 1 3 0 bundle|A3 A 2 3 0 hard_target|A4 A 2 3 0 twitch_weaken_ranged|A5 A 3 1 0 explosion|A6 A 3 2 0 defense|A7 A 4 2 0 players|A8 A 5 1 0 twitch_stay_still|" +
+        "B1 B 1 3 0 speed|B2 B 1 3 0 hand|B3 B 2 3 0 shape_ammo|B4 B 2 3 0 twitch_strength_ranged|B5 B 3 1 0 twitch_infinite_ammo|B6 B 3 2 0 laceration|B7 B 4 2 0 run|B8 B 5 1 0 hot|" +
+        "H1 H 3 1 5 run_and_gun|H2 H 4 1 5 stress_zombie_horde|H3 H 5 1 8 electric_turret",
+        null, null, null, null, null, null, null, null,
     };
 
     public static readonly Skill[][] Trees = ParseTrees();
@@ -284,6 +288,7 @@ public class AposMastery : MonoBehaviour
         AposPistol.Tick(player, HeldClass == Pistols);
         AposShotgun.Tick(player, HeldClass == Shotguns);
         AposRifle.Tick(player, HeldClass == Rifles);
+        AposMG.Tick(player, HeldClass == MG);
         for (int i = 0; i < StatVars.Length; i++)
         {
             if (player.Buffs.GetCustomVar(StatVars[i]) != stats[i]) player.Buffs.SetCustomVar(StatVars[i], stats[i]);
@@ -322,6 +327,16 @@ public class AposMastery : MonoBehaviour
         return learned;
     }
 
+    // a class asks for the hit being processed to tear a limb off (AposCombat sets DamageResponse.Dismember)
+    static bool dismemberNext;
+    public static void RequestDismember() { dismemberNext = true; }
+    public static bool TakeDismember()
+    {
+        bool d = dismemberNext;
+        dismemberNext = false;
+        return d;
+    }
+
     // ===== hits by the local player (AposCombatDamagePatch) =====
     public static bool IsLocalWeaponHit(EntityPlayer attacker, EntityAlive target, DamageSource source)
     {
@@ -339,6 +354,7 @@ public class AposMastery : MonoBehaviour
         if (HeldClass == Pistols) return AposPistol.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
         if (HeldClass == Shotguns) return AposShotgun.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
         if (HeldClass == Rifles) return AposRifle.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
+        if (HeldClass == MG) return AposMG.ModifyHit(attacker as EntityPlayerLocal, target, source, strength);
         return strength;
     }
 
@@ -349,6 +365,7 @@ public class AposMastery : MonoBehaviour
         if (HeldClass == Pistols) AposPistol.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
         if (HeldClass == Shotguns) AposShotgun.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
         if (HeldClass == Rifles) AposRifle.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
+        if (HeldClass == MG) AposMG.AfterHit(attacker as EntityPlayerLocal, target, response, dealt);
         return 0f;
     }
 
@@ -446,6 +463,7 @@ public class AposMastery : MonoBehaviour
             AposPistol.Reset();
             AposShotgun.Reset();
             AposRifle.Reset();
+            AposMG.Reset();
             AposMasteryBadgePatch.Forget();
             hintRect = null;
             return;

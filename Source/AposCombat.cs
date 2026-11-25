@@ -103,7 +103,7 @@ public static class AposCombat
         }
         // Weapon Mastery: hit nodes and kill progress (AposMastery.cs)
         leech += AposMastery.AfterHit(attacker, target, source, response, dealt);
-        if (AposShotgun.TakeShred() && !response.Fatal) response.Dismember = true; // Shred: 7 pellets in one zombie
+        if (AposMastery.TakeDismember() && !response.Fatal) response.Dismember = true; // mastery: shotgun / MG Shred
         if (response.Fatal) AposMastery.CountKill(attacker, target);
         if (leech > 0f)
         {

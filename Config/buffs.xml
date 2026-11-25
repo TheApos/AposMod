@@ -287,18 +287,10 @@
 
 		<!-- Machine guns "Suppression" (on the zombie): aposSupStacks hits, -5% speed each, capped at aposSupMax (negative).
 		     aposSupFull = 1 at the cap (Machine Gunner 5 deals +25% to such targets). Every hit resets aposSupTime to 8 s. -->
+		<!-- Machine guns "Suppression" (Source/AposMG.cs sets aposSupSlow (negative), aposSupFull, aposSupTime = 8 on each hit) -->
 		<buff name="buffAposSuppressed" hidden="true">
 			<stack_type value="ignore"/>
 			<effect_group>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposSupSlow" operation="set" value="@aposSupStacks"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposSupSlow" operation="multiply" value="-.05"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposSupFull" operation="set" value="0"/>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposSupFull" operation="set" value="1">
-					<requirement name="CVarCompare" cvar="aposSupSlow" operation="LTE" value="@aposSupMax"/>
-				</triggered_effect>
-				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposSupSlow" operation="set" value="@aposSupMax">
-					<requirement name="CVarCompare" cvar="aposSupSlow" operation="LT" value="@aposSupMax"/>
-				</triggered_effect>
 				<passive_effect name="WalkSpeed" operation="perc_add" value="@aposSupSlow"/>
 				<passive_effect name="RunSpeed" operation="perc_add" value="@aposSupSlow"/>
 				<triggered_effect trigger="onSelfBuffUpdate" action="ModifyCVar" cvar="aposSupTime" operation="add" value="-1"/>
@@ -306,6 +298,24 @@
 					<requirement name="CVarCompare" cvar="aposSupTime" operation="LTE" value="0"/>
 				</triggered_effect>
 				<triggered_effect trigger="onSelfBuffRemove" action="RemoveCVar" cvar="aposSupStacks,aposSupSlow,aposSupFull,aposSupTime"/>
+			</effect_group>
+		</buff>
+		<!-- MG mastery "Wall of Fire": a fully suppressed zombie stops (elites -80%) while you keep hitting it, 2 s after -->
+		<buff name="buffAposWallStop" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="2"/>
+			<effect_group>
+				<passive_effect name="WalkSpeed" operation="perc_add" value="@aposWallStop"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value="@aposWallStop"/>
+			</effect_group>
+		</buff>
+		<!-- MG mastery "Wall of Fire" downside on the player: -40% movement while firing -->
+		<buff name="buffAposWallSlow" hidden="true">
+			<stack_type value="replace"/>
+			<duration value="0.5"/>
+			<effect_group>
+				<passive_effect name="WalkSpeed" operation="perc_add" value="-.4"/>
+				<passive_effect name="RunSpeed" operation="perc_add" value="-.4"/>
 			</effect_group>
 		</buff>
 

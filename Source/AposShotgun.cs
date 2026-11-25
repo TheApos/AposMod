@@ -37,7 +37,6 @@ public static class AposShotgun
     static readonly Dictionary<int, int> pellets = new Dictionary<int, int>(); // target id -> pellets this shot
     static readonly HashSet<int> knocked = new HashSet<int>();                // thrown this shot
     static bool wallBonus;                                                     // Lead Wall 2/2: the next shot +50%
-    static bool shredNow;                                                      // Shred: dismember this hit (AposCombat reads it)
 
     // Battering Ram: zombies near the landing spot fall too, a moment after the throw
     class Landing { public EntityAlive Body; public float At; public int Damage; }
@@ -46,7 +45,7 @@ public static class AposShotgun
     public static void Reset()
     {
         pellets.Clear(); knocked.Clear(); landings.Clear();
-        wallBonus = shredNow = false;
+        wallBonus = false;
     }
 
     // ===== ammo =====
@@ -144,7 +143,7 @@ public static class AposShotgun
             // Shred: the 7th pellet in one zombie tears a limb off and stuns it
             if (n == 7 && R("B5") > 0)
             {
-                shredNow = true;
+                AposMastery.RequestDismember();
                 target.Buffs.AddBuff("buffInjuryStunned01", -1, true, false, 1f);
             }
         }
@@ -153,13 +152,6 @@ public static class AposShotgun
         return Mathf.Max(1, Mathf.RoundToInt(strength * mult));
     }
 
-    // AposCombat asks after the hit: should this hit tear a limb off (Shred)?
-    public static bool TakeShred()
-    {
-        bool s = shredNow;
-        shredNow = false;
-        return s;
-    }
 
     public static void AfterHit(EntityPlayerLocal player, EntityAlive target, DamageResponse response, int dealt)
     {
