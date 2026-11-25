@@ -282,8 +282,9 @@ public static class AposCrossbow
     }
 }
 
-// Arrows and bolts that stick in a wall or the ground: Splinter Mine (bows), Sticky Charge / Minefield (crossbows).
-// Harmony on ProjectileMoveScript.checkCollision: Active -> Sticky without an entity hit in the same moment.
+// Arrows and bolts that hit a wall or the ground: Shock Trap (bows), Sticky Charge / Minefield (crossbows).
+// Harmony on ProjectileMoveScript.checkCollision: Active -> any other state (Sticky, or Dead / Destroyed when the game's
+// stick roll broke it) without an entity hit in the same moment.
 [HarmonyLib.HarmonyPatch(typeof(ProjectileMoveScript), "checkCollision")]
 public static class AposProjectiles
 {
@@ -317,7 +318,7 @@ public static class AposProjectiles
         current = null;
         try
         {
-            if (__state != ProjectileMoveScript.State.Active || __instance.state != ProjectileMoveScript.State.Sticky) return;
+            if (__state != ProjectileMoveScript.State.Active || __instance.state == ProjectileMoveScript.State.Active) return;
             if (Time.time - lastEntityHit < 0.1f) return;           // it stuck in a zombie: the hit hooks handle that
             World world = GameManager.Instance.World;
             EntityPlayerLocal player = world != null ? world.GetPrimaryPlayer() : null;

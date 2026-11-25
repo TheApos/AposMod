@@ -99,7 +99,7 @@ public class AposMastery : MonoBehaviour
         "B1 B 1 3 0 speed|B2 B 1 3 0 hand|B3 B 2 3 0 shape_ammo|B4 B 2 3 0 twitch_strength_ranged|B5 B 3 1 0 twitch_infinite_ammo|B6 B 3 2 0 laceration|B7 B 4 2 0 run|B8 B 5 1 0 hot|" +
         "H1 H 3 1 5 run_and_gun|H2 H 4 1 5 stress_zombie_horde|H3 H 5 1 8 electric_turret",
         // Bows: A splinters, B the arrow (AposBowTree.cs)
-        "A1 A 1 3 0 add|A2 A 1 3 0 knife|A3 A 2 3 0 arrow_compass|A4 A 2 3 0 fire|A5 A 3 1 0 explosion|A6 A 3 2 0 twitch_slow|A7 A 4 2 0 traps|A8 A 5 1 0 storm_wasteland|" +
+        "A1 A 1 3 0 add|A2 A 1 3 0 knife|A3 A 2 3 0 arrow_compass|A4 A 2 3 0 fire|A5 A 3 1 0 explosion|A6 A 3 2 0 twitch_slow|A7 A 4 2 0 electric_power|A8 A 5 1 0 storm_wasteland|" +
         "B1 B 1 3 0 archery|B2 B 1 3 0 arrow_right|B3 B 2 3 0 laceration|B4 B 2 3 0 speed|B5 B 3 1 0 stealth|B6 B 3 2 0 head_shot|B7 B 4 2 0 bundle|B8 B 5 1 0 spear|" +
         "H1 H 3 1 5 twitch_hurt|H2 H 4 1 5 noise|H3 H 5 1 8 star",
         // Crossbows: A the Mark, B Sticky Charge (AposCrossbow.cs)

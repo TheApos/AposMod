@@ -2,7 +2,7 @@
 // - Class trait "Splinter": an arrow hit bursts into 2 splinters, each flies to the nearest other zombie within 5 m and
 //   hits for 50% of the arrow (at least 40). Full Hunter set: +2 splinters. (It used to be XML scaled by Archery.)
 // - Branch A (splinters, crowds): More Splinters, Sharp Splinters, Wide Scatter, Elemental Splinters, Splinter Chain,
-//   Shrapnel Wound, Splinter Mine, capstone Splinter Storm.
+//   Shrapnel Wound, Shock Trap, capstone Splinter Storm.
 // - Branch B (the arrow, strong targets): Full Draw (x Agility), Piercing Arrow, Hunter's Wound, Quick Draw, Shadow,
 //   Marksmanship, Arrow Recovery, capstone Lance Arrow.
 // - Hybrids: Barbed Splinters, Distraction, Thousand Needles.
@@ -128,8 +128,8 @@ public static class AposBowTree
 
         // Splinters (Lance Arrow: only from shots that were not fully drawn)
         if (!(full && R("B8") > 0)) Burst(player, target.position, target, Splinters(player), Element(target), full, true);
-        // Splinter Mine: 1.5 s later the arrow stuck in it bursts again
-        if (R("A7") > 0) AddMine(new Mine { At = Time.time + 1.5f, Pos = target.position, Full = full, Element = Element(target), Dmg = lastArrowDmg, Body = response.Fatal ? null : target });
+        // Shock Trap: 1.5 s later the arrow stuck in it discharges electricity around
+        if (R("A7") > 0) AddMine(new Mine { At = Time.time + 1.5f, Pos = target.position, Dmg = lastArrowDmg, Body = response.Fatal ? null : target });
     }
 
     static int Splinters(EntityPlayerLocal player)
@@ -232,12 +232,14 @@ public static class AposBowTree
         if (R("H1") > 0) Wound(e);
     }
 
-    // ===== Splinter Mine: a second wave from where the arrow stuck =====
-    // an arrow in a zombie bursts 1.5 s later; an arrow in a wall / the ground is a trap (Trap): it waits up to 30 s
-    // for a zombie within 3 m, bursts 0.3 s later (or by itself when the time is up); at most 5 traps, oldest go first
-    class Mine { public float At; public Vector3 Pos; public bool Full; public string Element; public float Dmg; public EntityAlive Body; public bool Trap; public float Expires; }
+    // ===== Shock Trap: the stuck arrow discharges electricity =====
+    // an arrow in a zombie discharges 1.5 s later; an arrow in a wall / the ground is a trap (Trap): it waits up to 30 s
+    // for a zombie within 3 m and discharges 0.3 s later (unused, it just goes out); at most 5 traps, oldest go first.
+    // The discharge: everyone within 3 m (rank 2: 4.5 m) takes 50% (100%) of a splinter as electrical damage, shocked 2 (4) s.
+    class Mine { public float At; public Vector3 Pos; public float Dmg; public EntityAlive Body; public bool Trap; public float Expires; }
     const float TrapWait = 30f, TrapRadius = 3f;
     const int MaxTraps = 5;
+    static readonly Color TrapColor = new Color(0.4f, 0.85f, 1f);
     static readonly List<Mine> mines = new List<Mine>();
 
     static void RunMines(EntityPlayerLocal player)
@@ -247,48 +249,49 @@ public static class AposBowTree
             Mine m = mines[i];
             if (m.Trap && m.At == float.MaxValue)
             {
-                if (Time.time > m.Expires) m.At = Time.time;
-                else foreach (EntityAlive e in Around(m.Pos, TrapRadius)) { m.At = Time.time + 0.3f; break; }
+                if (Time.time > m.Expires) { mines.RemoveAt(i); AposFx.Unmark(m); continue; }   // went out unused
+                foreach (EntityAlive e in Around(m.Pos, TrapRadius)) { m.At = Time.time + 0.3f; break; }
             }
             if (Time.time < m.At) continue;
             mines.RemoveAt(i);
             AposFx.Unmark(m);
-            AposFx.Blast(m.Body != null && !m.Body.IsDead() ? m.Body.position + Vector3.up * 1f : m.Pos);
-            if (m.Body != null) m.Pos = m.Body.position;
-            float keep = lastArrowDmg;
-            lastArrowDmg = m.Dmg;
-            int n = Splinters(player);
-            if (R("A7") < 2) n = Mathf.Max(1, n / 2);
-            int hits = BurstWide(player, m.Pos, n, m.Element, m.Full, R("A7") >= 2 ? 1.5f : 1f);
-            if (hits > 0) AposReactions.Add(AposReactions.SplinterMine, Mathf.RoundToInt(Mathf.Max(SplMin[R("A2")], m.Dmg * SplShare[R("A2")])), hits);
-            lastArrowDmg = keep;
+            if (m.Body != null && !m.Body.IsDead()) m.Pos = m.Body.position;
+            Discharge(player, m);
         }
+    }
+
+    static void Discharge(EntityPlayerLocal player, Mine m)
+    {
+        bool r2 = R("A7") >= 2;
+        float radius = r2 ? 4.5f : 3f;
+        float dmg = Mathf.Max(SplMin[R("A2")], m.Dmg * SplShare[R("A2")]) * (r2 ? 1f : 0.5f) * (R("A8") > 0 ? 2f : 1f);
+        int d = Mathf.Max(1, Mathf.RoundToInt(dmg)), hits = 0;
+        Vector3 at = m.Pos + Vector3.up * (m.Body != null ? 1f : 0.2f);
+        try
+        {
+            GameManager.Instance.SpawnParticleEffectClient(new ParticleEffect("p_electric_shock", at, Quaternion.identity, 1f, Color.white, "electric_fence_impact", null, 1f, null), player.entityId, true, true);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("[AposMod] Shock Trap effect: " + e.Message);
+        }
+        foreach (EntityAlive e in new List<EntityAlive>(Around(m.Pos, radius)))
+        {
+            AposSplash.Deal(e, d, player.entityId, EnumDamageTypes.Electrical);
+            if (!e.IsDead()) e.Buffs.AddBuff("buffShocked", -1, true, false, r2 ? 4f : 2f);
+            hits++;
+        }
+        if (hits > 0) AposReactions.Add(AposReactions.SplinterMine, d, hits);
     }
 
     // the armed arrow: a pulsing marker on it (on the zombie it is stuck in, or where it hit) until it bursts
     static void AddMine(Mine m)
     {
         mines.Add(m);
-        AposFx.Mark(m, m.Pos, m.Body);   // exactly where the arrow stuck (no lift: it showed off the arrow up close)
+        AposFx.Mark(m, m.Pos, m.Body, TrapColor);   // exactly where the arrow stuck
     }
 
-    static int BurstWide(EntityPlayerLocal player, Vector3 pos, int n, string element, bool full, float radiusMult)
-    {
-        // the mine's radius can be 1.5x: temporarily widen by bursting from the point with the bigger radius
-        float radius = SplRadius[R("A3")] * radiusMult;
-        List<EntityAlive> near = new List<EntityAlive>(Around(pos, radius));
-        near.Sort((a, b) => (a.position - pos).sqrMagnitude.CompareTo((b.position - pos).sqrMagnitude));
-        float dmg = Mathf.Max(SplMin[R("A2")], lastArrowDmg * SplShare[R("A2")]) * (R("A8") > 0 ? 2f : 1f);
-        int hits = Mathf.Min(n, near.Count);
-        for (int i = 0; i < hits; i++) Splinter(player, near[i], dmg, element, true);
-        if (n > hits && R("H2") > 0)
-        {
-            foreach (EntityAlive e in Around(pos, 8f)) e.SetInvestigatePosition(pos, 80, false);
-        }
-        return hits;
-    }
-
-    // an arrow stuck in a wall or the ground (AposProjectiles): with Splinter Mine it becomes a trap
+    // an arrow stuck in a wall or the ground (AposProjectiles): with Shock Trap it becomes a trap
     public static void OnGroundImpact(EntityPlayerLocal player, Vector3 pos, string ammo)
     {
         if (R("A7") <= 0) return;
@@ -297,7 +300,7 @@ public static class AposBowTree
         foreach (Mine x in mines) if (x.Trap) traps++;
         for (int i = 0; i < mines.Count && traps >= MaxTraps; i++)
             if (mines[i].Trap) { AposFx.Unmark(mines[i]); mines.RemoveAt(i); traps--; i--; }
-        AddMine(new Mine { Trap = true, At = float.MaxValue, Expires = Time.time + TrapWait, Pos = pos, Full = FullShot(), Element = ammo != null && ammo.Contains("Flaming") ? "buffBurningFlamingArrow" : null, Dmg = Mathf.Max(lastArrowDmg, 40f) });
+        AddMine(new Mine { Trap = true, At = float.MaxValue, Expires = Time.time + TrapWait, Pos = pos, Dmg = Mathf.Max(lastArrowDmg, 40f) });
     }
 
     static readonly FastTags<TagGroup.Global> TraderTag = FastTags<TagGroup.Global>.Parse("trader");

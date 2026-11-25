@@ -113,7 +113,7 @@ public static class AposReactions
                     case Overkill: pic = carry; pc = new Color(1f, 0.55f, 0.35f); source = Localization.Get("aposProcOverkill"); break;
                     case ChainReaction: pic = blast; pc = BlastColor; source = Localization.Get("aposProcChain"); break;
                     case Pierce: pic = carry; pc = new Color(1f, 0.82f, 0.3f); source = Localization.Get("aposMS_Bows_B2"); break;
-                    case SplinterMine: pic = blast; pc = BlastColor; source = Localization.Get("aposMS_Bows_A7"); break;
+                    case SplinterMine: pic = shock; pc = ShockColor; source = Localization.Get("aposMS_Bows_A7"); break;
                     case StickyCharge: pic = blast; pc = FireColor; source = Localization.Get("aposMS_Crossbows_B1"); break;
                     default: pic = shield; pc = new Color(0.8f, 0.8f, 0.85f); source = Localization.Get("aposProcShrapnel"); break;
                 }

@@ -1,7 +1,7 @@
 // Small visual / sound feedback for mastery skills (drawn from AposMastery.OnGUI):
 // - Blast(pos): a small explosion look and sound at a world point, no damage (the exploding-arrow particle, index 11)
 // - Toast(text): a short line under the crosshair (e.g. "Parry!"), fades out
-// - markers: a pulsing orange ring on an armed mine / sticky charge until it goes off
+// - markers: a pulsing ring (orange by default, blue for the bow's Shock Trap) on an armed mine / charge until it goes off
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,14 +32,19 @@ public static class AposFx
     }
 
     // ===== markers =====
-    class Marker { public object Key; public Vector3 Pos; public EntityAlive Body; }
+    class Marker { public object Key; public Vector3 Pos; public EntityAlive Body; public Color Color; }
     static readonly List<Marker> markers = new List<Marker>();
     static Texture2D ring;
 
     public static void Mark(object key, Vector3 pos, EntityAlive body)
     {
+        Mark(key, pos, body, new Color(1f, 0.55f, 0.15f));
+    }
+
+    public static void Mark(object key, Vector3 pos, EntityAlive body, Color color)
+    {
         Unmark(key);
-        markers.Add(new Marker { Key = key, Pos = pos, Body = body });
+        markers.Add(new Marker { Key = key, Pos = pos, Body = body, Color = color });
     }
 
     public static void Unmark(object key)
@@ -70,10 +75,10 @@ public static class AposFx
                 ring.Apply();
             }
             float beat = 0.55f + 0.45f * Mathf.Abs(Mathf.Sin(Time.time * 6f));
-            GUI.color = new Color(1f, 0.55f, 0.15f, beat);
             for (int i = markers.Count - 1; i >= 0; i--)
             {
                 Marker m = markers[i];
+                GUI.color = new Color(m.Color.r, m.Color.g, m.Color.b, beat);
                 if (m.Body != null && m.Body.IsDead()) m.Body = null;
                 // world (logical) position -> scene space for the camera
                 Vector3 scene = m.Body != null ? m.Body.transform.position + Vector3.up * m.Body.height * 0.5f : m.Pos - Origin.position;
