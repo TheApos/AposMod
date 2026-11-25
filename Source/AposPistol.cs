@@ -305,7 +305,9 @@ public static class AposPistol
             Vector3 at = head != null ? head.position : e.transform.position + Vector3.up * e.height * 0.9f;
             Vector3 v = cam.WorldToViewportPoint(at);
             if (v.z <= 0f) continue;
-            float size = Mathf.Clamp(Screen.height * 0.6f / Mathf.Max(1f, v.z), 10f, 48f);
+            // the ring frames the head: big up close, small far away (a head is about 0.35 m across)
+            Vector3 top = cam.WorldToViewportPoint(at + cam.transform.up * 0.35f);
+            float size = Mathf.Max(8f, Mathf.Abs(top.y - v.y) * Screen.height * 1.6f);
             GUI.DrawTexture(new Rect(v.x * Screen.width - size / 2f, (1f - v.y) * Screen.height - size / 2f, size, size), ring);
         }
         GUI.color = old;

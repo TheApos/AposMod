@@ -476,3 +476,45 @@ public class AposEliteCommand : ConsoleCmdAbstract
         return best;
     }
 }
+
+// aposmastery                 -> level, kills and free points of the held weapon's class
+// aposmastery level N         -> set that class to mastery level N (0-25), for tests
+// aposmastery max             -> level 25
+// aposmastery branch A|B|H    -> learn that branch as far as the free points go
+// aposmastery reset           -> clear the tree for free (no Eridium)
+public class AposMasteryCommand : ConsoleCmdAbstract
+{
+    public override string[] getCommands()
+    {
+        return new string[] { "aposmastery" };
+    }
+
+    public override string getDescription()
+    {
+        return "AposMod Weapon Mastery (tests, held weapon's class): aposmastery [level N | max | branch A|B|H | reset]";
+    }
+
+    public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
+    {
+        SdtdConsole console = SingletonMonoBehaviour<SdtdConsole>.Instance;
+        EntityPlayerLocal player = GameManager.Instance.World != null ? GameManager.Instance.World.GetPrimaryPlayer() : null;
+        int cls = player != null ? AposMastery.ClassOf(player.inventory.holdingItem) : -1;
+        if (cls < 0)
+        {
+            console.Output("Take a mastery weapon in your hands first.");
+            return;
+        }
+        string cmd = _params.Count > 0 ? _params[0].ToLowerInvariant() : "";
+        string arg = _params.Count > 1 ? _params[1].ToUpperInvariant() : "";
+        int n;
+        if (cmd == "level" && int.TryParse(arg, out n)) AposMastery.SetLevel(cls, n);
+        else if (cmd == "max") AposMastery.SetLevel(cls, AposMastery.MaxLevel);
+        else if (cmd == "branch" && (arg == "A" || arg == "B" || arg == "H")) console.Output("Learned ranks: " + AposMastery.FillBranch(cls, arg[0]));
+        else if (cmd == "reset") AposMastery.ResetAll(cls);
+        else if (cmd != "") console.Output(getDescription());
+        AposMastery.Progress p = AposMastery.Get(cls);
+        console.Output(string.Format("{0}: level {1}/{2}, kills {3}, free points {4}, spent {5} (A {6}, B {7}, hybrids {8})",
+            AposMastery.Classes[cls], AposMastery.Level(p), AposMastery.MaxLevel, p.Kills, AposMastery.Level(p) - AposMastery.Spent(p),
+            AposMastery.Spent(p), AposMastery.PointsIn(cls, 'A', 99), AposMastery.PointsIn(cls, 'B', 99), AposMastery.PointsIn(cls, 'H', 99)));
+    }
+}

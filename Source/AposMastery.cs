@@ -269,6 +269,38 @@ public class AposMastery : MonoBehaviour
         }
     }
 
+    // ===== test helpers ("aposmastery" console command) =====
+    public static void SetLevel(int cls, int level)
+    {
+        level = Mathf.Clamp(level, 0, MaxLevel);
+        progress[cls].Kills = level == 0 ? 0 : KillsFor[level - 1];
+        // fewer points than spent: the tree is cleared
+        if (Spent(progress[cls]) > level) Array.Clear(progress[cls].Ranks, 0, progress[cls].Ranks.Length);
+        Changed();
+        Save();
+    }
+
+    // learns the whole branch (A, B or H) from the bottom up while there are free points; returns ranks learned
+    public static int FillBranch(int cls, char branch)
+    {
+        int learned = 0;
+        bool any = true;
+        while (any)
+        {
+            any = false;
+            for (int i = 0; i < Trees[cls].Length; i++)
+            {
+                if (Trees[cls][i].Branch != branch || !CanLearn(cls, i)) continue;
+                progress[cls].Ranks[i]++;
+                learned++;
+                any = true;
+            }
+        }
+        Changed();
+        Save();
+        return learned;
+    }
+
     // ===== hits by the local player (AposCombatDamagePatch) =====
     public static bool IsLocalWeaponHit(EntityPlayer attacker, EntityAlive target, DamageSource source)
     {
