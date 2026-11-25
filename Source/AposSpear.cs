@@ -231,6 +231,10 @@ public static class AposSpear
         float dmg = EffectManager.GetValue(PassiveEffects.EntityDamage, player.inventory.holdingItemItemValue, 10f, player);
         dashHit = dmg * 2f * 2f;   // a power hit is about x2, Breakthrough x2
         Debug.Log("[AposMod] Breakthrough: dash, hit " + Mathf.RoundToInt(dashHit));
+        // feedback: a line under the crosshair, a heavy whoosh, a short gold flash in front
+        AposFx.Toast(Localization.Get("aposBreakthroughToast"), new Color(1f, 0.82f, 0.3f));
+        Audio.Manager.PlayInsidePlayerHead("sledge_swingheavy", player.entityId);
+        AposFx3D.Flash(player.position + dashDir * 2f + Vector3.up, new Color(1f, 0.8f, 0.4f), 6f, 3f, 0.3f);
     }
 
     static void DashStep(EntityPlayerLocal player)
@@ -243,6 +247,10 @@ public static class AposSpear
             if (!dashHits.Add(e.entityId)) continue;
             AposSplash.Deal(e, Mathf.Max(1, Mathf.RoundToInt(dashHit)), player.entityId, EnumDamageTypes.Piercing);
             if (!e.IsDead()) AposKnock.Ragdoll(e, player.position, 300f, 2f);
+            // every zombie on the way: a gold ring under it, a clang, a line in the feed (merged into "xN")
+            AposFx3D.Shockwave(e.position, 1.5f, new Color(1f, 0.8f, 0.3f), 0.35f);
+            Audio.Manager.PlayInsidePlayerHead("metalhitmetal", player.entityId);
+            AposReactions.Add(AposReactions.Breakthrough, Mathf.Max(1, Mathf.RoundToInt(dashHit)), 1);
         }
     }
 
