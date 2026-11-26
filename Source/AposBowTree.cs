@@ -291,6 +291,9 @@ public static class AposBowTree
         }
         List<EntityAlive> near = new List<EntityAlive>(Around(m.Pos, radius));
         AposFx3D.Discharge(at, radius, near);
+        string who = "";
+        foreach (EntityAlive e in near) who += " " + e.EntityName + (e.Buffs.HasBuff("buffAposCorroded") ? "(acid)" : "") + (e.Buffs.HasBuff("buffAposReactionCD") ? "(reaction CD)" : "");
+        Debug.Log("[AposMod] Shock Trap: discharged" + (m.Trap ? " (trap)" : " (in a zombie)") + ", " + d + " each, hit:" + (who.Length > 0 ? who : " nobody"));
         foreach (EntityAlive e in near)
         {
             AposSplash.Deal(e, d, player.entityId, EnumDamageTypes.Electrical);

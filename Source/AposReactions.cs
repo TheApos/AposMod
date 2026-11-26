@@ -65,7 +65,9 @@ public static class AposReactions
         float show = zombie.Buffs.GetCustomVar("aposReactShow");
         if (show <= 0f) return;
         zombie.Buffs.SetCustomVar("aposReactShow", 0f);
-        if (Mine(zombie, player)) Add((int)show, 0, 1);
+        bool mine = Mine(zombie, player);
+        Debug.Log("[AposMod] " + ((int)show == Miasma ? "Miasma" : "Confusion") + " reaction on " + zombie.EntityName + " (" + zombie.entityId + ")" + (mine ? "" : ", not your hit: no feed line"));
+        if (mine) Add((int)show, 0, 1);
     }
 
     public static void Clear() { lines.Clear(); }

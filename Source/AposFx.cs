@@ -12,7 +12,8 @@ public static class AposFx
         try
         {
             GameManager gm = GameManager.Instance;
-            if (gm != null) gm.ExplosionClient(worldPos, Quaternion.identity, 11, 0, 0f, 0f, -1, null);
+            // the block-change list must not be null: ExplosionClient reads its Count
+            if (gm != null) gm.ExplosionClient(worldPos, Quaternion.identity, 11, 0, 0f, 0f, -1, new List<BlockChangeInfo>());
         }
         catch (System.Exception e)
         {
