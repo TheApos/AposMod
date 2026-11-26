@@ -52,7 +52,8 @@ public static class AposKnuckles
         if (move != 0f) AposHud.AddSpeed("ui_apos_speed", move, "", move > 0f ? "B2" : "A8");
 
         Color gold = new Color(1f, 0.82f, 0.3f);
-        AposHud.Gauge(true, charges, cap, new Color(1f, 0.6f, 0.2f), charges >= cap, "boxer", charges + "/" + cap, "Base");
+        // Counter Punch charges come from hits you take: a defence widget (bottom, left of the toolbelt)
+        AposHud.Add(true, "boxer", charges + "/" + cap, charges > 0 ? new Color(1f, 0.6f, 0.2f) : new Color(0.6f, 0.6f, 0.6f), charges >= cap, "Base");
         if (R("A2") > 0 && charges > 0) AposHud.Add(true, "defense", "-" + Mathf.RoundToInt(SkinPct(player) * 100f) + "%", new Color(1f, 0.6f, 0.2f), false, "A2");
         if (R("B1") > 0 && combo > 0)
         {

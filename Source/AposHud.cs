@@ -108,8 +108,8 @@ public static class AposHud
     }
 
     // ===== gauges: the weapon's key mechanic as a quarter arc around the crosshair =====
-    // right: the main stack of the held class (Bloodsucker, Headhunter, Rage...), left: charges and cooldowns
-    // (Counter Punch, Earthquake, Chain Lightning). Segments light up one by one, empty ones are barely drawn, a full
+    // right: the main stack of the held class (Bloodsucker, Headhunter, Rage...), left: ability cooldowns
+    // (Earthquake, Chain Lightning; defensive charges such as Counter Punch sit in the defence row). Segments light up one by one, empty ones are barely drawn, a full
     // gauge pulses. Drawn by DrawGauges (IMGUI, from AposMastery.OnGUI); the value is also a Status Effects line.
     public static Widget GaugeLeft, GaugeRight;
 
@@ -274,7 +274,7 @@ public static class AposHud
     {
         new ModBuff { Buff = "buffAposThunderCharge", Cvar = "aposThunder", Suffix = "/3", Full = 3 },
         new ModBuff { Buff = "buffAposAdrenaline", Cvar = "aposAdrenaline", Suffix = "/3", Full = 3, Speed = true, SpeedCvar = "aposAdrenalineSpeed" },
-        new ModBuff { Buff = "buffAposEmp", Cvar = "aposEmp", Suffix = "/10", Full = 10 },
+        new ModBuff { Buff = "buffAposEmp", Cvar = "aposEmp", Suffix = "/10", Full = 10, Defense = true },   // discharges around you
         new ModBuff { Buff = "buffAposPipeVeteran", Cvar = "aposPipeBonus", Suffix = "%" },
         new ModBuff { Buff = "buffAposShadow", Cvar = "", Suffix = "x2", Full = -1 },
         new ModBuff { Buff = "buffAposFrenzyPerception", Cvar = "time" },
