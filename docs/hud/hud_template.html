@@ -1,0 +1,398 @@
+<title>Атлас статусів AposMod</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: tab strip of weapon classes; a HUD "scene" (the game screen around the crosshair) beside a detail panel;
+   every status on the scene and in the list below opens its description. Single dark look: it mirrors the game HUD. */
+:root {
+  --bg: #121513;          /* scorched night, a little green like the wasteland */
+  --panel: #1b1f1c;
+  --panel-2: #232823;
+  --line: #333a33;
+  --fg: #e7e9e2;
+  --muted: #9aa197;
+  --accent: #ffd14d;      /* the mod's gold: full stacks, "ready" */
+  --accent-ink: #1c1a10;
+  --danger: #e6404d;
+  --display: "Saira Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+.wrap { max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+header h1 { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4vw, 40px); letter-spacing: .02em; margin: 0; text-wrap: balance; text-transform: uppercase; }
+header p { margin: 4px 0 0; color: var(--muted); max-width: 70ch; }
+header b { color: var(--fg); font-weight: 600; }
+
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
+nav button {
+  font-family: var(--display); font-weight: 600; font-size: 16px; letter-spacing: .03em; text-transform: uppercase;
+  background: var(--panel); color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 5px 11px; cursor: pointer;
+}
+nav button:hover { color: var(--fg); border-color: #4a534a; }
+nav button[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+nav .sep { width: 1px; background: var(--line); margin: 0 4px; }
+button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.main { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 900px) { .main { grid-template-columns: minmax(0, 1fr); } }
+
+/* ===== the scene: crop of a 1920x1080 screen, x 360..1800, y 330..1080 ===== */
+.scene {
+  position: relative; width: 100%; aspect-ratio: 1440 / 750; container-type: inline-size; overflow: hidden; border-radius: 4px;
+  background:
+    radial-gradient(ellipse 60% 45% at 70% 30%, rgba(255, 190, 120, .10), transparent 70%),
+    linear-gradient(180deg, #2b3138 0%, #3a4036 52%, #2c3325 53%, #1f251b 100%);
+  border: 1px solid var(--line);
+}
+.scene svg.layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.hit { position: absolute; cursor: pointer; pointer-events: auto; }
+.hit.sel { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: 3px; }
+.slot { display: flex; align-items: center; gap: .25cqw; background: rgba(0,0,0,.28); padding: 0 .3cqw; height: 2.92cqw; width: 7.7cqw; }
+.slot .t { font: 700 1.85cqw/1 var(--display); color: #fff; text-shadow: 0 0 .15cqw #000, 0 0 .15cqw #000; white-space: nowrap; }
+.ic { display: inline-block; flex: none; }
+.ic svg { width: 100%; height: 100%; display: block; }
+.ic.png { -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; }
+.zrow { display: flex; gap: .45cqw; align-items: center; }
+.ztag { display: flex; align-items: center; gap: .15cqw; }
+.ztag .t { font: 700 1.55cqw/1 var(--display); text-shadow: 0 0 .15cqw #000, 0 0 .2cqw #000; white-space: nowrap; }
+.toast { font: 700 2.4cqw/1 var(--display); letter-spacing: .03em; text-shadow: 0 0 .25cqw #000, 0 0 .4cqw #000; white-space: nowrap; transform: translateX(-50%); }
+.feedline { display: flex; align-items: center; gap: .4cqw; background: rgba(0,0,0,.35); padding: .35cqw .6cqw; border-radius: .3cqw; }
+.feedline .src { font: 600 1.35cqw/1 var(--display); color: #d6d9d2; white-space: nowrap; }
+.feedline .t { font: 700 1.6cqw/1 var(--display); color: #fff; white-space: nowrap; }
+.feedline .op { font: 700 1.5cqw/1 var(--display); color: #fff; }
+.glow { animation: pulse 1.05s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .62; } }
+@media (prefers-reduced-motion: reduce) { .glow, .ring { animation: none !important; } }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--muted); font-size: 13px; margin-top: 8px; }
+.legend span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: var(--c); vertical-align: 1px; }
+
+/* ===== detail ===== */
+.detail { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.detail .head { display: flex; gap: 12px; align-items: center; }
+.detail .bigic { width: 48px; height: 48px; display: grid; place-items: center; background: #0d0f0d; border: 1px solid var(--line); border-radius: 4px; flex: none; }
+.detail h2 { font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1.05; margin: 0; letter-spacing: .02em; }
+.detail .en { color: var(--muted); font-size: 13px; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font: 600 12px/1 var(--body); letter-spacing: .04em; text-transform: uppercase; padding: 4px 7px; border-radius: 2px; background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); }
+.chip.k { color: var(--accent); border-color: #5c5020; }
+.detail dl { margin: 0; display: grid; gap: 10px; }
+.detail dt { font: 600 12px/1 var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.detail dd { margin: 0; }
+.detail .game { background: #0f120f; border-left: 3px solid #4a534a; padding: 8px 10px; border-radius: 2px; color: #d3d7cf; font-size: 14px; }
+.sample { font-family: var(--mono); font-size: 14px; color: var(--fg); background: #0f120f; padding: 1px 6px; border-radius: 2px; }
+.empty { color: var(--muted); }
+
+/* ===== list ===== */
+.list h3 { font-family: var(--display); font-weight: 600; font-size: 20px; text-transform: uppercase; letter-spacing: .04em; margin: 0 0 8px; color: var(--muted); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; }
+.card { display: flex; gap: 10px; align-items: flex-start; text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; cursor: pointer; color: var(--fg); font: inherit; min-width: 0; }
+.card:hover { border-color: #4f584f; }
+.card.sel { border-color: var(--accent); background: #24251a; }
+.card .bigic { width: 34px; height: 34px; display: grid; place-items: center; background: #0d0f0d; border-radius: 3px; flex: none; }
+.card .nm { font-family: var(--display); font-weight: 700; font-size: 18px; line-height: 1.1; }
+.card .wh { font-size: 12.5px; color: var(--muted); line-height: 1.35; margin-top: 2px; }
+.card .pl { font: 600 11px/1 var(--body); text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-top: 6px; }
+.note { color: var(--muted); font-size: 13px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Атлас статусів AposMod</h1>
+    <p>Усе, що мод показує на екрані: дуги біля прицілу, ряди значків, статуси над зомбі, написи і стрічка реакцій. Обери зброю, натисни на будь-який статус на сцені або в списку, щоб прочитати, що він означає. <b>Назви й описи навичок узяті з гри</b> (російською, як у клієнті).</p>
+  </header>
+  <nav id="tabs" role="tablist" aria-label="Зброя і розділи"></nav>
+  <div class="main">
+    <div>
+      <div class="scene" id="scene" aria-label="Приблизний вигляд екрана гри"></div>
+      <div class="legend">
+        <span style="--c:#ffd14d">дуга справа: головний стак зброї</span>
+        <span style="--c:#ff9933">дуга зліва: заряди й перезарядки</span>
+        <span style="--c:#66bfff">ряд під прицілом: атака</span>
+        <span style="--c:#9aa197">ряд біля пояса: захист</span>
+      </div>
+      <p class="note">Сцена приблизна: значки гри намальовані схоже, але не один в один, а HUD збільшено в 1.5 раза, щоб числа читались. Значки з пульсацією — стан «повний / готовий».</p>
+    </div>
+    <aside class="detail" id="detail" aria-live="polite"></aside>
+  </div>
+  <section class="list">
+    <h3 id="listTitle">Усі статуси</h3>
+    <div class="cards" id="cards"></div>
+  </section>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-head_shot" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.2" fill="currentColor"/><path d="M5 22c.6-4.2 3.4-6.6 7-6.6s6.4 2.4 7 6.6z" fill="currentColor"/><path d="M12 1.5v3.2M12 13.3v3M3.6 9h3.2M17.2 9h3.2" stroke="#000" stroke-width="1.4" opacity=".75"/><circle cx="12" cy="9" r="2.4" fill="none" stroke="#000" stroke-width="1.3" opacity=".75"/></symbol>
+    <symbol id="i-hot" viewBox="0 0 24 24"><path d="M12.6 1.8c.5 3.6-2.4 5.2-3.9 7.9-1.6 2.8-1.2 6.6 1.6 8.6-.8-2.2.2-4.2 1.9-5.4-.2 2.1 1 3.4 2.4 4.2 1.4.8 1.8 2.6 1.1 4.4 3.2-1.3 5-4.3 4.6-7.7-.4-3.8-3.2-5.4-3.6-8.5-1.1 1.6-1.3 3-1 4.4-1.7-1.9-1.8-5-3.1-7.9z" fill="currentColor"/></symbol>
+    <symbol id="i-fire" viewBox="0 0 24 24"><use href="#i-hot"/></symbol>
+    <symbol id="i-run_and_gun" viewBox="0 0 24 24"><circle cx="14.5" cy="3.6" r="2.3" fill="currentColor"/><path d="M13.4 7.4l-3.6 5.4 3.4 2.6-1.4 6.4M9.8 12.8l-4.6 1.2M13.4 7.4l3.6 3 4-1.6M11 15l-4 3.8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M17.2 8.2h5.4v1.8h-5.4z" fill="currentColor"/></symbol>
+    <symbol id="i-run" viewBox="0 0 24 24"><circle cx="15" cy="3.6" r="2.4" fill="currentColor"/><path d="M14 7.6l-4 5.4 3.6 2.8-1.4 6.2M10 13l-4.8 1.4M14 7.6l3.4 3.4 3.8-.8M11.4 15.4l-4.2 4" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-pistol" viewBox="0 0 24 24"><path d="M2.5 6.5h18.5v4.2h-8.6l-1 1.5.6 1.4H9.6l-1.3 7.4H3.8l2.4-8.2-3.7-.6z" fill="currentColor"/><rect x="19" y="5" width="2" height="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-sight" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M12 1.5v6M12 16.5v6M1.5 12h6M16.5 12h6" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.6" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15 15l6.6 6.6" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-shotgun" viewBox="0 0 24 24"><path d="M1 9.6h15.8l1.4-1h4.4v3.2h-6.2l-1.2 1H8.2l-1.6 1.3-3 4.6H1l2.5-5.2L1 12.6z" fill="currentColor"/><rect x="9.5" y="12.6" width="4" height="2.4" fill="currentColor"/></symbol>
+    <symbol id="i-speed" viewBox="0 0 24 24"><path d="M3 4.5l7.5 7.5L3 19.5M12 4.5l7.5 7.5-7.5 7.5" stroke="currentColor" stroke-width="3.2" fill="none" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="i-electric_power" viewBox="0 0 24 24"><path d="M14.5 1.5L4.6 13.8h6.4l-2.2 8.7 10.6-13h-6.6z" fill="currentColor"/></symbol>
+    <symbol id="i-electric_turret" viewBox="0 0 24 24"><path d="M4 21h16v-2.4H4zM7 18.6l2-5h6l2 5zM9 13.6V10h8.6V7.4H9.4A3.4 3.4 0 006 10.8v2.8z" fill="currentColor"/><path d="M19.6 2.5l-2.6 3.6h2l-1 3 3.2-4h-2z" fill="currentColor"/></symbol>
+    <symbol id="i-berserker" viewBox="0 0 24 24"><path d="M12 2.2c-5 0-8.4 3.4-8.4 8 0 3 1.4 5 3.2 6.2V21h3v-2h4.4v2h3v-4.6c1.8-1.2 3.2-3.2 3.2-6.2 0-4.6-3.4-8-8.4-8z" fill="currentColor"/><path d="M6.6 9.2l4.2 1.8-.6 1.8-3.2-.4zM17.4 9.2l-4.2 1.8.6 1.8 3.2-.4zM10.4 15.4h3.2" stroke="#000" stroke-width="1.4" fill="#000" opacity=".8"/></symbol>
+    <symbol id="i-bat" viewBox="0 0 24 24"><path d="M20.6 2.2c1 .8 1.4 2 .6 3L9 17.4l-2.4-2.4L18.2 2.6c.8-.8 1.6-1 2.4-.4z" fill="currentColor"/><path d="M6.6 15l2.4 2.4-2.6 2.6-2.4-2.4z" fill="currentColor"/><circle cx="3.4" cy="20.6" r="1.8" fill="currentColor"/></symbol>
+    <symbol id="i-traps" viewBox="0 0 24 24"><path d="M4 17.5a8 8 0 0116 0z" fill="currentColor"/><rect x="2" y="17.6" width="20" height="3" rx="1" fill="currentColor"/><path d="M12 3.4v4M5.6 6.4l2.6 2.8M18.4 6.4l-2.6 2.8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="M4.4 10A7.8 7.8 0 0118 6.2M19.6 14A7.8 7.8 0 016 17.8" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M15.4 2.6l4.6 3.8-5 2.4zM8.6 21.4L4 17.6l5-2.4z" fill="currentColor"/></symbol>
+    <symbol id="i-boxer" viewBox="0 0 24 24"><path d="M6 7.6c0-3 2.4-5.4 5.6-5.4h3.2c3.4 0 6 2.6 6 6v4.4c0 2.6-1.6 4.6-4 5.4V22H9v-3.6C7.2 17.4 6 15.6 6 13.4z" fill="currentColor"/><path d="M3 9.6c0-1.2 1-2.2 2.2-2.2H6v7H5.2A2.2 2.2 0 013 12.2z" fill="currentColor"/><path d="M10 9.4h8" stroke="#000" stroke-width="1.2" opacity=".6"/></symbol>
+    <symbol id="i-defense" viewBox="0 0 24 24"><path d="M12 1.6l8.6 3.2v6.4c0 5.4-3.6 9.6-8.6 11.2C7 20.8 3.4 16.6 3.4 11.2V4.8z" fill="currentColor"/><path d="M12 5.2v14M6.6 11h10.8" stroke="#000" stroke-width="1.6" opacity=".45"/></symbol>
+    <symbol id="i-twitch_strength_melee" viewBox="0 0 24 24"><path d="M8 9c0-2 1.6-3.6 3.6-3.6h3.6C17.8 5.4 20 7.6 20 10.2v3c0 2.4-1.6 4.4-3.8 5V21h-6v-2.8C8.8 17.4 8 16 8 14.4z" fill="currentColor"/><path d="M1.6 7.2l3.6 1.4M1.4 12h4.2M1.6 16.8l3.6-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-sneak_attack" viewBox="0 0 24 24"><path d="M20.8 2.4l-1 5.4L9.6 18l-3.6-3.6L16.2 4.2z" fill="currentColor"/><path d="M4.6 13l6.4 6.4-1.6 1.6-6.4-6.4z" fill="currentColor"/><path d="M5.4 18.2l-2.6 2.6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-sledge" viewBox="0 0 24 24"><rect x="3" y="2.6" width="13.6" height="7.4" rx="1" transform="rotate(-45 9.8 6.3)" fill="currentColor"/><path d="M11.2 10.6l9.6 9.6-1.8 1.8-9.6-9.6z" fill="currentColor"/></symbol>
+    <symbol id="i-spear" viewBox="0 0 24 24"><path d="M21.8 2.2l-1.4 6.2-2-.6-14 14-2-2 14-14-.6-2z" fill="currentColor"/></symbol>
+    <symbol id="i-hard_target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.4" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/></symbol>
+    <symbol id="i-stealth" viewBox="0 0 24 24"><path d="M1.6 12S5.4 5.4 12 5.4 22.4 12 22.4 12 18.6 18.6 12 18.6 1.6 12 1.6 12z" fill="currentColor"/><circle cx="12" cy="12" r="3.2" fill="#000" opacity=".7"/><path d="M3.4 20.6L20.6 3.4" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M4.6 21.6L21.6 4.6" stroke="#000" stroke-width="1" opacity=".5"/></symbol>
+    <symbol id="i-archery" viewBox="0 0 24 24"><path d="M5.4 2.4c6.6 2.6 10 7.4 10.2 16.2" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M5.4 2.4l10.2 16.2" stroke="currentColor" stroke-width="1.2"/><path d="M2.6 21.4L19.8 4.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M21.6 2.4l-.6 4.4-3.8-3.8z" fill="currentColor"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 1.6s-7 7.8-7 12.8a7 7 0 0014 0c0-5-7-12.8-7-12.8z" fill="currentColor"/></symbol>
+    <symbol id="i-critical" viewBox="0 0 24 24"><path d="M12 1.6s-7 7.8-7 12.8a7 7 0 0014 0c0-5-7-12.8-7-12.8z" fill="currentColor"/><path d="M12 9v6" stroke="#000" stroke-width="2.4" stroke-linecap="round" opacity=".7"/><circle cx="12" cy="18" r="1.4" fill="#000" opacity=".7"/></symbol>
+    <symbol id="i-stunned" viewBox="0 0 24 24"><path d="M12 2l1.6 3.6 3.9.4-2.9 2.6.8 3.8L12 10.5l-3.4 1.9.8-3.8L6.5 6l3.9-.4z" fill="currentColor"/><path d="M5 13l1 2.2 2.4.3-1.8 1.6.5 2.4L5 18.3l-2.1 1.2.5-2.4-1.8-1.6 2.4-.3zM19 13l1 2.2 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3z" fill="currentColor"/></symbol>
+    <symbol id="i-twitch_confused_controls" viewBox="0 0 24 24"><path d="M12 12.4c0-.8.8-1.2 1.4-.8.9.6.6 2.2-.6 2.6-1.8.6-3.4-1-3-2.8.5-2.6 3.6-3.6 5.8-2.2 2.8 1.8 2.8 6 0 8-3.2 2.4-8 1-9.2-2.8-1.4-4.4 2-8.8 6.6-8.8 4.2 0 7.6 3.2 7.8 7.2" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="i-infection" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.6" fill="currentColor"/><circle cx="12" cy="6" r="4" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="6.8" cy="15" r="4" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="17.2" cy="15" r="4" fill="none" stroke="currentColor" stroke-width="2.4"/></symbol>
+    <symbol id="i-armor_iron" viewBox="0 0 24 24"><path d="M7 2.4l-4.6 3 2 5.4 1.4-.6V21.6h12.4V10.2l1.4.6 2-5.4-4.6-3c-.8 2-2.6 3.2-5 3.2S7.8 4.4 7 2.4z" fill="currentColor"/></symbol>
+    <symbol id="i-block_damage" viewBox="0 0 24 24"><path d="M2.6 2.6h18.8v18.8H2.6z" fill="currentColor"/><path d="M9.6 2.6l2.6 6.2-3.4 3.4 4.4 4-1.2 5.2M12.2 8.8l5.2-1.8M13.2 16.2l5.2 1.4" stroke="#000" stroke-width="1.6" fill="none" opacity=".75"/></symbol>
+    <symbol id="i-concussion" viewBox="0 0 24 24"><circle cx="12" cy="13.6" r="6.6" fill="currentColor"/><path d="M5.4 22c.4-2.2 1.6-3.6 3-4.4h7.2c1.4.8 2.6 2.2 3 4.4z" fill="currentColor"/><path d="M4 3.6l.8 1.8 2 .2-1.5 1.3.4 2-1.7-1-1.7 1 .4-2L1.2 5.6l2-.2zM20 3.6l.8 1.8 2 .2-1.5 1.3.4 2-1.7-1-1.7 1 .4-2-1.5-1.3 2-.2zM12 .8l.8 1.8 2 .2-1.5 1.3.4 2-1.7-1-1.7 1 .4-2-1.5-1.3 2-.2z" fill="currentColor"/></symbol>
+    <symbol id="i-mining" viewBox="0 0 24 24"><path d="M3.2 7.2C7.4 2.6 14.4 1.6 20 4.6l-1.2 1.6C14.2 4.6 9.2 5.2 5.2 8.6z" fill="currentColor"/><path d="M11.4 7.2l2.2 2.2-9.8 9.8L1.6 17z" fill="currentColor"/></symbol>
+    <symbol id="i-siphoning_strikes" viewBox="0 0 24 24"><path d="M12 21.4S2.2 15 2.2 8.4A5 5 0 0112 6.2a5 5 0 019.8 2.2c0 6.6-9.8 13-9.8 13z" fill="currentColor"/><path d="M9 9.4l1 3.4 1-3.4M13 9.4l1 3.4 1-3.4" stroke="#000" stroke-width="1.3" fill="none" opacity=".7"/></symbol>
+    <symbol id="i-healing_factor" viewBox="0 0 24 24"><path d="M12 21.4S2.2 15 2.2 8.4A5 5 0 0112 6.2a5 5 0 019.8 2.2c0 6.6-9.8 13-9.8 13z" fill="currentColor"/><path d="M12 9v7M8.5 12.5h7" stroke="#000" stroke-width="2" opacity=".7"/></symbol>
+  </defs>
+</svg>
+
+<script>
+const D = /*__DATA__*/null;
+const PLACE = { gR: 'Дуга праворуч від прицілу', gL: 'Дуга ліворуч від прицілу', atk: 'Ряд під прицілом (атака)', def: 'Ряд ліворуч від поясу (захист)',
+  z: 'Над зомбі', toast: 'Напис під прицілом', mark: 'Мітка на стрілі / болті', feed: 'Стрічка реакцій праворуч', over: 'Позначки на зомбі' };
+const FEEDICONS = {
+  feed_explosion: [['elite_Burning', '#ff7319'], '+', ['elite_Acidic', '#99e633'], '=', ['elite_Explosive', '#ffcc40']],
+  feed_confusion: [['elite_Burning', '#ff7319'], '+', ['elite_Electric', '#59bfff'], '='],
+  feed_miasma: [['elite_Acidic', '#99e633'], '+', ['elite_Electric', '#59bfff'], '='],
+  feed_emp: [['elite_Electric', '#59bfff']], feed_overkill: [['elite_Fast', '#ff8c59']], feed_chain: [['elite_Explosive', '#ffcc40']],
+  feed_shrapnel: [['elite_Armored', '#ccccd9']], feed_pierce: [['elite_Fast', '#ffd14d']], feed_shock: [['elite_Electric', '#59bfff']],
+  feed_sticky: [['elite_Explosive', '#ff7319']], feed_breakthrough: [['elite_Fast', '#ffd14d']],
+};
+const U = n => (n / 1440 * 100).toFixed(3) + 'cqw';   // scene units (1440 wide crop) -> container width
+const S = 1.5;                                          // HUD drawn 1.5x so the numbers read
+const CX = 600, CY = 210;                               // crosshair in the crop
+
+function el(tag, attrs, kids) {
+  const e = document.createElement(tag);
+  for (const k in attrs || {}) {
+    if (k === 'style') Object.assign(e.style, attrs[k]);
+    else if (k === 'text') e.textContent = attrs[k];
+    else if (k === 'cls') e.className = attrs[k];
+    else e.setAttribute(k, attrs[k]);
+  }
+  (kids || []).forEach(c => c && e.appendChild(c));
+  return e;
+}
+function icon(name, color, size) {
+  const s = { width: size, height: size };
+  if (D.png[name]) {
+    return el('span', { cls: 'ic png', style: Object.assign(s, { background: color, webkitMaskImage: `url(${D.png[name]})`, maskImage: `url(${D.png[name]})` }) });
+  }
+  const sp = el('span', { cls: 'ic', style: Object.assign(s, { color }) });
+  sp.innerHTML = `<svg viewBox="0 0 24 24"><use href="#i-${name}"/></svg>`;
+  return sp;
+}
+function feedIcons(item, size) {
+  const parts = FEEDICONS[item.icon] || [];
+  return parts.map(p => typeof p === 'string' ? el('span', { cls: 'op', text: p }) : icon(p[0], p[1], size));
+}
+
+let items = [], sel = -1;
+const tabs = [{ id: 'general', name: 'Загальне' }].concat(D.classes.map(c => ({ id: c.id, name: c.name }))).concat([{ id: 'zombie', name: 'Над зомбі' }, { id: 'feed', name: 'Стрічка реакцій' }]);
+
+function itemsOf(id) {
+  if (id === 'general') return D.general;
+  if (id === 'zombie') return D.zombie;
+  if (id === 'feed') return D.feed;
+  return D.classes.find(c => c.id === id).items;
+}
+
+function gaugeSvg(it, left) {
+  const r = 62 * S, thick = 5 * S, span = 70, segs = it.seg > 0 ? it.seg : 1;
+  const gap = segs > 1 ? Math.min(3.5, 30 / segs) : 0, seg = (span - gap * (segs - 1)) / segs;
+  const pt = a => { const rad = a * Math.PI / 180; return [CX + (left ? -1 : 1) * r * Math.cos(rad), CY + r * Math.sin(rad)]; };
+  const arc = (a0, a1) => { const p0 = pt(a0), p1 = pt(a1); const sweep = left ? 1 : 0; return `M${p0[0].toFixed(1)} ${p0[1].toFixed(1)} A${r} ${r} 0 0 ${sweep} ${p1[0].toFixed(1)} ${p1[1].toFixed(1)}`; };
+  let out = '';
+  for (let i = 0; i < segs; i++) {
+    const a0 = span / 2 - i * (seg + gap);
+    const fill = it.seg > 0 ? Math.max(0, Math.min(1, it.value - i)) : Math.max(0, Math.min(1, it.value));
+    out += `<path d="${arc(a0, a0 - seg)}" stroke="rgba(255,255,255,.14)" stroke-width="${thick}" fill="none"/>`;
+    if (fill > 0) {
+      if (it.full) out += `<path class="glow" d="${arc(a0, a0 - seg * fill)}" stroke="${it.color}" stroke-opacity=".2" stroke-width="${thick * 2.6}" fill="none"/>`;
+      out += `<path class="${it.full ? 'glow' : ''}" d="${arc(a0, a0 - seg * fill)}" stroke="${it.color}" stroke-opacity=".92" stroke-width="${thick}" fill="none"/>`;
+    }
+  }
+  return out;
+}
+
+function render(tabId) {
+  items = itemsOf(tabId);
+  sel = -1;
+  document.querySelectorAll('#tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.id === tabId ? 'true' : 'false'));
+  try { localStorage.setItem('aposHudTab', tabId); } catch (e) {}
+  drawScene(tabId);
+  drawCards();
+  const first = items.findIndex(i => i.place === 'gR' || i.place === 'gL');
+  select(first >= 0 ? first : 0);
+}
+
+function hit(idx, x, y, kid, extra) {
+  const h = el('div', { cls: 'hit', tabindex: '0', role: 'button', 'aria-label': (items[idx].ru || '') + ' ' + (items[idx].text || ''), 'data-i': idx,
+    style: Object.assign({ left: U(x), top: U(y) }, extra || {}) }, [kid]);
+  h.addEventListener('click', () => select(idx));
+  h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(idx); } });
+  return h;
+}
+
+function slot(it) {
+  return el('div', { cls: 'slot' + (it.full ? ' glow' : '') }, [icon(it.icon, it.color, U(22 * S)), it.text ? el('span', { cls: 't', text: it.text }) : null]);
+}
+
+function drawScene(tabId) {
+  const sc = document.getElementById('scene');
+  sc.innerHTML = '';
+  let svg = '';
+  // crosshair
+  svg += `<g stroke="#fff" stroke-width="2.4" opacity=".85"><path d="M${CX - 16} ${CY}h10M${CX + 6} ${CY}h10M${CX} ${CY - 16}v10M${CX} ${CY + 6}v10"/></g>`;
+  // toolbelt (753 wide, top 84 px above the bottom) and the zombie
+  const beltX = CX - 376, beltY = 750 - 84;
+  for (let i = 0; i < 10; i++) svg += `<rect x="${beltX + i * 75.3 + 2}" y="${beltY}" width="71" height="70" fill="rgba(0,0,0,.42)" stroke="rgba(255,255,255,.12)"/>`;
+  const zx = 1060, zy = 330;
+  svg += `<g fill="#151a14" opacity=".92"><circle cx="${zx}" cy="${zy}" r="26"/><path d="M${zx - 34} ${zy + 30}h68l12 120-14 4-8-60-6 70 10 150h-28l-14-130-14 130h-28l10-150-6-70-8 60-14-4z"/><path d="M${zx + 32} ${zy + 40}l70 34-6 12-70-26z"/></g>`;
+  svg += `<ellipse cx="${zx}" cy="${zy + 350}" rx="70" ry="10" fill="rgba(0,0,0,.35)"/>`;
+
+  const g = { gR: [], gL: [], atk: [], def: [], z: [], toast: [], mark: [], feed: [], over: [] };
+  items.forEach((it, i) => g[it.place].push(i));
+  // gauges: show one per side (the first; the others are variants, picked in the list)
+  ['gR', 'gL'].forEach(p => { if (g[p].length) svg += gaugeSvg(items[g[p][0]], p === 'gL'); });
+  // overlay rings on the zombie's head / outline
+  g.over.forEach(i => {
+    const it = items[i];
+    svg += it.icon === 'outline'
+      ? `<path d="M${zx - 38} ${zy + 28}h76l14 124-16 6-8-56-4 66 10 156h-34l-12-126-12 126h-34l10-156-4-66-8 56-16-6z" fill="none" stroke="${it.color}" stroke-width="3" opacity=".8"/><circle cx="${zx}" cy="${zy}" r="30" fill="none" stroke="${it.color}" stroke-width="3" opacity=".8"/>`
+      : `<circle class="glow" cx="${zx}" cy="${zy}" r="20" fill="none" stroke="${it.color}" stroke-width="3"/>`;
+  });
+  // armed arrow / bolt rings on the ground in front of the zombie
+  g.mark.forEach((i, k) => {
+    const it = items[i], mx = 860 + k * 70, my = 640;
+    svg += `<ellipse class="glow" cx="${mx}" cy="${my}" rx="22" ry="9" fill="none" stroke="${it.color}" stroke-width="3"/><path d="M${mx - 2} ${my}l-14 -20" stroke="#c9b48a" stroke-width="3"/>`;
+  });
+  sc.appendChild(Object.assign(document.createElementNS('http://www.w3.org/2000/svg', 'svg'), { innerHTML: svg }));
+  sc.lastChild.setAttribute('class', 'layer'); sc.lastChild.setAttribute('viewBox', '0 0 1440 750');
+
+  // gauge hit areas + their icon and number under the bottom end
+  ['gR', 'gL'].forEach(p => {
+    if (!g[p].length) return;
+    const i = g[p][0], it = items[i], left = p === 'gL', r = 62 * S;
+    // icon + number outside the middle of the arc (as in the game)
+    const x = CX + (left ? -1 : 1) * (r + 10 * S), y = CY;
+    const kids = [icon(it.icon, it.color, U(18 * S)), el('span', { cls: 'ztag' }, [el('span', { cls: 't', text: it.text, style: { color: '#fff' } })])];
+    const lab = el('div', { cls: 'zrow' }, left ? kids.reverse() : kids);
+    sc.appendChild(hit(i, x, y - 14, lab, left ? { transform: 'translateX(-100%)' } : null));
+    // the arc itself is clickable too
+    sc.appendChild(hit(i, left ? CX - r - 16 : CX + r * 0.8, CY - r * 0.45, el('div', { style: { width: U(36), height: U(r * 0.9) } })));
+  });
+  // attack row, centred under the crosshair
+  const atk = g.atk, w = 78 * S;
+  atk.forEach((i, k) => sc.appendChild(hit(i, CX - atk.length * w / 2 + k * w, CY + 42 * S, slot(items[i]))));
+  // defence row: left of the toolbelt, growing to the left (the page wraps it to fit the crop; the game has one row of up to 6)
+  const perRow = Math.max(1, Math.floor((beltX - 8) / w));
+  g.def.forEach((i, k) => sc.appendChild(hit(i, beltX - 8 - (k % perRow + 1) * w, 750 - 59 - 8 - Math.floor(k / perRow) * 34 * S, slot(items[i]))));
+  // above the zombie: one wrapping row, centred, growing upwards
+  if (g.z.length) {
+    const box = el('div', { style: { position: 'absolute', left: U(zx - 300), width: U(600), bottom: U(750 - zy + 40), display: 'flex', flexWrap: 'wrap-reverse', justifyContent: 'center', gap: U(6) + ' ' + U(14) } });
+    g.z.forEach(i => {
+      const it = items[i];
+      const tag = el('div', { cls: 'ztag' }, [icon(it.icon, it.color, U(20 * S)), it.text ? el('span', { cls: 't', text: it.text, style: { color: it.color } }) : null]);
+      const h = hit(i, 0, 0, tag);
+      h.style.position = 'relative'; h.style.left = h.style.top = '0';
+      box.appendChild(h);
+    });
+    sc.appendChild(box);
+  }
+  // toasts under the crosshair (stacked when there are two variants)
+  g.toast.forEach((i, k) => sc.appendChild(hit(i, CX, CY + 42 * S + 60 + k * 44, el('div', { cls: 'toast', text: items[i].text, style: { color: items[i].color } }), { transform: 'translateX(-50%)' })));
+  // reaction feed on the right
+  g.feed.forEach((i, k) => {
+    const it = items[i];
+    const line = el('div', { cls: 'feedline' }, [el('span', { cls: 'src', text: it.ru })].concat(feedIcons(it, U(22 * S))).concat(it.text ? [el('span', { cls: 't', text: it.text })] : []));
+    sc.appendChild(hit(i, 1150, 26 + k * 52, line));
+  });
+  g.mark.forEach((i, k) => sc.appendChild(hit(i, 860 + k * 70 - 26, 620, el('div', { style: { width: U(52), height: U(40) } }))));
+  g.over.forEach(i => sc.appendChild(hit(i, zx - 40, zy - 34, el('div', { style: { width: U(80), height: U(68) } }))));
+}
+
+function bigIcon(it, px) {
+  const box = el('div', { cls: 'bigic' });
+  if (it.place === 'toast') box.appendChild(el('span', { text: '!', style: { font: `700 ${px * 0.7}px var(--display)`, color: it.color } }));
+  else if (it.place === 'mark' || it.place === 'over') box.innerHTML = `<svg width="${px * .8}" height="${px * .8}" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="${it.color}" stroke-width="2.6"/></svg>`;
+  else if (it.place === 'feed') feedIcons(it, (px * .45) + 'px').slice(-1).forEach(n => box.appendChild(n));
+  else box.appendChild(icon(it.icon, it.color, (px * .7) + 'px'));
+  return box;
+}
+
+function drawCards() {
+  const c = document.getElementById('cards');
+  c.innerHTML = '';
+  items.forEach((it, i) => {
+    const b = el('button', { cls: 'card', 'data-i': i, type: 'button' }, [
+      bigIcon(it, 34),
+      el('div', { style: { minWidth: 0 } }, [
+        el('div', { cls: 'nm', text: (it.ru || '') + (it.variant ? ' · ' + it.variant : '') }),
+        el('div', { cls: 'wh', text: it.what }),
+        el('div', { cls: 'pl', text: PLACE[it.place] }),
+      ]),
+    ]);
+    b.addEventListener('click', () => { select(i); document.getElementById('scene').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
+    c.appendChild(b);
+  });
+  document.getElementById('listTitle').textContent = 'Усі статуси: ' + tabs.find(t => t.id === currentTab).name;
+}
+
+function select(i) {
+  sel = i;
+  document.querySelectorAll('.hit, .card').forEach(e => e.classList.toggle('sel', +e.dataset.i === i));
+  const d = document.getElementById('detail');
+  d.innerHTML = '';
+  const it = items[i];
+  if (!it) { d.appendChild(el('p', { cls: 'empty', text: 'Тут немає статусів.' })); return; }
+  d.appendChild(el('div', { cls: 'head' }, [bigIcon(it, 48), el('div', {}, [
+    el('h2', { text: (it.ru || '') + (it.variant ? ' · ' + it.variant : '') }),
+    el('div', { cls: 'en', text: it.en || '' }),
+  ])]));
+  const chips = el('div', { cls: 'chips' }, [el('span', { cls: 'chip', text: PLACE[it.place] })]);
+  const m = /_(Base|[ABH]\d)$/.exec(it.key || '');
+  if (m) chips.appendChild(el('span', { cls: 'chip k', text: m[1] === 'Base' ? 'риса класу' : 'навичка ' + m[1] }));
+  d.appendChild(chips);
+  const dl = el('dl');
+  if (it.text) dl.appendChild(el('div', {}, [el('dt', { text: 'Приклад на екрані' }), el('dd', {}, [el('span', { cls: 'sample', text: it.text, style: { color: it.color } })])]));
+  dl.appendChild(el('div', {}, [el('dt', { text: 'Що показує' }), el('dd', { text: it.what })]));
+  dl.appendChild(el('div', {}, [el('dt', { text: 'Коли з\'являється' }), el('dd', { text: it.when })]));
+  if (it.d) dl.appendChild(el('div', {}, [el('dt', { text: 'Опис у грі' }), el('dd', { cls: 'game', text: it.d })]));
+  d.appendChild(dl);
+}
+
+let currentTab = 'Blades';
+try { const s = localStorage.getItem('aposHudTab'); if (s && tabs.some(t => t.id === s)) currentTab = s; } catch (e) {}
+const nav = document.getElementById('tabs');
+tabs.forEach((t, k) => {
+  if (k === 1 || t.id === 'zombie') nav.appendChild(el('span', { cls: 'sep' }));
+  const b = el('button', { type: 'button', role: 'tab', 'data-id': t.id, text: t.name });
+  b.addEventListener('click', () => { currentTab = t.id; render(t.id); });
+  nav.appendChild(b);
+});
+render(currentTab);
+</script>

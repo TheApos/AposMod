@@ -104,14 +104,13 @@ public static class AposHud
             if (w.Glow) Piece(c, r, a0, a0 - seg * fill, thick * 2.6f, new Color(col.r, col.g, col.b, 0.18f * pulse), left);   // soft glow
             Piece(c, r, a0, a0 - seg * fill, thick, new Color(col.r, col.g, col.b, 0.9f * pulse), left);
         }
-        // icon + number just below the bottom end of the arc
-        float ab = (ArcSpan / 2f + 9f) * Mathf.Deg2Rad;
-        float x = c.x + (left ? -1f : 1f) * r * Mathf.Cos(ab), y = c.y + r * Mathf.Sin(ab);
+        // icon + number outside the middle of the arc (not under it: the attack row sits there)
+        float x = c.x + (left ? -1f : 1f) * (r + 10f * k), y = c.y;
         float size = 18f * k;
         GUI.matrix = Matrix4x4.identity;
         Color ic = w.Color; ic.a = 0.95f;
         float tw = w.Text.Length > 0 ? gaugeStyle.CalcSize(new GUIContent(w.Text)).x : 0f;
-        float x0 = left ? x - size - 2f * k - tw : x - size * 0.5f;
+        float x0 = left ? x - size - 2f * k - tw : x;
         AposStatus.DrawIcon(p, w.Icon, new Rect(x0, y - size / 2f, size, size), ic);
         if (tw > 0f)
         {
@@ -363,7 +362,7 @@ public class XUiC_AposHud : XUiController
             else if (pos == "left") p = new Vector2i(-40 - SlotW, 30 - i * 32);
             else if (pos == "belt") p = new Vector2i(-388 - (i + 1) * SlotW, 59);   // left of the toolbelt (753 wide, top at 84)
             else if (pos.StartsWith("at")) p = new Vector2i(AposHud.AttackAt.Value.x + i * SlotW, AposHud.AttackAt.Value.y);
-            else p = new Vector2i(-n * SlotW / 2 + i * SlotW, -34);
+            else p = new Vector2i(-n * SlotW / 2 + i * SlotW, -42);   // below the gauges' bottom ends (y +36)
             slot[i].ViewComponent.Position = p;
         }
     }
