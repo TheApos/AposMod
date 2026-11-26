@@ -44,6 +44,8 @@ public class AposMastery : MonoBehaviour
     static FastTags<TagGroup.Global>[] classTags;
 
     // -1 = not a mastery weapon (tools, fists, turrets, explosives)
+    static readonly FastTags<TagGroup.Global> ammoTag = FastTags<TagGroup.Global>.Parse("ammo");
+
     public static int ClassOf(ItemClass ic)
     {
         if (ic == null || ic.ItemTags.IsEmpty) return -1;
@@ -52,6 +54,8 @@ public class AposMastery : MonoBehaviour
             classTags = new FastTags<TagGroup.Global>[ClassTags.Length];
             for (int i = 0; i < ClassTags.Length; i++) classTags[i] = FastTags<TagGroup.Global>.Parse(ClassTags[i]);
         }
+        // arrows and bolts carry perkArchery too, but ammo is not a weapon (no mastery badge / button on it)
+        if (ic.ItemTags.Test_AnySet(ammoTag)) return -1;
         for (int i = 0; i < ClassTags.Length; i++)
         {
             if (!ic.ItemTags.Test_AnySet(classTags[i])) continue;
