@@ -129,8 +129,8 @@ public static class AposBowTree
 
         // Splinters (Lance Arrow: only from shots that were not fully drawn)
         if (!(full && R("B8") > 0)) Burst(player, target.position, target, Splinters(player), Element(target), full, true);
-        // Shock Trap: 1.5 s later the arrow stuck in it discharges electricity around
-        if (R("A7") > 0) AddMine(new Mine { At = Time.time + 1.5f, Pos = target.position, Dmg = lastArrowDmg, Body = response.Fatal ? null : target });
+        // Shock Trap: the arrow stuck in it discharges electricity around at once (on the next RunMines, not inside this hit)
+        if (R("A7") > 0) mines.Add(new Mine { At = Time.time, Pos = target.position, Dmg = lastArrowDmg, Body = response.Fatal ? null : target });
     }
 
     static int Splinters(EntityPlayerLocal player)
@@ -246,7 +246,7 @@ public static class AposBowTree
     }
 
     // ===== Shock Trap: the stuck arrow discharges electricity =====
-    // an arrow in a zombie discharges 1.5 s later; an arrow in a wall / the ground is a trap (Trap): it waits up to 10 s
+    // an arrow in a zombie discharges at once; an arrow in a wall / the ground is a trap (Trap): it waits up to 10 s
     // for a zombie within 3 m and discharges 0.3 s later (unused, it just goes out after 10 s); one trap at a time: a new
     // one makes the old one discharge at once.
     // The discharge: everyone within 3 m (rank 2: 4.5 m) takes 50% (100%) of a splinter as electrical damage, shocked 2 (4) s.
