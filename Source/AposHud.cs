@@ -49,6 +49,62 @@ public static class AposHud
         Defense.Clear();
         AttackAt = null;
         GaugeLeft = GaugeRight = null;
+        Speed.Clear();
+    }
+
+    // ===== movement speed: a column at the bottom right, mirroring the vanilla buff column at the bottom left =====
+    // every mod status that changes how fast you walk / run (Adrenaline, Evasion, spear Hit and Back, knuckle Light Feet
+    // and the Knockout slow): icon + "+N%" (+ seconds / stacks), like a vanilla buff entry. Drawn by DrawSpeed (IMGUI).
+    public static readonly List<Widget> Speed = new List<Widget>();
+    static readonly Color SpeedUp = new Color(0.35f, 0.9f, 0.55f), SpeedDown = new Color(1f, 0.4f, 0.35f);
+
+    // pct: the change as a fraction (+0.15 = 15% faster); extra: seconds / stacks after it; skill: held class skill id or null
+    public static void AddSpeed(string icon, float pct, string extra, string skill)
+    {
+        string text = (pct >= 0f ? "+" : "") + Mathf.RoundToInt(pct * 100f) + "%" + (string.IsNullOrEmpty(extra) ? "" : "  " + extra);
+        Widget w = new Widget { Icon = icon.StartsWith("ui_") ? icon : "ui_game_symbol_" + icon, Text = text, Color = pct >= 0f ? SpeedUp : SpeedDown };
+        if (skill != null && AposMastery.HeldClass >= 0) w.Skill = AposMastery.SkillKey(AposMastery.HeldClass, skill);
+        Speed.Add(w);
+    }
+
+    static GUIStyle speedStyle;
+    static Texture2D speedBg;
+
+    public static void DrawSpeed(EntityPlayerLocal p)
+    {
+        if (p == null || !AposSettings.HudEnabled || Speed.Count == 0) return;
+        LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(p);
+        if (ui == null || ui.windowManager == null || ui.windowManager.IsModalWindowOpen() || !ui.windowManager.IsHUDEnabled()) return;
+        float k = Screen.height / 1080f;
+        if (speedStyle == null) speedStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleLeft };
+        if (speedBg == null)
+        {
+            // a bar fading out to the left, like the vanilla buff entry (ui_game_popup) mirrored
+            speedBg = new Texture2D(64, 1, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+            for (int px = 0; px < 64; px++) speedBg.SetPixel(px, 0, new Color(0f, 0f, 0f, 0.55f * Mathf.Clamp01(px / 24f)));
+            speedBg.Apply();
+        }
+        speedStyle.fontSize = Mathf.RoundToInt(24f * k);
+        float w = 190f * k, h = 46f * k, icon = 36f * k;
+        float x = Screen.width - 90f * k - w, bottom = Screen.height - 132f * k;
+        Color old = GUI.color;
+        for (int i = 0; i < Speed.Count; i++)
+        {
+            Widget s = Speed[i];
+            float y = bottom - (i + 1) * h;
+            GUI.color = Color.white;
+            GUI.DrawTexture(new Rect(x, y + 2f * k, w, h - 4f * k), speedBg);
+            float tw = speedStyle.CalcSize(new GUIContent(s.Text)).x;
+            // right-aligned: text, then the icon at the outer edge
+            Rect ir = new Rect(x + w - icon - 6f * k, y + (h - icon) / 2f, icon, icon);
+            AposStatus.DrawIcon(p, s.Icon, ir, s.Color);
+            Rect tr = new Rect(ir.x - 6f * k - tw, y, tw + 4f, h);
+            GUI.color = new Color(0f, 0f, 0f, 0.85f);
+            GUI.Label(new Rect(tr.x + 1.5f, tr.y + 1.5f, tr.width, tr.height), s.Text, speedStyle);
+            GUI.color = Color.white;
+            GUI.Label(tr, s.Text, speedStyle);
+        }
+        GUI.color = old;
     }
 
     // ===== gauges: the weapon's key mechanic as a quarter arc around the crosshair =====
@@ -178,6 +234,7 @@ public static class AposHud
         if (GaugeLeft != null) all.Add(GaugeLeft);
         all.AddRange(Attack);
         all.AddRange(Defense);
+        all.AddRange(Speed);
         {
             foreach (Widget w in all)
             {
@@ -211,11 +268,12 @@ public static class AposHud
 
     // ===== the mod's own player buffs =====
     // buff, defence row?, what the number is: cvar (with an optional "/max" or "%"), or "time" = seconds left, "" = icon only
-    class ModBuff { public string Buff, Cvar, Suffix; public bool Defense; public int Full; }
+    // Speed: a movement buff, shown in the speed column instead (SpeedCvar: its bonus as a fraction, or SpeedPct fixed)
+    class ModBuff { public string Buff, Cvar, Suffix, SpeedCvar; public bool Defense, Speed; public int Full; public float SpeedPct; }
     static readonly ModBuff[] modBuffs =
     {
         new ModBuff { Buff = "buffAposThunderCharge", Cvar = "aposThunder", Suffix = "/3", Full = 3 },
-        new ModBuff { Buff = "buffAposAdrenaline", Cvar = "aposAdrenaline", Suffix = "/3", Full = 3 },
+        new ModBuff { Buff = "buffAposAdrenaline", Cvar = "aposAdrenaline", Suffix = "/3", Full = 3, Speed = true, SpeedCvar = "aposAdrenalineSpeed" },
         new ModBuff { Buff = "buffAposEmp", Cvar = "aposEmp", Suffix = "/10", Full = 10 },
         new ModBuff { Buff = "buffAposPipeVeteran", Cvar = "aposPipeBonus", Suffix = "%" },
         new ModBuff { Buff = "buffAposShadow", Cvar = "", Suffix = "x2", Full = -1 },
@@ -226,7 +284,7 @@ public static class AposHud
         new ModBuff { Buff = "buffAposJackpot", Cvar = "time" },
         new ModBuff { Buff = "buffAposShieldUp", Cvar = "time", Defense = true, Full = -1 },
         new ModBuff { Buff = "buffAposGuardian", Cvar = "", Defense = true },
-        new ModBuff { Buff = "buffAposEvasion", Cvar = "time", Defense = true },
+        new ModBuff { Buff = "buffAposEvasion", Cvar = "time", Speed = true, SpeedPct = 0.3f },
         new ModBuff { Buff = "buffAposVampire", Cvar = "aposVampHP", Suffix = " HP", Defense = true },
         new ModBuff { Buff = "buffAposSecondWindCD", Cvar = "time", Defense = true },
         new ModBuff { Buff = "buffAposSecondLungsCD", Cvar = "time", Defense = true },
@@ -265,6 +323,12 @@ public static class AposHud
                 if (m.Full > 0 && n >= m.Full) full = true;
             }
             else if (m.Suffix != null) text = m.Suffix;
+            if (m.Speed)
+            {
+                Speed.Add(new Widget { Icon = bc.Icon, Color = SpeedUp,
+                    Text = "+" + Mathf.RoundToInt((m.SpeedCvar != null ? b.GetCustomVar(m.SpeedCvar) : m.SpeedPct) * 100f) + "%" + (text.Length > 0 ? "  " + text : "") });
+                continue;
+            }
             Color c = bc.IconColor;
             if (c.r + c.g + c.b < 0.05f) c = Color.white;
             c.a = 1f;

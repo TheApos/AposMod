@@ -49,6 +49,7 @@ public static class AposKnuckles
         float move = (R("B2") > 0 && Time.time - lastHitAt < 5f ? LightFeet[R("B2")] : 0f) - (Time.time < slowUntil ? 0.2f : 0f);
         if (player.Buffs.GetCustomVar("aposKnuckleMove") != move) player.Buffs.SetCustomVar("aposKnuckleMove", move);
         if (move != 0f) player.Buffs.AddBuff("buffAposKnuckleMove"); // short, refreshed while it applies
+        if (move != 0f) AposHud.AddSpeed("ui_apos_speed", move, "", move > 0f ? "B2" : "A8");
 
         Color gold = new Color(1f, 0.82f, 0.3f);
         AposHud.Gauge(true, charges, cap, new Color(1f, 0.6f, 0.2f), charges >= cap, "boxer", charges + "/" + cap, "Base");

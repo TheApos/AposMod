@@ -44,6 +44,18 @@ $icons['ui_apos_adrenaline'] = {
     $g.DrawLine($p, 4, 34, 34, 34); $g.DrawLine($p, 2, 56, 28, 56); $g.DrawLine($p, 8, 78, 30, 78)
 }
 
+# Movement speed: a running shoe with speed lines
+$icons['ui_apos_speed'] = {
+    param($g)
+    $shoe = New-Object Drawing.Drawing2D.GraphicsPath
+    $shoe.AddLines((P @(40,44, 62,44, 70,62, 100,72, 118,82, 120,96, 40,96)))
+    $shoe.CloseFigure()
+    $g.FillPath($white, $shoe)
+    $g.FillRectangle($white, 38, 100, 84, 10)
+    $p = Pen 7
+    $g.DrawLine($p, 6, 52, 30, 52); $g.DrawLine($p, 2, 70, 30, 70); $g.DrawLine($p, 8, 88, 30, 88)
+}
+
 # Critical hit: a jagged burst with an exclamation mark cut out
 $icons['ui_apos_crit'] = {
     param($g)
@@ -94,7 +106,7 @@ $icons['ui_apos_lungs'] = {
     $m = New-Object Drawing.Drawing2D.Matrix(-1, 0, 0, 1, 128, 0); $r = $l.Clone(); $r.Transform($m); $g.FillPath($white, $r)
 }
 
-$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
+$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
 $sheet = New-Object Drawing.Bitmap (($S + 16) * $icons.Count + 16), ($S + 32)
 $sg = [Drawing.Graphics]::FromImage($sheet); $sg.Clear([Drawing.Color]::FromArgb(30, 30, 30))
 $x = 16

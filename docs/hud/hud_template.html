@@ -64,6 +64,8 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
 .ztag { display: flex; align-items: center; gap: .15cqw; }
 .ztag .t { font: 700 1.55cqw/1 var(--display); text-shadow: 0 0 .15cqw #000, 0 0 .2cqw #000; white-space: nowrap; }
 .toast { font: 700 2.4cqw/1 var(--display); letter-spacing: .03em; text-shadow: 0 0 .25cqw #000, 0 0 .4cqw #000; white-space: nowrap; transform: translateX(-50%); }
+.spdrow { display: flex; align-items: center; justify-content: flex-end; gap: .5cqw; height: 3.6cqw; padding: 0 .4cqw 0 3cqw; background: linear-gradient(90deg, transparent, rgba(0,0,0,.55) 40%); }
+.spdrow .t { font: 700 2cqw/1 var(--display); text-shadow: 0 0 .15cqw #000, 0 0 .15cqw #000; white-space: nowrap; }
 .feedline { display: flex; align-items: center; gap: .4cqw; background: rgba(0,0,0,.35); padding: .35cqw .6cqw; border-radius: .3cqw; }
 .feedline .src { font: 600 1.35cqw/1 var(--display); color: #d6d9d2; white-space: nowrap; }
 .feedline .t { font: 700 1.6cqw/1 var(--display); color: #fff; white-space: nowrap; }
@@ -128,6 +130,7 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
         <span style="--c:#ff9933">дуга зліва: заряди й перезарядки</span>
         <span style="--c:#66bfff">ряд під прицілом: атака</span>
         <span style="--c:#9aa197">ряд біля пояса: захист</span>
+        <span style="--c:#5ae68c">колонка справа внизу: швидкість руху</span>
       </div>
       <p class="note">Сцена приблизна: значки гри намальовані схоже, але не один в один, а HUD збільшено в 1.5 раза, щоб числа читались. Значки з пульсацією — стан «повний / готовий». Позначка <b style="color:#ffb27a">ваніль</b> — значок узятий з гри: в описі видно, які статуси й перки гри мають такий самий; <b style="color:#8fe0a8">свій</b> — значок намальований для мода.</p>
     </div>
@@ -183,7 +186,7 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
 <script>
 const D = /*__DATA__*/null;
 const PLACE = { gR: 'Дуга праворуч від прицілу', gL: 'Дуга ліворуч від прицілу', atk: 'Ряд під прицілом (атака)', def: 'Ряд ліворуч від поясу (захист)',
-  z: 'Над зомбі', toast: 'Напис під прицілом', mark: 'Мітка на стрілі / болті', feed: 'Стрічка реакцій праворуч', over: 'Позначки на зомбі' };
+  spd: 'Колонка швидкості (справа внизу)', z: 'Над зомбі', toast: 'Напис під прицілом', mark: 'Мітка на стрілі / болті', feed: 'Стрічка реакцій праворуч', over: 'Позначки на зомбі' };
 const FEEDICONS = {
   feed_explosion: [['elite_Burning', '#ff7319'], '+', ['elite_Acidic', '#99e633'], '=', ['elite_Explosive', '#ffcc40']],
   feed_confusion: [['elite_Burning', '#ff7319'], '+', ['elite_Electric', '#59bfff'], '='],
@@ -302,7 +305,7 @@ function drawScene(tabId) {
   svg += `<g fill="#151a14" opacity=".92"><circle cx="${zx}" cy="${zy}" r="26"/><path d="M${zx - 34} ${zy + 30}h68l12 120-14 4-8-60-6 70 10 150h-28l-14-130-14 130h-28l10-150-6-70-8 60-14-4z"/><path d="M${zx + 32} ${zy + 40}l70 34-6 12-70-26z"/></g>`;
   svg += `<ellipse cx="${zx}" cy="${zy + 350}" rx="70" ry="10" fill="rgba(0,0,0,.35)"/>`;
 
-  const g = { gR: [], gL: [], atk: [], def: [], z: [], toast: [], mark: [], feed: [], over: [] };
+  const g = { gR: [], gL: [], atk: [], def: [], spd: [], z: [], toast: [], mark: [], feed: [], over: [] };
   items.forEach((it, i) => g[it.place].push(i));
   // gauges: show one per side (the first; the others are variants, picked in the list)
   ['gR', 'gL'].forEach(p => { if (g[p].length) svg += gaugeSvg(items[g[p][0]], p === 'gL'); });
@@ -358,6 +361,12 @@ function drawScene(tabId) {
     const it = items[i];
     const line = el('div', { cls: 'feedline' }, [el('span', { cls: 'src', text: it.ru })].concat(feedIcons(it, U(22 * S))).concat(it.text ? [el('span', { cls: 't', text: it.text })] : []));
     sc.appendChild(hit(i, 1150, 26 + k * 52, line));
+  });
+  // movement speed: a column at the bottom right, mirroring the vanilla buff column (bottom 132 px, rows 46 px)
+  g.spd.forEach((i, k) => {
+    const it = items[i];
+    const row = el('div', { cls: 'spdrow' }, [el('span', { cls: 't', text: it.text, style: { color: '#fff' } }), icon(it.icon, it.color, U(36 * 1.2))]);
+    sc.appendChild(hit(i, 1432, 750 - 132 - (k + 1) * 46 * 1.2, row, { transform: 'translateX(-100%)' }));
   });
   g.mark.forEach((i, k) => sc.appendChild(hit(i, 860 + k * 70 - 26, 620, el('div', { style: { width: U(52), height: U(40) } }))));
   g.over.forEach(i => sc.appendChild(hit(i, zx - 40, zy - 34, el('div', { style: { width: U(80), height: U(68) } }))));

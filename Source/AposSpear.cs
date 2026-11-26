@@ -89,6 +89,12 @@ public static class AposSpear
             AposStatus.Target(chainTarget, "spear", "x" + chainHits, new Color(0.4f, 0.75f, 1f));
         }
         if (riposteLeft > 0) AposHud.Add(false, "speed", riposteLeft.ToString(), new Color(1f, 0.82f, 0.3f), true, "B7");
+        BuffValue retreat = player.Buffs.GetBuff("buffAposSpearRetreat");
+        if (retreat != null && !retreat.Remove && R("A6") > 0)
+        {
+            float rl = retreat.BuffClass != null && retreat.BuffClass.DurationMax > 0f ? retreat.BuffClass.DurationMax - retreat.DurationInSeconds : 0f;
+            AposHud.AddSpeed("ui_apos_speed", Retreat[R("A6")], rl >= 0.5f ? Mathf.CeilToInt(rl) + "s" : "", "A6");
+        }
         if (R("A7") > 0) AposHud.Add(true, "defense", Time.time >= sentryReady ? "OK" : Mathf.CeilToInt(sentryReady - Time.time) + "s", new Color(0.7f, 0.85f, 1f), Time.time >= sentryReady, "A7");
         if (partingReady) AposHud.Add(false, "head_shot", "", new Color(1f, 0.82f, 0.3f), true, "H2");
     }
