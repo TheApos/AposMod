@@ -625,6 +625,41 @@
 		</buff>
 		<!-- Weapon Mastery (Source/AposMastery.cs): stat nodes of the weapon in hand. The C# side keeps it on the player
 		     and writes the cvars (fractions) whenever the held weapon or its learned nodes change. -->
+		<!-- Mastery counters of the held weapon (the HUD next to the crosshair) as lines of the Status Effects window, slot 0-7:
+		     Source/AposHud.cs (StatusInfo) sets the icon, name and description every frame and adds / removes them;
+		     not in the on-screen buff column (the HUD already shows them there) -->
+		<buff name="buffAposHudInfo0" showonhud="false" remove_on_death="false" icon="ui_game_symbol_add">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
+		<buff name="buffAposHudInfo1" showonhud="false" remove_on_death="false" icon="ui_game_symbol_add">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
+		<buff name="buffAposHudInfo2" showonhud="false" remove_on_death="false" icon="ui_game_symbol_add">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
+		<buff name="buffAposHudInfo3" showonhud="false" remove_on_death="false" icon="ui_game_symbol_add">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
+		<buff name="buffAposHudInfo4" showonhud="false" remove_on_death="false" icon="ui_game_symbol_add">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
+		<buff name="buffAposHudInfo5" showonhud="false" remove_on_death="false" icon="ui_game_symbol_add">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
+		<buff name="buffAposHudInfo6" showonhud="false" remove_on_death="false" icon="ui_game_symbol_add">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
+		<buff name="buffAposHudInfo7" showonhud="false" remove_on_death="false" icon="ui_game_symbol_add">
+			<stack_type value="ignore"/>
+			<duration value="0"/>
+		</buff>
 		<buff name="buffAposMastery" hidden="true" remove_on_death="false">
 			<!-- Weapon Mastery 2.0: stats of the held weapon's class tree, set every frame by Source/AposMastery.cs -->
 			<stack_type value="ignore"/>

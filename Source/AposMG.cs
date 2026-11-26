@@ -117,9 +117,9 @@ public static class AposMG
         {
             Color c = Time.time < overheatUntil ? new Color(1f, 0.3f, 0.2f) : new Color(0.4f, 0.75f, 1f);
             string text = Time.time < overheatUntil ? Mathf.CeilToInt(overheatUntil - Time.time) + "s" : stacks + "/" + MaxStacks();
-            AposHud.Add(false, "speed", text, c, FullSpin());
+            AposHud.Add(false, "speed", text, c, FullSpin(), "B1");
         }
-        if (emplacement) AposHud.Add(false, "electric_turret", "", new Color(1f, 0.82f, 0.3f), true);
+        if (emplacement) AposHud.Add(false, "electric_turret", "", new Color(1f, 0.82f, 0.3f), true, "A6");
     }
 
     static bool Reloading(EntityPlayerLocal p)

@@ -19,6 +19,7 @@ public static class AposHud
         public string Text;
         public Color Color;
         public bool Glow;     // full stacks / mode active: brighter
+        public string Skill;  // localization key of the mastery skill behind it (name; + "_D" = description), or null
     }
 
     // icon sprite -> time it last triggered (shown bright, then fading)
@@ -50,6 +51,59 @@ public static class AposHud
     public static void Add(bool defense, string icon, string text, Color color, bool glow)
     {
         AddSprite(defense, "ui_game_symbol_" + icon, text, color, glow);
+    }
+
+    // skill: the id of the held class's skill this counter belongs to ("Base", "A3", ...): it also gets its own line in
+    // the character's Status Effects window, with the skill's name, the same value and the skill's description
+    public static void Add(bool defense, string icon, string text, Color color, bool glow, string skill)
+    {
+        Add(defense, icon, text, color, glow);
+        List<Widget> l = defense ? Defense : Attack;
+        if (AposMastery.HeldClass >= 0) l[l.Count - 1].Skill = AposMastery.SkillKey(AposMastery.HeldClass, skill);
+    }
+
+    // ===== the counters in the Status Effects window =====
+    // buffs.xml buffAposHudInfo0..7: empty buffs (not on the HUD column) that take the icon, name and description of a
+    // counter every frame; the value comes from XUiC_ActiveBuffEntry's "buffdisplayinfo" binding (AposHudInfoPatch).
+    const int InfoSlots = 8;
+    public static readonly string[] InfoText = new string[InfoSlots];
+    public static readonly string[] InfoName = new string[InfoSlots];
+
+    public static int InfoSlot(string buffName)
+    {
+        if (buffName == null || !buffName.StartsWith("buffAposHudInfo")) return -1;
+        int i;
+        return int.TryParse(buffName.Substring(15), out i) && i >= 0 && i < InfoSlots ? i : -1;
+    }
+
+    public static void StatusInfo(EntityPlayerLocal p)
+    {
+        int n = 0;
+        for (int k = 0; k < 2; k++)
+        {
+            foreach (Widget w in k == 0 ? Attack : Defense)
+            {
+                if (w.Skill == null || n >= InfoSlots) continue;
+                BuffClass c = BuffManager.GetBuff("buffAposHudInfo" + n);
+                if (c == null) return;
+                Color col = w.Color;
+                col.a = 1f;
+                c.Icon = w.Icon;
+                c.IconColor = col;
+                InfoName[n] = Localization.Get(w.Skill);
+                InfoText[n] = w.Text;
+                c.LocalizedName = InfoName[n];
+                c.DescriptionKey = w.Skill + "_D";
+                c.Description = Localization.Get(c.DescriptionKey);
+                if (!p.Buffs.HasBuff(c.Name)) p.Buffs.AddBuff(c.Name);
+                n++;
+            }
+        }
+        for (int i = n; i < InfoSlots; i++)
+        {
+            string name = "buffAposHudInfo" + i;
+            if (p.Buffs.HasBuff(name)) p.Buffs.RemoveBuff(name);
+        }
     }
 
     public static void AddSprite(bool defense, string sprite, string text, Color color, bool glow)
@@ -219,4 +273,20 @@ public class XUiC_AposHud : XUiController
 public class XUiC_AposHudDef : XUiC_AposHud
 {
     protected override bool IsDefense { get { return true; } }
+}
+
+// The Status Effects window: a buffAposHudInfoN line shows the counter's current name and value (the entry caches the
+// name when the buff appears, and its display value is numeric only)
+[HarmonyLib.HarmonyPatch(typeof(XUiC_ActiveBuffEntry), "GetBindingValueInternal")]
+public static class AposHudInfoPatch
+{
+    static void Postfix(XUiC_ActiveBuffEntry __instance, ref string value, string bindingName)
+    {
+        if (bindingName != "buffname" && bindingName != "buffdisplayinfo") return;
+        EntityUINotification n = __instance.Notification;
+        BuffValue b = n != null ? n.Buff : null;
+        int slot = b != null && b.BuffClass != null ? AposHud.InfoSlot(b.BuffClass.Name) : -1;
+        if (slot < 0) return;
+        value = (bindingName == "buffname" ? AposHud.InfoName[slot] : AposHud.InfoText[slot]) ?? "";
+    }
 }

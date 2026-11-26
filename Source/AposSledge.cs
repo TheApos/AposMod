@@ -63,10 +63,10 @@ public static class AposSledge
         AposMastery.SetStat(AposMastery.StatStamPower, 0.5f + (R("B8") > 0 ? 0.5f : 0f) - lungs);
         AposMastery.SetStat(AposMastery.StatStamNormal, -lungs);
         float left = quakeReady - Time.time;
-        AposHud.Add(false, "sledge", left > 0f ? Mathf.CeilToInt(left) + "s" : "OK", left > 0f ? new Color(0.6f, 0.6f, 0.6f) : new Color(1f, 0.6f, 0.2f), left <= 0f);
+        AposHud.Add(false, "sledge", left > 0f ? Mathf.CeilToInt(left) + "s" : "OK", left > 0f ? new Color(0.6f, 0.6f, 0.6f) : new Color(1f, 0.6f, 0.2f), left <= 0f, "Base");
         if (R("B4") > 0 && momentumHits > 0 && Time.time - momentumAt < 3f)
         {
-            AposHud.Add(false, "twitch_strength_melee", "x" + momentumHits, new Color(0.4f, 0.75f, 1f), momentumHits >= 3);
+            AposHud.Add(false, "twitch_strength_melee", "x" + momentumHits, new Color(0.4f, 0.75f, 1f), momentumHits >= 3, "B4");
             AposStatus.Target(momentumTarget, "twitch_strength_melee", "x" + momentumHits, new Color(0.4f, 0.75f, 1f));
         }
     }

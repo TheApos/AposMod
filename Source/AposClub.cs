@@ -61,8 +61,8 @@ public static class AposClub
         // stamina: power hits +30% (anti-spam), Easy Swing, Grand Slam +50%; normal hits: Tireless
         AposMastery.SetStat(AposMastery.StatStamPower, 0.3f - EasySwing[R("A6")] + (R("A8") > 0 ? 0.5f : 0f));
         AposMastery.SetStat(AposMastery.StatStamNormal, -Tireless[R("B4")]);
-        if (Cap(player) > 0) AposHud.Add(false, "berserker", s + "/" + Cap(player), new Color(1f, 0.3f, 0.1f), MaxRage(player));
-        if (R("A7") > 0 && streak > 0 && Time.time - lastPowerHit < 3f) AposHud.Add(false, "bat", "x" + (streak + 1), new Color(1f, 0.82f, 0.3f), streak >= 3);
+        if (Cap(player) > 0) AposHud.Add(false, "berserker", s + "/" + Cap(player), new Color(1f, 0.3f, 0.1f), MaxRage(player), "B1");
+        if (R("A7") > 0 && streak > 0 && Time.time - lastPowerHit < 3f) AposHud.Add(false, "bat", "x" + (streak + 1), new Color(1f, 0.82f, 0.3f), streak >= 3, "A7");
     }
 
     // incoming damage for the player (Berserk: +25%)

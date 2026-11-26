@@ -51,14 +51,14 @@ public static class AposKnuckles
         if (move != 0f) player.Buffs.AddBuff("buffAposKnuckleMove"); // short, refreshed while it applies
 
         Color gold = new Color(1f, 0.82f, 0.3f);
-        AposHud.Add(true, "boxer", charges + "/" + cap, charges > 0 ? new Color(1f, 0.6f, 0.2f) : new Color(0.6f, 0.6f, 0.6f), charges >= cap);
-        if (R("A2") > 0 && charges > 0) AposHud.Add(true, "defense", "-" + Mathf.RoundToInt(SkinPct(player) * 100f) + "%", new Color(1f, 0.6f, 0.2f), false);
+        AposHud.Add(true, "boxer", charges + "/" + cap, charges > 0 ? new Color(1f, 0.6f, 0.2f) : new Color(0.6f, 0.6f, 0.6f), charges >= cap, "Base");
+        if (R("A2") > 0 && charges > 0) AposHud.Add(true, "defense", "-" + Mathf.RoundToInt(SkinPct(player) * 100f) + "%", new Color(1f, 0.6f, 0.2f), false, "A2");
         if (R("B1") > 0 && combo > 0)
         {
-            AposHud.Add(false, "twitch_strength_melee", combo + "/" + ComboMax(), new Color(0.4f, 0.75f, 1f), combo >= 10);
+            AposHud.Add(false, "twitch_strength_melee", combo + "/" + ComboMax(), new Color(0.4f, 0.75f, 1f), combo >= 10, "B1");
             AposStatus.Target(comboTarget, "twitch_strength_melee", combo + "/" + ComboMax(), new Color(0.4f, 0.75f, 1f));
         }
-        if (R("B6") > 0 && Time.time - lastTaken >= 5f) AposHud.Add(false, "sneak_attack", "x" + Opener[R("B6")], gold, true);
+        if (R("B6") > 0 && Time.time - lastTaken >= 5f) AposHud.Add(false, "sneak_attack", "x" + Opener[R("B6")], gold, true, "B6");
     }
 
     static float SkinPct(EntityPlayerLocal p) { return Mathf.Min(40f, IronSkin[R("A2")] * AposAffixes.Level(p, "attFortitude")) / 100f; }

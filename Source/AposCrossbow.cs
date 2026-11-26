@@ -62,8 +62,8 @@ public static class AposCrossbow
         if (!held) return;
         float reload = Crank[R("B4")] + (Time.time < rhythmUntil ? Rhythm[R("A7")] : 0f);
         AposMastery.SetStat(AposMastery.StatReload, reload / 100f);
-        if (R("B7") > 0) AposHud.Add(false, "traps", MinesOut() + "/" + MaxMines[R("B7")], new Color(1f, 0.6f, 0.2f), MinesOut() >= MaxMines[R("B7")]);
-        if (Time.time < rhythmUntil) AposHud.Add(false, "swap", "+" + Rhythm[R("A7")] + "%", new Color(1f, 0.82f, 0.3f), true);
+        if (R("B7") > 0) AposHud.Add(false, "traps", MinesOut() + "/" + MaxMines[R("B7")], new Color(1f, 0.6f, 0.2f), MinesOut() >= MaxMines[R("B7")], "B7");
+        if (Time.time < rhythmUntil) AposHud.Add(false, "swap", "+" + Rhythm[R("A7")] + "%", new Color(1f, 0.82f, 0.3f), true, "A7");
     }
 
     static bool IsBolt(DamageSource source)

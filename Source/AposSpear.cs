@@ -85,12 +85,12 @@ public static class AposSpear
         }
         if (R("B4") > 0 && chainHits > 0 && Time.time - chainAt <= 1f)
         {
-            AposHud.Add(false, "spear", "x" + chainHits, new Color(0.4f, 0.75f, 1f), chainHits >= 5);
+            AposHud.Add(false, "spear", "x" + chainHits, new Color(0.4f, 0.75f, 1f), chainHits >= 5, "B4");
             AposStatus.Target(chainTarget, "spear", "x" + chainHits, new Color(0.4f, 0.75f, 1f));
         }
-        if (riposteLeft > 0) AposHud.Add(false, "speed", riposteLeft.ToString(), new Color(1f, 0.82f, 0.3f), true);
-        if (R("A7") > 0) AposHud.Add(true, "defense", Time.time >= sentryReady ? "OK" : Mathf.CeilToInt(sentryReady - Time.time) + "s", new Color(0.7f, 0.85f, 1f), Time.time >= sentryReady);
-        if (partingReady) AposHud.Add(false, "head_shot", "", new Color(1f, 0.82f, 0.3f), true);
+        if (riposteLeft > 0) AposHud.Add(false, "speed", riposteLeft.ToString(), new Color(1f, 0.82f, 0.3f), true, "B7");
+        if (R("A7") > 0) AposHud.Add(true, "defense", Time.time >= sentryReady ? "OK" : Mathf.CeilToInt(sentryReady - Time.time) + "s", new Color(0.7f, 0.85f, 1f), Time.time >= sentryReady, "A7");
+        if (partingReady) AposHud.Add(false, "head_shot", "", new Color(1f, 0.82f, 0.3f), true, "H2");
     }
 
     public static float Incoming() { return AposMastery.HeldClass == AposMastery.Spears && R("B8") > 0 ? 1.2f : 1f; }

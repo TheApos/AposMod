@@ -91,7 +91,7 @@ public static class AposShotgun
             AposMastery.SetStat(AposMastery.StatBuckSpread, Choke[R("B2")]);
             AposMastery.SetStat(AposMastery.StatRange, ChokeRange[R("B2")]);
         }
-        if (wallBonus) AposHud.Add(false, "shotgun", "+50%", new Color(1f, 0.82f, 0.3f), true);
+        if (wallBonus) AposHud.Add(false, "shotgun", "+50%", new Color(1f, 0.82f, 0.3f), true, "B7");
     }
 
     // a new shot: the Lead Wall bonus (if armed) is for this shot; start counting its pellets

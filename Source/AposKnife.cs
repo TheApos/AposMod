@@ -39,10 +39,10 @@ public static class AposKnife
         int s = Stacks(player), cap = Cap(player);
         Color red = new Color(0.9f, 0.25f, 0.3f);
         // stacks under the crosshair (like the other classes' main counters), the regen they give in the defence column
-        AposHud.Add(false, "drop", s + "/" + cap, s > 0 ? red : new Color(0.6f, 0.6f, 0.6f), s >= cap);
-        AposHud.Add(true, "drop", "+" + s + "/s", s > 0 ? red : new Color(0.6f, 0.6f, 0.6f), s >= cap);
-        if (R("A3") > 0 && s > 0) AposHud.Add(false, "drop", "+" + Mathf.RoundToInt(HotBlood[R("A3")] * s * 100f) + "%", red, s >= cap);
-        if (chainLeft > 0) AposHud.Add(false, "critical", "x" + chainLeft, new Color(1f, 0.82f, 0.3f), true);
+        AposHud.Add(false, "drop", s + "/" + cap, s > 0 ? red : new Color(0.6f, 0.6f, 0.6f), s >= cap, "Base");
+        AposHud.Add(true, "drop", "+" + s + "/s", s > 0 ? red : new Color(0.6f, 0.6f, 0.6f), s >= cap, "Base");
+        if (R("A3") > 0 && s > 0) AposHud.Add(false, "drop", "+" + Mathf.RoundToInt(HotBlood[R("A3")] * s * 100f) + "%", red, s >= cap, "A3");
+        if (chainLeft > 0) AposHud.Add(false, "critical", "x" + chainLeft, new Color(1f, 0.82f, 0.3f), true, "B7");
     }
 
     static void AddStacks(EntityPlayerLocal p, int n)
