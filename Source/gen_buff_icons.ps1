@@ -1,4 +1,4 @@
-﻿# Draws AposMod buff icons: white on transparent, 128x128 (tinted in game by icon_color)
+﻿# Draws AposMod buff / HUD icons: white on transparent, 128x128 (tinted in game by icon_color)
 param([string]$Out, [string]$Preview)
 Add-Type -AssemblyName System.Drawing
 $S = 128
@@ -29,12 +29,36 @@ $icons['ui_apos_frenzy'] = {
     }
 }
 
-# Adrenaline: lightning bolt with speed lines
+# Adrenaline: a sprinter leaning forward, with speed lines behind
 $icons['ui_apos_adrenaline'] = {
     param($g)
-    $g.FillPolygon($white, (P @(74,6, 34,70, 62,70, 46,122, 98,48, 68,48, 88,6)))
-    $p = Pen 7
-    $g.DrawLine($p, 8, 40, 30, 40); $g.DrawLine($p, 4, 62, 26, 62); $g.DrawLine($p, 10, 84, 30, 84)
+    $g.FillEllipse($white, 76, 6, 26, 26)
+    $p = Pen 16
+    $g.DrawLine($p, 80, 42, 60, 74)                                         # torso
+    $p = Pen 11
+    $g.DrawLines($p, (P @(76,46, 96,60, 112,48)))                           # front arm
+    $g.DrawLines($p, (P @(72,46, 52,54, 40,42)))                            # back arm
+    $g.DrawLines($p, (P @(60,76, 84,88, 80,118)))                           # front leg
+    $g.DrawLines($p, (P @(58,78, 44,100, 18,104)))                          # back leg
+    $p = Pen 6
+    $g.DrawLine($p, 4, 34, 34, 34); $g.DrawLine($p, 2, 56, 28, 56); $g.DrawLine($p, 8, 78, 30, 78)
+}
+
+# Critical hit: a jagged burst with an exclamation mark cut out
+$icons['ui_apos_crit'] = {
+    param($g)
+    $pts = @(); $n = 12
+    for ($i = 0; $i -lt $n * 2; $i++) {
+        $a = [Math]::PI * $i / $n - [Math]::PI / 2
+        $r = if ($i % 2 -eq 0) { if ($i % 4 -eq 0) { 62 } else { 52 } } else { 34 }
+        $pts += New-Object Drawing.PointF((64 + $r * [Math]::Cos($a)), (64 + $r * [Math]::Sin($a)))
+    }
+    $g.FillPolygon($white, $pts)
+    $g.CompositingMode = 'SourceCopy'
+    $clear = New-Object Drawing.SolidBrush([Drawing.Color]::Transparent)
+    $g.FillPolygon($clear, (P @(56,30, 72,30, 68,74, 60,74)))
+    $g.FillEllipse($clear, 57, 82, 14, 14)
+    $g.CompositingMode = 'SourceOver'
 }
 
 # Evasion: a dodging silhouette with two fading afterimages
@@ -70,7 +94,7 @@ $icons['ui_apos_lungs'] = {
     $m = New-Object Drawing.Drawing2D.Matrix(-1, 0, 0, 1, 128, 0); $r = $l.Clone(); $r.Transform($m); $g.FillPath($white, $r)
 }
 
-$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
+$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
 $sheet = New-Object Drawing.Bitmap (($S + 16) * $icons.Count + 16), ($S + 32)
 $sg = [Drawing.Graphics]::FromImage($sheet); $sg.Clear([Drawing.Color]::FromArgb(30, 30, 30))
 $x = 16

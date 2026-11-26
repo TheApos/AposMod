@@ -555,7 +555,7 @@
 		</buff>
 
 		<!-- Agility 10 "Adrenaline": number = stacks (max 3), +10% move speed and +5% damage each, 15 s after the last kill -->
-		<buff name="buffAposAdrenaline" name_key="buffAposAdrenalineName" description_key="buffAposAdrenalineDesc" icon="ui_game_symbol_run_and_gun" icon_color="0,220,120">
+		<buff name="buffAposAdrenaline" name_key="buffAposAdrenalineName" description_key="buffAposAdrenalineDesc" icon="ui_apos_adrenaline" icon_color="0,220,120">
 			<stack_type value="ignore"/>
 			<display_value value="aposAdrenaline"/>
 			<effect_group>
