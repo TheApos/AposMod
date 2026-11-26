@@ -765,6 +765,9 @@
 			<stack_type value="ignore"/>
 			<effect_group>
 				<passive_effect name="BuffResistance" operation="base_add" value="1" tags="buffBurningElement,buffBurningFlamingArrow,buffBurningMolotov,buffBurningEnvironment"/>
+				<!-- "fire does not hurt it": no heat damage either (molotov / fire explosions, Explosion reaction);
+				     Equipment.CalcDamage cuts elemental damage by ElementalDamageResist / 100 -->
+				<passive_effect name="ElementalDamageResist" operation="base_add" value="100" tags="heat"/>
 				<triggered_effect trigger="onSelfAttackedOther" action="AddBuff" target="other" buff="buffBurningElement">
 					<requirement name="EntityTagCompare" target="other" tags="player"/>
 				</triggered_effect>
