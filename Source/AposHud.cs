@@ -83,6 +83,13 @@ public static class AposHud
 
     public static void ModBuffs(EntityPlayerLocal p)
     {
+        // while the HUD shows them, keep these buffs out of the vanilla buff list (no double icons); aposhud off brings
+        // them back. Set every frame: the buff classes are rebuilt from XML when a world loads.
+        foreach (ModBuff m in modBuffs)
+        {
+            BuffClass c = BuffManager.GetBuff(m.Buff);
+            if (c != null) c.Hidden = AposSettings.HudEnabled;
+        }
         EntityBuffs b = p.Buffs;
         foreach (ModBuff m in modBuffs)
         {
