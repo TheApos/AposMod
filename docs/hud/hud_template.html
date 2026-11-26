@@ -101,6 +101,17 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
 .card .wh { font-size: 12.5px; color: var(--muted); line-height: 1.35; margin-top: 2px; }
 .card .pl { font: 600 11px/1 var(--body); text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-top: 6px; }
 .note { color: var(--muted); font-size: 13px; }
+.chip.van { color: #ffb27a; border-color: #5a3d28; }
+.chip.own { color: #8fe0a8; border-color: #2c5236; }
+.tag { display: inline-block; font: 600 10px/1 var(--body); letter-spacing: .06em; text-transform: uppercase; padding: 3px 5px; border-radius: 2px; margin-left: 6px; vertical-align: 2px; }
+.tag.van { color: #ffb27a; background: #2c2118; }
+.tag.own { color: #8fe0a8; background: #16261b; }
+.uses { display: flex; flex-direction: column; gap: 6px; }
+.uses ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.uses li { background: var(--panel-2); border: 1px solid var(--line); border-radius: 2px; padding: 3px 7px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+.uses li i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
+.uses .lbl { font-size: 12.5px; color: var(--muted); }
+.uses .risk { color: #ffb27a; }
 </style>
 
 <div class="wrap">
@@ -118,7 +129,7 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
         <span style="--c:#66bfff">ряд під прицілом: атака</span>
         <span style="--c:#9aa197">ряд біля пояса: захист</span>
       </div>
-      <p class="note">Сцена приблизна: значки гри намальовані схоже, але не один в один, а HUD збільшено в 1.5 раза, щоб числа читались. Значки з пульсацією — стан «повний / готовий».</p>
+      <p class="note">Сцена приблизна: значки гри намальовані схоже, але не один в один, а HUD збільшено в 1.5 раза, щоб числа читались. Значки з пульсацією — стан «повний / готовий». Позначка <b style="color:#ffb27a">ваніль</b> — значок узятий з гри: в описі видно, які статуси й перки гри мають такий самий; <b style="color:#8fe0a8">свій</b> — значок намальований для мода.</p>
     </div>
     <aside class="detail" id="detail" aria-live="polite"></aside>
   </div>
@@ -204,6 +215,23 @@ function icon(name, color, size) {
   const sp = el('span', { cls: 'ic', style: Object.assign(s, { color }) });
   sp.innerHTML = `<svg viewBox="0 0 24 24"><use href="#i-${name}"/></svg>`;
   return sp;
+}
+// vanilla: a game sprite (D.vanilla knows where the game uses it); own: the mod's own picture; null: no icon of its own
+function iconKind(it) {
+  if (!it.icon || it.place === 'toast' || it.place === 'mark' || it.place === 'over') return null;
+  if (it.place === 'feed' || D.png[it.icon]) return 'own';
+  return 'van';
+}
+// other places of the mod that show the same icon
+function modUses(it) {
+  const all = [['general', 'Загальне', D.general]].concat(D.classes.map(c => [c.id, c.name, c.items])).concat([['zombie', 'Над зомбі', D.zombie]]);
+  const out = [], seen = new Set();
+  all.forEach(([id, name, list]) => list.forEach(o => {
+    if (o === it || o.icon !== it.icon) return;
+    const k = name + o.ru;
+    if (!seen.has(k)) { seen.add(k); out.push({ ru: o.ru, tab: name, color: o.color }); }
+  }));
+  return out;
 }
 function feedIcons(item, size) {
   const parts = FEEDICONS[item.icon] || [];
@@ -344,6 +372,26 @@ function bigIcon(it, px) {
   return box;
 }
 
+function vanillaUses(it) {
+  const v = D.vanilla[it.icon] || { buffs: [], perks: [], ui: 0, other: [] };
+  const box = el('div', { cls: 'uses' });
+  const list = (arr, f) => el('ul', {}, arr.map(f));
+  if (v.buffs.length) {
+    box.appendChild(el('div', { cls: 'lbl risk', text: 'Статуси гри з цим значком (у лівій колонці баффів і у вікні статусів) — їх можна сплутати:' }));
+    box.appendChild(list(v.buffs, b => el('li', { title: b.en + ' (' + b.id + ')' }, [el('i', { style: { background: b.color } }), document.createTextNode(b.ru)])));
+  }
+  if (v.perks.length) {
+    box.appendChild(el('div', { cls: 'lbl', text: "Перки й навички гри (лише в меню навичок, у бою не з'являються):" }));
+    box.appendChild(list(v.perks, p => el('li', { title: p.en }, [document.createTextNode(p.ru + ' · ' + p.kind)])));
+  }
+  const extra = [];
+  if (v.ui) extra.push('інтерфейс гри (кнопки, вікна): ' + v.ui);
+  if (v.other.length) extra.push(v.other.join(', '));
+  if (extra.length) box.appendChild(el('div', { cls: 'lbl', text: 'Також: ' + extra.join('; ') + '.' }));
+  if (!v.buffs.length && !v.perks.length && !extra.length) box.appendChild(el('div', { cls: 'lbl', text: 'У грі цей значок більше ніде не використовується.' }));
+  return box;
+}
+
 function drawCards() {
   const c = document.getElementById('cards');
   c.innerHTML = '';
@@ -351,7 +399,8 @@ function drawCards() {
     const b = el('button', { cls: 'card', 'data-i': i, type: 'button' }, [
       bigIcon(it, 34),
       el('div', { style: { minWidth: 0 } }, [
-        el('div', { cls: 'nm', text: (it.ru || '') + (it.variant ? ' · ' + it.variant : '') }),
+        el('div', { cls: 'nm' }, [document.createTextNode((it.ru || '') + (it.variant ? ' · ' + it.variant : '')),
+          iconKind(it) === 'van' ? el('span', { cls: 'tag van', text: 'ваніль' }) : iconKind(it) === 'own' ? el('span', { cls: 'tag own', text: 'свій' }) : null]),
         el('div', { cls: 'wh', text: it.what }),
         el('div', { cls: 'pl', text: PLACE[it.place] }),
       ]),
@@ -376,12 +425,19 @@ function select(i) {
   const chips = el('div', { cls: 'chips' }, [el('span', { cls: 'chip', text: PLACE[it.place] })]);
   const m = /_(Base|[ABH]\d)$/.exec(it.key || '');
   if (m) chips.appendChild(el('span', { cls: 'chip k', text: m[1] === 'Base' ? 'риса класу' : 'навичка ' + m[1] }));
+  const kind = iconKind(it);
+  if (kind === 'van') chips.appendChild(el('span', { cls: 'chip van', text: 'ванільний значок' }));
+  if (kind === 'own') chips.appendChild(el('span', { cls: 'chip own', text: 'власний значок мода' }));
   d.appendChild(chips);
   const dl = el('dl');
   if (it.text) dl.appendChild(el('div', {}, [el('dt', { text: 'Приклад на екрані' }), el('dd', {}, [el('span', { cls: 'sample', text: it.text, style: { color: it.color } })])]));
   dl.appendChild(el('div', {}, [el('dt', { text: 'Що показує' }), el('dd', { text: it.what })]));
   dl.appendChild(el('div', {}, [el('dt', { text: 'Коли з\'являється' }), el('dd', { text: it.when })]));
   if (it.d) dl.appendChild(el('div', {}, [el('dt', { text: 'Опис у грі' }), el('dd', { cls: 'game', text: it.d })]));
+  if (kind === 'van') dl.appendChild(el('div', {}, [el('dt', { text: 'Де ще цей значок у грі' }), vanillaUses(it)]));
+  const mine = kind ? modUses(it) : [];
+  if (mine.length) dl.appendChild(el('div', {}, [el('dt', { text: 'Цей самий значок у моді' }),
+    el('div', { cls: 'uses' }, [el('ul', {}, mine.map(o => el('li', {}, [el('i', { style: { background: o.color } }), document.createTextNode(o.ru + ' · ' + o.tab)])))])]));
   d.appendChild(dl);
 }
 

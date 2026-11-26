@@ -100,7 +100,7 @@ CLASSES = [
   I('atk', 'ui_apos_crit', GOLD, 'x2', 'Blades_B7', 'Цепь казней: скільки наступних ударів гарантовано будуть критами.', 'Після вбивства критом; зменшується з кожним ударом.', full=True),
   I('toast', '', GOLD, 'Удар в спину!', 'Blades_B2', 'Напис під прицілом.', 'Удар влучив у зомбі спиною до тебе або який тебе не бачить.'),
   I('toast', '', GOLD, 'Удар в хребет!', 'Blades_B8', 'Напис під прицілом (замість «Удар в спину!»).', 'Справжній удар у спину з капстоуном B8: ×2 і крізь броню.'),
-  I('z', 'critical', '#ff3333', '-8/s 14s', 'Blades_Base', 'Кровотеча над зомбі: шкода за секунду і скільки секунд лишилось.', 'Після силового удару (і звичайного з Глубокими порезами).'),
+  I('z', 'critical', '#ff3333', '-8/s 14s', 'Blades_Base', 'Кровотеча над зомбі: шкода за секунду і скільки секунд лишилось.', 'Після силового удару (і звичайного з Глубокими порезами).', ru='Кровотечение', en='Bleeding'),
  ]),
  ('Clubs', 'Дубинки й бити', [
   I('gR', 'berserker', '#ff4d1a', '4/8', 'Clubs_B1', 'Стаки Ярости: +10% шкоди і +5% швидкості ударів за кожен.', 'З навичкою B1. Стак 8 с від вбивства. Пульсує на максимумі.', value=4, seg=8),
@@ -189,10 +189,61 @@ FEED = [
  I('feed', 'feed_breakthrough', GOLD, '-140 ×1', 'Spears_A8', 'Прорыв списа.', 'Ривок крізь натовп.'),
 ]
 
+# ===== vanilla icons: where the game itself uses them (so the reader knows what they can be mixed up with) =====
+import csv
+VAN = os.path.join('..', '..', 'Data', 'Config')
+LOC = {}
+with open(os.path.join(VAN, 'Localization.csv'), encoding='utf-8-sig', newline='') as f:
+    for row in csv.DictReader(f):
+        LOC[row['Key']] = (row.get('russian') or row.get('english') or '', row.get('english') or '')
+
+def loc(key, fallback):
+    v = LOC.get(key)
+    return v if v and v[0] else (fallback, fallback)
+
+TAG = re.compile(r'<(\w+)\b([^>]*?)\b(?:icon|sprite)="ui_game_symbol_([a-z0-9_]+)"([^>]*)>')
+ATTR = re.compile(r'(\w+)="([^"]*)"')
+VANILLA = {}   # icon -> {'buffs': [...], 'perks': [...], 'ui': n, 'other': [...]}
+for root, _, files in os.walk(VAN):
+    for fn in files:
+        if not fn.endswith('.xml'):
+            continue
+        text = open(os.path.join(root, fn), encoding='utf-8-sig', errors='replace').read()
+        for m in TAG.finditer(text):
+            tag, icon = m.group(1), m.group(3)
+            a = dict(ATTR.findall(m.group(2) + ' ' + m.group(4)))
+            v = VANILLA.setdefault(icon, {'buffs': [], 'perks': [], 'ui': 0, 'other': []})
+            name = a.get('name', '')
+            if fn == 'buffs.xml' and tag == 'buff':
+                if a.get('hidden') == 'true':
+                    continue   # never shown to the player
+                ru, en = loc(a.get('name_key', name), name)
+                col = a.get('icon_color', '255,255,255')
+                v['buffs'].append({'ru': ru, 'en': en, 'id': name, 'color': 'rgb(%s)' % ','.join(col.split(',')[:3])})
+            elif fn == 'progression.xml':
+                ru, en = loc(a.get('name_key', name), name)
+                kind = {'perk': 'перк', 'attribute': 'атрибут', 'skill': 'навичка', 'book_group': 'книги', 'crafting_skill': 'крафт'}.get(tag, tag)
+                v['perks'].append({'ru': ru, 'en': en, 'kind': kind})
+            elif fn in ('windows.xml', 'templates.xml'):
+                v['ui'] += 1
+            else:
+                v['other'].append({'challenges.xml': 'випробування', 'twitch.xml': 'Twitch-події', 'entityclasses.xml': 'істоти',
+                                   'nav_objects.xml': 'мітки на мапі', 'ui_display.xml': 'опис предметів'}.get(fn, fn))
+for v in VANILLA.values():
+    # one entry per name, keep the order
+    for k in ('buffs', 'perks'):
+        seen, keep = set(), []
+        for e in v[k]:
+            if e['ru'] not in seen:
+                seen.add(e['ru']); keep.append(e)
+        v[k] = keep
+    v['other'] = sorted(set(v['other']))
+
 DATA = {
   'classes': [{'id': c, 'name': n, 'items': items} for c, n, items in CLASSES],
   'general': GENERAL, 'zombie': ZOMBIE, 'feed': FEED,
   'png': PNG,
+  'vanilla': {k: VANILLA[k] for k in VANILLA if not k.startswith('apos')},
 }
 
 html = open(os.path.join(SP, 'hud_template.html'), encoding='utf-8').read()
