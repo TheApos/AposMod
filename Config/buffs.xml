@@ -459,6 +459,13 @@
 	</append>
 	<!-- Bleeding on zombies you hit: 5% of the last hit per second, min 5 (same idea as the elements) -->
 	<append xpath="/buffs/buff[@name='buffInjuryBleeding']">
+		<!-- vanilla bleeding removes itself on the first update when bleedCounter is 0 (only the vanilla bleed mods raise
+		     it): every mod source (serrated arrow, knife, spear, shotgun, MG, Miasma) adds the buff without it -->
+		<effect_group name="AposMod bleed counter">
+			<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar="bleedCounter" operation="set" value="1">
+				<requirement name="CVarCompare" cvar="bleedCounter" operation="LT" value="1"/>
+			</triggered_effect>
+		</effect_group>
 		<effect_group name="AposMod bleed scaling">
 			<requirement name="!EntityTagCompare" tags="player"/>
 			<requirement name="CVarCompare" cvar="aposHitDmg" operation="GT" value="0"/>

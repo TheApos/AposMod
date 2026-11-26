@@ -39,6 +39,7 @@
 - Harmony (HarmonyX) lives in `Mods/0_TFP_Harmony/0Harmony.dll` (restored by a full Steam "verify files"; it was missing before). Reference it from there when writing Harmony patches.
 - An arrow / bolt hit (ProjectileMoveScript.checkCollision -> ItemActionAttack.Hit) gets the LAUNCHER as DamageSource.AttackingItem, not the ammo. Use `AposProjectiles.AmmoOf(source)` (the projectile being processed). `ItemActionCatapult.GetStrainPercent` is the last shot's draw and never resets; the live draw is `ItemActionDataCatapult.m_bActivated` + `m_ActivateTime / m_MaxStrainTime`.
 - `player.motion` does not move the local player (vp_FPController); move it with `SetPosition` steps.
+- Vanilla `buffInjuryBleeding` removes itself on its first update when the cvar `bleedCounter` is 0 (only the vanilla bleed mods raise it); buffs.xml "AposMod bleed counter" sets it to 1 on start, so any mod `AddBuff buffInjuryBleeding` works.
 - Ranged AOE: `target="positionAOE"` hits around the impact/hit point (ammo `onProjectileImpact`, player `onSelfPrimaryActionRayHit`); arrows/bolts cannot pierce via XML (projectiles ignore EntityPenetrationCount).
 - Custom UI sprites (buff icons etc.): `UIAtlases/UIAtlas/<name>.png` (white on transparent, tinted by `icon_color`), referenced by file name, e.g. `ui_apos_bloodsucker`. `Source/gen_buff_icons.ps1 -Out UIAtlases/UIAtlas -Preview <png>` draws the frenzy/adrenaline/evasion/haste/lungs icons.
 - Pictograms drawn by C# (IMGUI): `Icons/*.png` loaded with `ImageConversion.LoadImage` from `AposSettings.ModPath` (elite modifier badges).
