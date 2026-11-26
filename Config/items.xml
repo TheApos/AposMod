@@ -1476,6 +1476,46 @@
 			<property name="CustomIconTint" value="120,255,60"/>
 			<property name="EconomicValue" value="30"/>
 			<property name="DescriptionKey" value="ammoArrowAposAcidDesc"/>
+			<!-- copied from vanilla ammoArrowIron: "Extends" does not inherit effect groups, and without ProjectileVelocity
+			     the arrow drops at your feet -->
+			<effect_group name="AposMod arrow base" tiered="false"> <!-- ammoArrowIron -->
+				<passive_effect name="BlockDamage" operation="base_set" value="3" tags="perkArchery"/>
+				<passive_effect name="BlockDamage" operation="base_add" value="100" tags="barrelExplosive"/>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.2"/>
+				<display_value name="dTargetArmor" value="-.2"/>
+				<passive_effect name="DamageModifier" operation="perc_set" value=".1" tags="wood"/>
+				<passive_effect name="DamageModifier" operation="perc_set" value="0" tags="earth,cloth"/>
+				<passive_effect name="ProjectileVelocity" operation="base_set" value="50" tags="perkArchery"/>
+			</effect_group>
+			<effect_group name="perkPenetrator" tiered="false">
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.1" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="1"/></passive_effect>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.15" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="2"/></passive_effect>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.2" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="3"/></passive_effect>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.3" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="4"/></passive_effect>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.3" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="5"/></passive_effect>
+			</effect_group>
+			<effect_group tiered="false">
+				<!-- Fully drawn bow shots bypass enemy armor, dealing full damage and deal an extra 25% damage. -->
+				<triggered_effect trigger="onProjectilePreImpact" action="ModifyCVar" cvar="$perkPiercingPrecision" operation="set" value="1">
+					<requirement name="ProgressionLevel" progression_name="perkAgilityMastery" operation="Equals" value="5"/>
+					<requirement name="CatapultStrainAmount" operation="GTE" value="1"/>
+				</triggered_effect>
+
+				<passive_effect name="EntityDamage" operation="perc_add" value=".25" tags="perkArchery">
+					<requirement name="CVarCompare" cvar="$perkPiercingPrecision" operation="EQ" value="1"/>
+				</passive_effect>
+
+				<passive_effect name="TargetArmor" operation="perc_add" value="-1" tags="perkArchery">
+					<requirement name="CVarCompare" cvar="$perkPiercingPrecision" operation="EQ" value="1"/>
+				</passive_effect>
+
+				<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" cvar="$perkPiercingPrecision" operation="set" value="0"/>
+			</effect_group>
 			<effect_group name="AposMod acid arrow" tiered="false">
 				<passive_effect name="EntityDamage" operation="base_set" value="30" tags="perkArchery"/>
 				<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" target="other" cvar="aposCorrodeTime" operation="set" value="6"/>
@@ -1504,6 +1544,46 @@
 			<property name="EconomicValue" value="30"/>
 			<property name="Damage_type" value="Electrical"/>
 			<property name="DescriptionKey" value="ammoArrowAposShockDesc"/>
+			<!-- copied from vanilla ammoArrowIron: "Extends" does not inherit effect groups, and without ProjectileVelocity
+			     the arrow drops at your feet -->
+			<effect_group name="AposMod arrow base" tiered="false"> <!-- ammoArrowIron -->
+				<passive_effect name="BlockDamage" operation="base_set" value="3" tags="perkArchery"/>
+				<passive_effect name="BlockDamage" operation="base_add" value="100" tags="barrelExplosive"/>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.2"/>
+				<display_value name="dTargetArmor" value="-.2"/>
+				<passive_effect name="DamageModifier" operation="perc_set" value=".1" tags="wood"/>
+				<passive_effect name="DamageModifier" operation="perc_set" value="0" tags="earth,cloth"/>
+				<passive_effect name="ProjectileVelocity" operation="base_set" value="50" tags="perkArchery"/>
+			</effect_group>
+			<effect_group name="perkPenetrator" tiered="false">
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.1" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="1"/></passive_effect>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.15" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="2"/></passive_effect>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.2" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="3"/></passive_effect>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.3" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="4"/></passive_effect>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.3" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="5"/></passive_effect>
+			</effect_group>
+			<effect_group tiered="false">
+				<!-- Fully drawn bow shots bypass enemy armor, dealing full damage and deal an extra 25% damage. -->
+				<triggered_effect trigger="onProjectilePreImpact" action="ModifyCVar" cvar="$perkPiercingPrecision" operation="set" value="1">
+					<requirement name="ProgressionLevel" progression_name="perkAgilityMastery" operation="Equals" value="5"/>
+					<requirement name="CatapultStrainAmount" operation="GTE" value="1"/>
+				</triggered_effect>
+
+				<passive_effect name="EntityDamage" operation="perc_add" value=".25" tags="perkArchery">
+					<requirement name="CVarCompare" cvar="$perkPiercingPrecision" operation="EQ" value="1"/>
+				</passive_effect>
+
+				<passive_effect name="TargetArmor" operation="perc_add" value="-1" tags="perkArchery">
+					<requirement name="CVarCompare" cvar="$perkPiercingPrecision" operation="EQ" value="1"/>
+				</passive_effect>
+
+				<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" cvar="$perkPiercingPrecision" operation="set" value="0"/>
+			</effect_group>
 			<effect_group name="AposMod electric arrow" tiered="false">
 				<passive_effect name="EntityDamage" operation="base_set" value="32" tags="perkArchery"/>
 				<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffShocked" duration="4"/>
@@ -1515,6 +1595,46 @@
 			<property name="CustomIconTint" value="230,40,60"/>
 			<property name="EconomicValue" value="30"/>
 			<property name="DescriptionKey" value="ammoArrowAposBleedDesc"/>
+			<!-- copied from vanilla ammoArrowIron: "Extends" does not inherit effect groups, and without ProjectileVelocity
+			     the arrow drops at your feet -->
+			<effect_group name="AposMod arrow base" tiered="false"> <!-- ammoArrowIron -->
+				<passive_effect name="BlockDamage" operation="base_set" value="3" tags="perkArchery"/>
+				<passive_effect name="BlockDamage" operation="base_add" value="100" tags="barrelExplosive"/>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.2"/>
+				<display_value name="dTargetArmor" value="-.2"/>
+				<passive_effect name="DamageModifier" operation="perc_set" value=".1" tags="wood"/>
+				<passive_effect name="DamageModifier" operation="perc_set" value="0" tags="earth,cloth"/>
+				<passive_effect name="ProjectileVelocity" operation="base_set" value="50" tags="perkArchery"/>
+			</effect_group>
+			<effect_group name="perkPenetrator" tiered="false">
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.1" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="1"/></passive_effect>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.15" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="2"/></passive_effect>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.2" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="3"/></passive_effect>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.3" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="4"/></passive_effect>
+				<passive_effect name="TargetArmor" operation="perc_add" value="-.3" tags="perkArchery">
+					<requirement name="ProgressionLevel" progression_name="perkPenetrator" operation="Equals" value="5"/></passive_effect>
+			</effect_group>
+			<effect_group tiered="false">
+				<!-- Fully drawn bow shots bypass enemy armor, dealing full damage and deal an extra 25% damage. -->
+				<triggered_effect trigger="onProjectilePreImpact" action="ModifyCVar" cvar="$perkPiercingPrecision" operation="set" value="1">
+					<requirement name="ProgressionLevel" progression_name="perkAgilityMastery" operation="Equals" value="5"/>
+					<requirement name="CatapultStrainAmount" operation="GTE" value="1"/>
+				</triggered_effect>
+
+				<passive_effect name="EntityDamage" operation="perc_add" value=".25" tags="perkArchery">
+					<requirement name="CVarCompare" cvar="$perkPiercingPrecision" operation="EQ" value="1"/>
+				</passive_effect>
+
+				<passive_effect name="TargetArmor" operation="perc_add" value="-1" tags="perkArchery">
+					<requirement name="CVarCompare" cvar="$perkPiercingPrecision" operation="EQ" value="1"/>
+				</passive_effect>
+
+				<triggered_effect trigger="onProjectileImpact" action="ModifyCVar" cvar="$perkPiercingPrecision" operation="set" value="0"/>
+			</effect_group>
 			<effect_group name="AposMod serrated arrow" tiered="false">
 				<passive_effect name="EntityDamage" operation="base_set" value="34" tags="perkArchery"/>
 				<triggered_effect trigger="onProjectileImpact" action="AddBuff" target="other" buff="buffAposDeepBleed"/>

@@ -139,10 +139,17 @@ public static class AposBowTree
         return R("A8") > 0 ? n * 2 : n;
     }
 
-    // which element the splinters carry: the arrow's own fire, or one the target already has (elemental weapon mods)
+    // which element the splinters carry: the arrow's own (fire, the mod's acid / electric / serrated arrows), or one the
+    // target already has (elemental weapon mods)
     static string Element(EntityAlive target)
     {
-        if (lastAmmo != null && lastAmmo.Contains("Flaming")) return "buffBurningFlamingArrow";
+        if (lastAmmo != null)
+        {
+            if (lastAmmo.Contains("Flaming")) return "buffBurningFlamingArrow";
+            if (lastAmmo == "ammoArrowAposAcid") return "buffAposCorroded";
+            if (lastAmmo == "ammoArrowAposShock") return "buffShocked";
+            if (lastAmmo == "ammoArrowAposBleed") return "buffInjuryBleeding";
+        }
         string[] own = { "buffAposCorroded", "buffShocked", "buffBurningElement", "buffInjuryBleeding" };
         foreach (string b in own) if (target != null && target.Buffs.HasBuff(b)) return b;
         return null;
@@ -229,7 +236,12 @@ public static class AposBowTree
             return;
         }
         if (R("A6") > 0) AposPistol.Shackle(e, SplSlow[R("A6")], 3f);
-        if (element != null && R("A4") > 0 && Random.value < SplElem[R("A4")]) e.Buffs.AddBuff(element);
+        if (element != null && R("A4") > 0 && Random.value < SplElem[R("A4")])
+        {
+            // the mod's acid lives while aposCorrodeTime > 0 (buffs.xml): without it the buff is gone at once
+            if (element == "buffAposCorroded") e.Buffs.SetCustomVar("aposCorrodeTime", 6f);
+            e.Buffs.AddBuff(element);
+        }
         if (R("H1") > 0) Wound(e);
     }
 

@@ -34,6 +34,7 @@
 - In a `count="all"` lootgroup (e.g. the final chests `groupReinforcedChestT*`, `groupHardenedChestT*`, `groupBuriedTreasure`) an item's `prob` is **ignored** unless it has `force_prob="true"` (`LootContainer.SpawnAllItemsFromList`): without it the item always spawns.
 - A lootgroup must be **defined before it is referenced**; otherwise loot.xml fails to load and world generation breaks (player falls through the ground).
 - A mod with a DLL is skipped entirely (XML too) when the game runs with EasyAntiCheat. Launch `7DaysToDie.exe -noeac`. The log shows `Loaded Mod: AposMod` when it worked.
+- `Extends` copies an item's properties but NOT its effect groups: a new arrow / ammo that extends a vanilla one must repeat its effect groups (e.g. `ProjectileVelocity`, or the arrow drops at your feet).
 - Ammo item effect groups fire together with the weapon's events (ItemValue.FireEvent forwards to the loaded ammo) — that is how the slug-only knockback works.
 - Harmony (HarmonyX) lives in `Mods/0_TFP_Harmony/0Harmony.dll` (restored by a full Steam "verify files"; it was missing before). Reference it from there when writing Harmony patches.
 - An arrow / bolt hit (ProjectileMoveScript.checkCollision -> ItemActionAttack.Hit) gets the LAUNCHER as DamageSource.AttackingItem, not the ammo. Use `AposProjectiles.AmmoOf(source)` (the projectile being processed). `ItemActionCatapult.GetStrainPercent` is the last shot's draw and never resets; the live draw is `ItemActionDataCatapult.m_bActivated` + `m_ActivateTime / m_MaxStrainTime`.
