@@ -92,6 +92,8 @@ public static class AposStatus
         new Color(1f, 0.5f, 0.1f), new Color(1f, 0.2f, 0.2f), new Color(1f, 0.6f, 0.1f), new Color(1f, 0.45f, 0.45f),
         new Color(0.4f, 0.9f, 1f), new Color(0.5f, 1f, 0.35f), new Color(1f, 0.6f, 1f), new Color(0.7f, 0.95f, 0.5f),
     };
+    static readonly string[] BurnBuffs = { "buffBurningElement", "buffBurningFlamingArrow", "buffBurningMolotov" };
+    static readonly string[] BurnVars = { "$buffBurningElementDuration", "$buffBurningFlamingArrowDuration", "%buffBurningMolotovDuration" };
     static readonly float[] kindLeft = new float[8];
     static readonly bool[] kindOn = new bool[8];
 
@@ -118,6 +120,10 @@ public static class AposStatus
         for (int k = 0; k < kindOn.Length; k++)
         {
             if (!kindOn[k]) continue;
+            // burning: the buffs have no duration of their own, vanilla counts the seconds left in a cvar (1 per second)
+            if (k == 0)
+                for (int f = 0; f < BurnBuffs.Length; f++)
+                    if (b.HasBuff(BurnBuffs[f])) kindLeft[0] = Mathf.Max(kindLeft[0], b.GetCustomVar(BurnVars[f]));
             string text = kindLeft[k] >= 0.5f ? Mathf.CeilToInt(kindLeft[k]) + "s" : "";
             // bleeding: also how much it takes per second (the bigger of the vanilla bleed and the deep bleed tick)
             if (k == 1)
