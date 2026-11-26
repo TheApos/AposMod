@@ -83,12 +83,14 @@ public static class AposHud
 
     public static void ModBuffs(EntityPlayerLocal p)
     {
-        // while the HUD shows them, keep these buffs out of the vanilla buff list (no double icons); aposhud off brings
-        // them back. Set every frame: the buff classes are rebuilt from XML when a world loads.
+        // while the HUD shows them, keep these buffs out of the on-screen buff column on the left (no double icons), but
+        // still in the character's Status Effects window (name + description). BuffClass.Hidden would drop them from
+        // both: both lists are built from the same buff notifications; ShowOnHUD is only checked by XUiC_BuffPopoutList.
+        // aposhud off brings them back. Set every frame: the buff classes are rebuilt from XML when a world loads.
         foreach (ModBuff m in modBuffs)
         {
             BuffClass c = BuffManager.GetBuff(m.Buff);
-            if (c != null) c.Hidden = AposSettings.HudEnabled;
+            if (c != null) c.ShowOnHUD = !AposSettings.HudEnabled;
         }
         EntityBuffs b = p.Buffs;
         foreach (ModBuff m in modBuffs)
