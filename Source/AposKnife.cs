@@ -55,7 +55,7 @@ public static class AposKnife
 
     // ===== hits =====
     static int lastTarget = -1;
-    static bool lastCrit, lastPower, lastBleeding, lastStealth;
+    static bool lastCrit, lastPower, lastBleeding, lastStealth, lastBackstab, lastSpine;
 
     public static int ModifyHit(EntityPlayerLocal player, EntityAlive target, DamageSource source, int strength)
     {
@@ -67,7 +67,9 @@ public static class AposKnife
         float mult = 1f;
         mult += HotBlood[R("A3")] * Stacks(player);
         // Backstab: from behind or unseen; Blood Scent: a bleeding zombie counts too
-        if (R("B2") > 0 && (behind || unseen || (R("H2") > 0 && bleeding))) mult += Backstab[R("B2")];
+        lastBackstab = R("B2") > 0 && (behind || unseen || (R("H2") > 0 && bleeding));
+        lastSpine = R("B8") > 0 && behind;
+        if (lastBackstab) mult += Backstab[R("B2")];
         if (R("A8") > 0 && !bleeding) mult -= 0.3f;                   // Blood Feast downside
         if (R("B8") > 0)
         {
@@ -105,6 +107,9 @@ public static class AposKnife
     {
         if (player == null || target.entityId != lastTarget) return;
         lastTarget = -1;
+        // say it when the back-hit skills worked (Spine Strike is the stronger one, it wins)
+        if (lastSpine) AposFx.Toast(Localization.Get("aposSpineToast"), new Color(1f, 0.82f, 0.3f));
+        else if (lastBackstab) AposFx.Toast(Localization.Get("aposBackstabToast"), new Color(1f, 0.82f, 0.3f));
         AddStacks(player, lastPower ? 2 : 1);
         if (lastCrit && R("H1") > 0) AddStacks(player, 3);
         if (lastCrit && R("H3") > 0)

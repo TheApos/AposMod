@@ -432,6 +432,8 @@ armorFarmerGloves,buffs,Buff,,,"Hunter Gloves","Перчатки охотник�
 armorFarmerBoots,buffs,Buff,,,"Hunter Boots","Сапоги охотника"
 aposParryToast,buffs,Buff,,,"Parry!","Парирование!"
 aposBreakthroughToast,buffs,Buff,,,"Breakthrough!","Прорыв!"
+aposBackstabToast,buffs,Buff,,,"Backstab!","Удар в спину!"
+aposSpineToast,buffs,Buff,,,"Spine Strike!","Удар в хребет!"
 aposWardrobeTitle,buffs,Buff,,,"WARDROBE","ГАРДЕРОБ"
 aposWardrobeTab,buffs,Buff,,,"Outfit {0}","Комплект {0}"
 aposWardrobeWorn,buffs,Buff,,,"worn now","надет сейчас"
