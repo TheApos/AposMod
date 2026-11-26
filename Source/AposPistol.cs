@@ -134,8 +134,8 @@ public static class AposPistol
     static void Widgets(EntityPlayerLocal player)
     {
         // Headhunter: the streak (3/5) before the mode, empowered shots left while it runs
-        if (modeShots > 0) AposHud.Add(false, "head_shot", modeShots.ToString(), Cyan, true, "Base");
-        else AposHud.Add(false, "head_shot", streak + "/" + Need(player), streak > 0 ? Color.white : Dim, false, "Base");
+        if (modeShots > 0) AposHud.Gauge(false, modeShots, BaseShots + 3 * R("A3"), Cyan, true, "head_shot", modeShots.ToString(), "Base");
+        else AposHud.Gauge(false, streak, Need(player), Color.white, false, "head_shot", streak + "/" + Need(player), "Base");
         if (R("B5") > 0 && hot >= 1f) AposHud.Add(false, "hot", "+" + Mathf.RoundToInt(hot) + "%", Orange, hot >= 29.5f, "B5");
         if (R("H1") > 0) AposHud.Add(false, "run_and_gun", hitsInRow + "/8", hitsInRow >= 7 ? Color.white : Dim, hitsInRow >= 7, "H1");
         if (R("H2") > 0 && Time.time < gunfighterUntil) AposHud.Add(false, "pistol", "+15%", Color.white, false, "H2");

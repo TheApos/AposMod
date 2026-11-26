@@ -85,7 +85,7 @@ public static class AposSpear
         }
         if (R("B4") > 0 && chainHits > 0 && Time.time - chainAt <= 1f)
         {
-            AposHud.Add(false, "spear", "x" + chainHits, new Color(0.4f, 0.75f, 1f), chainHits >= 5, "B4");
+            AposHud.Gauge(false, chainHits, 5, new Color(0.4f, 0.75f, 1f), chainHits >= 5, "spear", "x" + chainHits, "B4");
             AposStatus.Target(chainTarget, "spear", "x" + chainHits, new Color(0.4f, 0.75f, 1f));
         }
         if (riposteLeft > 0) AposHud.Add(false, "speed", riposteLeft.ToString(), new Color(1f, 0.82f, 0.3f), true, "B7");

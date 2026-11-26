@@ -51,7 +51,7 @@ public static class AposKnuckles
         if (move != 0f) player.Buffs.AddBuff("buffAposKnuckleMove"); // short, refreshed while it applies
 
         Color gold = new Color(1f, 0.82f, 0.3f);
-        AposHud.Add(true, "boxer", charges + "/" + cap, charges > 0 ? new Color(1f, 0.6f, 0.2f) : new Color(0.6f, 0.6f, 0.6f), charges >= cap, "Base");
+        AposHud.Gauge(true, charges, cap, new Color(1f, 0.6f, 0.2f), charges >= cap, "boxer", charges + "/" + cap, "Base");
         if (R("A2") > 0 && charges > 0) AposHud.Add(true, "defense", "-" + Mathf.RoundToInt(SkinPct(player) * 100f) + "%", new Color(1f, 0.6f, 0.2f), false, "A2");
         if (R("B1") > 0 && combo > 0)
         {

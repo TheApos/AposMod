@@ -60,7 +60,7 @@ public static class AposRifle
         AposMastery.SetStat(AposMastery.StatReload, reload / 100f);
         if (focus > 0f) AposMastery.SetStat(AposMastery.StatSpread, -0.9f);
 
-        if (a6 > 0 && focus > 0f) AposHud.Add(false, "sight", "+" + Mathf.RoundToInt(focus * 100f) + "%", new Color(0.25f, 0.9f, 1f), focus >= FocusCap[a6] - 0.001f, "A6");
+        if (a6 > 0 && focus > 0f) AposHud.Gauge(false, focus / FocusCap[a6], 0, new Color(0.25f, 0.9f, 1f), focus >= FocusCap[a6] - 0.001f, "sight", "+" + Mathf.RoundToInt(focus * 100f) + "%", "A6");
         if (spotterNext) AposHud.Add(false, "search", "+50%", new Color(1f, 0.82f, 0.3f), true, "H2");
     }
 

@@ -42,6 +42,17 @@ public static class AposStatus
 
     public static void Clear() { icons.Clear(); }
 
+    // draws a sprite of the game's UI atlas (with a soft shadow) into an IMGUI rect; used by the HUD gauges too
+    public static void DrawIcon(EntityPlayerLocal p, string sprite, Rect r, Color c)
+    {
+        Icon ic = GetIcon(p, sprite);
+        if (ic == null) return;
+        GUI.color = new Color(0f, 0f, 0f, 0.7f * c.a);
+        GUI.DrawTextureWithTexCoords(new Rect(r.x + 1.5f, r.y + 1.5f, r.width, r.height), ic.Tex, ic.Uv);
+        GUI.color = c;
+        GUI.DrawTextureWithTexCoords(r, ic.Tex, ic.Uv);
+    }
+
     static void Add(string icon, string text, Color c) { tags.Add(new Tag { Sprite = "ui_game_symbol_" + icon, Text = text, Color = c }); }
 
     // ===== stacks the weapon classes keep on one target (thrust chain, combo, momentum, Breakdown...) =====

@@ -60,7 +60,7 @@ public static class AposBaton
         if (!held) return;
         AposMastery.SetStat(AposMastery.StatStamPower, 0.5f);
         float left = ready - Time.time;
-        AposHud.Add(false, "electric_power", left > 0f ? Mathf.CeilToInt(left) + "s" : "OK", left > 0f ? new Color(0.6f, 0.6f, 0.6f) : new Color(0.4f, 0.8f, 1f), left <= 0f, "Base");
+        AposHud.Gauge(true, 1f - Mathf.Clamp01(left / Cooldown(player)), 0, left > 0f ? new Color(0.45f, 0.6f, 0.8f) : new Color(0.4f, 0.8f, 1f), left <= 0f, "electric_power", left > 0f ? Mathf.CeilToInt(left) + "s" : "OK", "Base");
         if (R("B3") > 0 && bdHits > 0)
         {
             AposHud.Add(false, "hard_target", bdHits + "/4", new Color(1f, 0.5f, 0.3f), bdHits >= 3, "B3");

@@ -20,6 +20,8 @@ public static class AposHud
         public Color Color;
         public bool Glow;     // full stacks / mode active: brighter
         public string Skill;  // localization key of the mastery skill behind it (name; + "_D" = description), or null
+        public float Value;   // gauges: filled segments (Segments > 0) or a 0..1 fill (Segments = 0)
+        public int Segments;
     }
 
     // icon sprite -> time it last triggered (shown bright, then fading)
@@ -46,6 +48,98 @@ public static class AposHud
         Attack.Clear();
         Defense.Clear();
         AttackAt = null;
+        GaugeLeft = GaugeRight = null;
+    }
+
+    // ===== gauges: the weapon's key mechanic as a quarter arc around the crosshair =====
+    // right: the main stack of the held class (Bloodsucker, Headhunter, Rage...), left: charges and cooldowns
+    // (Counter Punch, Earthquake, Chain Lightning). Segments light up one by one, empty ones are barely drawn, a full
+    // gauge pulses. Drawn by DrawGauges (IMGUI, from AposMastery.OnGUI); the value is also a Status Effects line.
+    public static Widget GaugeLeft, GaugeRight;
+
+    // value: filled segments (segments > 0) or a 0..1 fill (segments = 0); text: the number under the arc
+    public static void Gauge(bool left, float value, int segments, Color color, bool full, string icon, string text, string skill)
+    {
+        Widget w = new Widget { Icon = icon.StartsWith("ui_") ? icon : "ui_game_symbol_" + icon, Text = text, Color = color, Glow = full,
+                                Value = value, Segments = Mathf.Max(0, segments) };
+        if (AposMastery.HeldClass >= 0) w.Skill = AposMastery.SkillKey(AposMastery.HeldClass, skill);
+        if (left) GaugeLeft = w; else GaugeRight = w;
+    }
+
+    const float ArcSpan = 70f, ArcGap = 3.5f;
+    static GUIStyle gaugeStyle;
+
+    public static void DrawGauges(EntityPlayerLocal p)
+    {
+        if (p == null || !AposSettings.HudEnabled || (GaugeLeft == null && GaugeRight == null)) return;
+        LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(p);
+        if (ui == null || ui.windowManager == null || ui.windowManager.IsModalWindowOpen() || !ui.windowManager.IsHUDEnabled()) return;
+        float k = Screen.height / 1080f * AposSettings.HudScale;
+        if (gaugeStyle == null) gaugeStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleLeft };
+        gaugeStyle.fontSize = Mathf.RoundToInt(15f * k);
+        Vector2 c = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        Color old = GUI.color;
+        Matrix4x4 m = GUI.matrix;
+        if (GaugeRight != null) DrawArc(p, GaugeRight, c, k, false);
+        if (GaugeLeft != null) DrawArc(p, GaugeLeft, c, k, true);
+        GUI.matrix = m;
+        GUI.color = old;
+    }
+
+    // angles in degrees, 0 = straight out to the side, + = down; the arc fills from the bottom up
+    static void DrawArc(EntityPlayerLocal p, Widget w, Vector2 c, float k, bool left)
+    {
+        float r = 62f * k, thick = 5f * k;
+        int segs = w.Segments > 0 ? w.Segments : 1;
+        float gap = segs > 1 ? Mathf.Min(ArcGap, 30f / segs) : 0f;
+        float seg = (ArcSpan - gap * (segs - 1)) / segs;
+        float pulse = w.Glow ? 0.75f + 0.25f * Mathf.Sin(Time.time * 6f) : 1f;
+        for (int i = 0; i < segs; i++)
+        {
+            float a0 = ArcSpan / 2f - i * (seg + gap);
+            float fill = w.Segments > 0 ? Mathf.Clamp01(w.Value - i) : Mathf.Clamp01(w.Value);
+            Piece(c, r, a0, a0 - seg, thick, new Color(1f, 1f, 1f, 0.13f), left);                      // the empty track
+            if (fill <= 0f) continue;
+            Color col = w.Color;
+            if (w.Glow) Piece(c, r, a0, a0 - seg * fill, thick * 2.6f, new Color(col.r, col.g, col.b, 0.18f * pulse), left);   // soft glow
+            Piece(c, r, a0, a0 - seg * fill, thick, new Color(col.r, col.g, col.b, 0.9f * pulse), left);
+        }
+        // icon + number just below the bottom end of the arc
+        float ab = (ArcSpan / 2f + 9f) * Mathf.Deg2Rad;
+        float x = c.x + (left ? -1f : 1f) * r * Mathf.Cos(ab), y = c.y + r * Mathf.Sin(ab);
+        float size = 18f * k;
+        GUI.matrix = Matrix4x4.identity;
+        Color ic = w.Color; ic.a = 0.95f;
+        float tw = w.Text.Length > 0 ? gaugeStyle.CalcSize(new GUIContent(w.Text)).x : 0f;
+        float x0 = left ? x - size - 2f * k - tw : x - size * 0.5f;
+        AposStatus.DrawIcon(p, w.Icon, new Rect(x0, y - size / 2f, size, size), ic);
+        if (tw > 0f)
+        {
+            Rect tr = new Rect(x0 + size + 2f * k, y - size / 2f, tw + 4f, size);
+            GUI.color = new Color(0f, 0f, 0f, 0.8f);
+            GUI.Label(new Rect(tr.x + 1.5f, tr.y + 1.5f, tr.width, tr.height), w.Text, gaugeStyle);
+            GUI.color = new Color(1f, 1f, 1f, 0.95f);
+            GUI.Label(tr, w.Text, gaugeStyle);
+        }
+    }
+
+    // one piece of the arc between two angles, drawn as short rotated bars (no shaders needed)
+    static void Piece(Vector2 c, float r, float from, float to, float thick, Color col, bool left)
+    {
+        float step = 1.5f;
+        int n = Mathf.Max(1, Mathf.CeilToInt(Mathf.Abs(from - to) / step));
+        float d = (to - from) / n;
+        float len = r * Mathf.Abs(d) * Mathf.Deg2Rad + 1f;
+        GUI.color = col;
+        for (int i = 0; i < n; i++)
+        {
+            float a = from + d * (i + 0.5f);
+            float rad = a * Mathf.Deg2Rad;
+            Vector2 at = new Vector2(c.x + (left ? -1f : 1f) * r * Mathf.Cos(rad), c.y + r * Mathf.Sin(rad));
+            GUI.matrix = Matrix4x4.identity;
+            GUIUtility.RotateAroundPivot(left ? 180f - a : a, at);
+            GUI.DrawTexture(new Rect(at.x - thick / 2f, at.y - len / 2f, thick, len), Texture2D.whiteTexture);
+        }
     }
 
     // icon: a vanilla symbol name ("head_shot" = ui_game_symbol_head_shot) or the mod's own sprite ("ui_apos_crit")
@@ -80,9 +174,13 @@ public static class AposHud
     public static void StatusInfo(EntityPlayerLocal p)
     {
         int n = 0;
-        for (int k = 0; k < 2; k++)
+        List<Widget> all = new List<Widget>();
+        if (GaugeRight != null) all.Add(GaugeRight);
+        if (GaugeLeft != null) all.Add(GaugeLeft);
+        all.AddRange(Attack);
+        all.AddRange(Defense);
         {
-            foreach (Widget w in k == 0 ? Attack : Defense)
+            foreach (Widget w in all)
             {
                 if (w.Skill == null || n >= InfoSlots) continue;
                 BuffClass c = BuffManager.GetBuff("buffAposHudInfo" + n);
