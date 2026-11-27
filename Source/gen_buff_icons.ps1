@@ -164,19 +164,21 @@ $icons['ui_apos_suppressed'] = {
     $g.DrawLines($p, (P @(58,70, 34,52, 40,30, 62,22)))                     # far arm over the head
 }
 
-# Hold the Line (MG A6, crouch / stand still): a bunker (pillbox) with a firing slit and a gun barrel
+# Hold the Line (MG A6, crouch / stand still): a machine-gun turret on a tripod
 $icons['ui_apos_holdline'] = {
     param($g)
-    $bunker = New-Object Drawing.Drawing2D.GraphicsPath
-    $bunker.AddArc(12, 30, 104, 90, 180, 180)
-    $bunker.AddLine(116, 75, 116, 104); $bunker.AddLine(116, 104, 12, 104)
-    $bunker.CloseFigure()
-    $g.FillPath($white, $bunker)
+    $p = Pen 9
+    $g.DrawLine($p, 58, 78, 30, 120); $g.DrawLine($p, 64, 78, 64, 122); $g.DrawLine($p, 70, 78, 98, 120)   # tripod
+    $g.FillRectangle($white, 52, 66, 24, 16)                                # swivel
+    $g.FillPolygon($white, (P @(20,40, 84,40, 92,48, 92,66, 20,66)))        # gun body
+    $g.FillRectangle($white, 90, 48, 34, 9)                                 # barrel
+    $g.FillRectangle($white, 116, 44, 8, 17)                                # muzzle
+    $g.FillRectangle($white, 34, 66, 20, 18)                                # ammo box
+    $g.FillPolygon($white, (P @(4,46, 20,42, 20,62, 4,58)))                 # stock
     $g.CompositingMode = 'SourceCopy'
-    $g.FillRectangle((New-Object Drawing.SolidBrush([Drawing.Color]::Transparent)), 34, 58, 60, 12)
+    $clear = New-Object Drawing.SolidBrush([Drawing.Color]::Transparent)
+    foreach ($x in @(30, 44, 58, 72)) { $g.FillRectangle($clear, $x, 46, 6, 14) }   # cooling slots
     $g.CompositingMode = 'SourceOver'
-    $g.FillRectangle($white, 60, 61, 64, 6)                                  # barrel through the slit
-    foreach ($x in @(8, 36, 64, 92)) { $g.FillEllipse($white, $x, 106, 30, 16) }   # sandbags
 }
 
 # Full Draw (bow B1): an arrow flying right, a damage burst at its tip
