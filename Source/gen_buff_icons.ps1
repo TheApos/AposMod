@@ -16,17 +16,20 @@ function Pen([float]$w) { $p = New-Object Drawing.Pen([Drawing.Color]::White, $w
 
 $icons = [ordered]@{}
 
-# Frenzy: three claw slashes
+# Frenzy (+15% attack speed): a big sword mid-swing with the swing's motion arcs behind it
 $icons['ui_apos_frenzy'] = {
     param($g)
-    for ($i = 0; $i -lt 3; $i++) {
-        $o = $i * 24 - 6
-        $path = New-Object Drawing.Drawing2D.GraphicsPath
-        $path.AddBezier(18 + $o, 104, 34 + $o, 74, 54 + $o, 40, 82 + $o, 14)
-        $path.AddBezier(82 + $o, 14, 64 + $o, 44, 46 + $o, 78, 30 + $o, 108)
-        $path.CloseFigure()
-        $g.FillPath($white, $path)
+    # motion arcs around the hilt, on the side the blade came from
+    foreach ($a in @(@(98, 9, 255), @(78, 8, 170), @(58, 7, 100))) {
+        $pen = New-Object Drawing.Pen([Drawing.Color]::FromArgb($a[2], 255, 255, 255), $a[1])
+        $pen.StartCap = 'Round'; $pen.EndCap = 'Round'
+        $r = $a[0]
+        $g.DrawArc($pen, (30 - $r), (110 - $r), (2 * $r), (2 * $r), 262, 42)
     }
+    # the sword: blade from the hilt (30,110) to the tip (116,16), guard across, grip
+    $g.FillPolygon($white, (P @(40,92, 106,22, 118,12, 110,30, 48,100)))
+    $g.FillPolygon($white, (P @(30,80, 60,110, 52,118, 22,88)))
+    $g.FillPolygon($white, (P @(34,102, 42,110, 18,126, 10,118)))
 }
 
 # Adrenaline: a sprinter leaning forward, with speed lines behind
