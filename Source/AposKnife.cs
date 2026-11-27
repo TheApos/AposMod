@@ -110,8 +110,12 @@ public static class AposKnife
     {
         if (player == null || target.entityId != lastTarget) return;
         lastTarget = -1;
-        // Spine Strike: a bone crunch on top of the label
-        if (lastSpine) Audio.Manager.PlayInsidePlayerHead("breakleg", player.entityId);
+        // Spine Strike: a bone crunch on top of the label, and a line in the reaction feed with the damage it did
+        if (lastSpine)
+        {
+            Audio.Manager.PlayInsidePlayerHead("breakleg", player.entityId);
+            if (dealt > 0) AposReactions.Add(AposReactions.SpineStrike, dealt, 1);
+        }
         AddStacks(player, lastPower ? 2 : 1);
         if (lastCrit && R("H1") > 0) AddStacks(player, 3);
         if (lastCrit && R("H3") > 0)
