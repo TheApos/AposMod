@@ -88,7 +88,7 @@ public static class AposSpear
             AposHud.Gauge(false, chainHits, 5, new Color(0.4f, 0.75f, 1f), chainHits >= 5, "spear", "x" + chainHits, "B4");
             AposStatus.Target(chainTarget, "spear", "x" + chainHits, new Color(0.4f, 0.75f, 1f));
         }
-        if (riposteLeft > 0) AposHud.Add(false, "speed", riposteLeft.ToString(), new Color(1f, 0.82f, 0.3f), true, "B7");
+        if (riposteLeft > 0) AposHud.AddAttackSpeed("speed", 0.5f, "x" + riposteLeft, "B7");
         BuffValue retreat = player.Buffs.GetBuff("buffAposSpearRetreat");
         if (retreat != null && !retreat.Remove && R("A6") > 0)
         {

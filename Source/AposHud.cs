@@ -52,11 +52,14 @@ public static class AposHud
         Speed.Clear();
     }
 
-    // ===== movement speed: a column at the bottom right, mirroring the vanilla buff column at the bottom left =====
-    // every mod status that changes how fast you walk / run (Adrenaline, Evasion, spear Hit and Back, knuckle Light Feet
-    // and the Knockout slow): icon + "+N%" (+ seconds / stacks), like a vanilla buff entry. Drawn by DrawSpeed (IMGUI).
+    // ===== the "energy" block: a column at the bottom right, mirroring the vanilla buff column at the bottom left =====
+    // every mod status that changes how fast you move (Adrenaline, Evasion, spear Hit and Back, knuckle Light Feet and the
+    // Knockout slow: green / red) or attack / fire / reload (Frenzy, Hot Barrel, Gunfighter, Hunter's Rhythm, Riposte:
+    // gold): icon + "+N%" (+ seconds / stacks), like a vanilla buff entry. Drawn by DrawSpeed (IMGUI).
+    // The screen has three themed blocks: this one, the defence row between the health bars and the toolbelt, and the
+    // vanilla buff column above the health bars for everything else (the mod leaves such buffs there).
     public static readonly List<Widget> Speed = new List<Widget>();
-    static readonly Color SpeedUp = new Color(0.35f, 0.9f, 0.55f), SpeedDown = new Color(1f, 0.4f, 0.35f);
+    static readonly Color SpeedUp = new Color(0.35f, 0.9f, 0.55f), SpeedDown = new Color(1f, 0.4f, 0.35f), AttackUp = new Color(1f, 0.82f, 0.3f);
 
     // pct: the change as a fraction (+0.15 = 15% faster); extra: seconds / stacks after it; skill: held class skill id or null
     public static void AddSpeed(string icon, float pct, string extra, string skill)
@@ -65,6 +68,13 @@ public static class AposHud
         Widget w = new Widget { Icon = icon.StartsWith("ui_") ? icon : "ui_game_symbol_" + icon, Text = text, Color = pct >= 0f ? SpeedUp : SpeedDown };
         if (skill != null && AposMastery.HeldClass >= 0) w.Skill = AposMastery.SkillKey(AposMastery.HeldClass, skill);
         Speed.Add(w);
+    }
+
+    // attack / fire rate / reload speed (gold)
+    public static void AddAttackSpeed(string icon, float pct, string extra, string skill)
+    {
+        AddSpeed(icon, pct, extra, skill);
+        Speed[Speed.Count - 1].Color = AttackUp;
     }
 
     static GUIStyle speedStyle;
@@ -269,7 +279,7 @@ public static class AposHud
     // ===== the mod's own player buffs =====
     // buff, defence row?, what the number is: cvar (with an optional "/max" or "%"), or "time" = seconds left, "" = icon only
     // Speed: a movement buff, shown in the speed column instead (SpeedCvar: its bonus as a fraction, or SpeedPct fixed)
-    class ModBuff { public string Buff, Cvar, Suffix, SpeedCvar; public bool Defense, Speed; public int Full; public float SpeedPct; }
+    class ModBuff { public string Buff, Cvar, Suffix, SpeedCvar; public bool Defense, Speed, Attack; public int Full; public float SpeedPct; }
     static readonly ModBuff[] modBuffs =
     {
         new ModBuff { Buff = "buffAposThunderCharge", Cvar = "aposThunder", Suffix = "/3", Full = 3 },
@@ -277,11 +287,11 @@ public static class AposHud
         new ModBuff { Buff = "buffAposEmp", Cvar = "aposEmp", Suffix = "/10", Full = 10, Defense = true },   // discharges around you
         new ModBuff { Buff = "buffAposPipeVeteran", Cvar = "aposPipeBonus", Suffix = "%" },
         new ModBuff { Buff = "buffAposShadow", Cvar = "", Suffix = "x2", Full = -1 },
-        new ModBuff { Buff = "buffAposFrenzyPerception", Cvar = "time" },
-        new ModBuff { Buff = "buffAposFrenzyStrength", Cvar = "time" },
-        new ModBuff { Buff = "buffAposFrenzyFortitude", Cvar = "time" },
-        new ModBuff { Buff = "buffAposFrenzyAgility", Cvar = "time" },
-        new ModBuff { Buff = "buffAposJackpot", Cvar = "time" },
+        new ModBuff { Buff = "buffAposFrenzyPerception", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
+        new ModBuff { Buff = "buffAposFrenzyStrength", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
+        new ModBuff { Buff = "buffAposFrenzyFortitude", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
+        new ModBuff { Buff = "buffAposFrenzyAgility", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
+        // Jackpot (loot x5) is none of the three themes: it stays in the vanilla buff column
         new ModBuff { Buff = "buffAposShieldUp", Cvar = "time", Defense = true, Full = -1 },
         new ModBuff { Buff = "buffAposGuardian", Cvar = "", Defense = true },
         new ModBuff { Buff = "buffAposEvasion", Cvar = "time", Speed = true, SpeedPct = 0.3f },
@@ -333,7 +343,7 @@ public static class AposHud
             else if (m.Suffix != null) text = m.Suffix;
             if (m.Speed)
             {
-                Speed.Add(new Widget { Icon = bc.Icon, Color = SpeedUp,
+                Speed.Add(new Widget { Icon = bc.Icon, Color = m.Attack ? AttackUp : SpeedUp,
                     Text = "+" + Mathf.RoundToInt((m.SpeedCvar != null ? b.GetCustomVar(m.SpeedCvar) : m.SpeedPct) * 100f) + "%" + (text.Length > 0 ? "  " + text : "") });
                 continue;
             }
