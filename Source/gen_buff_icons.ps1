@@ -203,6 +203,23 @@ $icons['ui_apos_fulldraw'] = {
     $g.FillPolygon($white, $pts)
 }
 
+# Backstab / Spine Strike (knife): a figure seen from behind with a knife stuck in its spine
+$icons['ui_apos_backstab'] = {
+    param($g)
+    $g.FillEllipse($white, 44, 6, 32, 32)                                   # head
+    $g.FillPolygon($white, (P @(30,42, 90,42, 104,58, 96,124, 24,124, 16,58)))   # shoulders and back
+    $g.CompositingMode = 'SourceCopy'
+    $clear = New-Object Drawing.SolidBrush([Drawing.Color]::Transparent)
+    $cut = New-Object Drawing.Pen([Drawing.Color]::Transparent, 7)
+    $g.DrawLine($cut, 60, 50, 60, 120)                                      # the spine line
+    $g.FillPolygon($clear, (P @(52,78, 120,20, 128,30, 64,92)))             # a gap around the knife
+    $g.CompositingMode = 'SourceOver'
+    # the knife: blade into the back, guard and grip sticking out up-right
+    $g.FillPolygon($white, (P @(58,86, 84,62, 90,68)))                      # the visible part of the blade
+    $g.FillPolygon($white, (P @(80,54, 98,72, 94,76, 76,58)))               # guard
+    $g.FillPolygon($white, (P @(90,62, 118,34, 126,42, 98,70)))             # grip
+}
+
 # Bonus damage on the next hit(s): a reticle with a blast in its centre. Shared by every such buff so they read the same:
 # pistol Firing Squad ready (x10), knife Execution Chain (sure crits)
 $icons['ui_apos_squad'] = {
@@ -252,7 +269,7 @@ $icons['ui_apos_lungs'] = {
     $m = New-Object Drawing.Drawing2D.Matrix(-1, 0, 0, 1, 128, 0); $r = $l.Clone(); $r.Transform($m); $g.FillPath($white, $r)
 }
 
-$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_shattered = '255,153,51'; ui_apos_suppressed = '115,191,255'; ui_apos_holdline = '255,210,77'; ui_apos_fulldraw = '255,210,77'; ui_apos_squad = '255,210,77'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
+$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_shattered = '255,153,51'; ui_apos_suppressed = '115,191,255'; ui_apos_holdline = '255,210,77'; ui_apos_fulldraw = '255,210,77'; ui_apos_squad = '255,210,77'; ui_apos_backstab = '242,31,31'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
 $sheet = New-Object Drawing.Bitmap (($S + 16) * $icons.Count + 16), ($S + 32)
 $sg = [Drawing.Graphics]::FromImage($sheet); $sg.Clear([Drawing.Color]::FromArgb(30, 30, 30))
 $x = 16

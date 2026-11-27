@@ -27,7 +27,7 @@ public static class AposReactions
     }
 
     static readonly List<Line> lines = new List<Line>();
-    static Texture2D fire, acid, shock, blast, carry, shield;
+    static Texture2D fire, acid, shock, blast, carry, shield, backstab;
     static GUIStyle style;
 
     static readonly Color FireColor = new Color(1f, 0.45f, 0.1f);
@@ -74,8 +74,18 @@ public static class AposReactions
 
     static Texture2D Icon(string name)
     {
+        return Png(System.IO.Path.Combine(System.IO.Path.Combine(AposSettings.ModPath ?? "", "Icons"), "elite_" + name + ".png"));
+    }
+
+    // a picture of the mod's UI atlas folder (white on transparent, tinted when drawn)
+    static Texture2D AtlasIcon(string sprite)
+    {
+        return Png(System.IO.Path.Combine(System.IO.Path.Combine(System.IO.Path.Combine(AposSettings.ModPath ?? "", "UIAtlases"), "UIAtlas"), sprite + ".png"));
+    }
+
+    static Texture2D Png(string path)
+    {
         Texture2D tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-        string path = System.IO.Path.Combine(System.IO.Path.Combine(AposSettings.ModPath ?? "", "Icons"), "elite_" + name + ".png");
         if (System.IO.File.Exists(path) && ImageConversion.LoadImage(tex, System.IO.File.ReadAllBytes(path))) return tex;
         return null;
     }
@@ -87,7 +97,7 @@ public static class AposReactions
         if (style == null)
         {
             fire = Icon("Burning"); acid = Icon("Acidic"); shock = Icon("Electric"); blast = Icon("Explosive");
-            carry = Icon("Fast"); shield = Icon("Armored");
+            carry = Icon("Fast"); shield = Icon("Armored"); backstab = AtlasIcon("ui_apos_backstab");
             style = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleLeft };
         }
         float k = Screen.height / 1080f;
@@ -118,7 +128,7 @@ public static class AposReactions
                     case SplinterMine: pic = shock; pc = ShockColor; source = Localization.Get("aposMS_Bows_A7"); break;
                     case StickyCharge: pic = blast; pc = FireColor; source = Localization.Get("aposMS_Crossbows_B1"); break;
                     case Breakthrough: pic = carry; pc = new Color(1f, 0.82f, 0.3f); source = Localization.Get("aposMS_Spears_A8"); break;
-                    case SpineStrike: pic = blast; pc = new Color(0.95f, 0.12f, 0.12f); source = "SPINE STRIKE!!"; break;   // knife B8, always English like its label
+                    case SpineStrike: pic = backstab ?? blast; pc = new Color(0.95f, 0.12f, 0.12f); source = "SPINE STRIKE!!"; break;   // knife B8, always English like its label
                     default: pic = shield; pc = new Color(0.8f, 0.8f, 0.85f); source = Localization.Get("aposProcShrapnel"); break;
                 }
                 string dmg = "-" + l.Damage + count;
