@@ -17,6 +17,7 @@ public static class AposPistol
     const int BaseShots = 6;
     const string ModeBuff = "buffAposHeadhunter";
     const float SquadHeadMult = 2f;       // Firing Squad: a body hit counted as a headshot
+    const float HotStep = 5f, HotMax = 100f; // Hot Barrel: +5% fire rate per hit, up to +100%, melts 5% per second
     const float VerdictBelow = 0.35f;
     const float MarkRange = 40f;
     const float FireworksRadius = 3f;
@@ -107,8 +108,8 @@ public static class AposPistol
             if (held && modeShots <= 0) BreakStreak();
             hitsInRow = 0;
         }
-        // Hot Barrel: melts 3% per second once you stop hitting
-        if (hot > 0f && Time.time - lastHitTime > 1f) hot = Mathf.Max(0f, hot - 3f * Time.deltaTime);
+        // Hot Barrel: melts 5% per second once you stop hitting (from +100% to nothing in 20 s)
+        if (hot > 0f && Time.time - lastHitTime > 1f) hot = Mathf.Max(0f, hot - HotStep * Time.deltaTime);
 
         if (modeShots > 0)
         {
@@ -136,9 +137,9 @@ public static class AposPistol
         // Headhunter: the streak (3/5) before the mode, empowered shots left while it runs
         if (modeShots > 0) AposHud.Gauge(false, modeShots, BaseShots + 3 * R("A3"), Cyan, true, "head_shot", modeShots.ToString(), "Base");
         else AposHud.Gauge(false, streak, Need(player), Color.white, false, "head_shot", streak + "/" + Need(player), "Base");
-        if (R("B5") > 0 && hot >= 1f) AposHud.AddAttackSpeed("hot", hot / 100f, "", "B5");
+        if (R("B5") > 0 && hot >= 1f) AposHud.AddAttackSpeed("ui_apos_hotbarrel", hot / 100f, "", "B5");
         if (R("H1") > 0) AposHud.Add(false, "run_and_gun", hitsInRow + "/8", hitsInRow >= 7 ? Color.white : Dim, hitsInRow >= 7, "H1");
-        if (R("H2") > 0 && Time.time < gunfighterUntil) AposHud.AddAttackSpeed("pistol", 0.15f, Mathf.CeilToInt(gunfighterUntil - Time.time) + "s", "H2");
+        if (R("H2") > 0 && Time.time < gunfighterUntil) AposHud.AddAttackSpeed("ui_apos_gunfighter", 0.15f, Mathf.CeilToInt(gunfighterUntil - Time.time) + "s", "H2");
     }
 
     // Extended Mag: +rounds or +% of the magazine, whichever is more
@@ -238,7 +239,7 @@ public static class AposPistol
             AposAmmo.LoadRounds(player, 1);
             gunfighterUntil = Time.time + 3f;
         }
-        if (R("B5") > 0) hot = Mathf.Min(30f, hot + 3f);
+        if (R("B5") > 0) hot = Mathf.Min(HotMax, hot + HotStep);
         lastHitTime = Time.time;
         // Bottomless Mag on a shocked zombie: 50% free in total (25% per shot + 1/3 of the rest here)
         if (R("B8") > 0 && target.Buffs.HasBuff("buffShocked") && Random.value < 1f / 3f) AposAmmo.LoadRounds(player, 1);

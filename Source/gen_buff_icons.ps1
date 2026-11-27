@@ -113,6 +113,39 @@ $icons['ui_apos_acidarmor'] = {
     }
 }
 
+# a pistol facing right (shared by the two fire-rate icons): slide, trigger guard, grip
+function Draw-Pistol($g, [float]$dx, [float]$dy, [float]$s) {
+    $pts = @(4,0, 64,0, 64,14, 30,14, 26,22, 30,46, 14,46, 12,22, 4,14)
+    $q = @(); for ($i = 0; $i -lt $pts.Length; $i += 2) { $q += $dx + $pts[$i] * $s; $q += $dy + $pts[$i + 1] * $s }
+    $g.FillPolygon($white, (P $q))
+}
+
+# Gunfighter (+15% fire rate after a headshot): a pistol rushing forward, speed lines behind it
+$icons['ui_apos_gunfighter'] = {
+    param($g)
+    Draw-Pistol $g 34 38 1.15
+    $p = Pen 7
+    $g.DrawLine($p, 4, 42, 28, 42); $g.DrawLine($p, 10, 60, 30, 60); $g.DrawLine($p, 4, 78, 26, 78)
+    # a muzzle flash
+    $g.FillPolygon($white, (P @(126,46, 116,36, 116,44, 110,46, 116,48, 116,56)))
+}
+
+# Hot Barrel (+5% fire rate per hit, up to +100%): a pistol with heat waves over the barrel and a burst of bullets ahead
+$icons['ui_apos_hotbarrel'] = {
+    param($g)
+    Draw-Pistol $g 6 52 1.2
+    $p = Pen 5
+    foreach ($x in @(30, 50, 70)) {
+        $path = New-Object Drawing.Drawing2D.GraphicsPath
+        $path.AddBezier($x, 46, ($x - 8), 36, ($x + 8), 28, $x, 18)
+        $g.DrawPath($p, $path)
+    }
+    foreach ($b in @(@(96, 62, 255), @(110, 62, 190), @(122, 62, 120))) {
+        $br = New-Object Drawing.SolidBrush([Drawing.Color]::FromArgb($b[2], 255, 255, 255))
+        $g.FillEllipse($br, ($b[0] - 5), ($b[1] - 5), 10, 10)
+    }
+}
+
 # Critical hit: a jagged burst with an exclamation mark cut out
 $icons['ui_apos_crit'] = {
     param($g)
@@ -163,7 +196,7 @@ $icons['ui_apos_lungs'] = {
     $m = New-Object Drawing.Drawing2D.Matrix(-1, 0, 0, 1, 128, 0); $r = $l.Clone(); $r.Transform($m); $g.FillPath($white, $r)
 }
 
-$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
+$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
 $sheet = New-Object Drawing.Bitmap (($S + 16) * $icons.Count + 16), ($S + 32)
 $sg = [Drawing.Graphics]::FromImage($sheet); $sg.Clear([Drawing.Color]::FromArgb(30, 30, 30))
 $x = 16
