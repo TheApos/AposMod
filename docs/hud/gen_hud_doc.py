@@ -254,7 +254,7 @@ for v in VANILLA.values():
 
 DATA = {
   'classes': [{'id': c, 'name': n, 'items': items} for c, n, items in CLASSES],
-  'general': GENERAL, 'zombie': ZOMBIE, 'feed': FEED, 'column': COLUMN,
+  'general': GENERAL + COLUMN, 'zombie': ZOMBIE, 'feed': FEED,
   'png': PNG,
   'vanilla': {k: VANILLA[k] for k in VANILLA if not k.startswith('apos')},
 }
