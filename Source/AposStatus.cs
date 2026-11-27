@@ -90,7 +90,7 @@ public static class AposStatus
         // spear "Tip in the Wound": +25% per hit on it, up to +100%
         if (b.GetCustomVar("aposTip") > 0f && b.GetCustomVar("aposTipHits") > 0f) Add("spear", "+" + Mathf.RoundToInt(25f * b.GetCustomVar("aposTipHits")) + "%", new Color(1f, 0.5f, 0.3f));
         if (b.HasBuff("buffAposArmorBreak")) Add("armor_iron", "-" + Pct(b.GetCustomVar("aposArmorBreak")), new Color(0.8f, 0.8f, 0.8f));
-        if (b.HasBuff("buffAposConcussed")) Add("concussion", "", new Color(1f, 0.9f, 0.4f));
+        if (b.HasBuff("buffAposConcussed")) Add("concussion", "+50%", new Color(1f, 0.9f, 0.4f));   // takes +50% from everything (AposCombat)
         Effects(b);
     }
 
