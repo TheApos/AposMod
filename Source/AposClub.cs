@@ -61,8 +61,15 @@ public static class AposClub
         // stamina: power hits +30% (anti-spam), Easy Swing, Grand Slam +50%; normal hits: Tireless
         AposMastery.SetStat(AposMastery.StatStamPower, 0.3f - EasySwing[R("A6")] + (R("A8") > 0 ? 0.5f : 0f));
         AposMastery.SetStat(AposMastery.StatStamNormal, -Tireless[R("B4")]);
-        if (Cap(player) > 0) AposHud.Gauge(false, s, Cap(player), new Color(1f, 0.3f, 0.1f), MaxRage(player), "berserker", s + "/" + Cap(player), "B1");
-        if (R("A7") > 0 && streak > 0 && Time.time - lastPowerHit < 3f) AposHud.Add(false, "bat", "x" + (streak + 1), new Color(1f, 0.82f, 0.3f), streak >= 3, "A7");
+        // Rage: the stacks and the damage they give; their attack speed (+5% each) goes to the energy column
+        if (Cap(player) > 0) AposHud.Gauge(false, s, Cap(player), new Color(1f, 0.3f, 0.1f), MaxRage(player), "berserker", s + "/" + Cap(player) + "  +" + Mathf.RoundToInt(s * Frenzy[R("B3")] * 100f) + "%", "B1");
+        if (s > 0) AposHud.AddAttackSpeed("berserker", s * 0.05f, "", "B1");
+        // Batting Streak: the left arc, 3 links; the number is what the NEXT power hit gets (while the 3 s window is open)
+        if (R("A7") > 0 && Time.time - lastPowerHit < 3f)
+        {
+            int next = Mathf.Min(3, streak + 1);
+            AposHud.Gauge(true, streak, 3, new Color(1f, 0.82f, 0.3f), streak >= 3, "bat", "+" + Mathf.RoundToInt(Streak[R("A7")] * next * 100f) + "%", "A7");
+        }
     }
 
     // incoming damage for the player (Berserk: +25%)

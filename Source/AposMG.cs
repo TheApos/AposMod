@@ -116,7 +116,7 @@ public static class AposMG
         if (R("B1") > 0)
         {
             Color c = Time.time < overheatUntil ? new Color(1f, 0.3f, 0.2f) : new Color(0.4f, 0.75f, 1f);
-            string text = Time.time < overheatUntil ? Mathf.CeilToInt(overheatUntil - Time.time) + "s" : stacks + "/" + MaxStacks();
+            string text = Time.time < overheatUntil ? Mathf.CeilToInt(overheatUntil - Time.time) + "s" : stacks + "/" + MaxStacks() + "  +" + Mathf.RoundToInt(speed) + "%";   // + the fire rate it gives
             bool hot = Time.time < overheatUntil;
             AposHud.Gauge(false, hot ? (overheatUntil - Time.time) / 2f : stacks, hot ? 0 : MaxStacks(), c, FullSpin(), "speed", text, "B1");
         }
