@@ -183,6 +183,7 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
     <symbol id="i-armor_iron" viewBox="0 0 24 24"><path d="M7 2.4l-4.6 3 2 5.4 1.4-.6V21.6h12.4V10.2l1.4.6 2-5.4-4.6-3c-.8 2-2.6 3.2-5 3.2S7.8 4.4 7 2.4z" fill="currentColor"/></symbol>
     <symbol id="i-block_damage" viewBox="0 0 24 24"><path d="M2.6 2.6h18.8v18.8H2.6z" fill="currentColor"/><path d="M9.6 2.6l2.6 6.2-3.4 3.4 4.4 4-1.2 5.2M12.2 8.8l5.2-1.8M13.2 16.2l5.2 1.4" stroke="#000" stroke-width="1.6" fill="none" opacity=".75"/></symbol>
     <symbol id="i-concussion" viewBox="0 0 24 24"><circle cx="12" cy="13.6" r="6.6" fill="currentColor"/><path d="M5.4 22c.4-2.2 1.6-3.6 3-4.4h7.2c1.4.8 2.6 2.2 3 4.4z" fill="currentColor"/><path d="M4 3.6l.8 1.8 2 .2-1.5 1.3.4 2-1.7-1-1.7 1 .4-2L1.2 5.6l2-.2zM20 3.6l.8 1.8 2 .2-1.5 1.3.4 2-1.7-1-1.7 1 .4-2-1.5-1.3 2-.2zM12 .8l.8 1.8 2 .2-1.5 1.3.4 2-1.7-1-1.7 1 .4-2-1.5-1.3 2-.2z" fill="currentColor"/></symbol>
+    <symbol id="i-explosion" viewBox="0 0 24 24"><path d="M12 1.5l2 5.2 4.6-3-1.4 5.4 5.3.6-4.2 3.4 4.2 3.6-5.4.4 1.2 5.4-4.6-3.2L12 22.5l-1.7-5.1-4.6 3.2 1.2-5.4-5.4-.4 4.2-3.6-4.2-3.4 5.3-.6-1.4-5.4 4.6 3z" fill="currentColor"/><circle cx="12" cy="12" r="3.4" fill="#000" opacity=".35"/></symbol>
     <symbol id="i-mining" viewBox="0 0 24 24"><path d="M3.2 7.2C7.4 2.6 14.4 1.6 20 4.6l-1.2 1.6C14.2 4.6 9.2 5.2 5.2 8.6z" fill="currentColor"/><path d="M11.4 7.2l2.2 2.2-9.8 9.8L1.6 17z" fill="currentColor"/></symbol>
     <symbol id="i-siphoning_strikes" viewBox="0 0 24 24"><path d="M12 21.4S2.2 15 2.2 8.4A5 5 0 0112 6.2a5 5 0 019.8 2.2c0 6.6-9.8 13-9.8 13z" fill="currentColor"/><path d="M9 9.4l1 3.4 1-3.4M13 9.4l1 3.4 1-3.4" stroke="#000" stroke-width="1.3" fill="none" opacity=".7"/></symbol>
     <symbol id="i-healing_factor" viewBox="0 0 24 24"><path d="M12 21.4S2.2 15 2.2 8.4A5 5 0 0112 6.2a5 5 0 019.8 2.2c0 6.6-9.8 13-9.8 13z" fill="currentColor"/><path d="M12 9v7M8.5 12.5h7" stroke="#000" stroke-width="2" opacity=".7"/></symbol>
@@ -347,7 +348,8 @@ function drawScene(tabId) {
   atk.forEach((i, k) => sc.appendChild(hit(i, CX - atk.length * w / 2 + k * w, CY + 42 * S, slot(items[i]))));
   // defence row: left of the toolbelt, growing to the left (the page wraps it to fit the crop; the game has one row of up to 6)
   const perRow = Math.max(1, Math.floor((beltX - 8) / w));
-  g.def.forEach((i, k) => sc.appendChild(hit(i, beltX - 8 - (k % perRow + 1) * w, 750 - 59 - 8 - Math.floor(k / perRow) * 34 * S, slot(items[i]))));
+  const defY = g.col.length ? 750 - 70 - g.col.length * 50 - 52 : 750 - 59 - 8;
+  g.def.forEach((i, k) => sc.appendChild(hit(i, beltX - 8 - (k % perRow + 1) * w, defY - Math.floor(k / perRow) * 34 * S, slot(items[i]))));
   // above the zombie: one wrapping row, centred, growing upwards
   if (g.z.length) {
     const box = el('div', { style: { position: 'absolute', left: U(zx - 300), width: U(600), bottom: U(750 - zy + 40), display: 'flex', flexWrap: 'wrap-reverse', justifyContent: 'center', gap: U(6) + ' ' + U(14) } });
@@ -370,11 +372,11 @@ function drawScene(tabId) {
   });
   // the vanilla buff column above health / stamina: in the game it starts 90 px from the left edge, outside this crop,
   // so the page draws it at the crop's left edge, with the two bars under it
-  // (with the defence row on the same tab the crop has no room at the bottom left: the column moves to the top left)
-  const colY = g.def.length ? 16 : 750 - 132 - g.col.length * 50;
+  // bottom left corner, above the health / stamina bars (the defence row is lifted above it on such a tab)
+  const colY = 750 - 70 - g.col.length * 50;
   if (g.col.length) {
     const bars = el('div', { cls: 'bars' }, [el('div', { cls: 'bar hp' }, [el('span', { text: 'ХП' })]), el('div', { cls: 'bar st' }, [el('span', { text: 'Витривалість' })])]);
-    bars.style.left = U(10); bars.style.top = U(colY + g.col.length * 50 + 6);
+    bars.style.left = U(10); bars.style.top = U(750 - 62);
     sc.appendChild(bars);
   }
   g.col.forEach((i, k) => {
