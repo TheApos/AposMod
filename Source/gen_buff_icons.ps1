@@ -149,19 +149,25 @@ $icons['ui_apos_hotbarrel'] = {
 # Shattered (shotgun A5, on a zombie): the same cracked chest plate as Corroded Armor, tinted orange in the game
 $icons['ui_apos_shattered'] = $icons['ui_apos_acidarmor']
 
-# Suppression (MG trait, on a zombie): a figure squatting down, both arms wrapped over its head
+# Suppression (MG trait, on a zombie): "duck and cover" seen from the front - a crouched body, the head pulled down,
+# both arms in a thick arch over it; bold shapes so it still reads at 20 px
 $icons['ui_apos_suppressed'] = {
     param($g)
-    $g.FillEllipse($white, 48, 34, 30, 30)                                   # head, pulled down
-    $p = Pen 22
-    $g.DrawLine($p, 60, 72, 50, 92)                                         # hunched back
-    $p = Pen 13
-    $g.DrawLines($p, (P @(48,94, 84,92, 82,118)))                           # front leg: thigh forward, shin down
-    $g.DrawLines($p, (P @(46,98, 70,106, 60,120)))                          # back leg
-    $g.DrawLine($p, 82, 118, 98, 118)                                       # foot
-    $p = Pen 10
-    $g.DrawLines($p, (P @(66,70, 88,46, 70,24, 48,28)))                     # near arm over the head
-    $g.DrawLines($p, (P @(58,70, 34,52, 40,30, 62,22)))                     # far arm over the head
+    $g.FillEllipse($white, 26, 70, 76, 46)                                  # crouched body and knees
+    $g.FillRectangle($white, 30, 106, 26, 14); $g.FillRectangle($white, 72, 106, 26, 14)   # feet
+    $arm = New-Object Drawing.Pen([Drawing.Color]::White, 18)
+    $arm.StartCap = 'Round'; $arm.EndCap = 'Round'
+    $g.DrawArc($arm, 22, 22, 84, 84, 180, 180)                              # arms over the head
+    $g.CompositingMode = 'SourceCopy'
+    $clear = New-Object Drawing.SolidBrush([Drawing.Color]::Transparent)
+    $g.FillEllipse($clear, 42, 44, 44, 44)                                  # a gap around the head
+    $g.FillRectangle($clear, 61, 10, 6, 26)                                  # the two arms meet over the head
+    $g.CompositingMode = 'SourceOver'
+    $g.FillEllipse($white, 46, 16, 16, 16); $g.FillEllipse($white, 66, 16, 16, 16)   # hands clasped on top
+    $g.FillEllipse($white, 48, 50, 32, 32)                                  # the head, pulled down
+    # a few incoming shots
+    $p = Pen 6
+    $g.DrawLine($p, 6, 18, 18, 30); $g.DrawLine($p, 122, 18, 110, 30); $g.DrawLine($p, 64, 2, 64, 12)
 }
 
 # Hold the Line (MG A6, crouch / stand still): a machine-gun turret on a tripod
