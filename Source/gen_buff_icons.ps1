@@ -149,6 +149,9 @@ $icons['ui_apos_hotbarrel'] = {
 # Shattered (shotgun A5, on a zombie): the same cracked chest plate as Corroded Armor, tinted orange in the game
 $icons['ui_apos_shattered'] = $icons['ui_apos_acidarmor']
 
+# Armor Break (sledge B3, on a zombie): the same cracked chest plate, tinted grey in the game
+$icons['ui_apos_armorbreak'] = $icons['ui_apos_acidarmor']
+
 # Suppression (MG trait, on a zombie): "duck and cover" seen from the front - a crouched body, the head pulled down,
 # both arms in a thick arch over it; bold shapes so it still reads at 20 px
 $icons['ui_apos_suppressed'] = {
@@ -284,7 +287,7 @@ $icons['ui_apos_lungs'] = {
     $m = New-Object Drawing.Drawing2D.Matrix(-1, 0, 0, 1, 128, 0); $r = $l.Clone(); $r.Transform($m); $g.FillPath($white, $r)
 }
 
-$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_shattered = '255,153,51'; ui_apos_suppressed = '115,191,255'; ui_apos_holdline = '255,210,77'; ui_apos_fulldraw = '255,210,77'; ui_apos_squad = '255,210,77'; ui_apos_backstab = '242,31,31'; ui_apos_ragespeed = '255,210,77'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
+$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_shattered = '255,153,51'; ui_apos_armorbreak = '204,204,204'; ui_apos_suppressed = '115,191,255'; ui_apos_holdline = '255,210,77'; ui_apos_fulldraw = '255,210,77'; ui_apos_squad = '255,210,77'; ui_apos_backstab = '242,31,31'; ui_apos_ragespeed = '255,210,77'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
 $sheet = New-Object Drawing.Bitmap (($S + 16) * $icons.Count + 16), ($S + 32)
 $sg = [Drawing.Graphics]::FromImage($sheet); $sg.Clear([Drawing.Color]::FromArgb(30, 30, 30))
 $x = 16
