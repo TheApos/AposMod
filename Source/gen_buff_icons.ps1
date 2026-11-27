@@ -197,6 +197,21 @@ $icons['ui_apos_fulldraw'] = {
     $g.FillPolygon($white, $pts)
 }
 
+# Firing Squad ready (the next hit deals 1000%): a reticle with a blast in its centre
+$icons['ui_apos_squad'] = {
+    param($g)
+    $p = Pen 8
+    $g.DrawEllipse($p, 18, 18, 92, 92)
+    $g.DrawLine($p, 64, 2, 64, 26); $g.DrawLine($p, 64, 102, 64, 126); $g.DrawLine($p, 2, 64, 26, 64); $g.DrawLine($p, 102, 64, 126, 64)
+    $pts = @(); $n = 8
+    for ($i = 0; $i -lt $n * 2; $i++) {
+        $an = [Math]::PI * $i / $n - [Math]::PI / 2
+        $r = if ($i % 2 -eq 0) { 30 } else { 13 }
+        $pts += New-Object Drawing.PointF((64 + $r * [Math]::Cos($an)), (64 + $r * [Math]::Sin($an)))
+    }
+    $g.FillPolygon($white, $pts)
+}
+
 # Critical hit: a jagged burst with an exclamation mark cut out
 $icons['ui_apos_crit'] = {
     param($g)
@@ -247,7 +262,7 @@ $icons['ui_apos_lungs'] = {
     $m = New-Object Drawing.Drawing2D.Matrix(-1, 0, 0, 1, 128, 0); $r = $l.Clone(); $r.Transform($m); $g.FillPath($white, $r)
 }
 
-$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_shattered = '255,153,51'; ui_apos_suppressed = '115,191,255'; ui_apos_holdline = '255,210,77'; ui_apos_fulldraw = '255,210,77'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
+$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_shattered = '255,153,51'; ui_apos_suppressed = '115,191,255'; ui_apos_holdline = '255,210,77'; ui_apos_fulldraw = '255,210,77'; ui_apos_squad = '255,210,77'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
 $sheet = New-Object Drawing.Bitmap (($S + 16) * $icons.Count + 16), ($S + 32)
 $sg = [Drawing.Graphics]::FromImage($sheet); $sg.Clear([Drawing.Color]::FromArgb(30, 30, 30))
 $x = 16

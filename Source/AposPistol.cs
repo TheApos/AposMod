@@ -16,7 +16,7 @@ public static class AposPistol
     const int BaseNeed = 5;
     const int BaseShots = 6;
     const string ModeBuff = "buffAposHeadhunter";
-    const float SquadHeadMult = 2f;       // Firing Squad: a body hit counted as a headshot
+    const float SquadMult = 10f;          // Firing Squad: the 8th hit in a row deals 1000% (and counts as a headshot)
     const float HotStep = 5f, HotMax = 100f; // Hot Barrel: +5% fire rate per hit, up to +100%, melts 5% per second
     const float VerdictBelow = 0.35f;
     const float MarkRange = 40f;
@@ -138,7 +138,12 @@ public static class AposPistol
         if (modeShots > 0) AposHud.Gauge(false, modeShots, BaseShots + 3 * R("A3"), Cyan, true, "head_shot", modeShots.ToString(), "Base");
         else AposHud.Gauge(false, streak, Need(player), Color.white, false, "head_shot", streak + "/" + Need(player), "Base");
         if (R("B5") > 0 && hot >= 1f) AposHud.AddAttackSpeed("ui_apos_hotbarrel", hot / 100f, "", "B5");
-        if (R("H1") > 0) AposHud.Add(false, "run_and_gun", hitsInRow + "/8", hitsInRow >= 7 ? Color.white : Dim, hitsInRow >= 7, "H1");
+        // Firing Squad: the count to the 8th hit; when the next hit is the empowered one, its own icon and "x10"
+        if (R("H1") > 0)
+        {
+            if (hitsInRow >= 7) AposHud.Add(false, "ui_apos_squad", "x10", new Color(1f, 0.82f, 0.3f), true, "H1");
+            else AposHud.Add(false, "run_and_gun", hitsInRow + "/8", hitsInRow > 0 ? Color.white : Dim, false, "H1");
+        }
         if (R("H2") > 0 && Time.time < gunfighterUntil) AposHud.AddAttackSpeed("ui_apos_gunfighter", 0.15f, Mathf.CeilToInt(gunfighterUntil - Time.time) + "s", "H2");
     }
 
@@ -188,15 +193,16 @@ public static class AposPistol
         bool head = (source.GetEntityDamageBodyPart(target) & EnumBodyPartHit.Head) != 0;
         float mult = 1f;
 
-        // Firing Squad: every 8th hit in a row is a headshot
+        // Firing Squad: every 8th hit in a row deals 1000% and counts as a headshot (+1 to the Headhunter streak)
         bool squad = false;
         if (R("H1") > 0 && ++hitsInRow >= 8)
         {
             hitsInRow = 0;
-            squad = !head;
+            squad = true;
+            AposHud.FlashSprite("ui_apos_squad");
         }
         bool asHead = head || squad || AposCrossbow.BodyAsHead(target); // crossbow Weak Spot on a marked zombie
-        if (squad) mult *= SquadHeadMult;
+        if (squad) mult *= SquadMult;
         if (asHead) mult += KeenEye[R("A1")];
 
         bool mode = modeShots > 0;
