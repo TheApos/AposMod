@@ -203,6 +203,21 @@ $icons['ui_apos_fulldraw'] = {
     $g.FillPolygon($white, $pts)
 }
 
+# Rage swing speed (clubs): a baseball bat mid-swing with speed lines behind it
+$icons['ui_apos_ragespeed'] = {
+    param($g)
+    $st = $g.Save()
+    $g.TranslateTransform(72, 62); $g.RotateTransform(-40); $g.ScaleTransform(1.1, 1.1)
+    $bat = New-Object Drawing.Drawing2D.GraphicsPath
+    $bat.AddLine(-54, -6, 8, -13); $bat.AddArc(0, -19, 56, 38, 270, 180); $bat.AddLine(8, 13, -54, 6)
+    $bat.CloseFigure()
+    $g.FillPath($white, $bat)
+    $g.FillEllipse($white, -64, -10, 14, 20)                                # knob
+    $g.Restore($st)
+    $p = Pen 7
+    $g.DrawLine($p, 6, 70, 34, 70); $g.DrawLine($p, 2, 88, 28, 88); $g.DrawLine($p, 10, 106, 32, 106)
+}
+
 # Backstab / Spine Strike (knife): a figure seen from behind with a knife stuck in its spine
 $icons['ui_apos_backstab'] = {
     param($g)
@@ -269,7 +284,7 @@ $icons['ui_apos_lungs'] = {
     $m = New-Object Drawing.Drawing2D.Matrix(-1, 0, 0, 1, 128, 0); $r = $l.Clone(); $r.Transform($m); $g.FillPath($white, $r)
 }
 
-$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_shattered = '255,153,51'; ui_apos_suppressed = '115,191,255'; ui_apos_holdline = '255,210,77'; ui_apos_fulldraw = '255,210,77'; ui_apos_squad = '255,210,77'; ui_apos_backstab = '242,31,31'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
+$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_shattered = '255,153,51'; ui_apos_suppressed = '115,191,255'; ui_apos_holdline = '255,210,77'; ui_apos_fulldraw = '255,210,77'; ui_apos_squad = '255,210,77'; ui_apos_backstab = '242,31,31'; ui_apos_ragespeed = '255,210,77'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
 $sheet = New-Object Drawing.Bitmap (($S + 16) * $icons.Count + 16), ($S + 32)
 $sg = [Drawing.Graphics]::FromImage($sheet); $sg.Clear([Drawing.Color]::FromArgb(30, 30, 30))
 $x = 16
