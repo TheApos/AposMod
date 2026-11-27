@@ -291,6 +291,9 @@ public static class AposHud
         new ModBuff { Buff = "buffAposAcidArmor", Cvar = "time", Defense = true },
     };
 
+    // buffs the HUD already shows in its own way (the knife's Bloodsucker gauge and regen widget): off the column too
+    static readonly string[] ColumnHidden = { "buffAposKnifeRegen" };
+
     public static void ModBuffs(EntityPlayerLocal p)
     {
         // while the HUD shows them, keep these buffs out of the on-screen buff column on the left (no double icons), but
@@ -300,6 +303,11 @@ public static class AposHud
         foreach (ModBuff m in modBuffs)
         {
             BuffClass c = BuffManager.GetBuff(m.Buff);
+            if (c != null) c.ShowOnHUD = !AposSettings.HudEnabled;
+        }
+        foreach (string name in ColumnHidden)
+        {
+            BuffClass c = BuffManager.GetBuff(name);
             if (c != null) c.ShowOnHUD = !AposSettings.HudEnabled;
         }
         EntityBuffs b = p.Buffs;

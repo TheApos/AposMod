@@ -64,6 +64,12 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
 .ztag { display: flex; align-items: center; gap: .15cqw; }
 .ztag .t { font: 700 1.55cqw/1 var(--display); text-shadow: 0 0 .15cqw #000, 0 0 .2cqw #000; white-space: nowrap; }
 .toast { font: 700 2.4cqw/1 var(--display); letter-spacing: .03em; text-shadow: 0 0 .25cqw #000, 0 0 .4cqw #000; white-space: nowrap; transform: translateX(-50%); }
+.colrow { display: flex; align-items: center; gap: .6cqw; height: 3.2cqw; padding: 0 3cqw 0 .4cqw; background: linear-gradient(270deg, transparent, rgba(0,0,0,.55) 40%); }
+.colrow .t { font: 600 1.6cqw/1 var(--display); color: #fff; text-shadow: 0 0 .15cqw #000; white-space: nowrap; }
+.bars { position: absolute; display: flex; flex-direction: column; gap: .4cqw; width: 22cqw; }
+.bar { height: 1.9cqw; border-radius: .2cqw; display: flex; align-items: center; padding-left: .5cqw; font: 600 1.2cqw/1 var(--display); color: #fff; text-shadow: 0 0 .15cqw #000; }
+.bar.hp { background: linear-gradient(90deg, #b3262e 78%, #3a1517 78%); }
+.bar.st { background: linear-gradient(90deg, #3f8a3a 64%, #18301a 64%); }
 .spdrow { display: flex; align-items: center; justify-content: flex-end; gap: .5cqw; height: 3.6cqw; padding: 0 .4cqw 0 3cqw; background: linear-gradient(90deg, transparent, rgba(0,0,0,.55) 40%); }
 .spdrow .t { font: 700 2cqw/1 var(--display); text-shadow: 0 0 .15cqw #000, 0 0 .15cqw #000; white-space: nowrap; }
 .feedline { display: flex; align-items: center; gap: .4cqw; background: rgba(0,0,0,.35); padding: .35cqw .6cqw; border-radius: .3cqw; }
@@ -186,7 +192,7 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
 <script>
 const D = /*__DATA__*/null;
 const PLACE = { gR: 'Дуга праворуч від прицілу', gL: 'Дуга ліворуч від прицілу', atk: 'Ряд під прицілом (атака)', def: 'Ряд ліворуч від поясу (захист)',
-  spd: 'Колонка швидкості (справа внизу)', z: 'Над зомбі', toast: 'Напис під прицілом', mark: 'Мітка на стрілі / болті', feed: 'Стрічка реакцій праворуч', over: 'Позначки на зомбі' };
+  col: 'Колонка баффів гри над ХП (зліва внизу)', spd: 'Колонка швидкості (справа внизу)', z: 'Над зомбі', toast: 'Напис під прицілом', mark: 'Мітка на стрілі / болті', feed: 'Стрічка реакцій праворуч', over: 'Позначки на зомбі' };
 const FEEDICONS = {
   feed_explosion: [['elite_Burning', '#ff7319'], '+', ['elite_Acidic', '#99e633'], '=', ['elite_Explosive', '#ffcc40']],
   feed_confusion: [['elite_Burning', '#ff7319'], '+', ['elite_Electric', '#59bfff'], '='],
@@ -242,12 +248,13 @@ function feedIcons(item, size) {
 }
 
 let items = [], sel = -1;
-const tabs = [{ id: 'general', name: 'Загальне' }].concat(D.classes.map(c => ({ id: c.id, name: c.name }))).concat([{ id: 'zombie', name: 'Над зомбі' }, { id: 'feed', name: 'Стрічка реакцій' }]);
+const tabs = [{ id: 'general', name: 'Загальне' }].concat(D.classes.map(c => ({ id: c.id, name: c.name }))).concat([{ id: 'zombie', name: 'Над зомбі' }, { id: 'feed', name: 'Стрічка реакцій' }, { id: 'column', name: 'Над ХП' }]);
 
 function itemsOf(id) {
   if (id === 'general') return D.general;
   if (id === 'zombie') return D.zombie;
   if (id === 'feed') return D.feed;
+  if (id === 'column') return D.column;
   return D.classes.find(c => c.id === id).items;
 }
 
@@ -305,7 +312,7 @@ function drawScene(tabId) {
   svg += `<g fill="#151a14" opacity=".92"><circle cx="${zx}" cy="${zy}" r="26"/><path d="M${zx - 34} ${zy + 30}h68l12 120-14 4-8-60-6 70 10 150h-28l-14-130-14 130h-28l10-150-6-70-8 60-14-4z"/><path d="M${zx + 32} ${zy + 40}l70 34-6 12-70-26z"/></g>`;
   svg += `<ellipse cx="${zx}" cy="${zy + 350}" rx="70" ry="10" fill="rgba(0,0,0,.35)"/>`;
 
-  const g = { gR: [], gL: [], atk: [], def: [], spd: [], z: [], toast: [], mark: [], feed: [], over: [] };
+  const g = { gR: [], gL: [], atk: [], def: [], spd: [], col: [], z: [], toast: [], mark: [], feed: [], over: [] };
   items.forEach((it, i) => g[it.place].push(i));
   // gauges: show one per side (the first; the others are variants, picked in the list)
   ['gR', 'gL'].forEach(p => { if (g[p].length) svg += gaugeSvg(items[g[p][0]], p === 'gL'); });
@@ -361,6 +368,18 @@ function drawScene(tabId) {
     const it = items[i];
     const line = el('div', { cls: 'feedline' }, [el('span', { cls: 'src', text: it.ru })].concat(feedIcons(it, U(22 * S))).concat(it.text ? [el('span', { cls: 't', text: it.text })] : []));
     sc.appendChild(hit(i, 1150, 26 + k * 52, line));
+  });
+  // the vanilla buff column above health / stamina: in the game it starts 90 px from the left edge, outside this crop,
+  // so the page draws it at the crop's left edge, with the two bars under it
+  if (g.col.length) {
+    const bars = el('div', { cls: 'bars' }, [el('div', { cls: 'bar hp' }, [el('span', { text: 'ХП' })]), el('div', { cls: 'bar st' }, [el('span', { text: 'Витривалість' })])]);
+    bars.style.left = U(10); bars.style.top = U(750 - 112);
+    sc.appendChild(bars);
+  }
+  g.col.forEach((i, k) => {
+    const it = items[i];
+    const row = el('div', { cls: 'colrow' }, [icon(it.icon, it.color, U(40)), el('span', { cls: 't', text: it.ru + (it.text ? '  ' + it.text : '') })]);
+    sc.appendChild(hit(i, 10, 750 - 132 - (k + 1) * 50, row));
   });
   // movement speed: a column at the bottom right, mirroring the vanilla buff column (bottom 132 px, rows 46 px)
   g.spd.forEach((i, k) => {

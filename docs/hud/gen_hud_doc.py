@@ -178,6 +178,16 @@ ZOMBIE = [
  I('z', 'hard_target', '#ff8040', '3/4', 'Batons_B3', 'Лічильник на цілі: Пробой кийка.', 'Поки б\'єш цю ціль.'),
 ]
 
+# what is left in the vanilla buff column above health / stamina (bottom left)
+COLUMN = [
+ I('col', 'explosion', '#ffb400', '', 'buffAposFreeRocket', 'Большой бабах: наступна ракета без витрати боєприпасу.',
+   'Після пострілу з легендарного ракетомета, поки він у руках. У HUD його немає, тож він лишається тут.'),
+ I('col', 'ui_apos_bloodsucker', '#e63c50', '2', 'buffAposKnifeRegen', 'Стаки регенерації ножа (HP за секунду).',
+   'Тут лише коли HUD вимкнено (aposhud off). З увімкненим HUD його показують дуга праворуч і ряд біля поясу.'),
+ I('col', 'armor_iron', '#ffffff', '', None, "Ванільний бафф повного комплекту броні. Бонуси сетів AposMod прив'язані до нього: поки він є, діє і бонус мода.",
+   'Поки вдягнений повний комплект.', ru='Бонус полного комплекта', en='Full Set Bonus', d=''),
+]
+
 FEED = [
  I('feed', 'feed_explosion', GOLD, '-120 ×3', None, 'Реакція Взрыв (вогонь + кислота): шкода кожному і скільки зачепило в 4 м.', 'Вогонь і кислота на одному зомбі.', ru='Взрыв', en='Explosion', d=''),
  I('feed', 'feed_confusion', '#ff99ff', '', None, 'Реакція Замешательство (вогонь + шок).', 'Вогонь і шок на одному зомбі.', ru='Замешательство', en='Confusion', d=''),
@@ -244,7 +254,7 @@ for v in VANILLA.values():
 
 DATA = {
   'classes': [{'id': c, 'name': n, 'items': items} for c, n, items in CLASSES],
-  'general': GENERAL, 'zombie': ZOMBIE, 'feed': FEED,
+  'general': GENERAL, 'zombie': ZOMBIE, 'feed': FEED, 'column': COLUMN,
   'png': PNG,
   'vanilla': {k: VANILLA[k] for k in VANILLA if not k.startswith('apos')},
 }
