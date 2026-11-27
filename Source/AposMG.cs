@@ -120,7 +120,7 @@ public static class AposMG
             bool hot = Time.time < overheatUntil;
             AposHud.Gauge(false, hot ? (overheatUntil - Time.time) / 2f : stacks, hot ? 0 : MaxStacks(), c, FullSpin(), "speed", text, "B1");
         }
-        if (emplacement) AposHud.Add(false, "electric_turret", "", new Color(1f, 0.82f, 0.3f), true, "A6");
+        if (emplacement) AposHud.Add(false, "ui_apos_holdline", "", new Color(1f, 0.82f, 0.3f), true, "A6");
     }
 
     static bool Reloading(EntityPlayerLocal p)

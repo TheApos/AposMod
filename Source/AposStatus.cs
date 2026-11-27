@@ -53,7 +53,8 @@ public static class AposStatus
         GUI.DrawTextureWithTexCoords(r, ic.Tex, ic.Uv);
     }
 
-    static void Add(string icon, string text, Color c) { tags.Add(new Tag { Sprite = "ui_game_symbol_" + icon, Text = text, Color = c }); }
+    // icon: a vanilla symbol name ("fire" = ui_game_symbol_fire) or the mod's own sprite ("ui_apos_shattered")
+    static void Add(string icon, string text, Color c) { tags.Add(new Tag { Sprite = icon.StartsWith("ui_") ? icon : "ui_game_symbol_" + icon, Text = text, Color = c }); }
 
     // ===== stacks the weapon classes keep on one target (thrust chain, combo, momentum, Breakdown...) =====
     // Every frame AposMastery.Update calls Begin(), then the held class's Tick adds its counter with Target().
@@ -81,10 +82,11 @@ public static class AposStatus
         float slow = 0f;
         if (b.HasBuff("buffAposShackles")) slow = Mathf.Max(slow, b.GetCustomVar("aposShackle"));
         if (b.HasBuff("buffAposWound")) slow = Mathf.Max(slow, -b.GetCustomVar("aposWoundSlow"));
-        if (b.HasBuff("buffAposSuppressed")) slow = Mathf.Max(slow, -b.GetCustomVar("aposSupSlow"));
         if (slow > 0.001f) Add("run", "-" + Pct(slow), new Color(0.45f, 0.75f, 1f));
+        // machine gun Suppression: its own icon (a figure shielding itself), how much it slows
+        if (b.HasBuff("buffAposSuppressed") && -b.GetCustomVar("aposSupSlow") > 0.001f) Add("ui_apos_suppressed", "-" + Pct(-b.GetCustomVar("aposSupSlow")), new Color(0.45f, 0.75f, 1f));
         if (b.HasBuff("buffAposWound")) Add("drop", "x" + Mathf.Max(1, (int)b.GetCustomVar("aposWound")), new Color(1f, 0.35f, 0.3f));
-        if (b.HasBuff("buffAposShattered")) Add("block_damage", "+50%", new Color(1f, 0.6f, 0.2f));
+        if (b.HasBuff("buffAposShattered")) Add("ui_apos_shattered", "+50%", new Color(1f, 0.6f, 0.2f));
         // spear "Tip in the Wound": +25% per hit on it, up to +100%
         if (b.GetCustomVar("aposTip") > 0f && b.GetCustomVar("aposTipHits") > 0f) Add("spear", "+" + Mathf.RoundToInt(25f * b.GetCustomVar("aposTipHits")) + "%", new Color(1f, 0.5f, 0.3f));
         if (b.HasBuff("buffAposArmorBreak")) Add("armor_iron", "-" + Pct(b.GetCustomVar("aposArmorBreak")), new Color(0.8f, 0.8f, 0.8f));

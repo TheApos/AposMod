@@ -146,6 +146,57 @@ $icons['ui_apos_hotbarrel'] = {
     }
 }
 
+# Shattered (shotgun A5, on a zombie): a chest plate broken into three pieces drifting apart, chips flying
+$icons['ui_apos_shattered'] = {
+    param($g)
+    $g.FillPolygon($white, (P @(16,22, 36,10, 50,10, 54,24, 44,50, 52,74, 40,112, 22,112, 22,60, 10,58)))
+    $g.FillPolygon($white, (P @(60,26, 72,26, 66,52, 76,76, 64,112, 48,112, 58,76, 50,52)))
+    $g.FillPolygon($white, (P @(78,10, 92,10, 112,22, 118,58, 106,60, 106,112, 72,112, 84,76, 74,50)))
+    foreach ($c in @(@(8,10,6), @(120,8,5), @(124,90,6), @(4,92,5))) { $g.FillRectangle($white, $c[0], $c[1], $c[2], $c[2]) }
+}
+
+# Suppression (MG trait, on a zombie): a crouching figure shielding its head, bullets streaking at it
+$icons['ui_apos_suppressed'] = {
+    param($g)
+    $g.FillEllipse($white, 22, 44, 24, 24)                                   # head
+    $g.FillPolygon($white, (P @(30,70, 58,64, 66,96, 74,118, 58,120, 48,98, 34,112, 20,104, 30,90)))   # crouched body
+    $p = Pen 11
+    $g.DrawLines($p, (P @(52,70, 56,46, 36,34)))                            # arm raised over the head
+    $p = Pen 5
+    foreach ($y in @(30, 54, 78)) { $g.DrawLine($p, 82, $y, 122, $y); $g.FillEllipse($white, 74, ($y - 5), 10, 10) }
+}
+
+# Hold the Line (MG A6, crouch / stand still): a bunker (pillbox) with a firing slit and a gun barrel
+$icons['ui_apos_holdline'] = {
+    param($g)
+    $bunker = New-Object Drawing.Drawing2D.GraphicsPath
+    $bunker.AddArc(12, 30, 104, 90, 180, 180)
+    $bunker.AddLine(116, 75, 116, 104); $bunker.AddLine(116, 104, 12, 104)
+    $bunker.CloseFigure()
+    $g.FillPath($white, $bunker)
+    $g.CompositingMode = 'SourceCopy'
+    $g.FillRectangle((New-Object Drawing.SolidBrush([Drawing.Color]::Transparent)), 34, 58, 60, 12)
+    $g.CompositingMode = 'SourceOver'
+    $g.FillRectangle($white, 60, 61, 64, 6)                                  # barrel through the slit
+    foreach ($x in @(8, 36, 64, 92)) { $g.FillEllipse($white, $x, 106, 30, 16) }   # sandbags
+}
+
+# Full Draw (bow B1): an arrow flying right, a damage burst at its tip
+$icons['ui_apos_fulldraw'] = {
+    param($g)
+    $p = Pen 9
+    $g.DrawLine($p, 14, 64, 82, 64)
+    $g.FillPolygon($white, (P @(4,48, 24,64, 4,80, 14,64)))                  # fletching
+    $g.FillPolygon($white, (P @(76,48, 100,64, 76,80)))                     # head
+    $pts = @(); $n = 8
+    for ($i = 0; $i -lt $n * 2; $i++) {
+        $an = [Math]::PI * $i / $n
+        $r = if ($i % 2 -eq 0) { 24 } else { 11 }
+        $pts += New-Object Drawing.PointF((106 + $r * [Math]::Cos($an)), (64 + $r * [Math]::Sin($an)))
+    }
+    $g.FillPolygon($white, $pts)
+}
+
 # Critical hit: a jagged burst with an exclamation mark cut out
 $icons['ui_apos_crit'] = {
     param($g)
@@ -196,7 +247,7 @@ $icons['ui_apos_lungs'] = {
     $m = New-Object Drawing.Drawing2D.Matrix(-1, 0, 0, 1, 128, 0); $r = $l.Clone(); $r.Transform($m); $g.FillPath($white, $r)
 }
 
-$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
+$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_shattered = '255,153,51'; ui_apos_suppressed = '115,191,255'; ui_apos_holdline = '255,210,77'; ui_apos_fulldraw = '255,210,77'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
 $sheet = New-Object Drawing.Bitmap (($S + 16) * $icons.Count + 16), ($S + 32)
 $sg = [Drawing.Graphics]::FromImage($sheet); $sg.Clear([Drawing.Color]::FromArgb(30, 30, 30))
 $x = 16

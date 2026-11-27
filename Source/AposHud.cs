@@ -55,6 +55,14 @@ public static class AposHud
 
     // ===== urgent / important: a row centred above the crosshair (Jackpot...): bigger, on a dark pill, pulsing =====
     public static readonly List<Widget> Alerts = new List<Widget>();
+
+    // a class's urgent widget (e.g. the bow's Shadow): the row above the crosshair, also a Status Effects line
+    public static void AddAlert(string icon, string text, Color color, string skill)
+    {
+        Widget w = new Widget { Icon = icon.StartsWith("ui_") ? icon : "ui_game_symbol_" + icon, Text = text, Color = color, Glow = true };
+        if (AposMastery.HeldClass >= 0) w.Skill = AposMastery.SkillKey(AposMastery.HeldClass, skill);
+        Alerts.Add(w);
+    }
     static GUIStyle alertStyle;
 
     public static void DrawAlerts(EntityPlayerLocal p)
@@ -342,7 +350,7 @@ public static class AposHud
         new ModBuff { Buff = "buffAposAdrenaline", Cvar = "aposAdrenaline", Suffix = "/3", Full = 3, Speed = true, SpeedCvar = "aposAdrenalineSpeed" },
         new ModBuff { Buff = "buffAposEmp", Cvar = "aposEmp", Suffix = "/10", Full = 10, Defense = true },   // discharges around you
         new ModBuff { Buff = "buffAposPipeVeteran", Cvar = "aposPipeBonus", Suffix = "%" },
-        new ModBuff { Buff = "buffAposShadow", Cvar = "", Suffix = "x2", Full = -1 },
+        new ModBuff { Buff = "buffAposShadow", Cvar = "", Alert = true, Prefix = "x2" },   // the next hit x2: above the crosshair
         new ModBuff { Buff = "buffAposFrenzyPerception", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
         new ModBuff { Buff = "buffAposFrenzyStrength", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
         new ModBuff { Buff = "buffAposFrenzyFortitude", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
