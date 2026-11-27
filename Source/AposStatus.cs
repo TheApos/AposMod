@@ -99,7 +99,7 @@ public static class AposStatus
     static readonly string[] EffectPrefix = { "buffBurning", "buffInjuryBleeding", "buffAposDeepBleed", "buffInjuryStunned0", "buffInjuryKnockdown0",
                                               "buffInjuryCrippled01", "buffShocked", "buffAposCorroded", "buffAposAcidSlow", "buffAposEmp", "buffAposConfused", "buffAposMiasma" };
     static readonly int[] EffectKind = { 0, 1, 1, 2, 2, 3, 4, 5, 5, 4, 6, 7 };
-    static readonly string[] KindIcon = { "fire", "critical", "stunned", "run", "electric_power", "drop", "twitch_confused_controls", "infection" };
+    static readonly string[] KindIcon = { "fire", "critical", "stunned", "ui_apos_crippled", "electric_power", "drop", "twitch_confused_controls", "infection" };
     static readonly Color[] KindColor =
     {
         new Color(1f, 0.5f, 0.1f), new Color(1f, 0.2f, 0.2f), new Color(1f, 0.6f, 0.1f), new Color(1f, 0.45f, 0.45f),

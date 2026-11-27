@@ -221,6 +221,21 @@ $icons['ui_apos_ragespeed'] = {
     $g.DrawLine($p, 6, 70, 34, 70); $g.DrawLine($p, 2, 88, 28, 88); $g.DrawLine($p, 10, 106, 32, 106)
 }
 
+# Crippled (vanilla crippled legs, on a zombie): a figure in a wheelchair
+$icons['ui_apos_crippled'] = {
+    param($g)
+    $g.FillEllipse($white, 40, 4, 24, 24)                                   # head
+    $p = Pen 14
+    $g.DrawLine($p, 50, 36, 46, 72)                                         # back
+    $g.DrawLines($p, (P @(46,72, 84,72, 96,104)))                           # thigh, shin
+    $g.DrawLine($p, 50, 48, 76, 52)                                         # arm forward
+    $ring = Pen 10
+    $g.DrawArc($ring, 14, 54, 66, 66, 0, 360)                               # the big wheel
+    $g.FillEllipse($white, 102, 104, 18, 18)                                # the small front wheel
+    $p = Pen 7
+    $g.DrawLine($p, 96, 104, 110, 112)                                      # footrest to the small wheel
+}
+
 # Backstab / Spine Strike (knife): a figure seen from behind with a knife stuck in its spine
 $icons['ui_apos_backstab'] = {
     param($g)
@@ -287,7 +302,7 @@ $icons['ui_apos_lungs'] = {
     $m = New-Object Drawing.Drawing2D.Matrix(-1, 0, 0, 1, 128, 0); $r = $l.Clone(); $r.Transform($m); $g.FillPath($white, $r)
 }
 
-$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_shattered = '255,153,51'; ui_apos_armorbreak = '204,204,204'; ui_apos_suppressed = '115,191,255'; ui_apos_holdline = '255,210,77'; ui_apos_fulldraw = '255,210,77'; ui_apos_squad = '255,210,77'; ui_apos_backstab = '242,31,31'; ui_apos_ragespeed = '255,210,77'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
+$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_gunfighter = '255,210,77'; ui_apos_hotbarrel = '255,150,50'; ui_apos_shattered = '255,153,51'; ui_apos_armorbreak = '204,204,204'; ui_apos_suppressed = '115,191,255'; ui_apos_holdline = '255,210,77'; ui_apos_fulldraw = '255,210,77'; ui_apos_squad = '255,210,77'; ui_apos_backstab = '242,31,31'; ui_apos_ragespeed = '255,210,77'; ui_apos_crippled = '255,115,115'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
 $sheet = New-Object Drawing.Bitmap (($S + 16) * $icons.Count + 16), ($S + 32)
 $sg = [Drawing.Graphics]::FromImage($sheet); $sg.Clear([Drawing.Color]::FromArgb(30, 30, 30))
 $x = 16
