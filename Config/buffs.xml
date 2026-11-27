@@ -584,7 +584,7 @@
 		</buff>
 
 		<!-- Mother Lode 5 "Jackpot": x5 harvest for 2 s -->
-		<buff name="buffAposJackpot" name_key="buffAposJackpotName" description_key="buffAposJackpotDesc" icon="ui_game_symbol_mining" icon_color="255,210,0">
+		<buff name="buffAposJackpot" name_key="buffAposJackpotName" description_key="buffAposJackpotDesc" icon="ui_apos_jackpot" icon_color="255,210,0">
 			<stack_type value="replace"/>
 			<duration value="2"/>
 			<effect_group>

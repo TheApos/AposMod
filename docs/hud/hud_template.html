@@ -70,6 +70,8 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
 .bar { height: 1.9cqw; border-radius: .2cqw; display: flex; align-items: center; padding-left: .5cqw; font: 600 1.2cqw/1 var(--display); color: #fff; text-shadow: 0 0 .15cqw #000; }
 .bar.hp { background: linear-gradient(90deg, #b3262e 78%, #3a1517 78%); }
 .bar.st { background: linear-gradient(90deg, #3f8a3a 64%, #18301a 64%); }
+.alertpill { display: flex; align-items: center; gap: .6cqw; padding: .4cqw .8cqw; background: rgba(0,0,0,.5); border-bottom: .25cqw solid; }
+.alertpill .t { font: 700 2.4cqw/1 var(--display); color: #fff; text-shadow: 0 0 .15cqw #000; white-space: nowrap; }
 .spdrow { display: flex; align-items: center; justify-content: flex-end; gap: .5cqw; height: 3.6cqw; padding: 0 .4cqw 0 3cqw; background: linear-gradient(90deg, transparent, rgba(0,0,0,.55) 40%); }
 .spdrow .t { font: 700 2cqw/1 var(--display); text-shadow: 0 0 .15cqw #000, 0 0 .15cqw #000; white-space: nowrap; }
 .feedline { display: flex; align-items: center; gap: .4cqw; background: rgba(0,0,0,.35); padding: .35cqw .6cqw; border-radius: .3cqw; }
@@ -140,6 +142,7 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
         <span style="--c:#9aa197">між ХП і поясом: захист</span>
         <span style="--c:#5ae68c">справа внизу: енергія — швидкість руху й атаки</span>
         <span style="--c:#c8c8c8">над ХП: усе інше (колонка гри)</span>
+        <span style="--c:#ffd200">над прицілом: екстрене й важливе</span>
       </div>
       <p class="note">Сцена приблизна: значки гри намальовані схоже, але не один в один, а HUD збільшено в 1.5 раза, щоб числа читались. Значки з пульсацією — стан «повний / готовий». Позначка <b style="color:#ffb27a">ваніль</b> — значок узятий з гри: в описі видно, які статуси й перки гри мають такий самий; <b style="color:#8fe0a8">свій</b> — значок намальований для мода.</p>
     </div>
@@ -196,7 +199,7 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
 <script>
 const D = /*__DATA__*/null;
 const PLACE = { gR: 'Дуга праворуч від прицілу', gL: 'Дуга ліворуч від прицілу', atk: 'Ряд під прицілом (атака)', def: 'Блок захисту (між ХП і поясом)',
-  col: 'Над ХП: усе інше (колонка баффів гри)', spd: 'Блок енергії: швидкість руху й атаки (справа внизу)', z: 'Над зомбі', toast: 'Напис під прицілом', mark: 'Мітка на стрілі / болті', feed: 'Стрічка реакцій праворуч', over: 'Позначки на зомбі' };
+  alert: 'Над прицілом: екстрене й важливе', col: 'Над ХП: усе інше (колонка баффів гри)', spd: 'Блок енергії: швидкість руху й атаки (справа внизу)', z: 'Над зомбі', toast: 'Напис під прицілом', mark: 'Мітка на стрілі / болті', feed: 'Стрічка реакцій праворуч', over: 'Позначки на зомбі' };
 const FEEDICONS = {
   feed_explosion: [['elite_Burning', '#ff7319'], '+', ['elite_Acidic', '#99e633'], '=', ['elite_Explosive', '#ffcc40']],
   feed_confusion: [['elite_Burning', '#ff7319'], '+', ['elite_Electric', '#59bfff'], '='],
@@ -308,7 +311,7 @@ function drawScene(tabId) {
   let svg = '';
   // crosshair
   svg += `<g stroke="#fff" stroke-width="2.4" opacity=".85"><path d="M${CX - 16} ${CY}h10M${CX + 6} ${CY}h10M${CX} ${CY - 16}v10M${CX} ${CY + 6}v10"/></g>`;
-  const g = { gR: [], gL: [], atk: [], def: [], spd: [], col: [], z: [], toast: [], mark: [], feed: [], over: [] };
+  const g = { gR: [], gL: [], atk: [], def: [], spd: [], col: [], alert: [], z: [], toast: [], mark: [], feed: [], over: [] };
   items.forEach((it, i) => g[it.place].push(i));
   // schematic bottom line, left to right: health / stamina bars, the defence row, a narrow toolbelt under the
   // crosshair; the vanilla buff column above the bars, the speed column at the bottom right
@@ -349,6 +352,18 @@ function drawScene(tabId) {
     // the arc itself is clickable too
     sc.appendChild(hit(i, left ? CX - r - 16 : CX + r * 0.8, CY - r * 0.45, el('div', { style: { width: U(36), height: U(r * 0.9) } })));
   });
+  // urgent / important: a row centred above the crosshair
+  if (g.alert.length) {
+    const box = el('div', { style: { position: 'absolute', left: U(CX - 400), width: U(800), top: U(CY - 150), display: 'flex', justifyContent: 'center', gap: U(16) } });
+    g.alert.forEach(i => {
+      const it = items[i];
+      const pill = el('div', { cls: 'alertpill glow', style: { borderBottomColor: it.color } }, [icon(it.icon, it.color, U(40 * 1.3)), el('span', { cls: 't', text: it.text })]);
+      const h = hit(i, 0, 0, pill);
+      h.style.position = 'relative'; h.style.left = h.style.top = '0';
+      box.appendChild(h);
+    });
+    sc.appendChild(box);
+  }
   // attack row, centred under the crosshair
   const atk = g.atk, w = 78 * S;
   atk.forEach((i, k) => sc.appendChild(hit(i, CX - atk.length * w / 2 + k * w, CY + 42 * S, slot(items[i]))));

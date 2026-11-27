@@ -50,6 +50,49 @@ public static class AposHud
         AttackAt = null;
         GaugeLeft = GaugeRight = null;
         Speed.Clear();
+        Alerts.Clear();
+    }
+
+    // ===== urgent / important: a row centred above the crosshair (Jackpot...): bigger, on a dark pill, pulsing =====
+    public static readonly List<Widget> Alerts = new List<Widget>();
+    static GUIStyle alertStyle;
+
+    public static void DrawAlerts(EntityPlayerLocal p)
+    {
+        if (p == null || !AposSettings.HudEnabled || Alerts.Count == 0) return;
+        LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(p);
+        if (ui == null || ui.windowManager == null || ui.windowManager.IsModalWindowOpen() || !ui.windowManager.IsHUDEnabled()) return;
+        float k = Screen.height / 1080f * AposSettings.HudScale;
+        if (alertStyle == null) alertStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleLeft };
+        alertStyle.fontSize = Mathf.RoundToInt(26f * k);
+        float icon = 40f * k, pad = 10f * k, gap = 16f * k, h = 52f * k;
+        float[] w = new float[Alerts.Count];
+        float total = -gap;
+        for (int i = 0; i < Alerts.Count; i++)
+        {
+            w[i] = pad + icon + 8f * k + alertStyle.CalcSize(new GUIContent(Alerts[i].Text)).x + pad;
+            total += w[i] + gap;
+        }
+        float x = Screen.width / 2f - total / 2f, y = Screen.height / 2f - 150f * k - h;
+        float pulse = 0.8f + 0.2f * Mathf.Sin(Time.time * 5f);
+        Color old = GUI.color;
+        for (int i = 0; i < Alerts.Count; i++)
+        {
+            Widget a = Alerts[i];
+            GUI.color = new Color(0f, 0f, 0f, 0.5f);
+            GUI.DrawTexture(new Rect(x, y, w[i], h), Texture2D.whiteTexture);
+            GUI.color = new Color(a.Color.r, a.Color.g, a.Color.b, 0.9f * pulse);
+            GUI.DrawTexture(new Rect(x, y + h - 3f * k, w[i], 3f * k), Texture2D.whiteTexture);   // a coloured underline
+            Color ic = a.Color; ic.a = pulse;
+            AposStatus.DrawIcon(p, a.Icon, new Rect(x + pad, y + (h - icon) / 2f, icon, icon), ic);
+            Rect tr = new Rect(x + pad + icon + 8f * k, y, w[i], h);
+            GUI.color = new Color(0f, 0f, 0f, 0.85f);
+            GUI.Label(new Rect(tr.x + 1.5f, tr.y + 1.5f, tr.width, tr.height), a.Text, alertStyle);
+            GUI.color = Color.white;
+            GUI.Label(tr, a.Text, alertStyle);
+            x += w[i] + gap;
+        }
+        GUI.color = old;
     }
 
     // ===== the "energy" block: a column at the bottom right, mirroring the vanilla buff column at the bottom left =====
@@ -256,6 +299,7 @@ public static class AposHud
         all.AddRange(Attack);
         all.AddRange(Defense);
         all.AddRange(Speed);
+        all.AddRange(Alerts);
         {
             foreach (Widget w in all)
             {
@@ -290,7 +334,8 @@ public static class AposHud
     // ===== the mod's own player buffs =====
     // buff, defence row?, what the number is: cvar (with an optional "/max" or "%"), or "time" = seconds left, "" = icon only
     // Speed: a movement buff, shown in the speed column instead (SpeedCvar: its bonus as a fraction, or SpeedPct fixed)
-    class ModBuff { public string Buff, Cvar, Suffix, SpeedCvar; public bool Defense, Speed, Attack; public int Full; public float SpeedPct; }
+    // Alert: urgent / important, the row above the crosshair (Prefix goes before the timer, e.g. "x5")
+    class ModBuff { public string Buff, Cvar, Suffix, SpeedCvar, Prefix; public bool Defense, Speed, Attack, Alert; public int Full; public float SpeedPct; }
     static readonly ModBuff[] modBuffs =
     {
         new ModBuff { Buff = "buffAposThunderCharge", Cvar = "aposThunder", Suffix = "/3", Full = 3 },
@@ -302,7 +347,7 @@ public static class AposHud
         new ModBuff { Buff = "buffAposFrenzyStrength", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
         new ModBuff { Buff = "buffAposFrenzyFortitude", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
         new ModBuff { Buff = "buffAposFrenzyAgility", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
-        // Jackpot (loot x5) is none of the three themes: it stays in the vanilla buff column
+        new ModBuff { Buff = "buffAposJackpot", Cvar = "time", Alert = true, Prefix = "x5" },
         new ModBuff { Buff = "buffAposShieldUp", Cvar = "time", Defense = true, Full = -1 },
         new ModBuff { Buff = "buffAposGuardian", Cvar = "", Defense = true },
         new ModBuff { Buff = "buffAposEvasion", Cvar = "time", Speed = true, SpeedPct = 0.3f },
@@ -352,6 +397,12 @@ public static class AposHud
                 if (m.Full > 0 && n >= m.Full) full = true;
             }
             else if (m.Suffix != null) text = m.Suffix;
+            if (m.Alert)
+            {
+                Color ac = bc.IconColor; ac.a = 1f;
+                Alerts.Add(new Widget { Icon = bc.Icon, Color = ac, Text = (m.Prefix ?? "") + (text.Length > 0 ? "  " + text : "") });
+                continue;
+            }
             if (m.Speed)
             {
                 Speed.Add(new Widget { Icon = bc.Icon, Color = m.Attack ? AttackUp : SpeedUp,

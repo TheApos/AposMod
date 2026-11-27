@@ -56,6 +56,24 @@ $icons['ui_apos_speed'] = {
     $g.DrawLine($p, 6, 52, 30, 52); $g.DrawLine($p, 2, 70, 30, 70); $g.DrawLine($p, 8, 88, 30, 88)
 }
 
+# Jackpot (Mother Lode 5, harvest x5): a faceted gem with sparkles
+$icons['ui_apos_jackpot'] = {
+    param($g)
+    $g.FillPolygon($white, (P @(30,44, 52,22, 92,22, 114,44, 72,110)))
+    $g.CompositingMode = 'SourceCopy'
+    $clear = New-Object Drawing.SolidBrush([Drawing.Color]::Transparent)
+    $edge = New-Object Drawing.Pen([Drawing.Color]::Transparent, 5)
+    $g.DrawLine($edge, 30, 46, 114, 46)
+    $g.DrawLine($edge, 52, 24, 62, 46); $g.DrawLine($edge, 92, 24, 82, 46)
+    $g.DrawLine($edge, 62, 46, 72, 106); $g.DrawLine($edge, 82, 46, 72, 106)
+    $g.CompositingMode = 'SourceOver'
+    # sparkles: four-point stars
+    foreach ($s in @(@(18, 18, 12), @(112, 92, 10), @(116, 10, 7))) {
+        $x = $s[0]; $y = $s[1]; $r = $s[2]; $q = $r * 0.28
+        $g.FillPolygon($white, (P @($x,($y-$r), ($x+$q),($y-$q), ($x+$r),$y, ($x+$q),($y+$q), $x,($y+$r), ($x-$q),($y+$q), ($x-$r),$y, ($x-$q),($y-$q))))
+    }
+}
+
 # Critical hit: a jagged burst with an exclamation mark cut out
 $icons['ui_apos_crit'] = {
     param($g)
@@ -106,7 +124,7 @@ $icons['ui_apos_lungs'] = {
     $m = New-Object Drawing.Drawing2D.Matrix(-1, 0, 0, 1, 128, 0); $r = $l.Clone(); $r.Transform($m); $g.FillPath($white, $r)
 }
 
-$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
+$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_jackpot = '255,210,0'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
 $sheet = New-Object Drawing.Bitmap (($S + 16) * $icons.Count + 16), ($S + 32)
 $sg = [Drawing.Graphics]::FromImage($sheet); $sg.Clear([Drawing.Color]::FromArgb(30, 30, 30))
 $x = 16

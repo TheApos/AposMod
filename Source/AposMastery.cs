@@ -502,6 +502,7 @@ public class AposMastery : MonoBehaviour
             AposStatus.Draw(lp);
             AposHud.DrawGauges(lp);
             AposHud.DrawSpeed(lp);
+            AposHud.DrawAlerts(lp);
         }
         float t = Time.time - bannerStart;
         if (t > BannerTime || bannerTitle == null || Event.current.type != EventType.Repaint) return;
