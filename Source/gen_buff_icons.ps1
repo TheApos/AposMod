@@ -149,15 +149,19 @@ $icons['ui_apos_hotbarrel'] = {
 # Shattered (shotgun A5, on a zombie): the same cracked chest plate as Corroded Armor, tinted orange in the game
 $icons['ui_apos_shattered'] = $icons['ui_apos_acidarmor']
 
-# Suppression (MG trait, on a zombie): a crouching figure shielding its head, bullets streaking at it
+# Suppression (MG trait, on a zombie): a figure squatting down, both arms wrapped over its head
 $icons['ui_apos_suppressed'] = {
     param($g)
-    $g.FillEllipse($white, 22, 44, 24, 24)                                   # head
-    $g.FillPolygon($white, (P @(30,70, 58,64, 66,96, 74,118, 58,120, 48,98, 34,112, 20,104, 30,90)))   # crouched body
-    $p = Pen 11
-    $g.DrawLines($p, (P @(52,70, 56,46, 36,34)))                            # arm raised over the head
-    $p = Pen 5
-    foreach ($y in @(30, 54, 78)) { $g.DrawLine($p, 82, $y, 122, $y); $g.FillEllipse($white, 74, ($y - 5), 10, 10) }
+    $g.FillEllipse($white, 48, 34, 30, 30)                                   # head, pulled down
+    $p = Pen 22
+    $g.DrawLine($p, 60, 72, 50, 92)                                         # hunched back
+    $p = Pen 13
+    $g.DrawLines($p, (P @(48,94, 84,92, 82,118)))                           # front leg: thigh forward, shin down
+    $g.DrawLines($p, (P @(46,98, 70,106, 60,120)))                          # back leg
+    $g.DrawLine($p, 82, 118, 98, 118)                                       # foot
+    $p = Pen 10
+    $g.DrawLines($p, (P @(66,70, 88,46, 70,24, 48,28)))                     # near arm over the head
+    $g.DrawLines($p, (P @(58,70, 34,52, 40,30, 62,22)))                     # far arm over the head
 }
 
 # Hold the Line (MG A6, crouch / stand still): a bunker (pillbox) with a firing slit and a gun barrel
