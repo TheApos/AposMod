@@ -74,6 +74,26 @@ $icons['ui_apos_jackpot'] = {
     }
 }
 
+# Free Rocket (legendary Big Boom): a rocket flying up-right with a flame trail
+$icons['ui_apos_rocket'] = {
+    param($g)
+    $st = $g.Save()
+    $g.TranslateTransform(64, 64); $g.ScaleTransform(1.3, 1.3); $g.RotateTransform(45)
+    # body, nose cone, fins (drawn pointing up, then turned 45 degrees)
+    $g.FillRectangle($white, -12, -30, 24, 50)
+    $g.FillPolygon($white, (P @(-12,-30, 0,-56, 12,-30)))
+    $g.FillPolygon($white, (P @(-12,4, -26,24, -12,20)))
+    $g.FillPolygon($white, (P @(12,4, 26,24, 12,20)))
+    # a window
+    $g.CompositingMode = 'SourceCopy'
+    $g.FillEllipse((New-Object Drawing.SolidBrush([Drawing.Color]::Transparent)), -6, -22, 12, 12)
+    $g.CompositingMode = 'SourceOver'
+    # flame
+    $g.FillPolygon((New-Object Drawing.SolidBrush([Drawing.Color]::FromArgb(200, 255, 255, 255))), (P @(-9,22, 0,50, 9,22)))
+    $g.FillPolygon($white, (P @(-5,22, 0,36, 5,22)))
+    $g.Restore($st)
+}
+
 # Critical hit: a jagged burst with an exclamation mark cut out
 $icons['ui_apos_crit'] = {
     param($g)
@@ -124,7 +144,7 @@ $icons['ui_apos_lungs'] = {
     $m = New-Object Drawing.Drawing2D.Matrix(-1, 0, 0, 1, 128, 0); $r = $l.Clone(); $r.Transform($m); $g.FillPath($white, $r)
 }
 
-$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_jackpot = '255,210,0'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
+$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
 $sheet = New-Object Drawing.Bitmap (($S + 16) * $icons.Count + 16), ($S + 32)
 $sg = [Drawing.Graphics]::FromImage($sheet); $sg.Clear([Drawing.Color]::FromArgb(30, 30, 30))
 $x = 16

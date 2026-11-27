@@ -159,7 +159,7 @@
 
 		<!-- Legendary Big Boom: the next rocket costs no ammo. Only while a launcher is in hand: without the requirement
 		     every weapon (bows too) shot for free while the buff waited for the next rocket. -->
-		<buff name="buffAposFreeRocket" name_key="buffAposFreeRocketName" description_key="buffAposFreeRocketDesc" icon="ui_game_symbol_explosion" icon_color="255,180,0">
+		<buff name="buffAposFreeRocket" name_key="buffAposFreeRocketName" description_key="buffAposFreeRocketDesc" icon="ui_apos_rocket" icon_color="255,180,0">
 			<stack_type value="ignore"/>
 			<effect_group>
 				<requirement name="HoldingItemHasTags" tags="launcher"/>

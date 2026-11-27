@@ -180,7 +180,7 @@ ZOMBIE = [
 
 # what is left in the vanilla buff column above health / stamina (bottom left)
 COLUMN = [
- I('col', 'explosion', '#ffb400', '', 'buffAposFreeRocket', 'Большой бабах: наступна ракета без витрати боєприпасу.',
+ I('col', 'ui_apos_rocket', '#ffb400', '', 'buffAposFreeRocket', 'Большой бабах: наступна ракета без витрати боєприпасу.',
    'Після пострілу з легендарного ракетомета, поки він у руках. У HUD його немає, тож він лишається тут.'),
  I('col', 'ui_apos_bloodsucker', '#e63c50', '2', 'buffAposKnifeRegen', 'Стаки регенерації ножа (HP за секунду).',
    'Тут лише коли HUD вимкнено (aposhud off). З увімкненим HUD його показують дуга праворуч і ряд біля поясу.'),
