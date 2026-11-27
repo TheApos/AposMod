@@ -258,7 +258,7 @@ public static class AposHud
         }
     }
 
-    // icon: a vanilla symbol name ("head_shot" = ui_game_symbol_head_shot) or the mod's own sprite ("ui_apos_crit")
+    // icon: a vanilla symbol name ("head_shot" = ui_game_symbol_head_shot) or the mod's own sprite ("ui_apos_squad")
     public static void Add(bool defense, string icon, string text, Color color, bool glow)
     {
         AddSprite(defense, icon.StartsWith("ui_") ? icon : "ui_game_symbol_" + icon, text, color, glow);
