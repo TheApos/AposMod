@@ -141,7 +141,7 @@ public static class AposPistol
         // Firing Squad: the count to the 8th hit; when the next hit is the empowered one, its own icon and "x10"
         if (R("H1") > 0)
         {
-            if (hitsInRow >= 7) AposHud.Add(false, "ui_apos_squad", "x10", new Color(1f, 0.82f, 0.3f), true, "H1");
+            if (hitsInRow >= 7) AposHud.AddNextHit("ui_apos_squad", SquadMult, "H1");
             else AposHud.Add(false, "run_and_gun", hitsInRow + "/8", hitsInRow > 0 ? Color.white : Dim, false, "H1");
         }
         if (R("H2") > 0 && Time.time < gunfighterUntil) AposHud.AddAttackSpeed("ui_apos_gunfighter", 0.15f, Mathf.CeilToInt(gunfighterUntil - Time.time) + "s", "H2");

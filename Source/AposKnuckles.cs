@@ -60,7 +60,7 @@ public static class AposKnuckles
             AposHud.Add(false, "twitch_strength_melee", combo + "/" + ComboMax(), new Color(0.4f, 0.75f, 1f), combo >= 10, "B1");
             AposStatus.Target(comboTarget, "twitch_strength_melee", combo + "/" + ComboMax(), new Color(0.4f, 0.75f, 1f));
         }
-        if (R("B6") > 0 && Time.time - lastTaken >= 5f) AposHud.Add(false, "sneak_attack", "x" + Opener[R("B6")], gold, true, "B6");
+        if (R("B6") > 0 && Time.time - lastTaken >= 5f) AposHud.AddNextHit("sneak_attack", Opener[R("B6")], "B6");
     }
 
     static float SkinPct(EntityPlayerLocal p) { return Mathf.Min(40f, IronSkin[R("A2")] * AposAffixes.Level(p, "attFortitude")) / 100f; }

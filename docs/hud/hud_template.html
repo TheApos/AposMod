@@ -142,7 +142,7 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
         <span style="--c:#9aa197">між ХП і поясом: захист</span>
         <span style="--c:#5ae68c">справа внизу: енергія — швидкість руху й атаки (однакові бафи в один рядок із сумою)</span>
         <span style="--c:#c8c8c8">над ХП: усе інше (колонка гри)</span>
-        <span style="--c:#ffd200">над прицілом: екстрене й важливе</span>
+        <span style="--c:#ffd200">над прицілом: екстрене й важливе (бонуси наступного удару — одна плашка з добутком)</span>
       </div>
       <p class="note">Сцена приблизна: значки гри намальовані схоже, але не один в один, а HUD збільшено в 1.5 раза, щоб числа читались. Значки з пульсацією — стан «повний / готовий». Позначка <b style="color:#ffb27a">ваніль</b> — значок узятий з гри: в описі видно, які статуси й перки гри мають такий самий; <b style="color:#8fe0a8">свій</b> — значок намальований для мода.</p>
     </div>
@@ -355,12 +355,19 @@ function drawScene(tabId) {
   // urgent / important: a row centred above the crosshair
   if (g.alert.length) {
     const box = el('div', { style: { position: 'absolute', left: U(CX - 400), width: U(800), top: U(CY - 150), display: 'flex', justifyContent: 'center', gap: U(16) } });
-    g.alert.forEach(i => {
+    const add = (i, kid) => { const h = hit(i, 0, 0, kid); h.style.position = 'relative'; h.style.left = h.style.top = '0'; return h; };
+    // the next-hit bonuses share one pill: their icons and the combined multiplier (every icon clickable)
+    const next = g.alert.filter(i => items[i].kind === 'next');
+    if (next.length > 1) {
+      const m = next.reduce((s, i) => s * items[i].mult, 1);
+      const pill = el('div', { cls: 'alertpill glow', style: { borderBottomColor: '#ffd14d' } });
+      next.forEach(i => pill.appendChild(add(i, icon(items[i].icon, items[i].color, U(40 * 1.3)))));
+      pill.appendChild(el('span', { cls: 't', text: 'x' + (Math.round(m * 10) / 10) }));
+      box.appendChild(pill);
+    }
+    g.alert.filter(i => next.length < 2 || items[i].kind !== 'next').forEach(i => {
       const it = items[i];
-      const pill = el('div', { cls: 'alertpill glow', style: { borderBottomColor: it.color } }, [icon(it.icon, it.color, U(40 * 1.3)), el('span', { cls: 't', text: it.text })]);
-      const h = hit(i, 0, 0, pill);
-      h.style.position = 'relative'; h.style.left = h.style.top = '0';
-      box.appendChild(h);
+      box.appendChild(add(i, el('div', { cls: 'alertpill glow', style: { borderBottomColor: it.color } }, [icon(it.icon, it.color, U(40 * 1.3)), el('span', { cls: 't', text: it.text })])));
     });
     sc.appendChild(box);
   }

@@ -57,6 +57,23 @@ public static class AposHud
     // ===== urgent / important: a row centred above the crosshair (Jackpot...): bigger, on a dark pill, pulsing =====
     public static readonly List<Widget> Alerts = new List<Widget>();
 
+    // "the next hit is stronger" (Shadows, Spotter, Lead Wall, Opener, Firing Squad ready): one pill above the crosshair
+    // with all their icons and the combined multiplier (the class bonus times the Shadow's x2)
+    public const string NextHit = "next";
+
+    public static void AddNextHit(string icon, float mult, string skill)
+    {
+        AddAlert(icon, Mult(mult), new Color(1f, 0.82f, 0.3f), skill);
+        Widget w = Alerts[Alerts.Count - 1];
+        w.Kind = NextHit;
+        w.Value = mult;
+    }
+
+    static string Mult(float m)
+    {
+        return "x" + (Mathf.Abs(m - Mathf.Round(m)) < 0.05f ? Mathf.RoundToInt(m).ToString() : m.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture));
+    }
+
     // a class's urgent widget (e.g. the bow's Shadow): the row above the crosshair, also a Status Effects line
     public static void AddAlert(string icon, string text, Color color, string skill)
     {
@@ -66,39 +83,67 @@ public static class AposHud
     }
     static GUIStyle alertStyle;
 
+    // one pill per alert; the next-hit bonuses share one pill: their icons and the combined multiplier
+    class Pill { public List<Widget> Icons = new List<Widget>(); public string Text; public Color Color; }
+    static readonly List<Pill> pills = new List<Pill>();
+
     public static void DrawAlerts(EntityPlayerLocal p)
     {
         if (p == null || !AposSettings.HudEnabled || Alerts.Count == 0) return;
         LocalPlayerUI ui = LocalPlayerUI.GetUIForPlayer(p);
         if (ui == null || ui.windowManager == null || ui.windowManager.IsModalWindowOpen() || !ui.windowManager.IsHUDEnabled()) return;
+        pills.Clear();
+        Pill next = null;
+        float mult = 1f;
+        foreach (Widget a in Alerts)
+        {
+            if (a.Kind == NextHit)
+            {
+                if (next == null) { next = new Pill { Color = new Color(1f, 0.82f, 0.3f) }; pills.Add(next); }
+                next.Icons.Add(a);
+                mult *= a.Value;
+                continue;
+            }
+            Pill one = new Pill { Text = a.Text, Color = a.Color };
+            one.Icons.Add(a);
+            pills.Add(one);
+        }
+        if (next != null) next.Text = next.Icons.Count == 1 ? next.Icons[0].Text : Mult(mult);
+
         float k = Screen.height / 1080f * AposSettings.HudScale;
         if (alertStyle == null) alertStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleLeft };
         alertStyle.fontSize = Mathf.RoundToInt(26f * k);
-        float icon = 40f * k, pad = 10f * k, gap = 16f * k, h = 52f * k;
-        float[] w = new float[Alerts.Count];
+        float icon = 40f * k, pad = 10f * k, gap = 16f * k, h = 52f * k, ig = 4f * k;
+        float[] w = new float[pills.Count];
         float total = -gap;
-        for (int i = 0; i < Alerts.Count; i++)
+        for (int i = 0; i < pills.Count; i++)
         {
-            w[i] = pad + icon + 8f * k + alertStyle.CalcSize(new GUIContent(Alerts[i].Text)).x + pad;
+            Pill pl = pills[i];
+            w[i] = pad + pl.Icons.Count * icon + (pl.Icons.Count - 1) * ig + 8f * k + alertStyle.CalcSize(new GUIContent(pl.Text)).x + pad;
             total += w[i] + gap;
         }
         float x = Screen.width / 2f - total / 2f, y = Screen.height / 2f - 150f * k - h;
         float pulse = 0.8f + 0.2f * Mathf.Sin(Time.time * 5f);
         Color old = GUI.color;
-        for (int i = 0; i < Alerts.Count; i++)
+        for (int i = 0; i < pills.Count; i++)
         {
-            Widget a = Alerts[i];
+            Pill pl = pills[i];
             GUI.color = new Color(0f, 0f, 0f, 0.5f);
             GUI.DrawTexture(new Rect(x, y, w[i], h), Texture2D.whiteTexture);
-            GUI.color = new Color(a.Color.r, a.Color.g, a.Color.b, 0.9f * pulse);
+            GUI.color = new Color(pl.Color.r, pl.Color.g, pl.Color.b, 0.9f * pulse);
             GUI.DrawTexture(new Rect(x, y + h - 3f * k, w[i], 3f * k), Texture2D.whiteTexture);   // a coloured underline
-            Color ic = a.Color; ic.a = pulse;
-            AposStatus.DrawIcon(p, a.Icon, new Rect(x + pad, y + (h - icon) / 2f, icon, icon), ic);
-            Rect tr = new Rect(x + pad + icon + 8f * k, y, w[i], h);
+            float ix = x + pad;
+            foreach (Widget a in pl.Icons)
+            {
+                Color ic = a.Color; ic.a = pulse;
+                AposStatus.DrawIcon(p, a.Icon, new Rect(ix, y + (h - icon) / 2f, icon, icon), ic);
+                ix += icon + ig;
+            }
+            Rect tr = new Rect(ix - ig + 8f * k, y, w[i], h);
             GUI.color = new Color(0f, 0f, 0f, 0.85f);
-            GUI.Label(new Rect(tr.x + 1.5f, tr.y + 1.5f, tr.width, tr.height), a.Text, alertStyle);
+            GUI.Label(new Rect(tr.x + 1.5f, tr.y + 1.5f, tr.width, tr.height), pl.Text, alertStyle);
             GUI.color = Color.white;
-            GUI.Label(tr, a.Text, alertStyle);
+            GUI.Label(tr, pl.Text, alertStyle);
             x += w[i] + gap;
         }
         GUI.color = old;
@@ -373,14 +418,14 @@ public static class AposHud
     // buff, defence row?, what the number is: cvar (with an optional "/max" or "%"), or "time" = seconds left, "" = icon only
     // Speed: a movement buff, shown in the speed column instead (SpeedCvar: its bonus as a fraction, or SpeedPct fixed)
     // Alert: urgent / important, the row above the crosshair (Prefix goes before the timer, e.g. "x5")
-    class ModBuff { public string Buff, Cvar, Suffix, SpeedCvar, Prefix; public bool Defense, Speed, Attack, Alert; public int Full; public float SpeedPct; }
+    class ModBuff { public string Buff, Cvar, Suffix, SpeedCvar, Prefix; public bool Defense, Speed, Attack, Alert; public int Full; public float SpeedPct, NextHitMult; }
     static readonly ModBuff[] modBuffs =
     {
         new ModBuff { Buff = "buffAposThunderCharge", Cvar = "aposThunder", Suffix = "/3", Full = 3 },
         new ModBuff { Buff = "buffAposAdrenaline", Cvar = "aposAdrenaline", Suffix = "/3", Full = 3, Speed = true, SpeedCvar = "aposAdrenalineSpeed" },
         new ModBuff { Buff = "buffAposEmp", Cvar = "aposEmp", Suffix = "/10", Full = 10, Defense = true },   // discharges around you
         new ModBuff { Buff = "buffAposPipeVeteran", Cvar = "aposPipeBonus", Suffix = "%" },
-        new ModBuff { Buff = "buffAposShadow", Cvar = "", Alert = true, Prefix = "x2" },   // the next hit x2: above the crosshair
+        new ModBuff { Buff = "buffAposShadow", Cvar = "", Alert = true, Prefix = "x2", NextHitMult = 2f },   // the next hit x2: above the crosshair
         new ModBuff { Buff = "buffAposFrenzyPerception", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
         new ModBuff { Buff = "buffAposFrenzyStrength", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
         new ModBuff { Buff = "buffAposFrenzyFortitude", Cvar = "time", Speed = true, Attack = true, SpeedPct = 0.15f },
@@ -438,7 +483,9 @@ public static class AposHud
             if (m.Alert)
             {
                 Color ac = bc.IconColor; ac.a = 1f;
-                Alerts.Add(new Widget { Icon = bc.Icon, Color = ac, Text = (m.Prefix ?? "") + (text.Length > 0 ? "  " + text : "") });
+                Widget aw = new Widget { Icon = bc.Icon, Color = ac, Text = (m.Prefix ?? "") + (text.Length > 0 ? "  " + text : "") };
+                if (m.NextHitMult > 0f) { aw.Kind = NextHit; aw.Value = m.NextHitMult; }
+                Alerts.Add(aw);
                 continue;
             }
             if (m.Speed)

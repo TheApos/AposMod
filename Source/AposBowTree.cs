@@ -59,7 +59,7 @@ public static class AposBowTree
         AposMastery.SetStat(AposMastery.StatSpeed, speed);
         AposMastery.SetStat(AposMastery.StatReload, speed);
         if (strain > 0f) AposHud.AttackAt = AposHud.BesideDrawBar;   // next to the vanilla draw bar, not over it
-        if (player.Buffs.HasBuff("buffAposBowShadow")) AposHud.AddAlert("stealth", "x2", new Color(0.6f, 0.6f, 1f), "B5");   // the next arrow x2
+        if (player.Buffs.HasBuff("buffAposBowShadow")) AposHud.AddNextHit("stealth", 2f, "B5");   // the next arrow x2
         if (R("B1") > 0 && strain >= 0.97f) AposHud.Add(false, "ui_apos_fulldraw", "+" + Mathf.RoundToInt(DrawBonus(player) * 100f) + "%", new Color(1f, 0.82f, 0.3f), true, "B1");
     }
 
