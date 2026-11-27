@@ -97,6 +97,22 @@ $icons['ui_apos_rocket'] = {
     $g.Restore($st)
 }
 
+# Corroded Armor (an Acidic elite's hit): a chest plate split by a jagged crack, acid dripping from it
+$icons['ui_apos_acidarmor'] = {
+    param($g)
+    $g.FillPolygon($white, (P @(34,8, 50,8, 56,20, 72,20, 78,8, 94,8, 118,24, 108,52, 98,48, 98,96, 30,96, 30,48, 20,52, 10,24)))
+    $g.CompositingMode = 'SourceCopy'
+    $clear = New-Object Drawing.SolidBrush([Drawing.Color]::Transparent)
+    $g.FillPolygon($clear, (P @(70,20, 58,40, 72,54, 56,72, 68,84, 60,98, 70,98, 80,84, 68,72, 84,54, 70,40, 78,20)))
+    $g.CompositingMode = 'SourceOver'
+    # drops under the plate
+    foreach ($d in @(@(44,104,8), @(86,108,10), @(64,116,7))) {
+        $x = $d[0]; $y = $d[1]; $r = $d[2]
+        $g.FillEllipse($white, ($x - $r), ($y - $r / 2), (2 * $r), (2 * $r))
+        $g.FillPolygon($white, (P @(($x - $r * 0.8),($y + $r * 0.2), $x,($y - $r * 1.6), ($x + $r * 0.8),($y + $r * 0.2))))
+    }
+}
+
 # Critical hit: a jagged burst with an exclamation mark cut out
 $icons['ui_apos_crit'] = {
     param($g)
@@ -147,7 +163,7 @@ $icons['ui_apos_lungs'] = {
     $m = New-Object Drawing.Drawing2D.Matrix(-1, 0, 0, 1, 128, 0); $r = $l.Clone(); $r.Transform($m); $g.FillPath($white, $r)
 }
 
-$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
+$colors = @{ ui_apos_frenzy = '255,180,0'; ui_apos_adrenaline = '0,220,120'; ui_apos_crit = '255,210,77'; ui_apos_jackpot = '255,210,0'; ui_apos_rocket = '255,180,0'; ui_apos_acidarmor = '120,255,60'; ui_apos_speed = '90,230,140'; ui_apos_evasion = '0,200,255'; ui_apos_haste = '255,210,77'; ui_apos_lungs = '150,150,150' }
 $sheet = New-Object Drawing.Bitmap (($S + 16) * $icons.Count + 16), ($S + 32)
 $sg = [Drawing.Graphics]::FromImage($sheet); $sg.Clear([Drawing.Color]::FromArgb(30, 30, 30))
 $x = 16

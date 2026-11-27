@@ -535,6 +535,7 @@ $renamed = [ordered]@{
 foreach ($k in $renamed.Keys) { $extra[$k] = $renamed[$k] }
 
 # Wardrobe (Source/AposWardrobe.cs)
+$extra['aposAcidArmorShort'] = '-{0}%', '-{0}%'
 $extra['aposHudSrcBase']   = '[AAAAAA]Weapon Mastery: {0}, class trait[-]', '[AAAAAA]Мастерство оружия: {0}, черта класса[-]'
 $extra['aposHudSrcBranch'] = '[AAAAAA]Weapon Mastery: {0}, branch "{1}", skill {2}[-]', '[AAAAAA]Мастерство оружия: {0}, ветка «{1}», навык {2}[-]'
 $extra['aposHudSrcHybrid'] = '[AAAAAA]Weapon Mastery: {0}, hybrid skill {1}[-]', '[AAAAAA]Мастерство оружия: {0}, гибрид {1}[-]'

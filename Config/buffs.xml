@@ -840,10 +840,14 @@
 			</effect_group>
 		</buff>
 		<!-- on the player: hit by an Acidic elite -->
-		<buff name="buffAposAcidArmor" name_key="buffAposAcidArmorName" description_key="buffAposAcidArmorDesc" icon="ui_game_symbol_defense" icon_color="120,255,60">
+		<buff name="buffAposAcidArmor" name_key="buffAposAcidArmorName" description_key="buffAposAcidArmorDesc" icon="ui_apos_acidarmor" icon_color="120,255,60">
 			<stack_type value="replace"/>
 			<duration value="10"/>
+			<!-- the debuff on the icon: "-20%" (a "." cvar + display_value_key: XUiM_PlayerBuffs.GetBuffDisplayInfo formats the key with the value) -->
+			<display_value value=".aposAcidArmorShow"/>
+			<display_value_key value="aposAcidArmorShort"/>
 			<effect_group>
+				<triggered_effect trigger="onSelfBuffStart" action="ModifyCVar" cvar=".aposAcidArmorShow" operation="set" value="20"/>
 				<passive_effect name="PhysicalDamageResist" operation="base_add" value="-20"/>
 			</effect_group>
 		</buff>
