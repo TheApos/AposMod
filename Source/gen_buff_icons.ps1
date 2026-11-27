@@ -146,14 +146,8 @@ $icons['ui_apos_hotbarrel'] = {
     }
 }
 
-# Shattered (shotgun A5, on a zombie): a chest plate broken into three pieces drifting apart, chips flying
-$icons['ui_apos_shattered'] = {
-    param($g)
-    $g.FillPolygon($white, (P @(16,22, 36,10, 50,10, 54,24, 44,50, 52,74, 40,112, 22,112, 22,60, 10,58)))
-    $g.FillPolygon($white, (P @(60,26, 72,26, 66,52, 76,76, 64,112, 48,112, 58,76, 50,52)))
-    $g.FillPolygon($white, (P @(78,10, 92,10, 112,22, 118,58, 106,60, 106,112, 72,112, 84,76, 74,50)))
-    foreach ($c in @(@(8,10,6), @(120,8,5), @(124,90,6), @(4,92,5))) { $g.FillRectangle($white, $c[0], $c[1], $c[2], $c[2]) }
-}
+# Shattered (shotgun A5, on a zombie): the same cracked chest plate as Corroded Armor, tinted orange in the game
+$icons['ui_apos_shattered'] = $icons['ui_apos_acidarmor']
 
 # Suppression (MG trait, on a zombie): a crouching figure shielding its head, bullets streaking at it
 $icons['ui_apos_suppressed'] = {
