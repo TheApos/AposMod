@@ -236,6 +236,17 @@ public static class AposHud
         return int.TryParse(buffName.Substring(15), out i) && i >= 0 && i < InfoSlots ? i : -1;
     }
 
+    // "Weapon Mastery: Knives and machetes, branch "Bloodsucker", skill A3" from a key aposMS_<Class>_<Id>
+    static string SkillSource(string key)
+    {
+        string[] part = key.Split('_');
+        if (part.Length < 3) return "";
+        string cls = Localization.Get("aposMasteryClass" + part[1]), id = part[2];
+        if (id == "Base") return string.Format(Localization.Get("aposHudSrcBase"), cls);
+        if (id[0] == 'H') return string.Format(Localization.Get("aposHudSrcHybrid"), cls, id);
+        return string.Format(Localization.Get("aposHudSrcBranch"), cls, Localization.Get("aposMB_" + part[1] + "_" + id[0]), id);
+    }
+
     public static void StatusInfo(EntityPlayerLocal p)
     {
         int n = 0;
@@ -259,7 +270,7 @@ public static class AposHud
                 InfoText[n] = w.Text;
                 c.LocalizedName = InfoName[n];
                 c.DescriptionKey = w.Skill + "_D";
-                c.Description = Localization.Get(c.DescriptionKey);
+                c.Description = SkillSource(w.Skill) + "\n" + Localization.Get(c.DescriptionKey);
                 if (!p.Buffs.HasBuff(c.Name)) p.Buffs.AddBuff(c.Name);
                 n++;
             }
@@ -298,7 +309,7 @@ public static class AposHud
         new ModBuff { Buff = "buffAposVampire", Cvar = "aposVampHP", Suffix = " HP", Defense = true },
         new ModBuff { Buff = "buffAposSecondWindCD", Cvar = "time", Defense = true },
         new ModBuff { Buff = "buffAposSecondLungsCD", Cvar = "time", Defense = true },
-        new ModBuff { Buff = "buffAposAcidArmor", Cvar = "time", Defense = true },
+        // Corroded Armor (an Acidic elite's hit) is a debuff, not defence: it stays in the vanilla buff column
     };
 
     // buffs the HUD already shows in its own way (the knife's Bloodsucker gauge and regen widget): off the column too

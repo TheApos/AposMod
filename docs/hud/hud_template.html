@@ -107,6 +107,8 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
 .card .bigic { width: 34px; height: 34px; display: grid; place-items: center; background: #0d0f0d; border-radius: 3px; flex: none; }
 .card .nm { font-family: var(--display); font-weight: 700; font-size: 18px; line-height: 1.1; }
 .card .wh { font-size: 12.5px; color: var(--muted); line-height: 1.35; margin-top: 2px; }
+.card .sr { font-size: 12px; color: #c9b98a; line-height: 1.3; margin-top: 4px; }
+.detail .src { color: #e9d9a6; font-weight: 500; }
 .card .pl { font: 600 11px/1 var(--body); text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-top: 6px; }
 .note { color: var(--muted); font-size: 13px; }
 .chip.van { color: #ffb27a; border-color: #5a3d28; }
@@ -432,6 +434,7 @@ function drawCards() {
         el('div', { cls: 'nm' }, [document.createTextNode((it.ru || '') + (it.variant ? ' · ' + it.variant : '')),
           iconKind(it) === 'van' ? el('span', { cls: 'tag van', text: 'ваніль' }) : iconKind(it) === 'own' ? el('span', { cls: 'tag own', text: 'свій' }) : null]),
         el('div', { cls: 'wh', text: it.what }),
+        el('div', { cls: 'sr', text: it.src }),
         el('div', { cls: 'pl', text: PLACE[it.place] }),
       ]),
     ]);
@@ -460,6 +463,7 @@ function select(i) {
   if (kind === 'own') chips.appendChild(el('span', { cls: 'chip own', text: 'власний значок мода' }));
   d.appendChild(chips);
   const dl = el('dl');
+  dl.appendChild(el('div', {}, [el('dt', { text: 'Звідки' }), el('dd', { cls: 'src', text: it.src })]));
   if (it.text) dl.appendChild(el('div', {}, [el('dt', { text: 'Приклад на екрані' }), el('dd', {}, [el('span', { cls: 'sample', text: it.text, style: { color: it.color } })])]));
   dl.appendChild(el('div', {}, [el('dt', { text: 'Що показує' }), el('dd', { text: it.what })]));
   dl.appendChild(el('div', {}, [el('dt', { text: 'Коли з\'являється' }), el('dd', { text: it.when })]));
