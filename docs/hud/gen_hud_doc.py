@@ -297,6 +297,9 @@ def source_of(it):
 for lst in [items for _, _, items in CLASSES] + [GENERAL, ZOMBIE, FEED, COLUMN]:
     for it in lst:
         it['src'] = source_of(it)
+        if it['place'] == 'spd':
+            it['kind'] = 'reload' if it.get('key') == 'Crossbows_A7' else ('attack' if it['color'] == GOLD else 'move')
+            it['pct'] = int(re.match(r'([+-]?\d+)%', it['text']).group(1))
 
 DATA = {
   'classes': [{'id': c, 'name': n, 'items': items} for c, n, items in CLASSES],

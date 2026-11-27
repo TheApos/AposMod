@@ -21,6 +21,7 @@ public static class AposHud
         public bool Glow;     // full stacks / mode active: brighter
         public string Skill;  // localization key of the mastery skill behind it (name; + "_D" = description), or null
         public float Value;   // gauges: filled segments (Segments > 0) or a 0..1 fill (Segments = 0)
+        public string Kind;   // the energy column: what the bonus speeds up (Move / AttackKind / Reload), Value = the bonus
         public int Segments;
     }
 
@@ -113,24 +114,41 @@ public static class AposHud
     static readonly Color SpeedUp = new Color(0.35f, 0.9f, 0.55f), SpeedDown = new Color(1f, 0.4f, 0.35f), AttackUp = new Color(1f, 0.82f, 0.3f);
 
     // pct: the change as a fraction (+0.15 = 15% faster); extra: seconds / stacks after it; skill: held class skill id or null
+    // Kind: what the bonus speeds up; statuses of one kind are merged into one line (their icons + the summed %)
+    public const string Move = "move", AttackKind = "attack", Reload = "reload";
+    static readonly string[] SpeedKinds = { Move, AttackKind, Reload };
+
     public static void AddSpeed(string icon, float pct, string extra, string skill)
     {
+        AddSpeedOf(Move, icon, pct, extra, skill);
+    }
+
+    // attack / fire rate (gold)
+    public static void AddAttackSpeed(string icon, float pct, string extra, string skill)
+    {
+        AddSpeedOf(AttackKind, icon, pct, extra, skill);
+    }
+
+    // reload speed (gold)
+    public static void AddReloadSpeed(string icon, float pct, string extra, string skill)
+    {
+        AddSpeedOf(Reload, icon, pct, extra, skill);
+    }
+
+    static void AddSpeedOf(string kind, string icon, float pct, string extra, string skill)
+    {
         string text = (pct >= 0f ? "+" : "") + Mathf.RoundToInt(pct * 100f) + "%" + (string.IsNullOrEmpty(extra) ? "" : "  " + extra);
-        Widget w = new Widget { Icon = icon.StartsWith("ui_") ? icon : "ui_game_symbol_" + icon, Text = text, Color = pct >= 0f ? SpeedUp : SpeedDown };
+        Widget w = new Widget { Icon = icon.StartsWith("ui_") ? icon : "ui_game_symbol_" + icon, Text = text, Kind = kind, Value = pct,
+                                Color = kind != Move ? AttackUp : pct >= 0f ? SpeedUp : SpeedDown };
         if (skill != null && AposMastery.HeldClass >= 0) w.Skill = AposMastery.SkillKey(AposMastery.HeldClass, skill);
         Speed.Add(w);
     }
 
-    // attack / fire rate / reload speed (gold)
-    public static void AddAttackSpeed(string icon, float pct, string extra, string skill)
-    {
-        AddSpeed(icon, pct, extra, skill);
-        Speed[Speed.Count - 1].Color = AttackUp;
-    }
-
     static GUIStyle speedStyle;
     static Texture2D speedBg;
+    static readonly List<Widget> speedGroup = new List<Widget>();
 
+    // one line per kind: a single status as it is (with its timer / stacks); several: all their icons and the summed %
     public static void DrawSpeed(EntityPlayerLocal p)
     {
         if (p == null || !AposSettings.HudEnabled || Speed.Count == 0) return;
@@ -146,24 +164,36 @@ public static class AposHud
             speedBg.Apply();
         }
         speedStyle.fontSize = Mathf.RoundToInt(24f * k);
-        float w = 190f * k, h = 46f * k, icon = 36f * k;
-        float x = Screen.width - 90f * k - w, bottom = Screen.height - 132f * k;
+        float h = 46f * k, icon = 36f * k, gap = 4f * k;
+        float right = Screen.width - 90f * k, bottom = Screen.height - 132f * k;
         Color old = GUI.color;
-        for (int i = 0; i < Speed.Count; i++)
+        int line = 0;
+        foreach (string kind in SpeedKinds)
         {
-            Widget s = Speed[i];
-            float y = bottom - (i + 1) * h;
+            speedGroup.Clear();
+            float sum = 0f;
+            foreach (Widget s in Speed) if (s.Kind == kind) { speedGroup.Add(s); sum += s.Value; }
+            if (speedGroup.Count == 0) continue;
+            string text = speedGroup.Count == 1 ? speedGroup[0].Text : (sum >= 0f ? "+" : "") + Mathf.RoundToInt(sum * 100f) + "%";
+            Color tc = speedGroup.Count == 1 ? Color.white : kind != Move ? AttackUp : sum >= 0f ? SpeedUp : SpeedDown;
+            float tw = speedStyle.CalcSize(new GUIContent(text)).x;
+            float iconsW = speedGroup.Count * icon + (speedGroup.Count - 1) * gap;
+            float w = Mathf.Max(190f * k, iconsW + tw + 60f * k);
+            float y = bottom - (++line) * h;
             GUI.color = Color.white;
-            GUI.DrawTexture(new Rect(x, y + 2f * k, w, h - 4f * k), speedBg);
-            float tw = speedStyle.CalcSize(new GUIContent(s.Text)).x;
-            // right-aligned: text, then the icon at the outer edge
-            Rect ir = new Rect(x + w - icon - 6f * k, y + (h - icon) / 2f, icon, icon);
-            AposStatus.DrawIcon(p, s.Icon, ir, s.Color);
-            Rect tr = new Rect(ir.x - 6f * k - tw, y, tw + 4f, h);
+            GUI.DrawTexture(new Rect(right - w, y + 2f * k, w, h - 4f * k), speedBg);
+            // right-aligned: the summed text, then the icons, the first one at the outer edge
+            float ix = right - 6f * k - icon;
+            foreach (Widget s in speedGroup)
+            {
+                AposStatus.DrawIcon(p, s.Icon, new Rect(ix, y + (h - icon) / 2f, icon, icon), s.Color);
+                ix -= icon + gap;
+            }
+            Rect tr = new Rect(ix + icon + gap - 6f * k - tw, y, tw + 4f, h);
             GUI.color = new Color(0f, 0f, 0f, 0.85f);
-            GUI.Label(new Rect(tr.x + 1.5f, tr.y + 1.5f, tr.width, tr.height), s.Text, speedStyle);
-            GUI.color = Color.white;
-            GUI.Label(tr, s.Text, speedStyle);
+            GUI.Label(new Rect(tr.x + 1.5f, tr.y + 1.5f, tr.width, tr.height), text, speedStyle);
+            GUI.color = tc;
+            GUI.Label(tr, text, speedStyle);
         }
         GUI.color = old;
     }
@@ -413,8 +443,9 @@ public static class AposHud
             }
             if (m.Speed)
             {
-                Speed.Add(new Widget { Icon = bc.Icon, Color = m.Attack ? AttackUp : SpeedUp,
-                    Text = "+" + Mathf.RoundToInt((m.SpeedCvar != null ? b.GetCustomVar(m.SpeedCvar) : m.SpeedPct) * 100f) + "%" + (text.Length > 0 ? "  " + text : "") });
+                float pct = m.SpeedCvar != null ? b.GetCustomVar(m.SpeedCvar) : m.SpeedPct;
+                Speed.Add(new Widget { Icon = bc.Icon, Color = m.Attack ? AttackUp : SpeedUp, Kind = m.Attack ? AttackKind : Move, Value = pct,
+                    Text = "+" + Mathf.RoundToInt(pct * 100f) + "%" + (text.Length > 0 ? "  " + text : "") });
                 continue;
             }
             Color c = bc.IconColor;

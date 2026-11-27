@@ -140,7 +140,7 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
         <span style="--c:#ff9933">дуга зліва: перезарядки вмінь</span>
         <span style="--c:#66bfff">ряд під прицілом: атака</span>
         <span style="--c:#9aa197">між ХП і поясом: захист</span>
-        <span style="--c:#5ae68c">справа внизу: енергія — швидкість руху й атаки</span>
+        <span style="--c:#5ae68c">справа внизу: енергія — швидкість руху й атаки (однакові бафи в один рядок із сумою)</span>
         <span style="--c:#c8c8c8">над ХП: усе інше (колонка гри)</span>
         <span style="--c:#ffd200">над прицілом: екстрене й важливе</span>
       </div>
@@ -401,10 +401,28 @@ function drawScene(tabId) {
     sc.appendChild(hit(i, BARS_X, 750 - 72 - (k + 1) * 50, row));
   });
   // movement speed: a column at the bottom right, mirroring the vanilla buff column (bottom 132 px, rows 46 px)
-  g.spd.forEach((i, k) => {
-    const it = items[i];
-    const row = el('div', { cls: 'spdrow' }, [el('span', { cls: 't', text: it.text, style: { color: '#fff' } }), icon(it.icon, it.color, U(36 * 1.2))]);
-    sc.appendChild(hit(i, 1432, 750 - 10 - (k + 1) * 56, row, { transform: 'translateX(-100%)' }));
+  // statuses of one kind (movement / attack / reload speed) share one line: their icons and the summed %
+  let line = 0;
+  ['move', 'attack', 'reload'].forEach(kind => {
+    const grp = g.spd.filter(i => items[i].kind === kind);
+    if (!grp.length) return;
+    const y = 750 - 10 - (++line) * 56;
+    if (grp.length === 1) {
+      const it = items[grp[0]];
+      const row = el('div', { cls: 'spdrow' }, [el('span', { cls: 't', text: it.text, style: { color: '#fff' } }), icon(it.icon, it.color, U(36 * 1.2))]);
+      sc.appendChild(hit(grp[0], 1432, y, row, { transform: 'translateX(-100%)' }));
+      return;
+    }
+    const sum = grp.reduce((s, i) => s + items[i].pct, 0);
+    const col = kind !== 'move' ? '#ffd14d' : sum >= 0 ? '#5ae68c' : '#ff6659';
+    const row = el('div', { cls: 'spdrow', style: { position: 'absolute', left: U(1432), top: U(y), transform: 'translateX(-100%)' } },
+      [el('span', { cls: 't', text: (sum >= 0 ? '+' : '') + sum + '%', style: { color: col } })]);
+    grp.slice().reverse().forEach(i => {
+      const h = hit(i, 0, 0, icon(items[i].icon, items[i].color, U(36 * 1.2)));
+      h.style.position = 'relative'; h.style.left = h.style.top = '0';
+      row.appendChild(h);
+    });
+    sc.appendChild(row);
   });
   g.mark.forEach((i, k) => sc.appendChild(hit(i, zx - 220 + k * 70 - 26, 620, el('div', { style: { width: U(52), height: U(40) } }))));
   g.over.forEach(i => sc.appendChild(hit(i, zx - 40, zy - 34, el('div', { style: { width: U(80), height: U(68) } }))));
