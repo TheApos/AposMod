@@ -541,7 +541,6 @@ $extra['aposHudSrcBranch'] = '[AAAAAA]Weapon Mastery: {0}, branch "{1}", skill {
 $extra['aposHudSrcHybrid'] = '[AAAAAA]Weapon Mastery: {0}, hybrid skill {1}[-]', '[AAAAAA]Мастерство оружия: {0}, гибрид {1}[-]'
 $extra['aposParryToast']       = 'Parry!', 'Парирование!'
 $extra['aposBreakthroughToast'] = 'Breakthrough!', 'Прорыв!'
-$extra['aposPartingAlert']    = 'Head thrust', 'Укол в голову'
 $extra['aposSpineSub']         = 'x2 through armor', 'x2 сквозь броню'
 $extra['aposWardrobeTitle']    = 'WARDROBE', 'ГАРДЕРОБ'
 $extra['aposWardrobeTab']      = 'Outfit {0}', 'Комплект {0}'

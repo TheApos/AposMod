@@ -436,7 +436,6 @@ aposHudSrcBranch,buffs,Buff,,,"[AAAAAA]Weapon Mastery: {0}, branch ""{1}"", skil
 aposHudSrcHybrid,buffs,Buff,,,"[AAAAAA]Weapon Mastery: {0}, hybrid skill {1}[-]","[AAAAAA]Мастерство оружия: {0}, гибрид {1}[-]"
 aposParryToast,buffs,Buff,,,"Parry!","Парирование!"
 aposBreakthroughToast,buffs,Buff,,,"Breakthrough!","Прорыв!"
-aposPartingAlert,buffs,Buff,,,"Head thrust","Укол в голову"
 aposSpineSub,buffs,Buff,,,"x2 through armor","x2 сквозь броню"
 aposWardrobeTitle,buffs,Buff,,,"WARDROBE","ГАРДЕРОБ"
 aposWardrobeTab,buffs,Buff,,,"Outfit {0}","Комплект {0}"
