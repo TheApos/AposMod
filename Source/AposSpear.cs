@@ -96,7 +96,7 @@ public static class AposSpear
             AposHud.AddSpeed("ui_apos_speed", Retreat[R("A6")], rl >= 0.5f ? Mathf.CeilToInt(rl) + "s" : "", "A6");
         }
         if (R("A7") > 0) AposHud.Add(true, "defense", Time.time >= sentryReady ? "OK" : Mathf.CeilToInt(sentryReady - Time.time) + "s", new Color(0.7f, 0.85f, 1f), Time.time >= sentryReady, "A7");
-        if (partingReady) AposHud.Add(false, "head_shot", "", new Color(1f, 0.82f, 0.3f), true, "H2");
+        if (partingReady) AposHud.AddAlert("head_shot", Localization.Get("aposPartingAlert"), new Color(1f, 0.82f, 0.3f), "H2");   // the next hit is a head thrust
     }
 
     public static float Incoming() { return AposMastery.HeldClass == AposMastery.Spears && R("B8") > 0 ? 1.2f : 1f; }
