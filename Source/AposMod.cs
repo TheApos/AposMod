@@ -92,6 +92,28 @@ public class AposDamageNumbers : MonoBehaviour
     Camera cam;
     static string killText;
 
+    // ===== labels over the damage number, like "Kill!" (knife Backstab / Spine Strike) =====
+    // a skill asks for a label on a target before the hit lands (ModifyHit); the next number on that target shows it
+    class Label { public string Text, Sub; public Color Color; public float Size, At; }
+    static readonly Dictionary<int, Label> labels = new Dictionary<int, Label>();
+
+    public static void LabelNextHit(EntityAlive target, string text, string sub, Color color, float size)
+    {
+        if (target == null) return;
+        labels[target.entityId] = new Label { Text = text, Sub = sub, Color = color, Size = size, At = Time.time };
+    }
+
+    static void ShowLabel(EntityAlive e, Vector3 pos, bool fatal)
+    {
+        Label l;
+        if (!labels.TryGetValue(e.entityId, out l)) return;
+        labels.Remove(e.entityId);
+        if (Time.time - l.At > 1f) return;   // the hit never landed
+        float up = fatal && AposSettings.KillLabel ? 0.85f : 0.45f;   // above "Kill!" when both show
+        Show(l.Text, l.Color, pos + new Vector3(0f, up, 0f), l.Size, true);
+        if (!string.IsNullOrEmpty(l.Sub)) Show(l.Sub, l.Color, pos + new Vector3(0f, up - 0.22f, 0f), l.Size * 0.55f, true);
+    }
+
     void Awake()
     {
         // Skip the IMGUI layout pass: we only draw the Mark rings
@@ -192,6 +214,7 @@ public class AposDamageNumbers : MonoBehaviour
         Color c = element ?? (buffed ? BuffedColor : (headshot ? HeadshotColor : NormalColor));
         Show(headshot ? r.Strength + "!" : r.Strength.ToString(), c, worldPos, headshot ? 1.3f : 1f, false);
         if (r.Fatal) ShowKill(e, worldPos);
+        ShowLabel(e, worldPos, r.Fatal);
         return false;
     }
 

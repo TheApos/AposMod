@@ -69,6 +69,9 @@ public static class AposKnife
         // Backstab: from behind or unseen; Blood Scent: a bleeding zombie counts too
         lastBackstab = R("B2") > 0 && (behind || unseen || (R("H2") > 0 && bleeding));
         lastSpine = R("B8") > 0 && behind;
+        // the label over this hit's damage number (like "Kill!"); Spine Strike is the stronger one and wins
+        if (lastSpine) AposDamageNumbers.LabelNextHit(target, "SPINE STRIKE!!", Localization.Get("aposSpineSub"), new Color(0.95f, 0.12f, 0.12f), 1.6f);
+        else if (lastBackstab) AposDamageNumbers.LabelNextHit(target, "Backstab!", null, new Color(1f, 0.7f, 0.2f), 1.1f);
         if (lastBackstab) mult += Backstab[R("B2")];
         if (R("A8") > 0 && !bleeding) mult -= 0.3f;                   // Blood Feast downside
         if (R("B8") > 0)
@@ -107,9 +110,8 @@ public static class AposKnife
     {
         if (player == null || target.entityId != lastTarget) return;
         lastTarget = -1;
-        // say it when the back-hit skills worked (Spine Strike is the stronger one, it wins)
-        if (lastSpine) AposFx.Toast(Localization.Get("aposSpineToast"), new Color(1f, 0.82f, 0.3f));
-        else if (lastBackstab) AposFx.Toast(Localization.Get("aposBackstabToast"), new Color(1f, 0.82f, 0.3f));
+        // Spine Strike: a bone crunch on top of the label
+        if (lastSpine) Audio.Manager.PlayInsidePlayerHead("breakleg", player.entityId);
         AddStacks(player, lastPower ? 2 : 1);
         if (lastCrit && R("H1") > 0) AddStacks(player, 3);
         if (lastCrit && R("H3") > 0)

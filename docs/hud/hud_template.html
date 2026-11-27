@@ -70,6 +70,9 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
 .bar { height: 1.9cqw; border-radius: .2cqw; display: flex; align-items: center; padding-left: .5cqw; font: 600 1.2cqw/1 var(--display); color: #fff; text-shadow: 0 0 .15cqw #000; }
 .bar.hp { background: linear-gradient(90deg, #b3262e 78%, #3a1517 78%); }
 .bar.st { background: linear-gradient(90deg, #3f8a3a 64%, #18301a 64%); }
+.dmgstack { display: flex; flex-direction: column; align-items: center; gap: .1cqw; }
+.dmglabel { font: 800 2cqw/1 var(--display); letter-spacing: .03em; text-shadow: 0 0 .2cqw #000, 0 0 .3cqw #000; white-space: nowrap; }
+.dmgnum { font: 700 2.2cqw/1 var(--display); color: #fff; text-shadow: 0 0 .2cqw #000; }
 .alertpill { display: flex; align-items: center; gap: .6cqw; padding: .4cqw .8cqw; background: rgba(0,0,0,.5); border-bottom: .25cqw solid; }
 .alertpill .t { font: 700 2.4cqw/1 var(--display); color: #fff; text-shadow: 0 0 .15cqw #000; white-space: nowrap; }
 .spdrow { display: flex; align-items: center; justify-content: flex-end; gap: .5cqw; height: 3.6cqw; padding: 0 .4cqw 0 3cqw; background: linear-gradient(90deg, transparent, rgba(0,0,0,.55) 40%); }
@@ -199,7 +202,7 @@ button:focus-visible, .hit:focus-visible, .card:focus-visible { outline: 2px sol
 <script>
 const D = /*__DATA__*/null;
 const PLACE = { gR: 'Дуга праворуч від прицілу', gL: 'Дуга ліворуч від прицілу', atk: 'Ряд під прицілом (атака)', def: 'Блок захисту (між ХП і поясом)',
-  alert: 'Над прицілом: екстрене й важливе', col: 'Над ХП: усе інше (колонка баффів гри)', spd: 'Блок енергії: швидкість руху й атаки (справа внизу)', z: 'Над зомбі', toast: 'Напис під прицілом', mark: 'Мітка на стрілі / болті', feed: 'Стрічка реакцій праворуч', over: 'Позначки на зомбі' };
+  alert: 'Над прицілом: екстрене й важливе', col: 'Над ХП: усе інше (колонка баффів гри)', spd: 'Блок енергії: швидкість руху й атаки (справа внизу)', z: 'Над зомбі', toast: 'Напис під прицілом', dmg: 'Над числом шкоди (як «Труп!»)', mark: 'Мітка на стрілі / болті', feed: 'Стрічка реакцій праворуч', over: 'Позначки на зомбі' };
 const FEEDICONS = {
   feed_explosion: [['elite_Burning', '#ff7319'], '+', ['elite_Acidic', '#99e633'], '=', ['elite_Explosive', '#ffcc40']],
   feed_confusion: [['elite_Burning', '#ff7319'], '+', ['elite_Electric', '#59bfff'], '='],
@@ -311,7 +314,7 @@ function drawScene(tabId) {
   let svg = '';
   // crosshair
   svg += `<g stroke="#fff" stroke-width="2.4" opacity=".85"><path d="M${CX - 16} ${CY}h10M${CX + 6} ${CY}h10M${CX} ${CY - 16}v10M${CX} ${CY + 6}v10"/></g>`;
-  const g = { gR: [], gL: [], atk: [], def: [], spd: [], col: [], alert: [], z: [], toast: [], mark: [], feed: [], over: [] };
+  const g = { gR: [], gL: [], atk: [], def: [], spd: [], col: [], alert: [], z: [], toast: [], dmg: [], mark: [], feed: [], over: [] };
   items.forEach((it, i) => g[it.place].push(i));
   // schematic bottom line, left to right: health / stamina bars, the defence row, a narrow toolbelt under the
   // crosshair; the vanilla buff column above the bars, the speed column at the bottom right
@@ -319,7 +322,7 @@ function drawScene(tabId) {
   for (let i = 0; i < 10; i++) svg += `<rect x="${beltX + i * 40 + 2}" y="${beltY}" width="36" height="44" fill="rgba(0,0,0,.42)" stroke="rgba(255,255,255,.12)"/>`;
   // the zombie only where something is shown on it
   const zx = 1180, zy = 300;
-  if (g.z.length || g.over.length || g.mark.length) {
+  if (g.z.length || g.over.length || g.mark.length || g.dmg.length) {
     svg += `<g fill="#151a14" opacity=".92"><circle cx="${zx}" cy="${zy}" r="26"/><path d="M${zx - 34} ${zy + 30}h68l12 120-14 4-8-60-6 70 10 150h-28l-14-130-14 130h-28l10-150-6-70-8 60-14-4z"/><path d="M${zx + 32} ${zy + 40}l70 34-6 12-70-26z"/></g>`;
     svg += `<ellipse cx="${zx}" cy="${zy + 350}" rx="70" ry="10" fill="rgba(0,0,0,.35)"/>`;
   }
@@ -390,6 +393,15 @@ function drawScene(tabId) {
     });
     sc.appendChild(box);
   }
+  // labels over the damage number of a hit, right of the zombie's head (like the game's "Kill!")
+  g.dmg.forEach((i, k) => {
+    const it = items[i], x = zx + 44, y = k === 0 ? zy - 110 : zy + 110;   // the second one beside the body, below the status row
+    const big = it.text.length > 10;
+    const kids = [el('div', { cls: 'dmglabel', text: it.text, style: { color: it.color, fontSize: U(big ? 32 : 28) } })];
+    if (it.sub) kids.push(el('div', { cls: 'dmglabel', text: it.sub, style: { color: it.color, fontSize: U(17) } }));
+    kids.push(el('div', { cls: 'dmgnum', text: big ? '184' : '92' }));
+    sc.appendChild(hit(i, x, y - 60, el('div', { cls: 'dmgstack' }, kids)));
+  });
   // toasts under the crosshair (stacked when there are two variants)
   g.toast.forEach((i, k) => sc.appendChild(hit(i, CX, CY + 42 * S + 60 + k * 44, el('div', { cls: 'toast', text: items[i].text, style: { color: items[i].color } }), { transform: 'translateX(-50%)' })));
   // reaction feed on the right
@@ -437,7 +449,7 @@ function drawScene(tabId) {
 
 function bigIcon(it, px) {
   const box = el('div', { cls: 'bigic' });
-  if (it.place === 'toast') box.appendChild(el('span', { text: '!', style: { font: `700 ${px * 0.7}px var(--display)`, color: it.color } }));
+  if (it.place === 'toast' || it.place === 'dmg') box.appendChild(el('span', { text: '!', style: { font: `700 ${px * 0.7}px var(--display)`, color: it.color } }));
   else if (it.place === 'mark' || it.place === 'over') box.innerHTML = `<svg width="${px * .8}" height="${px * .8}" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="${it.color}" stroke-width="2.6"/></svg>`;
   else if (it.place === 'feed') feedIcons(it, (px * .45) + 'px').slice(-1).forEach(n => box.appendChild(n));
   else box.appendChild(icon(it.icon, it.color, (px * .7) + 'px'));
