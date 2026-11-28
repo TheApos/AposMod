@@ -143,11 +143,25 @@
       meta.appendChild(box);
     }
 
+    // highlight the section being read in the section bar
+    if (spy) spy.disconnect();
+    if ('IntersectionObserver' in window) {
+      var links = {};
+      app.querySelectorAll('nav.bar a[href^="#"]').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+      spy = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting || !links[en.target.id]) return;
+          Object.keys(links).forEach(function (k) { links[k].classList.toggle('here', k === en.target.id); });
+        });
+      }, { rootMargin: '-30% 0px -60% 0px' });
+      app.querySelectorAll('section[id]').forEach(function (s) { spy.observe(s); });
+    }
+
     // the interactive sections (widgets.js): build them for this language
     if (window.AposWidgets) window.AposWidgets.mount(app, current);
   }
 
-  var current = null;
+  var current = null, spy = null;
   function show(lang) {
     if (LANGS.indexOf(lang) < 0) lang = 'en';
     if (lang === current) return;

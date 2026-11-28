@@ -47,6 +47,16 @@ nav.bar a { font: 600 13px var(--f-body); color: var(--ink); text-decoration: no
 nav.bar a:hover, nav.bar a:focus-visible { border-color: var(--amber); outline: none; }
 #q { flex: 1 1 200px; min-width: 0; font: 14px var(--f-body); padding: 7px 10px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); color: var(--ink); }
 #q:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+nav.bar a.here { border-color: var(--amber); color: var(--amber); }
+/* wide screens: the section bar becomes a fixed column on the left, search on top */
+@media (min-width: 1360px) {
+  body { padding-left: 220px; }
+  nav.bar { position: fixed; top: 0; left: 0; bottom: 0; width: 220px; border-bottom: 0; border-right: 1px solid var(--line); overflow-y: auto; }
+  nav.bar .wrap { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 6px; padding: 20px 16px; max-width: none; }
+  nav.bar a { padding: 8px 12px; }
+  #q { order: -1; flex: none; margin-bottom: 8px; }
+  section { scroll-margin-top: 12px; }
+}
 section { padding-block: 26px 6px; }
 h2 { font: 400 24px/1.2 var(--f-display); margin: 0 0 4px; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
 h2 small { font: 500 13px var(--f-body); color: var(--muted); }
@@ -3113,11 +3123,25 @@ window.APOS_DATA = {"mastery":{"order":["pistols","shotguns","rifles","mgs","bow
       meta.appendChild(box);
     }
 
+    // highlight the section being read in the section bar
+    if (spy) spy.disconnect();
+    if ('IntersectionObserver' in window) {
+      var links = {};
+      app.querySelectorAll('nav.bar a[href^="#"]').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+      spy = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting || !links[en.target.id]) return;
+          Object.keys(links).forEach(function (k) { links[k].classList.toggle('here', k === en.target.id); });
+        });
+      }, { rootMargin: '-30% 0px -60% 0px' });
+      app.querySelectorAll('section[id]').forEach(function (s) { spy.observe(s); });
+    }
+
     // the interactive sections (widgets.js): build them for this language
     if (window.AposWidgets) window.AposWidgets.mount(app, current);
   }
 
-  var current = null;
+  var current = null, spy = null;
   function show(lang) {
     if (LANGS.indexOf(lang) < 0) lang = 'en';
     if (lang === current) return;
