@@ -206,6 +206,39 @@ public static class AposFx3D
         Flash(at, orange, radius * 3f, 8f, 0.4f);
         Shockwave(at, radius, orange, 0.45f);
     }
+
+    // the sledge's Earthquake: dust and a bang at the impact, a fast bright ring and a slower wide one, a warm flash and
+    // the camera shaking. big = the main quake (Doomsday: red), otherwise the Aftershock echo (smaller)
+    public static void Quake(EntityPlayerLocal player, Vector3 at, float radius, bool big, bool doomsday)
+    {
+        Color c = doomsday ? new Color(1f, 0.25f, 0.15f) : new Color(1f, 0.65f, 0.3f);
+        AposFx.Blast(at);
+        Flash(at + Vector3.up * 0.5f, c, radius * 2.5f, big ? 7f : 4f, 0.45f);
+        Shockwave(at, radius * 0.5f, Color.Lerp(c, Color.white, 0.5f), 0.3f);
+        Shockwave(at, radius, c, big ? 0.7f : 0.5f);
+        if (doomsday) Shockwave(at, radius * 1.4f, c, 0.9f);
+        ShakeCamera(player, big ? 0.6f : 0.35f, doomsday ? 25f : big ? 15f : 8f);
+    }
+
+    // a knocked-down zombie (the sledge's Stagger): a small ring and a puff of light at its feet
+    public static void Knock(EntityPlayerLocal player, EntityAlive e)
+    {
+        Color c = new Color(1f, 0.7f, 0.35f);
+        Shockwave(e.position, 1.5f, c, 0.35f);
+        Flash(e.position + Vector3.up * 0.4f, c, 3f, 3f, 0.25f);
+        ShakeCamera(player, 0.25f, 5f);
+    }
+
+    // the game's own camera shake (EntityPlayerLocal.shakeCamera, used when firing: 0.5 s, strength 5-20)
+    public static void ShakeCamera(EntityPlayerLocal player, float time, float strength)
+    {
+        try
+        {
+            if (player != null && GameManager.Instance != null)
+                GameManager.Instance.StartCoroutine(player.shakeCamera(Vector3.one, time, strength, 1f));
+        }
+        catch (System.Exception e) { Debug.LogWarning("[AposMod] Camera shake: " + e.Message); }
+    }
 }
 
 public class AposFxAnim : MonoBehaviour
@@ -278,7 +311,7 @@ public class AposFxCommand : ConsoleCmdAbstract
 {
     public override string[] getCommands() { return new string[] { "aposfx" }; }
 
-    public override string getDescription() { return "AposMod: show an effect in front of you: aposfx shock|boom|bolt"; }
+    public override string getDescription() { return "AposMod: show an effect in front of you: aposfx shock|boom|bolt|quake [doom]|echo|knock"; }
 
     public override void Execute(List<string> _params, CommandSenderInfo _senderInfo)
     {
@@ -289,6 +322,9 @@ public class AposFxCommand : ConsoleCmdAbstract
         Vector3 at = p.position + f * 4f + Vector3.up * 0.5f;
         string what = _params.Count > 0 ? _params[0] : "shock";
         if (what == "boom") { AposFx.Blast(at); AposFx3D.Boom(at, 3f); }
+        else if (what == "quake") AposFx3D.Quake(p, at, 4f, true, _params.Count > 1 && _params[1] == "doom");
+        else if (what == "echo") AposFx3D.Quake(p, at, 4f, false, false);
+        else if (what == "knock") AposFx3D.Knock(p, p);
         else if (what == "bolt") AposFx3D.Lightning(p.getHeadPosition() + f, at, new Color(0.45f, 0.8f, 1f), 0.5f);
         else
         {

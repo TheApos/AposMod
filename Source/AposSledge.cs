@@ -56,7 +56,7 @@ public static class AposSledge
             if (Time.time < echoes[i].At) continue;
             Echo ec = echoes[i];
             echoes.RemoveAt(i);
-            Shake(player, ec.Pos, ec.Center, ec.Damage, false);
+            Shake(player, ec.Pos, ec.Center, ec.Damage, false, false);
         }
         if (!held) return;
         float lungs = Mathf.Min(80f, IronLungs[R("B2")] * AposAffixes.Level(player, "attFortitude")) / 100f;
@@ -130,8 +130,8 @@ public static class AposSledge
         if (lastPower)
         {
             float quakeDmg = R("H2") > 0 ? lastFull : lastBase;          // Heavy Quake: from the boosted hit
-            if (response.Fatal && R("H3") > 0) Shake(player, target.position, target, lastFull * 1f / Mathf.Max(0.01f, Shockforce[R("A2")]), true); // Doomsday
-            else if (Time.time >= quakeReady) Shake(player, target.position, target, quakeDmg, true);
+            if (response.Fatal && R("H3") > 0) Shake(player, target.position, target, lastFull * 1f / Mathf.Max(0.01f, Shockforce[R("A2")]), true, true); // Doomsday
+            else if (Time.time >= quakeReady) Shake(player, target.position, target, quakeDmg, true, false);
             // Overkill: the power hit's excess goes to the nearest zombie within 4 m
             if (response.Fatal && R("B5") > 0)
             {
@@ -143,6 +143,7 @@ public static class AposSledge
         else if (!response.Fatal && Random.value < Stagger[R("A4")])
         {
             target.Buffs.AddBuff("buffInjuryKnockdown01");
+            AposFx3D.Knock(player, target);
         }
     }
 
@@ -153,8 +154,8 @@ public static class AposSledge
     }
 
     // the Earthquake: knock down everyone around, a share of the blow to each; first = the main one (cooldown, Rift,
-    // Aftershock), not its echo
-    static void Shake(EntityPlayerLocal player, Vector3 pos, EntityAlive center, float blow, bool first)
+    // Aftershock), not its echo; doomsday = set off by a Doomsday kill (red effect)
+    static void Shake(EntityPlayerLocal player, Vector3 pos, EntityAlive center, float blow, bool first, bool doomsday)
     {
         if (first)
         {
@@ -163,6 +164,7 @@ public static class AposSledge
             if (R("A8") > 0) echoes.Add(new Echo { Pos = pos, At = Time.time + 1.5f, Damage = blow, Center = center });
         }
         float radius = QuakeRadius[R("A1")] + (player.Buffs.HasBuff("buffBikerSetBonus") ? 1f : 0f);
+        AposFx3D.Quake(player, pos, radius, first, doomsday);
         float down = BaseDown + Trembling[R("A6")];
         int dmg = Mathf.Max(1, Mathf.RoundToInt(blow * Shockforce[R("A2")]));
         string element = null;
