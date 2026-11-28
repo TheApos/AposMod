@@ -66,7 +66,7 @@
     });
 
     // lists of named things (legendaries, sets, perks, affix stats) -> tile grid; full text on hover / tap
-    app.querySelectorAll('.card > ul').forEach(function (ul) {
+    app.querySelectorAll('.card > ul:not(.plain)').forEach(function (ul) {
       var items = Array.prototype.slice.call(ul.children);
       if (items.length < 4) return;
       var named = items.every(function (li) { var f = li.firstElementChild; return f && f.tagName === 'B' && li.textContent.trim().indexOf(f.textContent.trim()) === 0; });

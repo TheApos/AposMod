@@ -22,11 +22,18 @@
 /* ===== shared bits ===== */
 .mw, .hw { display: grid; gap: 12px; margin-top: 4px; }
 .mw-eyebrow { font: 600 11px/1.2 var(--f-mono); letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
-.mw-tabs, .hw-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
-.mw-tab, .hw-tab { font: 600 13px var(--f-body); color: var(--ink); padding: 5px 10px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); cursor: pointer; }
-.mw-tab:hover, .hw-tab:hover { border-color: var(--amber); }
-.mw-tab[aria-selected="true"], .hw-tab[aria-selected="true"] { background: var(--amber); border-color: var(--amber); color: var(--bg); }
-.hw-sep { width: 1px; background: var(--line); margin: 0 2px; }
+/* class / weapon tabs: underlined tabs on the panel's top edge, not buttons (the page nav above already is buttons) */
+.mw-tabs, .hw-tabs { display: flex; flex-wrap: wrap; gap: 0 2px; border-bottom: 1px solid var(--line); }
+.mw-tab, .hw-tab { font: 600 13px var(--f-body); color: var(--muted); padding: 8px 10px 7px; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; border-radius: 0; background: none; cursor: pointer; }
+.mw-tab:hover, .hw-tab:hover { color: var(--ink); border-bottom-color: var(--line); }
+.mw-tab[aria-selected="true"], .hw-tab[aria-selected="true"] { color: var(--amber); border-bottom-color: var(--amber); }
+.hw-sep { width: 1px; background: var(--line); margin: 8px 4px; }
+.mw-head { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 2px 12px 0; }
+/* "How it works": a plain two-column list, not hover tiles */
+.card:has(> ul.plain) { grid-column: 1 / -1; }
+.card > ul.plain { columns: 2; column-gap: 28px; }
+.card > ul.plain li { break-inside: avoid; }
+@media (max-width: 700px) { .card > ul.plain { columns: 1; } }
 .mw-btn { font: 600 12px var(--f-body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 3px; padding: 5px 10px; cursor: pointer; }
 .mw-btn:hover:not(:disabled) { border-color: var(--amber); }
 .mw-btn:disabled { opacity: .45; cursor: not-allowed; }
@@ -34,7 +41,8 @@
 .mw-tag { display: inline-block; font: 600 11px/1 var(--f-mono); padding: 3px 6px; border-radius: 2px; color: #111; white-space: nowrap; }
 
 /* ===== mastery ===== */
-.mw-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; }
+.mw-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 0; }
+.mw-reset { margin-left: auto; background: none; color: var(--muted); }
 .mw-lvlbox { display: flex; align-items: center; gap: 8px; }
 .mw-lvl { width: 150px; accent-color: var(--amber); }
 .mw-lvlv { font: 600 18px var(--f-mono); color: var(--amber); min-width: 2ch; }

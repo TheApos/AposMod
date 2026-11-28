@@ -268,10 +268,10 @@ window.APOS_DATA = {"mastery":{"order":["pistols","shotguns","rifles","mgs","bow
     mroot = root;
     setClass(ms.cls);
     root.innerHTML =
-      '<div class="mw-tabs" role="tablist">' + M.order.map(function (k) { return '<button type="button" class="mw-tab" role="tab" data-cls="' + k + '">' + esc(tx(M.classes[k].name)) + '</button>'; }).join('') + '</div>' +
+      '<div class="mw-head"><div class="mw-tabs" role="tablist">' + M.order.map(function (k) { return '<button type="button" class="mw-tab" role="tab" data-cls="' + k + '">' + esc(tx(M.classes[k].name)) + '</button>'; }).join('') + '</div>' +
       '<div class="mw-tools"><label class="mw-lvlbox"><span class="mw-eyebrow">' + u('level') + '</span><input type="range" class="mw-lvl" min="0" max="25" aria-label="' + esc(u('level')) + '"><b class="mw-lvlv"></b></label>' +
       '<span class="mw-chip">' + u('points') + ' <b class="mw-pts"></b></span>' +
-      '<span class="mw-eyebrow">' + u('builds') + '</span><span class="mw-presets"></span><button type="button" class="mw-btn mw-reset">' + u('reset') + '</button></div>' +
+      '<span class="mw-eyebrow">' + u('builds') + '</span><span class="mw-presets"></span><button type="button" class="mw-btn mw-reset">' + u('reset') + '</button></div></div>' +
       '<div class="mw-body"><div class="mw-treepane" aria-label="' + esc(u('treeLabel')) + '"><div class="mw-bheads"></div><div class="mw-scroll"><div class="mw-tree"></div></div><p class="mw-hint">' + esc(u('hint')) + '</p></div>' +
       '<div class="mw-detail" aria-live="polite" aria-label="' + esc(u('cardLabel')) + '"></div></div>' +
       '<div class="mw-legend"><div class="mw-eyebrow">' + u('legend') + '</div><div class="mw-lg">' + Object.keys(SYN).map(function (k) {

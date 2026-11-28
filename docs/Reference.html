@@ -186,11 +186,18 @@ html, body { overflow-x: clip; }
 /* ===== shared bits ===== */
 .mw, .hw { display: grid; gap: 12px; margin-top: 4px; }
 .mw-eyebrow { font: 600 11px/1.2 var(--f-mono); letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
-.mw-tabs, .hw-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
-.mw-tab, .hw-tab { font: 600 13px var(--f-body); color: var(--ink); padding: 5px 10px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); cursor: pointer; }
-.mw-tab:hover, .hw-tab:hover { border-color: var(--amber); }
-.mw-tab[aria-selected="true"], .hw-tab[aria-selected="true"] { background: var(--amber); border-color: var(--amber); color: var(--bg); }
-.hw-sep { width: 1px; background: var(--line); margin: 0 2px; }
+/* class / weapon tabs: underlined tabs on the panel's top edge, not buttons (the page nav above already is buttons) */
+.mw-tabs, .hw-tabs { display: flex; flex-wrap: wrap; gap: 0 2px; border-bottom: 1px solid var(--line); }
+.mw-tab, .hw-tab { font: 600 13px var(--f-body); color: var(--muted); padding: 8px 10px 7px; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; border-radius: 0; background: none; cursor: pointer; }
+.mw-tab:hover, .hw-tab:hover { color: var(--ink); border-bottom-color: var(--line); }
+.mw-tab[aria-selected="true"], .hw-tab[aria-selected="true"] { color: var(--amber); border-bottom-color: var(--amber); }
+.hw-sep { width: 1px; background: var(--line); margin: 8px 4px; }
+.mw-head { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 2px 12px 0; }
+/* "How it works": a plain two-column list, not hover tiles */
+.card:has(> ul.plain) { grid-column: 1 / -1; }
+.card > ul.plain { columns: 2; column-gap: 28px; }
+.card > ul.plain li { break-inside: avoid; }
+@media (max-width: 700px) { .card > ul.plain { columns: 1; } }
 .mw-btn { font: 600 12px var(--f-body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 3px; padding: 5px 10px; cursor: pointer; }
 .mw-btn:hover:not(:disabled) { border-color: var(--amber); }
 .mw-btn:disabled { opacity: .45; cursor: not-allowed; }
@@ -198,7 +205,8 @@ html, body { overflow-x: clip; }
 .mw-tag { display: inline-block; font: 600 11px/1 var(--f-mono); padding: 3px 6px; border-radius: 2px; color: #111; white-space: nowrap; }
 
 /* ===== mastery ===== */
-.mw-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; }
+.mw-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 0; }
+.mw-reset { margin-left: auto; background: none; color: var(--muted); }
 .mw-lvlbox { display: flex; align-items: center; gap: 8px; }
 .mw-lvl { width: 150px; accent-color: var(--amber); }
 .mw-lvlv { font: 600 18px var(--f-mono); color: var(--amber); min-width: 2ch; }
@@ -729,7 +737,7 @@ html, body { overflow-x: clip; }
   <div class="grid">
     <article class="card legendary">
       <h3>How it works</h3>
-      <ul>
+      <ul class="plain">
         <li><b>Levels:</b> 1-25 per weapon class, from kills with any weapon of that class. Saved with your game.</li>
         <li><b>Class trait:</b> every class has its own mechanic from level 0 (Headhunter, Bloodsucker, Earthquake and so on).</li>
         <li><b>Branches:</b> two branches per class. A tier opens after 0 / 3 / 6 / 9 / 12 points lower in the same branch; the top tier is a capstone with a downside.</li>
@@ -1381,7 +1389,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
   <div class="grid">
     <article class="card legendary">
       <h3>Как это работает</h3>
-      <ul>
+      <ul class="plain">
         <li><b>Уровни:</b> 1–25 у каждого класса оружия, за убийства любым оружием этого класса. Сохраняются вместе с игрой.</li>
         <li><b>Черта класса:</b> у каждого класса своя механика с 0 уровня (Охотник за головами, Кровопийца, Землетрясение и т. д.).</li>
         <li><b>Ветки:</b> две ветки у класса. Ярус открывается после 0 / 3 / 6 / 9 / 12 очков ниже в этой же ветке; верхний ярус — капстоун с минусом.</li>
@@ -2033,7 +2041,7 @@ aposbow off | on  выключить / включить автоналожени
   <div class="grid">
     <article class="card legendary">
       <h3>Як це працює</h3>
-      <ul>
+      <ul class="plain">
         <li><b>Рівні:</b> 1–25 у кожного класу зброї, за вбивства будь-якою зброєю цього класу. Зберігаються разом із грою.</li>
         <li><b>Риса класу:</b> у кожного класу своя механіка з 0 рівня (Мисливець за головами, Кровопивця, Землетрус тощо).</li>
         <li><b>Гілки:</b> дві гілки в класу. Ярус відкривається після 0 / 3 / 6 / 9 / 12 очок нижче в цій самій гілці; верхній ярус — капстоун з мінусом.</li>
@@ -2598,10 +2606,10 @@ window.APOS_DATA = {"mastery":{"order":["pistols","shotguns","rifles","mgs","bow
     mroot = root;
     setClass(ms.cls);
     root.innerHTML =
-      '<div class="mw-tabs" role="tablist">' + M.order.map(function (k) { return '<button type="button" class="mw-tab" role="tab" data-cls="' + k + '">' + esc(tx(M.classes[k].name)) + '</button>'; }).join('') + '</div>' +
+      '<div class="mw-head"><div class="mw-tabs" role="tablist">' + M.order.map(function (k) { return '<button type="button" class="mw-tab" role="tab" data-cls="' + k + '">' + esc(tx(M.classes[k].name)) + '</button>'; }).join('') + '</div>' +
       '<div class="mw-tools"><label class="mw-lvlbox"><span class="mw-eyebrow">' + u('level') + '</span><input type="range" class="mw-lvl" min="0" max="25" aria-label="' + esc(u('level')) + '"><b class="mw-lvlv"></b></label>' +
       '<span class="mw-chip">' + u('points') + ' <b class="mw-pts"></b></span>' +
-      '<span class="mw-eyebrow">' + u('builds') + '</span><span class="mw-presets"></span><button type="button" class="mw-btn mw-reset">' + u('reset') + '</button></div>' +
+      '<span class="mw-eyebrow">' + u('builds') + '</span><span class="mw-presets"></span><button type="button" class="mw-btn mw-reset">' + u('reset') + '</button></div></div>' +
       '<div class="mw-body"><div class="mw-treepane" aria-label="' + esc(u('treeLabel')) + '"><div class="mw-bheads"></div><div class="mw-scroll"><div class="mw-tree"></div></div><p class="mw-hint">' + esc(u('hint')) + '</p></div>' +
       '<div class="mw-detail" aria-live="polite" aria-label="' + esc(u('cardLabel')) + '"></div></div>' +
       '<div class="mw-legend"><div class="mw-eyebrow">' + u('legend') + '</div><div class="mw-lg">' + Object.keys(SYN).map(function (k) {
@@ -3028,7 +3036,7 @@ window.APOS_DATA = {"mastery":{"order":["pistols","shotguns","rifles","mgs","bow
     });
 
     // lists of named things (legendaries, sets, perks, affix stats) -> tile grid; full text on hover / tap
-    app.querySelectorAll('.card > ul').forEach(function (ul) {
+    app.querySelectorAll('.card > ul:not(.plain)').forEach(function (ul) {
       var items = Array.prototype.slice.call(ul.children);
       if (items.length < 4) return;
       var named = items.every(function (li) { var f = li.firstElementChild; return f && f.tagName === 'B' && li.textContent.trim().indexOf(f.textContent.trim()) === 0; });
