@@ -203,6 +203,11 @@ html, body { overflow-x: clip; }
 .mw-tab[aria-selected="true"], .hw-tab[aria-selected="true"] { color: var(--amber); border-bottom-color: var(--amber); }
 .hw-sep { width: 1px; background: var(--line); margin: 8px 4px; }
 .mw-head { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 2px 12px 0; }
+/* the tab bars stay on screen while the tree / scene below scrolls (under the page's top bar on narrow screens:
+   --navh is its height, set by script.js; 0 when the menu is the left column) */
+.mw-head, .hw-tabs { position: sticky; top: var(--navh, 0px); z-index: 4; box-shadow: 0 6px 10px -8px rgba(0, 0, 0, .5); }
+.hw-tabs { background: var(--bg); }
+@media (max-width: 700px) { .mw-head, .hw-tabs { position: static; box-shadow: none; } }
 /* "How it works": a plain two-column list, not hover tiles */
 .card:has(> ul.plain) { grid-column: 1 / -1; }
 .card > ul.plain { columns: 2; column-gap: 28px; }
@@ -3123,6 +3128,16 @@ window.APOS_DATA = {"mastery":{"order":["pistols","shotguns","rifles","mgs","bow
       meta.appendChild(box);
     }
 
+    // height of the sticky top bar (0 when it is the fixed left column): the widgets' tab bars stick right under it
+    var bar = app.querySelector('nav.bar');
+    function navh() {
+      var h = bar && getComputedStyle(bar).position === 'sticky' ? bar.offsetHeight : 0;
+      document.documentElement.style.setProperty('--navh', h + 'px');
+    }
+    navh();
+    if (!resizeHooked) { resizeHooked = true; window.addEventListener('resize', function () { navh2(); }); }
+    navh2 = navh;
+
     // highlight the section being read in the section bar
     if (spy) spy.disconnect();
     if ('IntersectionObserver' in window) {
@@ -3141,7 +3156,7 @@ window.APOS_DATA = {"mastery":{"order":["pistols","shotguns","rifles","mgs","bow
     if (window.AposWidgets) window.AposWidgets.mount(app, current);
   }
 
-  var current = null, spy = null;
+  var current = null, spy = null, resizeHooked = false, navh2 = function () { };
   function show(lang) {
     if (LANGS.indexOf(lang) < 0) lang = 'en';
     if (lang === current) return;

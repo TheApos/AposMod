@@ -143,6 +143,16 @@
       meta.appendChild(box);
     }
 
+    // height of the sticky top bar (0 when it is the fixed left column): the widgets' tab bars stick right under it
+    var bar = app.querySelector('nav.bar');
+    function navh() {
+      var h = bar && getComputedStyle(bar).position === 'sticky' ? bar.offsetHeight : 0;
+      document.documentElement.style.setProperty('--navh', h + 'px');
+    }
+    navh();
+    if (!resizeHooked) { resizeHooked = true; window.addEventListener('resize', function () { navh2(); }); }
+    navh2 = navh;
+
     // highlight the section being read in the section bar
     if (spy) spy.disconnect();
     if ('IntersectionObserver' in window) {
@@ -161,7 +171,7 @@
     if (window.AposWidgets) window.AposWidgets.mount(app, current);
   }
 
-  var current = null, spy = null;
+  var current = null, spy = null, resizeHooked = false, navh2 = function () { };
   function show(lang) {
     if (LANGS.indexOf(lang) < 0) lang = 'en';
     if (lang === current) return;
