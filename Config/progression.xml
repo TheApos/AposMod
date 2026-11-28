@@ -146,7 +146,7 @@
 
 	<!-- Perception -->
 	<!-- Demolitions Expert 5 "Chain Reaction", Penetrator 5 "Shrapnel": Source/AposCombat.cs -->
-	<!-- Infiltrator 5 "Ghost": crouching halves noise and visibility; hits on unaware zombies x2; mines and traps cannot hurt you -->
+	<!-- Infiltrator 5 "Ghost": crouching halves noise and visibility; hits on unaware zombies x2; mines cannot hurt you, traps -25% -->
 	<append xpath="/progression/perks/perk[@name='perkInfiltrator']">
 		<effect_group name="AposMod ghost">
 			<requirement name="ProgressionLevel" progression_name="perkInfiltrator" operation="GTE" value="5"/>

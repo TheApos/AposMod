@@ -3,7 +3,7 @@
     <div class="stripe" aria-hidden="true"></div>
     <div class="meta">7 Days to Die 3.4 · AposMod {{VERSION}}</div>
     <h1>AposMod Reference</h1>
-    <p class="sub">Weapon traits, affixes, perks and attributes, elements, mods, legendary weapons and settings in one place. Numbers like "0 → 5" depend on the level of the matching perk.</p>
+    <p class="sub">Weapon traits, affixes, perks and attributes, elements, mods, legendary weapons and settings in one place. In the weapon tables, column 0 is the trait itself and 1–3 are the ranks of the mastery skill named in the row.</p>
   </div>
 </header>
 
@@ -53,142 +53,149 @@
 
 <section id="melee" data-sec>
   <h2>Melee <small>LMB — normal attack, RMB — power attack</small></h2>
-  <p class="lead">A normal attack gives a small bonus, a power attack triggers the class's main trait.</p>
+  <p class="lead">Every class has its trait from mastery level 0. Skills of its mastery tree make it stronger: the tables show the trait (0) and the ranks of the skill named in each row. The full trees are in Weapon mastery above.</p>
   <div class="grid">
 
     <article class="card">
       <h3>Knives &amp; machetes — <span class="trait">Bloodsucker</span></h3>
-      <div class="tagline">Perk: Deep Cuts</div>
+      <div class="tagline">Class trait · knife tree</div>
       <ul>
-        <li>Each hit adds a regeneration stack (power attack — two): +1 HP/s per stack, each hit extends it to 5 s.</li>
-        <li>A power attack causes bleeding.</li>
+        <li>Every hit is a regeneration stack: +1 HP/s (a power hit +2). Stacks last 5 s from the last hit. The full Assassin set gives +2 stacks.</li>
+        <li>A power hit makes the zombie bleed. Normal hits bleed only with Deep Cuts.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Max stacks</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr></table></div>
-      <div class="five"><b>Level 5 — Blood Feast:</b> a knife kill at max stacks instantly heals 25 HP.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Max stacks (Thirst)</td><td>2</td><td>4</td><td>5</td><td>8</td></tr><tr><td>Normal hits bleed (Deep Cuts)</td><td>—</td><td>15%</td><td>30%</td><td>60%</td></tr></table></div>
+      <div class="five"><b>Capstone — Blood Feast:</b> 10% of your damage to bleeding zombies comes back as health, a kill at max stacks heals 25 HP. Downside: −30% to zombies that don't bleed.</div>
     </article>
 
     <article class="card">
       <h3>Clubs &amp; bats — <span class="trait">Home Run</span></h3>
-      <div class="tagline">Perk: Pummel Pete</div>
+      <div class="tagline">Class trait · club tree</div>
       <ul>
-        <li>A normal attack can stun the target for 1 s.</li>
-        <li>A power attack to the head launches the zombie and knocks it down.</li>
-        <li>A power attack on a stunned target deals extra damage.</li>
+        <li>A normal hit stuns for 1 s with a 15% chance. A stunned zombie can't be stunned again for 3 s.</li>
+        <li>A power hit to the head launches the zombie and knocks it down (force 800, the full Bruiser set +300).</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Stun</td><td>15%</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td></tr><tr><td>Knockback force</td><td>800</td><td>950</td><td>1100</td><td>1250</td><td>1400</td><td>1550</td></tr><tr><td>Power vs stunned</td><td>—</td><td>+10%</td><td>+20%</td><td>+30%</td><td>+40%</td><td>+50%</td></tr></table></div>
-      <div class="cost">Power attack costs 30% more stamina.</div>
-      <div class="five"><b>Level 5:</b> Home Run triggers on a power attack to any body part, and <b>every 3rd normal attack</b> launches the zombie too.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Stun chance (Stunning Blow)</td><td>15%</td><td>20%</td><td>25%</td><td>40%</td></tr><tr><td>Power hit on a stunned zombie (Kick Them While Down)</td><td>—</td><td>+20%</td><td>+40%</td><td>+80%</td></tr></table></div>
+      <div class="cost">A power attack costs 30% more stamina.</div>
+      <div class="five"><b>Angry Home Run</b> (hybrid): at max Rage every power hit launches, not only to the head.</div>
+    </article>
+
+    <article class="card">
+      <h3>Clubs &amp; bats — <span class="trait">Rage</span></h3>
+      <div class="tagline">Club tree, branch B · replaces the Grand Slam perk (hidden, its points are refunded)</div>
+      <ul>
+        <li>A kill with a club or bat gives a stack for 8 s: +10% damage, +5% attack speed. Sledgehammer kills don't count.</li>
+        <li>The full Bruiser set gives +1 stack.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Max stacks (Rage)</td><td>—</td><td>2</td><td>4</td><td>8</td></tr></table></div>
+      <div class="five"><b>Rampage:</b> at max Rage hits cost no stamina, and you can't be stunned or knocked down. <b>Capstone — Berserk:</b> twice the stacks (16) and every hit heals 1 HP per 4 stacks. Downside: you take +25% damage.</div>
     </article>
 
     <article class="card">
       <h3>Sledgehammers — <span class="trait">Earthquake</span></h3>
-      <div class="tagline">Perk: Skull Crusher</div>
+      <div class="tagline">Class trait · sledgehammer tree</div>
       <ul>
-        <li>A normal attack can knock the target down.</li>
-        <li>A power attack knocks down every zombie around and damages each one: the number in the table, or 10% of the power hit per level if that's more.</li>
+        <li>A normal hit knocks the target down with a 20% chance.</li>
+        <li>A power hit knocks down every zombie around (the full Bruiser set +1 m) and deals each 10% of its damage. Dust, rings on the ground and a camera shake show it.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Knockdown (normal)</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td><td>45%</td></tr><tr><td>Radius</td><td>3 m</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Damage to knocked down</td><td>—</td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr></table></div>
-      <div class="cost">4 s cooldown. Power attack costs 50% more stamina.</div>
-      <div class="five"><b>Level 5 — Aftershock:</b> knocked-down zombies stay stunned for about 3 s after they get up.</div>
-    </article>
-    <article class="card">
-      <h3>Clubs &amp; sledgehammers — <span class="trait">Rage</span></h3>
-      <div class="tagline">Perk: Rage (replaces Grand Slam)</div>
-      <ul>
-        <li>A kill with a club, bat or sledgehammer gives a stack for 8 s: +10% damage, +5% attack speed.</li>
-        <li>Max stacks equal the perk level (1–5).</li>
-      </ul>
-      <div class="five"><b>Level 5 — Rampage:</b> at 5 stacks attacks cost no stamina, and you can't be stunned or knocked down.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Radius (Wide Quake)</td><td>3 m</td><td>3.5</td><td>4</td><td>6</td></tr><tr><td>Share of the hit (Shockforce)</td><td>10%</td><td>20%</td><td>30%</td><td>50%</td></tr><tr><td>Cooldown (Frequent Quakes)</td><td>10 s</td><td>8</td><td>6</td><td>3</td></tr><tr><td>Normal knockdown (Stagger)</td><td>20%</td><td>25%</td><td>30%</td><td>45%</td></tr></table></div>
+      <div class="cost">A power attack costs 50% more stamina.</div>
+      <div class="five"><b>Capstone — Aftershock:</b> a second quake 1.5 s later, and knocked-down zombies stay stunned 3 s after they get up. Downside: cooldown +2 s.</div>
     </article>
 
     <article class="card">
       <h3>Batons — <span class="trait">Chain Lightning</span></h3>
-      <div class="tagline">Perk: Calculated Attack · batons and the pipe baton</div>
+      <div class="tagline">Class trait · baton tree · batons and the pipe baton</div>
       <ul>
-        <li>A normal attack briefly shocks the target.</li>
-        <li>A power attack shocks every zombie around.</li>
+        <li>A normal hit shocks the target for 0.5 s.</li>
+        <li>A power hit shocks and stuns every zombie around for 2 s.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Shock (normal)</td><td>0.5 s</td><td>0.6</td><td>0.7</td><td>0.8</td><td>0.9</td><td>1.0</td></tr><tr><td>Power radius</td><td>3 m</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Shock (power)</td><td>2 s</td><td>2.4</td><td>2.8</td><td>3.2</td><td>3.6</td><td>4.0</td></tr></table></div>
-      <div class="cost">3 s cooldown. Power attack costs 50% more stamina.</div>
-      <div class="five"><b>Level 5:</b> every 4th normal attack also triggers Chain Lightning.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Radius (Wide Arc)</td><td>3 m</td><td>3.5</td><td>4</td><td>5</td></tr><tr><td>Stun (Sustained Charge)</td><td>2 s</td><td>3</td><td>4</td><td>5</td></tr><tr><td>Normal shock (Hold the Current)</td><td>0.5 s</td><td>0.75</td><td>1</td><td>1.5</td></tr></table></div>
+      <div class="cost">10 s cooldown (Capacitor: up to −50% with Intellect). A power attack costs 50% more stamina.</div>
+      <div class="five"><b>Tesla Coil</b> (big hybrid): every 4th hit on one target (Breakdown) fires the lightning without the cooldown.</div>
     </article>
 
     <article class="card">
       <h3>Spears — <span class="trait">Battering Ram</span></h3>
-      <div class="tagline">Perk: Spear Master</div>
+      <div class="tagline">Class trait · spear tree</div>
       <ul>
-        <li>A normal attack pushes the target back.</li>
-        <li>A power attack pierces the zombies behind and knocks each one back.</li>
+        <li>A normal hit pushes the target back.</li>
+        <li>A power hit goes through the zombies behind and throws each one back.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Power pierce</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr><tr><td>Push force</td><td>120</td><td>160</td><td>200</td><td>240</td><td>280</td><td>320</td></tr></table></div>
-      <div class="five"><b>Level 5 — Skewer:</b> every zombie hit by a power attack is knocked down.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Push force (Strong Push)</td><td>120</td><td>160</td><td>200</td><td>320</td></tr><tr><td>Zombies pierced (Through Strike)</td><td>1</td><td>2</td><td>3</td><td>6</td></tr></table></div>
+      <div class="five"><b>Capstone — Breakthrough:</b> a power hit while running forward is a 6 m dash: everyone on the way is pierced, knocked down and takes x2. Downside: you can barely attack for 1.5 s after it.</div>
     </article>
 
     <article class="card">
       <h3>Knuckles — <span class="trait">Counter Punch</span></h3>
-      <div class="tagline">Perk: The Brawler</div>
+      <div class="tagline">Class trait · knuckle tree</div>
       <ul>
-        <li>Taking a hit fills charges. No timer.</li>
-        <li>Normal attack: +25% damage, uses 1 charge; can grant a new charge.</li>
-        <li>Power attack: uses all charges, +50% damage per charge, knocks down.</li>
+        <li>Every hit you take gives a charge. No timer.</li>
+        <li>A normal hit spends 1 charge and deals extra damage.</li>
+        <li>A power hit spends all charges: +50% per charge, and knocks down.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Charges</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>Chance of +1 charge</td><td>—</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td></tr></table></div>
-      <div class="five"><b>Level 5 — Knockout:</b> a power attack at full charges kills any non-elite zombie.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Charges (More Charges)</td><td>2</td><td>3</td><td>4</td><td>7</td></tr><tr><td>Normal hit with a charge (Retort)</td><td>+25%</td><td>+40%</td><td>+60%</td><td>+100%</td></tr></table></div>
+      <div class="five"><b>Capstone — Knockout:</b> a power hit at full charges kills any non-elite zombie; an elite takes x3 and stays down 3 s. Downside: you move 20% slower for 15 s after it.</div>
     </article>
-
 
   </div>
 </section>
 
 <section id="ranged" data-sec>
   <h2>Ranged</h2>
-  <p class="lead">Each trait grows with its weapon's perk.</p>
+  <p class="lead">Same as melee: the trait works from mastery level 0, and skills of the class tree grow it.</p>
   <div class="grid">
 
     <article class="card">
       <h3>Pistols &amp; SMGs — <span class="trait">Headhunter</span></h3>
-      <div class="tagline">Perk: Gunslinger</div>
+      <div class="tagline">Class trait · pistol tree (pistols and SMGs share it)</div>
       <ul>
-        <li>5 headshots in a row (4 with the full Gunslinger set) activate empowered shots. A miss or a body hit resets the streak.</li>
-        <li>Empowered shots hit harder with almost no spread.</li>
+        <li>5 headshots in a row (4 with the full Gunslinger set) start the Headhunter mode: the next shots are empowered, with almost no spread.</li>
+        <li>A miss or a body hit breaks the streak.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Shots</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td></tr><tr><td>Damage</td><td>+25%</td><td>+35%</td><td>+45%</td><td>+55%</td><td>+65%</td><td>+75%</td></tr></table></div>
-      <div class="five"><b>Level 5:</b> each <b>headshot</b> kill in this mode adds 2 more shots.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Empowered shots (The Hunt Goes On)</td><td>6</td><td>9</td><td>12</td><td>15</td></tr><tr><td>Damage (Lethal Precision, 2 ranks)</td><td>+20%</td><td>+40%</td><td>+70%</td><td>—</td></tr><tr><td>Headshots needed (Cold Blood)</td><td>5</td><td>4</td><td>4</td><td>3</td></tr></table></div>
+      <div class="five">The Hunt Goes On 3/3: a headshot kill in the mode adds 2 shots. Cold Blood 2/3: a miss takes away 1 headshot instead of the whole streak.</div>
     </article>
+
     <article class="card">
-      <h3>Shotguns — <span class="trait">Slug Knockback</span></h3>
+      <h3>Shotguns — <span class="trait">Sledgehammer in the Barrel</span></h3>
+      <div class="tagline">Class trait · shotgun tree</div>
       <ul>
-        <li>Slugs (Slug and Breaching Slug) knock the zombie back and down. Buckshot does the same point blank (within 3 m); the force grows with Boomstick.</li>
+        <li>Slugs (Slug and Breaching Slug) throw zombies back and knock them down (force 1000). Buckshot does it point blank, within 3 m (force 300).</li>
+        <li>Elites stay on their feet.</li>
         <li>Breaching Slug only reaches 4 m — that's how the base game designed it.</li>
       </ul>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Extra force (Brawn) × Strength</td><td>—</td><td>+20</td><td>+35</td><td>+50</td></tr></table></div>
+      <div class="five"><b>Bouncer 2/2:</b> elites are knocked down too. <b>Pump Action:</b> a slug kill loads 1 / 2 shells.</div>
     </article>
 
     <article class="card">
       <h3>Rifles — <span class="trait">Ricochet</span></h3>
-      <div class="tagline">Perk: Dead Eye</div>
-      <ul><li>A headshot damages every zombie near the impact point: the number in the table, or a share of the headshot (5% → 20% by level) if that's more.</li></ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Radius</td><td>5 m</td><td>7</td><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>Damage</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td></tr></table></div>
-      <div class="five"><b>Level 5:</b> the ricochet also stuns everyone it hits for 2 s (once per 4 s).</div>
+      <div class="tagline">Class trait · rifle tree</div>
+      <ul>
+        <li>A headshot hurts zombies near the target, each for a share of the headshot (at least 20).</li>
+      </ul>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Targets (More Targets)</td><td>3</td><td>5</td><td>7</td><td>10</td></tr><tr><td>Share of the headshot (Ricochet Power)</td><td>5%</td><td>15%</td><td>25%</td><td>45%</td></tr><tr><td>Radius (Wide Ricochet), per Perception level</td><td>5 m</td><td>+0.5</td><td>+0.8</td><td>+1</td></tr><tr><td>Stun (Stunning Ricochet)</td><td>—</td><td>0.5 s</td><td>1</td><td>2</td></tr></table></div>
+      <div class="five">Stunning Ricochet stuns one zombie at most once per 4 s. Wide Ricochet adds at most 10 m.</div>
     </article>
 
     <article class="card">
       <h3>Assault rifles &amp; machine guns — <span class="trait">Suppression</span></h3>
-      <div class="tagline">Perk: Machine Gunner</div>
+      <div class="tagline">Class trait · machine gun tree</div>
       <ul>
-        <li>Each hit slows the target by 5% for 8 s — up to the max in the table.</li>
-        <li>Every 4th hit returns 1 round to the magazine (every 3rd with the full Commando set).</li>
+        <li>Each hit slows the target by 5% for 8 s, up to the max.</li>
+        <li>Every 4th hit puts a round back into the magazine (every 3rd with the full Commando set).</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Max slow</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td><td>60%</td></tr></table></div>
-      <div class="five"><b>Level 5:</b> +25% damage to fully slowed targets, and each kill gives 5 rounds of the loaded ammo type.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Max slow (Heavy Fire)</td><td>20%</td><td>30%</td><td>50%</td><td>80%</td></tr><tr><td>Damage to fully slowed (Pin Down)</td><td>—</td><td>+15%</td><td>+30%</td><td>+50%</td></tr><tr><td>Round back every Nth hit (Thrifty; from rank 2 a kill +2)</td><td>4</td><td>3</td><td>3</td><td>2</td></tr></table></div>
+      <div class="five"><b>Belt Feed:</b> at full spin every kill loads 3 rounds, and a reload keeps the spin.</div>
     </article>
 
     <article class="card">
       <h3>Bows — <span class="trait">Splinter</span></h3>
-      <div class="tagline">Perk: Archery</div>
-      <ul><li>An arrow shatters into splinters on hit. Each splinter flies at the nearest other zombie within 5 m.</li></ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Splinters</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>8</td></tr><tr><td>Splinter damage, minimum</td><td>40</td><td>50</td><td>60</td><td>70</td><td>80</td><td>100</td></tr></table></div>
-      <ul><li>If the arrow hit harder, a splinter deals <b>half its damage</b> (up to 300).</li></ul>
-      <div class="five"><b>Level 5:</b> an arrow to the head sets the target on fire.</div>
+      <div class="tagline">Class trait · bow tree</div>
+      <ul>
+        <li>On impact the arrow bursts into splinters; each flies at the nearest other zombie within 5 m.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Splinters (More Splinters)</td><td>2</td><td>4</td><td>6</td><td>10</td></tr><tr><td>Share of the arrow (Sharp Splinters)</td><td>50%</td><td>60%</td><td>75%</td><td>100%</td></tr><tr><td>Minimum damage (Sharp Splinters)</td><td>40</td><td>60</td><td>80</td><td>100</td></tr></table></div>
       <ul>
         <li><b>Controls:</b> the bow nocks the next arrow by itself while in hand. <b>R</b> opens the arrow wheel instantly with no delay: hold, aim, release.</li>
       </ul>
@@ -206,16 +213,14 @@
     </article>
 
     <article class="card">
-      <h3>Crossbows — <span class="trait">Mark · Pin</span></h3>
-      <div class="tagline">Perk: Archery</div>
+      <h3>Crossbows — <span class="trait">Mark</span></h3>
+      <div class="tagline">Class trait · crossbow tree</div>
       <ul>
-        <li><b>Mark:</b> a bolt marks the zombie for 10 s. All your damage to it, with any weapon, is increased. A red crosshair ring glows above the marked zombie, visible even through walls.</li>
-        <li><b>Pin</b> (crossbows only, not bows): if there's a wall within 3 m behind the zombie, the bolt pins it until it dies. An elite — for 10 s.</li>
+        <li>A bolt marks the zombie for 10 s: all your damage to it, with any weapon, is increased. A red ring glows above it, visible even through walls.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Mark bonus</td><td>+20%</td><td>+40%</td><td>+60%</td><td>+80%</td><td>+100%</td><td>+120%</td></tr></table></div>
-      <div class="five"><b>Level 5 — Hunting Party:</b> a bolt marks every zombie within 4 m of the impact.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Mark bonus (Deep Mark)</td><td>+20%</td><td>+35%</td><td>+50%</td><td>+80%</td></tr><tr><td>Marks everyone around the hit (Spread Mark)</td><td>—</td><td>2 m</td><td>3 m</td><td>5 m</td></tr></table></div>
+      <div class="five"><b>Sticky Charge</b> (branch B): the bolt sticks and explodes 2 s later, 30% / 50% / 100% of the bolt within 2 / 2.5 / 5 m. <b>Capstone — Hunting Party:</b> the Mark bonus doubles and a marked kill marks the 3 nearest zombies within 8 m. Downside: bolts −40%.</div>
     </article>
-
 
   </div>
 </section>
@@ -239,7 +244,7 @@
     <article class="card">
       <h3>Where elements come from</h3>
       <ul>
-        <li><b>Fire:</b> Incendiary mod, molotov, flaming arrows, Splinter at level 5, legendaries Dragon's Breath, Storm Fist, Artemis.</li>
+        <li><b>Fire:</b> Incendiary mod, molotov, flaming arrows, legendaries Dragon's Breath, Storm Fist, Artemis.</li>
         <li><b>Shock:</b> Tesla mod, batons (Chain Lightning), legendaries Thunderclap, Storm Fist.</li>
         <li><b>Acid:</b> Corrosive mod, legendary Hornet.</li><li><b>Bleeding</b> from your hits (knives, serrated blade, barbed wire, Ripper): 5% of the last hit's damage per second (at least 5).</li><li>The vanilla <b>Burning Shaft</b> mod now ignites with a 5–30% chance instead of 10–60%: its fire also scales with hit damage now.</li>
       </ul>
@@ -287,7 +292,7 @@
         <li><b>Quality 1:</b> no affixes.</li>
         <li><b>Quality 2–3:</b> up to 1 (50% chance).</li>
         <li><b>Quality 4–5:</b> up to 2 (75% / 35%).</li>
-        <li><b>Quality 6:</b> up to 3 (100% / 60% / 30%), values at max.</li>
+        <li><b>Quality 6:</b> up to 3 (100% / 60% / 30%); values roll in the top range (e.g. damage +25…35%).</li>
         <li>A weapon never has the same affix twice. After combining two guns, extra affixes are removed; the Combine Station shows the result's affixes and which ones will be removed before you press Combine.</li>
         <li>Affixes show at the top of the item tooltip, and the icon has a star badge.</li>
       </ul>
@@ -302,7 +307,7 @@
         <li><b>Damage</b> +5% → +35%</li>
         <li><b>Reload speed</b> +10% → +40%</li>
         <li><b>Pellets</b> (shotguns) +10% → +35%</li>
-        <li><b>Second bullet</b> (pistols, rifles, assault rifles, quality 6 only): 2 bullets per shot, each −40% damage</li>
+        <li><b>Second bullet</b> (any gun except shotguns, quality 6 only): 2 bullets per shot, each −40% damage</li>
         <li><b>Headshot damage</b> +10% → +60%</li>
         <li><b>Magazine size</b> +10% → +60% (not on bows and crossbows)</li>
         <li><b>Movement speed</b> with the weapon in hand +2% → +10%</li>
@@ -394,7 +399,7 @@
         <li><b>Flurry of Perception — Frenzy:</b> a spear kill gives +15% attack speed for 5 s.</li>
         <li><b>Demolitions Expert — Chain Reaction:</b> a zombie killed by your explosives explodes itself: 250 damage within 4 m, or half of the killing hit if that's more.</li>
         <li><b>Penetrator — Shrapnel:</b> armor-piercing rounds deal 40% of the shot's damage to everyone within 3 m of the target.</li>
-        <li><b>Infiltrator — Ghost:</b> while crouched you're twice as hard to spot, hits on a zombie that can't see you deal ×2, and mines and traps don't hurt you.</li>
+        <li><b>Infiltrator — Ghost:</b> while crouched you're twice as hard to spot, hits on a zombie that can't see you deal ×2, mines don't hurt you and traps deal 25% less.</li>
         <li><b>Animal Tracker — Hunter's Mark:</b> hitting an animal puts a Mark on it.</li>
         <li><b>Treasure Hunter — X Marks the Spot:</b> the treasure search circle shrinks almost to a point, and the chest holds a quality 5–6 weapon with affixes.</li>
         <li><b>Salvage Operations — Junk Genius:</b> salvage tools wear out 90% slower.</li>
@@ -405,7 +410,6 @@
       <h3>Strength — <span class="trait">level 5</span></h3>
       <ul>
         <li><b>Flurry of Strength — Frenzy:</b> a club or sledgehammer kill gives +15% attack speed for 5 s.</li>
-        <li><b>Boomstick — Pump Action:</b> a shotgun kill loads 2 shells into the magazine.</li>
         <li><b>Pack Mule — Beast of Burden:</b> being encumbered no longer slows you.</li>
         <li><b>Strength Mastery — Crippling Blows:</b> a club or sledgehammer power attack breaks the zombie's legs, and it crawls.</li>
         <li><b>Miner 69'er — Tunnel Rat:</b> mining tools use 50% less stamina.</li>
@@ -462,11 +466,8 @@
         <li><b>Lucky Looter 5 — Fortune:</b> found weapons get +1 affix within the quality limit.</li>
       </ul>
     </article>
-    <article class="card"><h3>Grand Slam → <span class="trait">Rage</span></h3><ul><li>The running knockdown is removed. Rage is described in the "Melee" section.</li></ul></article>
+    <article class="card"><h3>Perks changed by <span class="trait">Weapon mastery 2.0</span></h3><ul><li><b>Grand Slam:</b> hidden, its points are given back. Rage is a skill of the club tree.</li><li><b>Pummel Pete:</b> the bonus to stunned zombies, the hit combo and the power-hit knockdown are removed (the club tree has Kick Them While Down, Concussion and Batting Streak).</li><li><b>Skull Crusher:</b> the power-hit knockdowns are removed (the sledgehammer trait Earthquake does it).</li><li><b>The Brawler:</b> the power-hit stun and the head knockdown are removed (Counter Punch knocks down).</li><li><b>Deep Cuts:</b> normal knife hits no longer bleed (the knife skill Deep Cuts does it); power hits keep the vanilla wounds.</li><li><b>Gunslinger 3–5:</b> the +100% shot after a series of hits is removed (Headhunter and Firing Squad do it).</li><li><b>Boomstick:</b> no mod bonus any more; Pump Action is a skill of the shotgun tree.</li><li>Everything else these perks do in the base game still works.</li></ul></article>
     <article class="card"><h3>Intellect Mastery 4–5</h3><ul><li><b>4 — Field Repair:</b> all weapons, tools and armor wear out 30% slower.</li><li><b>5 — Inventor:</b> crafted weapons get random affixes, like looted weapons of the same quality. Everything crafted comes out one quality level above the quality you pick in the recipe (pick 5, get 6); if you pick 6, weapons, tools and armor come out at quality 6, forge tier 7.</li><li>The old baton bonuses (charge in 2 hits, +300% shock damage) are removed.</li></ul></article>
-    <article class="card"><h3>Pummel Pete</h3><ul><li>Removed: a power attack on a stunned target kept it stunned "forever".</li><li>Instead: a power attack on a stunned target deals +10…50% damage.</li></ul></article>
-    <article class="card"><h3>Skull Crusher</h3><ul><li>Removed: power attack knockdown chances.</li><li>Instead: Earthquake deals 10…50 damage to each knocked-down zombie.</li></ul></article>
-    <article class="card"><h3>The Brawler</h3><ul><li>Removed: power attack stuns, and to the head knocks down.</li><li>Instead: a normal attack has a 10…50% chance to give a Counter Punch charge.</li></ul></article>
   </div>
 </section>
 
@@ -558,6 +559,7 @@
     <div class="dmg"><span class="num n-yellow">90!</span><span>Headshot</span></div>
     <div class="dmg"><span class="num n-cyan">120</span><span>Hit boosted by a buff: Headhunter, Rage, Counter Punch, Mark, Suppression, acid</span></div>
     <div class="dmg"><span class="num n-red">Kill!</span><span>Killing blow (text above the number)</span></div>
+    <div class="dmg"><span class="num n-orange">Backstab!</span><span>Skill label above the number (knife: Backstab!, SPINE STRIKE!!)</span></div>
     <div class="dmg"><span class="num n-magenta">60</span><span>Elemental reaction</span></div>
     <div class="dmg"><span class="num n-orange">8</span><span>Burning</span></div>
     <div class="dmg"><span class="num n-green">3</span><span>Acid</span></div>
@@ -614,20 +616,19 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
       </ul>
     </article>
     <article class="card">
-      <h3>Indicator buffs</h3>
-      <ul>
-        <li>Bloodsucker — knife regeneration stacks</li>
-        <li>Counter Punch — knuckles charges</li>
-        <li>Veteran Junk — pipe weapon bonus, %</li>
-        <li>Headhunter — empowered shots left</li>
-        <li>Rage — stacks</li>
-        <li>Guardian Protocol, Energy Shield</li>
-        <li>Earthquake, Chain Lightning and Ricochet stun cooldown</li>
-        <li>Thunderclap storm charges, Big Boom free rocket</li>
-        <li>Red ring above a zombie — it has a crossbow Mark</li>
-        <li>Frenzy, Adrenaline (stacks), lightning charges, Jackpot, Evasion</li>
-        <li>Second Wind (5 min) and Second Lungs (60 s) cooldown</li>
-      </ul>
+    <h3>Combat HUD — <span class="trait">aposhud</span></h3>
+    <ul>
+    <li>The mod's statuses are not in the vanilla buff column: the combat HUD shows them by the crosshair, by the toolbelt and above zombies. Each one is explained in <a href="#hud">HUD statuses</a>.</li>
+    <li>Every counter is also a line in the Status Effects window, with its description.</li>
+    <li><code>aposhud on</code> / <code>off</code>, <code>aposhud size 0.6–1.6</code>, <code>aposhud pos below|right|left</code>.</li>
+    </ul>
+    </article>
+    <article class="card">
+    <h3>Mastery testing — <span class="trait">aposmastery</span></h3>
+    <ul>
+    <li>Works on the class of the weapon in your hands: <code>aposmastery level N</code>, <code>aposmastery max</code>, <code>aposmastery branch A|B|H</code> (learns the whole branch), <code>aposmastery reset</code>.</li>
+    <li><code>aposfx quake|echo|knock|shock|boom|bolt</code> shows an effect in front of you.</li>
+    </ul>
     </article>
     <article class="card"><h3>Bird nests</h3><ul><li>Three times more feathers: from the nest's contents (3 + 3–15 instead of 1 + 1–5) and when picking up the nest itself.</li></ul></article>
     <article class="card">

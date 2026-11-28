@@ -77,6 +77,8 @@ h2 small { font: 500 13px var(--f-body); color: var(--muted); }
 .scale th, .scale td { border: 1px solid var(--line); padding: 3px 6px; text-align: center; white-space: nowrap; }
 .scale th { background: var(--amber-soft); font-weight: 600; }
 .scale td:first-child, .scale th:first-child { text-align: left; }
+/* the row name (a skill and what it changes) wraps; the numbers stay on one line */
+.scale td:first-child { white-space: normal; font-family: var(--f-body); width: 100%; }
 .legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
 .dmg { display: flex; gap: 10px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; }
 .num { font: 400 20px var(--f-display); min-width: 70px; text-align: center; text-shadow: 1px 1px 0 rgba(0,0,0,.6); background: #26282c; border-radius: 3px; padding: 2px 8px; }

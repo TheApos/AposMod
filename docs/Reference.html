@@ -77,6 +77,8 @@ h2 small { font: 500 13px var(--f-body); color: var(--muted); }
 .scale th, .scale td { border: 1px solid var(--line); padding: 3px 6px; text-align: center; white-space: nowrap; }
 .scale th { background: var(--amber-soft); font-weight: 600; }
 .scale td:first-child, .scale th:first-child { text-align: left; }
+/* the row name (a skill and what it changes) wraps; the numbers stay on one line */
+.scale td:first-child { white-space: normal; font-family: var(--f-body); width: 100%; }
 .legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
 .dmg { display: flex; gap: 10px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; }
 .num { font: 400 20px var(--f-display); min-width: 70px; text-align: center; text-shadow: 1px 1px 0 rgba(0,0,0,.6); background: #26282c; border-radius: 3px; padding: 2px 8px; }
@@ -400,7 +402,7 @@ html, body { overflow-x: clip; }
     <div class="stripe" aria-hidden="true"></div>
     <div class="meta">7 Days to Die 3.4 · AposMod 2.0.0</div>
     <h1>AposMod Reference</h1>
-    <p class="sub">Weapon traits, affixes, perks and attributes, elements, mods, legendary weapons and settings in one place. Numbers like "0 → 5" depend on the level of the matching perk.</p>
+    <p class="sub">Weapon traits, affixes, perks and attributes, elements, mods, legendary weapons and settings in one place. In the weapon tables, column 0 is the trait itself and 1–3 are the ranks of the mastery skill named in the row.</p>
   </div>
 </header>
 
@@ -450,142 +452,149 @@ html, body { overflow-x: clip; }
 
 <section id="melee" data-sec>
   <h2>Melee <small>LMB — normal attack, RMB — power attack</small></h2>
-  <p class="lead">A normal attack gives a small bonus, a power attack triggers the class's main trait.</p>
+  <p class="lead">Every class has its trait from mastery level 0. Skills of its mastery tree make it stronger: the tables show the trait (0) and the ranks of the skill named in each row. The full trees are in Weapon mastery above.</p>
   <div class="grid">
 
     <article class="card">
       <h3>Knives &amp; machetes — <span class="trait">Bloodsucker</span></h3>
-      <div class="tagline">Perk: Deep Cuts</div>
+      <div class="tagline">Class trait · knife tree</div>
       <ul>
-        <li>Each hit adds a regeneration stack (power attack — two): +1 HP/s per stack, each hit extends it to 5 s.</li>
-        <li>A power attack causes bleeding.</li>
+        <li>Every hit is a regeneration stack: +1 HP/s (a power hit +2). Stacks last 5 s from the last hit. The full Assassin set gives +2 stacks.</li>
+        <li>A power hit makes the zombie bleed. Normal hits bleed only with Deep Cuts.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Max stacks</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr></table></div>
-      <div class="five"><b>Level 5 — Blood Feast:</b> a knife kill at max stacks instantly heals 25 HP.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Max stacks (Thirst)</td><td>2</td><td>4</td><td>5</td><td>8</td></tr><tr><td>Normal hits bleed (Deep Cuts)</td><td>—</td><td>15%</td><td>30%</td><td>60%</td></tr></table></div>
+      <div class="five"><b>Capstone — Blood Feast:</b> 10% of your damage to bleeding zombies comes back as health, a kill at max stacks heals 25 HP. Downside: −30% to zombies that don't bleed.</div>
     </article>
 
     <article class="card">
       <h3>Clubs &amp; bats — <span class="trait">Home Run</span></h3>
-      <div class="tagline">Perk: Pummel Pete</div>
+      <div class="tagline">Class trait · club tree</div>
       <ul>
-        <li>A normal attack can stun the target for 1 s.</li>
-        <li>A power attack to the head launches the zombie and knocks it down.</li>
-        <li>A power attack on a stunned target deals extra damage.</li>
+        <li>A normal hit stuns for 1 s with a 15% chance. A stunned zombie can't be stunned again for 3 s.</li>
+        <li>A power hit to the head launches the zombie and knocks it down (force 800, the full Bruiser set +300).</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Stun</td><td>15%</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td></tr><tr><td>Knockback force</td><td>800</td><td>950</td><td>1100</td><td>1250</td><td>1400</td><td>1550</td></tr><tr><td>Power vs stunned</td><td>—</td><td>+10%</td><td>+20%</td><td>+30%</td><td>+40%</td><td>+50%</td></tr></table></div>
-      <div class="cost">Power attack costs 30% more stamina.</div>
-      <div class="five"><b>Level 5:</b> Home Run triggers on a power attack to any body part, and <b>every 3rd normal attack</b> launches the zombie too.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Stun chance (Stunning Blow)</td><td>15%</td><td>20%</td><td>25%</td><td>40%</td></tr><tr><td>Power hit on a stunned zombie (Kick Them While Down)</td><td>—</td><td>+20%</td><td>+40%</td><td>+80%</td></tr></table></div>
+      <div class="cost">A power attack costs 30% more stamina.</div>
+      <div class="five"><b>Angry Home Run</b> (hybrid): at max Rage every power hit launches, not only to the head.</div>
+    </article>
+
+    <article class="card">
+      <h3>Clubs &amp; bats — <span class="trait">Rage</span></h3>
+      <div class="tagline">Club tree, branch B · replaces the Grand Slam perk (hidden, its points are refunded)</div>
+      <ul>
+        <li>A kill with a club or bat gives a stack for 8 s: +10% damage, +5% attack speed. Sledgehammer kills don't count.</li>
+        <li>The full Bruiser set gives +1 stack.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Max stacks (Rage)</td><td>—</td><td>2</td><td>4</td><td>8</td></tr></table></div>
+      <div class="five"><b>Rampage:</b> at max Rage hits cost no stamina, and you can't be stunned or knocked down. <b>Capstone — Berserk:</b> twice the stacks (16) and every hit heals 1 HP per 4 stacks. Downside: you take +25% damage.</div>
     </article>
 
     <article class="card">
       <h3>Sledgehammers — <span class="trait">Earthquake</span></h3>
-      <div class="tagline">Perk: Skull Crusher</div>
+      <div class="tagline">Class trait · sledgehammer tree</div>
       <ul>
-        <li>A normal attack can knock the target down.</li>
-        <li>A power attack knocks down every zombie around and damages each one: the number in the table, or 10% of the power hit per level if that's more.</li>
+        <li>A normal hit knocks the target down with a 20% chance.</li>
+        <li>A power hit knocks down every zombie around (the full Bruiser set +1 m) and deals each 10% of its damage. Dust, rings on the ground and a camera shake show it.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Knockdown (normal)</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td><td>45%</td></tr><tr><td>Radius</td><td>3 m</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Damage to knocked down</td><td>—</td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr></table></div>
-      <div class="cost">4 s cooldown. Power attack costs 50% more stamina.</div>
-      <div class="five"><b>Level 5 — Aftershock:</b> knocked-down zombies stay stunned for about 3 s after they get up.</div>
-    </article>
-    <article class="card">
-      <h3>Clubs &amp; sledgehammers — <span class="trait">Rage</span></h3>
-      <div class="tagline">Perk: Rage (replaces Grand Slam)</div>
-      <ul>
-        <li>A kill with a club, bat or sledgehammer gives a stack for 8 s: +10% damage, +5% attack speed.</li>
-        <li>Max stacks equal the perk level (1–5).</li>
-      </ul>
-      <div class="five"><b>Level 5 — Rampage:</b> at 5 stacks attacks cost no stamina, and you can't be stunned or knocked down.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Radius (Wide Quake)</td><td>3 m</td><td>3.5</td><td>4</td><td>6</td></tr><tr><td>Share of the hit (Shockforce)</td><td>10%</td><td>20%</td><td>30%</td><td>50%</td></tr><tr><td>Cooldown (Frequent Quakes)</td><td>10 s</td><td>8</td><td>6</td><td>3</td></tr><tr><td>Normal knockdown (Stagger)</td><td>20%</td><td>25%</td><td>30%</td><td>45%</td></tr></table></div>
+      <div class="cost">A power attack costs 50% more stamina.</div>
+      <div class="five"><b>Capstone — Aftershock:</b> a second quake 1.5 s later, and knocked-down zombies stay stunned 3 s after they get up. Downside: cooldown +2 s.</div>
     </article>
 
     <article class="card">
       <h3>Batons — <span class="trait">Chain Lightning</span></h3>
-      <div class="tagline">Perk: Calculated Attack · batons and the pipe baton</div>
+      <div class="tagline">Class trait · baton tree · batons and the pipe baton</div>
       <ul>
-        <li>A normal attack briefly shocks the target.</li>
-        <li>A power attack shocks every zombie around.</li>
+        <li>A normal hit shocks the target for 0.5 s.</li>
+        <li>A power hit shocks and stuns every zombie around for 2 s.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Shock (normal)</td><td>0.5 s</td><td>0.6</td><td>0.7</td><td>0.8</td><td>0.9</td><td>1.0</td></tr><tr><td>Power radius</td><td>3 m</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Shock (power)</td><td>2 s</td><td>2.4</td><td>2.8</td><td>3.2</td><td>3.6</td><td>4.0</td></tr></table></div>
-      <div class="cost">3 s cooldown. Power attack costs 50% more stamina.</div>
-      <div class="five"><b>Level 5:</b> every 4th normal attack also triggers Chain Lightning.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Radius (Wide Arc)</td><td>3 m</td><td>3.5</td><td>4</td><td>5</td></tr><tr><td>Stun (Sustained Charge)</td><td>2 s</td><td>3</td><td>4</td><td>5</td></tr><tr><td>Normal shock (Hold the Current)</td><td>0.5 s</td><td>0.75</td><td>1</td><td>1.5</td></tr></table></div>
+      <div class="cost">10 s cooldown (Capacitor: up to −50% with Intellect). A power attack costs 50% more stamina.</div>
+      <div class="five"><b>Tesla Coil</b> (big hybrid): every 4th hit on one target (Breakdown) fires the lightning without the cooldown.</div>
     </article>
 
     <article class="card">
       <h3>Spears — <span class="trait">Battering Ram</span></h3>
-      <div class="tagline">Perk: Spear Master</div>
+      <div class="tagline">Class trait · spear tree</div>
       <ul>
-        <li>A normal attack pushes the target back.</li>
-        <li>A power attack pierces the zombies behind and knocks each one back.</li>
+        <li>A normal hit pushes the target back.</li>
+        <li>A power hit goes through the zombies behind and throws each one back.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Power pierce</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr><tr><td>Push force</td><td>120</td><td>160</td><td>200</td><td>240</td><td>280</td><td>320</td></tr></table></div>
-      <div class="five"><b>Level 5 — Skewer:</b> every zombie hit by a power attack is knocked down.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Push force (Strong Push)</td><td>120</td><td>160</td><td>200</td><td>320</td></tr><tr><td>Zombies pierced (Through Strike)</td><td>1</td><td>2</td><td>3</td><td>6</td></tr></table></div>
+      <div class="five"><b>Capstone — Breakthrough:</b> a power hit while running forward is a 6 m dash: everyone on the way is pierced, knocked down and takes x2. Downside: you can barely attack for 1.5 s after it.</div>
     </article>
 
     <article class="card">
       <h3>Knuckles — <span class="trait">Counter Punch</span></h3>
-      <div class="tagline">Perk: The Brawler</div>
+      <div class="tagline">Class trait · knuckle tree</div>
       <ul>
-        <li>Taking a hit fills charges. No timer.</li>
-        <li>Normal attack: +25% damage, uses 1 charge; can grant a new charge.</li>
-        <li>Power attack: uses all charges, +50% damage per charge, knocks down.</li>
+        <li>Every hit you take gives a charge. No timer.</li>
+        <li>A normal hit spends 1 charge and deals extra damage.</li>
+        <li>A power hit spends all charges: +50% per charge, and knocks down.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Charges</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>Chance of +1 charge</td><td>—</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td></tr></table></div>
-      <div class="five"><b>Level 5 — Knockout:</b> a power attack at full charges kills any non-elite zombie.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Charges (More Charges)</td><td>2</td><td>3</td><td>4</td><td>7</td></tr><tr><td>Normal hit with a charge (Retort)</td><td>+25%</td><td>+40%</td><td>+60%</td><td>+100%</td></tr></table></div>
+      <div class="five"><b>Capstone — Knockout:</b> a power hit at full charges kills any non-elite zombie; an elite takes x3 and stays down 3 s. Downside: you move 20% slower for 15 s after it.</div>
     </article>
-
 
   </div>
 </section>
 
 <section id="ranged" data-sec>
   <h2>Ranged</h2>
-  <p class="lead">Each trait grows with its weapon's perk.</p>
+  <p class="lead">Same as melee: the trait works from mastery level 0, and skills of the class tree grow it.</p>
   <div class="grid">
 
     <article class="card">
       <h3>Pistols &amp; SMGs — <span class="trait">Headhunter</span></h3>
-      <div class="tagline">Perk: Gunslinger</div>
+      <div class="tagline">Class trait · pistol tree (pistols and SMGs share it)</div>
       <ul>
-        <li>5 headshots in a row (4 with the full Gunslinger set) activate empowered shots. A miss or a body hit resets the streak.</li>
-        <li>Empowered shots hit harder with almost no spread.</li>
+        <li>5 headshots in a row (4 with the full Gunslinger set) start the Headhunter mode: the next shots are empowered, with almost no spread.</li>
+        <li>A miss or a body hit breaks the streak.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Shots</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td></tr><tr><td>Damage</td><td>+25%</td><td>+35%</td><td>+45%</td><td>+55%</td><td>+65%</td><td>+75%</td></tr></table></div>
-      <div class="five"><b>Level 5:</b> each <b>headshot</b> kill in this mode adds 2 more shots.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Empowered shots (The Hunt Goes On)</td><td>6</td><td>9</td><td>12</td><td>15</td></tr><tr><td>Damage (Lethal Precision, 2 ranks)</td><td>+20%</td><td>+40%</td><td>+70%</td><td>—</td></tr><tr><td>Headshots needed (Cold Blood)</td><td>5</td><td>4</td><td>4</td><td>3</td></tr></table></div>
+      <div class="five">The Hunt Goes On 3/3: a headshot kill in the mode adds 2 shots. Cold Blood 2/3: a miss takes away 1 headshot instead of the whole streak.</div>
     </article>
+
     <article class="card">
-      <h3>Shotguns — <span class="trait">Slug Knockback</span></h3>
+      <h3>Shotguns — <span class="trait">Sledgehammer in the Barrel</span></h3>
+      <div class="tagline">Class trait · shotgun tree</div>
       <ul>
-        <li>Slugs (Slug and Breaching Slug) knock the zombie back and down. Buckshot does the same point blank (within 3 m); the force grows with Boomstick.</li>
+        <li>Slugs (Slug and Breaching Slug) throw zombies back and knock them down (force 1000). Buckshot does it point blank, within 3 m (force 300).</li>
+        <li>Elites stay on their feet.</li>
         <li>Breaching Slug only reaches 4 m — that's how the base game designed it.</li>
       </ul>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Extra force (Brawn) × Strength</td><td>—</td><td>+20</td><td>+35</td><td>+50</td></tr></table></div>
+      <div class="five"><b>Bouncer 2/2:</b> elites are knocked down too. <b>Pump Action:</b> a slug kill loads 1 / 2 shells.</div>
     </article>
 
     <article class="card">
       <h3>Rifles — <span class="trait">Ricochet</span></h3>
-      <div class="tagline">Perk: Dead Eye</div>
-      <ul><li>A headshot damages every zombie near the impact point: the number in the table, or a share of the headshot (5% → 20% by level) if that's more.</li></ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Radius</td><td>5 m</td><td>7</td><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>Damage</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td></tr></table></div>
-      <div class="five"><b>Level 5:</b> the ricochet also stuns everyone it hits for 2 s (once per 4 s).</div>
+      <div class="tagline">Class trait · rifle tree</div>
+      <ul>
+        <li>A headshot hurts zombies near the target, each for a share of the headshot (at least 20).</li>
+      </ul>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Targets (More Targets)</td><td>3</td><td>5</td><td>7</td><td>10</td></tr><tr><td>Share of the headshot (Ricochet Power)</td><td>5%</td><td>15%</td><td>25%</td><td>45%</td></tr><tr><td>Radius (Wide Ricochet), per Perception level</td><td>5 m</td><td>+0.5</td><td>+0.8</td><td>+1</td></tr><tr><td>Stun (Stunning Ricochet)</td><td>—</td><td>0.5 s</td><td>1</td><td>2</td></tr></table></div>
+      <div class="five">Stunning Ricochet stuns one zombie at most once per 4 s. Wide Ricochet adds at most 10 m.</div>
     </article>
 
     <article class="card">
       <h3>Assault rifles &amp; machine guns — <span class="trait">Suppression</span></h3>
-      <div class="tagline">Perk: Machine Gunner</div>
+      <div class="tagline">Class trait · machine gun tree</div>
       <ul>
-        <li>Each hit slows the target by 5% for 8 s — up to the max in the table.</li>
-        <li>Every 4th hit returns 1 round to the magazine (every 3rd with the full Commando set).</li>
+        <li>Each hit slows the target by 5% for 8 s, up to the max.</li>
+        <li>Every 4th hit puts a round back into the magazine (every 3rd with the full Commando set).</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Max slow</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td><td>60%</td></tr></table></div>
-      <div class="five"><b>Level 5:</b> +25% damage to fully slowed targets, and each kill gives 5 rounds of the loaded ammo type.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Max slow (Heavy Fire)</td><td>20%</td><td>30%</td><td>50%</td><td>80%</td></tr><tr><td>Damage to fully slowed (Pin Down)</td><td>—</td><td>+15%</td><td>+30%</td><td>+50%</td></tr><tr><td>Round back every Nth hit (Thrifty; from rank 2 a kill +2)</td><td>4</td><td>3</td><td>3</td><td>2</td></tr></table></div>
+      <div class="five"><b>Belt Feed:</b> at full spin every kill loads 3 rounds, and a reload keeps the spin.</div>
     </article>
 
     <article class="card">
       <h3>Bows — <span class="trait">Splinter</span></h3>
-      <div class="tagline">Perk: Archery</div>
-      <ul><li>An arrow shatters into splinters on hit. Each splinter flies at the nearest other zombie within 5 m.</li></ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Splinters</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>8</td></tr><tr><td>Splinter damage, minimum</td><td>40</td><td>50</td><td>60</td><td>70</td><td>80</td><td>100</td></tr></table></div>
-      <ul><li>If the arrow hit harder, a splinter deals <b>half its damage</b> (up to 300).</li></ul>
-      <div class="five"><b>Level 5:</b> an arrow to the head sets the target on fire.</div>
+      <div class="tagline">Class trait · bow tree</div>
+      <ul>
+        <li>On impact the arrow bursts into splinters; each flies at the nearest other zombie within 5 m.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Splinters (More Splinters)</td><td>2</td><td>4</td><td>6</td><td>10</td></tr><tr><td>Share of the arrow (Sharp Splinters)</td><td>50%</td><td>60%</td><td>75%</td><td>100%</td></tr><tr><td>Minimum damage (Sharp Splinters)</td><td>40</td><td>60</td><td>80</td><td>100</td></tr></table></div>
       <ul>
         <li><b>Controls:</b> the bow nocks the next arrow by itself while in hand. <b>R</b> opens the arrow wheel instantly with no delay: hold, aim, release.</li>
       </ul>
@@ -603,16 +612,14 @@ html, body { overflow-x: clip; }
     </article>
 
     <article class="card">
-      <h3>Crossbows — <span class="trait">Mark · Pin</span></h3>
-      <div class="tagline">Perk: Archery</div>
+      <h3>Crossbows — <span class="trait">Mark</span></h3>
+      <div class="tagline">Class trait · crossbow tree</div>
       <ul>
-        <li><b>Mark:</b> a bolt marks the zombie for 10 s. All your damage to it, with any weapon, is increased. A red crosshair ring glows above the marked zombie, visible even through walls.</li>
-        <li><b>Pin</b> (crossbows only, not bows): if there's a wall within 3 m behind the zombie, the bolt pins it until it dies. An elite — for 10 s.</li>
+        <li>A bolt marks the zombie for 10 s: all your damage to it, with any weapon, is increased. A red ring glows above it, visible even through walls.</li>
       </ul>
-      <div class="scale"><table><tr><th>Level</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Mark bonus</td><td>+20%</td><td>+40%</td><td>+60%</td><td>+80%</td><td>+100%</td><td>+120%</td></tr></table></div>
-      <div class="five"><b>Level 5 — Hunting Party:</b> a bolt marks every zombie within 4 m of the impact.</div>
+      <div class="scale"><table><tr><th>Skill rank</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Mark bonus (Deep Mark)</td><td>+20%</td><td>+35%</td><td>+50%</td><td>+80%</td></tr><tr><td>Marks everyone around the hit (Spread Mark)</td><td>—</td><td>2 m</td><td>3 m</td><td>5 m</td></tr></table></div>
+      <div class="five"><b>Sticky Charge</b> (branch B): the bolt sticks and explodes 2 s later, 30% / 50% / 100% of the bolt within 2 / 2.5 / 5 m. <b>Capstone — Hunting Party:</b> the Mark bonus doubles and a marked kill marks the 3 nearest zombies within 8 m. Downside: bolts −40%.</div>
     </article>
-
 
   </div>
 </section>
@@ -636,7 +643,7 @@ html, body { overflow-x: clip; }
     <article class="card">
       <h3>Where elements come from</h3>
       <ul>
-        <li><b>Fire:</b> Incendiary mod, molotov, flaming arrows, Splinter at level 5, legendaries Dragon's Breath, Storm Fist, Artemis.</li>
+        <li><b>Fire:</b> Incendiary mod, molotov, flaming arrows, legendaries Dragon's Breath, Storm Fist, Artemis.</li>
         <li><b>Shock:</b> Tesla mod, batons (Chain Lightning), legendaries Thunderclap, Storm Fist.</li>
         <li><b>Acid:</b> Corrosive mod, legendary Hornet.</li><li><b>Bleeding</b> from your hits (knives, serrated blade, barbed wire, Ripper): 5% of the last hit's damage per second (at least 5).</li><li>The vanilla <b>Burning Shaft</b> mod now ignites with a 5–30% chance instead of 10–60%: its fire also scales with hit damage now.</li>
       </ul>
@@ -684,7 +691,7 @@ html, body { overflow-x: clip; }
         <li><b>Quality 1:</b> no affixes.</li>
         <li><b>Quality 2–3:</b> up to 1 (50% chance).</li>
         <li><b>Quality 4–5:</b> up to 2 (75% / 35%).</li>
-        <li><b>Quality 6:</b> up to 3 (100% / 60% / 30%), values at max.</li>
+        <li><b>Quality 6:</b> up to 3 (100% / 60% / 30%); values roll in the top range (e.g. damage +25…35%).</li>
         <li>A weapon never has the same affix twice. After combining two guns, extra affixes are removed; the Combine Station shows the result's affixes and which ones will be removed before you press Combine.</li>
         <li>Affixes show at the top of the item tooltip, and the icon has a star badge.</li>
       </ul>
@@ -699,7 +706,7 @@ html, body { overflow-x: clip; }
         <li><b>Damage</b> +5% → +35%</li>
         <li><b>Reload speed</b> +10% → +40%</li>
         <li><b>Pellets</b> (shotguns) +10% → +35%</li>
-        <li><b>Second bullet</b> (pistols, rifles, assault rifles, quality 6 only): 2 bullets per shot, each −40% damage</li>
+        <li><b>Second bullet</b> (any gun except shotguns, quality 6 only): 2 bullets per shot, each −40% damage</li>
         <li><b>Headshot damage</b> +10% → +60%</li>
         <li><b>Magazine size</b> +10% → +60% (not on bows and crossbows)</li>
         <li><b>Movement speed</b> with the weapon in hand +2% → +10%</li>
@@ -791,7 +798,7 @@ html, body { overflow-x: clip; }
         <li><b>Flurry of Perception — Frenzy:</b> a spear kill gives +15% attack speed for 5 s.</li>
         <li><b>Demolitions Expert — Chain Reaction:</b> a zombie killed by your explosives explodes itself: 250 damage within 4 m, or half of the killing hit if that's more.</li>
         <li><b>Penetrator — Shrapnel:</b> armor-piercing rounds deal 40% of the shot's damage to everyone within 3 m of the target.</li>
-        <li><b>Infiltrator — Ghost:</b> while crouched you're twice as hard to spot, hits on a zombie that can't see you deal ×2, and mines and traps don't hurt you.</li>
+        <li><b>Infiltrator — Ghost:</b> while crouched you're twice as hard to spot, hits on a zombie that can't see you deal ×2, mines don't hurt you and traps deal 25% less.</li>
         <li><b>Animal Tracker — Hunter's Mark:</b> hitting an animal puts a Mark on it.</li>
         <li><b>Treasure Hunter — X Marks the Spot:</b> the treasure search circle shrinks almost to a point, and the chest holds a quality 5–6 weapon with affixes.</li>
         <li><b>Salvage Operations — Junk Genius:</b> salvage tools wear out 90% slower.</li>
@@ -802,7 +809,6 @@ html, body { overflow-x: clip; }
       <h3>Strength — <span class="trait">level 5</span></h3>
       <ul>
         <li><b>Flurry of Strength — Frenzy:</b> a club or sledgehammer kill gives +15% attack speed for 5 s.</li>
-        <li><b>Boomstick — Pump Action:</b> a shotgun kill loads 2 shells into the magazine.</li>
         <li><b>Pack Mule — Beast of Burden:</b> being encumbered no longer slows you.</li>
         <li><b>Strength Mastery — Crippling Blows:</b> a club or sledgehammer power attack breaks the zombie's legs, and it crawls.</li>
         <li><b>Miner 69'er — Tunnel Rat:</b> mining tools use 50% less stamina.</li>
@@ -859,11 +865,8 @@ html, body { overflow-x: clip; }
         <li><b>Lucky Looter 5 — Fortune:</b> found weapons get +1 affix within the quality limit.</li>
       </ul>
     </article>
-    <article class="card"><h3>Grand Slam → <span class="trait">Rage</span></h3><ul><li>The running knockdown is removed. Rage is described in the "Melee" section.</li></ul></article>
+    <article class="card"><h3>Perks changed by <span class="trait">Weapon mastery 2.0</span></h3><ul><li><b>Grand Slam:</b> hidden, its points are given back. Rage is a skill of the club tree.</li><li><b>Pummel Pete:</b> the bonus to stunned zombies, the hit combo and the power-hit knockdown are removed (the club tree has Kick Them While Down, Concussion and Batting Streak).</li><li><b>Skull Crusher:</b> the power-hit knockdowns are removed (the sledgehammer trait Earthquake does it).</li><li><b>The Brawler:</b> the power-hit stun and the head knockdown are removed (Counter Punch knocks down).</li><li><b>Deep Cuts:</b> normal knife hits no longer bleed (the knife skill Deep Cuts does it); power hits keep the vanilla wounds.</li><li><b>Gunslinger 3–5:</b> the +100% shot after a series of hits is removed (Headhunter and Firing Squad do it).</li><li><b>Boomstick:</b> no mod bonus any more; Pump Action is a skill of the shotgun tree.</li><li>Everything else these perks do in the base game still works.</li></ul></article>
     <article class="card"><h3>Intellect Mastery 4–5</h3><ul><li><b>4 — Field Repair:</b> all weapons, tools and armor wear out 30% slower.</li><li><b>5 — Inventor:</b> crafted weapons get random affixes, like looted weapons of the same quality. Everything crafted comes out one quality level above the quality you pick in the recipe (pick 5, get 6); if you pick 6, weapons, tools and armor come out at quality 6, forge tier 7.</li><li>The old baton bonuses (charge in 2 hits, +300% shock damage) are removed.</li></ul></article>
-    <article class="card"><h3>Pummel Pete</h3><ul><li>Removed: a power attack on a stunned target kept it stunned "forever".</li><li>Instead: a power attack on a stunned target deals +10…50% damage.</li></ul></article>
-    <article class="card"><h3>Skull Crusher</h3><ul><li>Removed: power attack knockdown chances.</li><li>Instead: Earthquake deals 10…50 damage to each knocked-down zombie.</li></ul></article>
-    <article class="card"><h3>The Brawler</h3><ul><li>Removed: power attack stuns, and to the head knocks down.</li><li>Instead: a normal attack has a 10…50% chance to give a Counter Punch charge.</li></ul></article>
   </div>
 </section>
 
@@ -955,6 +958,7 @@ html, body { overflow-x: clip; }
     <div class="dmg"><span class="num n-yellow">90!</span><span>Headshot</span></div>
     <div class="dmg"><span class="num n-cyan">120</span><span>Hit boosted by a buff: Headhunter, Rage, Counter Punch, Mark, Suppression, acid</span></div>
     <div class="dmg"><span class="num n-red">Kill!</span><span>Killing blow (text above the number)</span></div>
+    <div class="dmg"><span class="num n-orange">Backstab!</span><span>Skill label above the number (knife: Backstab!, SPINE STRIKE!!)</span></div>
     <div class="dmg"><span class="num n-magenta">60</span><span>Elemental reaction</span></div>
     <div class="dmg"><span class="num n-orange">8</span><span>Burning</span></div>
     <div class="dmg"><span class="num n-green">3</span><span>Acid</span></div>
@@ -1011,20 +1015,19 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
       </ul>
     </article>
     <article class="card">
-      <h3>Indicator buffs</h3>
-      <ul>
-        <li>Bloodsucker — knife regeneration stacks</li>
-        <li>Counter Punch — knuckles charges</li>
-        <li>Veteran Junk — pipe weapon bonus, %</li>
-        <li>Headhunter — empowered shots left</li>
-        <li>Rage — stacks</li>
-        <li>Guardian Protocol, Energy Shield</li>
-        <li>Earthquake, Chain Lightning and Ricochet stun cooldown</li>
-        <li>Thunderclap storm charges, Big Boom free rocket</li>
-        <li>Red ring above a zombie — it has a crossbow Mark</li>
-        <li>Frenzy, Adrenaline (stacks), lightning charges, Jackpot, Evasion</li>
-        <li>Second Wind (5 min) and Second Lungs (60 s) cooldown</li>
-      </ul>
+    <h3>Combat HUD — <span class="trait">aposhud</span></h3>
+    <ul>
+    <li>The mod's statuses are not in the vanilla buff column: the combat HUD shows them by the crosshair, by the toolbelt and above zombies. Each one is explained in <a href="#hud">HUD statuses</a>.</li>
+    <li>Every counter is also a line in the Status Effects window, with its description.</li>
+    <li><code>aposhud on</code> / <code>off</code>, <code>aposhud size 0.6–1.6</code>, <code>aposhud pos below|right|left</code>.</li>
+    </ul>
+    </article>
+    <article class="card">
+    <h3>Mastery testing — <span class="trait">aposmastery</span></h3>
+    <ul>
+    <li>Works on the class of the weapon in your hands: <code>aposmastery level N</code>, <code>aposmastery max</code>, <code>aposmastery branch A|B|H</code> (learns the whole branch), <code>aposmastery reset</code>.</li>
+    <li><code>aposfx quake|echo|knock|shock|boom|bolt</code> shows an effect in front of you.</li>
+    </ul>
     </article>
     <article class="card"><h3>Bird nests</h3><ul><li>Three times more feathers: from the nest's contents (3 + 3–15 instead of 1 + 1–5) and when picking up the nest itself.</li></ul></article>
     <article class="card">
@@ -1052,7 +1055,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
     <div class="stripe" aria-hidden="true"></div>
     <div class="meta">7 Days to Die 3.4 · AposMod 2.0.0</div>
     <h1>Справочник AposMod</h1>
-    <p class="sub">Фишки оружия, аффиксы, перки и атрибуты, стихии, моды, легендарное оружие и настройки в одном месте. Числа «0 → 5» зависят от уровня соответствующего перка.</p>
+    <p class="sub">Фишки оружия, аффиксы, перки и атрибуты, стихии, моды, легендарное оружие и настройки в одном месте. В таблицах оружия колонка 0 — сама фишка, 1–3 — ранги навыка мастерства, названного в строке.</p>
   </div>
 </header>
 
@@ -1102,142 +1105,149 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
 
 <section id="melee" data-sec>
   <h2>Ближний бой <small>ЛКМ — обычный удар, ПКМ — силовой</small></h2>
-  <p class="lead">Обычный удар даёт небольшой бонус, силовой — главную фишку класса.</p>
+  <p class="lead">У каждого класса своя фишка с 0 уровня мастерства. Навыки его дерева мастерства её усиливают: в таблицах — сама фишка (0) и ранги навыка из строки. Полные деревья — в разделе «Мастерство оружия» выше.</p>
   <div class="grid">
 
     <article class="card">
       <h3>Ножи и мачете — <span class="trait">Bloodsucker</span></h3>
-      <div class="tagline">Перк: Deep Cuts</div>
+      <div class="tagline">Фишка класса · дерево ножей</div>
       <ul>
-        <li>Каждый удар добавляет стак регенерации (силовой — два): +1 HP/с за стак, каждый удар продлевает действие до 5 с.</li>
-        <li>Силовой удар вызывает кровотечение.</li>
+        <li>Каждый удар — стак регенерации: +1 HP/с (силовой +2). Стаки держатся 5 с от последнего удара. Полный сет Assassin даёт +2 стака.</li>
+        <li>Силовой удар вызывает кровотечение. Обычные удары — только с Deep Cuts.</li>
       </ul>
-      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Макс. стаков</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr></table></div>
-      <div class="five"><b>5 уровень — Blood Feast:</b> убийство ножом на максимуме стаков сразу лечит 25 HP.</div>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Максимум стаков (Thirst)</td><td>2</td><td>4</td><td>5</td><td>8</td></tr><tr><td>Кровотечение от обычных (Deep Cuts)</td><td>—</td><td>15%</td><td>30%</td><td>60%</td></tr></table></div>
+      <div class="five"><b>Капстоун — Blood Feast:</b> 10% урона по кровоточащим зомби возвращается здоровьем, убийство на максимуме стаков лечит 25 HP. Минус: −30% по зомби без кровотечения.</div>
     </article>
 
     <article class="card">
       <h3>Дубинки и биты — <span class="trait">Home Run</span></h3>
-      <div class="tagline">Перк: Pummel Pete</div>
+      <div class="tagline">Фишка класса · дерево дубинок</div>
       <ul>
-        <li>Обычный удар может оглушить цель на 1 с.</li>
-        <li>Силовой удар в голову подбрасывает зомби и сбивает его с ног.</li>
-        <li>Силовой удар по оглушённому наносит дополнительный урон.</li>
+        <li>Обычный удар с шансом 15% оглушает на 1 с. Оглушённого 3 с нельзя оглушить снова.</li>
+        <li>Силовой в голову подбрасывает зомби и сбивает с ног (сила 800, полный сет Bruiser +300).</li>
       </ul>
-      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Оглушение</td><td>15%</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td></tr><tr><td>Сила отбрасывания</td><td>800</td><td>950</td><td>1100</td><td>1250</td><td>1400</td><td>1550</td></tr><tr><td>Силовой по оглушённым</td><td>—</td><td>+10%</td><td>+20%</td><td>+30%</td><td>+40%</td><td>+50%</td></tr></table></div>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Шанс оглушения (Stunning Blow)</td><td>15%</td><td>20%</td><td>25%</td><td>40%</td></tr><tr><td>Силовой по оглушённому (Kick Them While Down)</td><td>—</td><td>+20%</td><td>+40%</td><td>+80%</td></tr></table></div>
       <div class="cost">Силовой удар тратит на 30% больше выносливости.</div>
-      <div class="five"><b>5 уровень:</b> Home Run срабатывает от силового удара в любую часть тела, а <b>каждый 3-й обычный удар</b> тоже подбрасывает зомби.</div>
+      <div class="five"><b>Angry Home Run</b> (гибрид): на максимуме Ярости любой силовой подбрасывает, не только в голову.</div>
+    </article>
+
+    <article class="card">
+      <h3>Дубинки и биты — <span class="trait">Rage</span></h3>
+      <div class="tagline">Дерево дубинок, ветка B · вместо перка Grand Slam (скрыт, очки возвращены)</div>
+      <ul>
+        <li>Убийство дубинкой или битой даёт стак на 8 с: +10% урона, +5% скорости атаки. Убийства кувалдой не считаются.</li>
+        <li>Полный сет Bruiser даёт +1 стак.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Максимум стаков (Rage)</td><td>—</td><td>2</td><td>4</td><td>8</td></tr></table></div>
+      <div class="five"><b>Rampage:</b> на максимуме Ярости удары не тратят выносливость, вас нельзя оглушить или сбить с ног. <b>Капстоун — Berserk:</b> вдвое больше стаков (16), каждый удар лечит 1 HP за каждые 4 стака. Минус: вы получаете +25% урона.</div>
     </article>
 
     <article class="card">
       <h3>Кувалды — <span class="trait">Earthquake</span></h3>
-      <div class="tagline">Перк: Skull Crusher</div>
+      <div class="tagline">Фишка класса · дерево кувалд</div>
       <ul>
-        <li>Обычный удар может сбить цель с ног.</li>
-        <li>Силовой удар сбивает с ног всех зомби вокруг и наносит каждому урон: число из таблицы или 10% силового удара за уровень, если это больше.</li>
+        <li>Обычный удар с шансом 20% сбивает цель с ног.</li>
+        <li>Силовой сбивает всех зомби вокруг (полный сет Bruiser +1 м) и наносит каждому 10% своего урона. Видно по пыли, кольцам по земле и тряске камеры.</li>
       </ul>
-      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Сбить обычным</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td><td>45%</td></tr><tr><td>Радиус</td><td>3 м</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Урон сбитым</td><td>—</td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr></table></div>
-      <div class="cost">Перезарядка 4 с. Силовой удар тратит на 50% больше выносливости.</div>
-      <div class="five"><b>5 уровень — Aftershock:</b> сбитые зомби ещё около 3 с оглушены после того, как поднимутся.</div>
-    </article>
-    <article class="card">
-      <h3>Дубинки и кувалды — <span class="trait">Rage</span></h3>
-      <div class="tagline">Перк: Rage (вместо Grand Slam)</div>
-      <ul>
-        <li>Убийство дубинкой, битой или кувалдой даёт стак на 8 с: +10% урона, +5% скорости атаки.</li>
-        <li>Максимум стаков равен уровню перка (1–5).</li>
-      </ul>
-      <div class="five"><b>5 уровень — Rampage:</b> на 5 стаках удары не тратят выносливость, а вас нельзя оглушить или сбить с ног.</div>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Радиус (Wide Quake)</td><td>3 м</td><td>3.5</td><td>4</td><td>6</td></tr><tr><td>Доля удара (Shockforce)</td><td>10%</td><td>20%</td><td>30%</td><td>50%</td></tr><tr><td>Перезарядка (Frequent Quakes)</td><td>10 с</td><td>8</td><td>6</td><td>3</td></tr><tr><td>Сбивание обычным (Stagger)</td><td>20%</td><td>25%</td><td>30%</td><td>45%</td></tr></table></div>
+      <div class="cost">Силовой удар тратит на 50% больше выносливости.</div>
+      <div class="five"><b>Капстоун — Aftershock:</b> через 1.5 с второй толчок, а сбитые зомби ещё 3 с оглушены после подъёма. Минус: перезарядка +2 с.</div>
     </article>
 
     <article class="card">
       <h3>Жезлы — <span class="trait">Chain Lightning</span></h3>
-      <div class="tagline">Перк: Calculated Attack · жезлы и дубинка из трубы</div>
+      <div class="tagline">Фишка класса · дерево жезлов · жезлы и дубинка из трубы</div>
       <ul>
-        <li>Обычный удар ненадолго шокирует цель.</li>
-        <li>Силовой удар шокирует всех зомби вокруг.</li>
+        <li>Обычный удар шокирует цель на 0.5 с.</li>
+        <li>Силовой шокирует и оглушает всех зомби вокруг на 2 с.</li>
       </ul>
-      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Шок обычным</td><td>0.5 с</td><td>0.6</td><td>0.7</td><td>0.8</td><td>0.9</td><td>1.0</td></tr><tr><td>Радиус силового</td><td>3 м</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Шок силовым</td><td>2 с</td><td>2.4</td><td>2.8</td><td>3.2</td><td>3.6</td><td>4.0</td></tr></table></div>
-      <div class="cost">Перезарядка 3 с. Силовой удар тратит на 50% больше выносливости.</div>
-      <div class="five"><b>5 уровень:</b> каждый 4-й обычный удар тоже запускает Chain Lightning.</div>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Радиус (Wide Arc)</td><td>3 м</td><td>3.5</td><td>4</td><td>5</td></tr><tr><td>Оглушение (Sustained Charge)</td><td>2 с</td><td>3</td><td>4</td><td>5</td></tr><tr><td>Шок обычного (Hold the Current)</td><td>0.5 с</td><td>0.75</td><td>1</td><td>1.5</td></tr></table></div>
+      <div class="cost">Перезарядка 10 с (Capacitor: до −50% от Интеллекта). Силовой удар тратит на 50% больше выносливости.</div>
+      <div class="five"><b>Tesla Coil</b> (большой гибрид): каждый 4-й удар по одной цели (Breakdown) запускает молнию без перезарядки.</div>
     </article>
 
     <article class="card">
       <h3>Копья — <span class="trait">Battering Ram</span></h3>
-      <div class="tagline">Перк: Spear Master</div>
+      <div class="tagline">Фишка класса · дерево копий</div>
       <ul>
         <li>Обычный удар отталкивает цель.</li>
-        <li>Силовой удар пробивает зомби позади и отбрасывает каждого.</li>
+        <li>Силовой пробивает зомби позади и отбрасывает каждого.</li>
       </ul>
-      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Пробитие силовым</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr><tr><td>Сила толчка</td><td>120</td><td>160</td><td>200</td><td>240</td><td>280</td><td>320</td></tr></table></div>
-      <div class="five"><b>5 уровень — Skewer:</b> все зомби, которых задел силовой удар, падают с ног.</div>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Сила толчка (Strong Push)</td><td>120</td><td>160</td><td>200</td><td>320</td></tr><tr><td>Пробивает зомби (Through Strike)</td><td>1</td><td>2</td><td>3</td><td>6</td></tr></table></div>
+      <div class="five"><b>Капстоун — Breakthrough:</b> силовой на бегу вперёд — рывок на 6 м: всех на пути пробивает, сбивает и бьёт x2. Минус: 1.5 с после рывка почти нельзя атаковать.</div>
     </article>
 
     <article class="card">
       <h3>Кастеты — <span class="trait">Counter Punch</span></h3>
-      <div class="tagline">Перк: The Brawler</div>
+      <div class="tagline">Фишка класса · дерево кастетов</div>
       <ul>
-        <li>Полученный удар заполняет заряды. Таймера нет.</li>
-        <li>Обычный удар: +25% урона, минус 1 заряд; может дать новый заряд.</li>
-        <li>Силовой удар: тратит все заряды, +50% урона за каждый, сбивает с ног.</li>
+        <li>Каждый полученный удар даёт заряд. Без таймера.</li>
+        <li>Обычный удар тратит 1 заряд и бьёт сильнее.</li>
+        <li>Силовой тратит все заряды: +50% за каждый, и сбивает с ног.</li>
       </ul>
-      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Заряды</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>Шанс +1 заряд</td><td>—</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td></tr></table></div>
-      <div class="five"><b>5 уровень — Knockout:</b> силовой удар на полных зарядах убивает любого не элитного зомби.</div>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Заряды (More Charges)</td><td>2</td><td>3</td><td>4</td><td>7</td></tr><tr><td>Обычный с зарядом (Retort)</td><td>+25%</td><td>+40%</td><td>+60%</td><td>+100%</td></tr></table></div>
+      <div class="five"><b>Капстоун — Knockout:</b> силовой на полных зарядах убивает любого не-элитного зомби; элита получает x3 и лежит 3 с. Минус: 15 с после этого вы на 20% медленнее.</div>
     </article>
-
 
   </div>
 </section>
 
 <section id="ranged" data-sec>
   <h2>Дальний бой</h2>
-  <p class="lead">Каждая фишка растёт вместе с перком своего оружия.</p>
+  <p class="lead">Как и в ближнем бою: фишка работает с 0 уровня мастерства, навыки дерева класса её усиливают.</p>
   <div class="grid">
 
     <article class="card">
       <h3>Пистолеты и ПП — <span class="trait">Headhunter</span></h3>
-      <div class="tagline">Перк: Gunslinger</div>
+      <div class="tagline">Фишка класса · дерево пистолетов (общее у пистолетов и ПП)</div>
       <ul>
-        <li>5 хедшотов подряд (4 в полном сете Gunslinger) включают режим усиленных выстрелов. Промах или попадание в тело обнуляет серию.</li>
-        <li>Усиленные выстрелы бьют сильнее и почти без разброса.</li>
+        <li>5 попаданий в голову подряд (4 с полным сетом Gunslinger) включают режим Охотника: следующие выстрелы усилены и почти без разброса.</li>
+        <li>Промах или попадание в тело обрывает серию.</li>
       </ul>
-      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Выстрелов</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td></tr><tr><td>Урон</td><td>+25%</td><td>+35%</td><td>+45%</td><td>+55%</td><td>+65%</td><td>+75%</td></tr></table></div>
-      <div class="five"><b>5 уровень:</b> каждое убийство <b>в голову</b> в этом режиме добавляет ещё 2 выстрела.</div>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Усиленных выстрелов (The Hunt Goes On)</td><td>6</td><td>9</td><td>12</td><td>15</td></tr><tr><td>Урон (Lethal Precision, 2 ранга)</td><td>+20%</td><td>+40%</td><td>+70%</td><td>—</td></tr><tr><td>Нужно попаданий в голову (Cold Blood)</td><td>5</td><td>4</td><td>4</td><td>3</td></tr></table></div>
+      <div class="five">The Hunt Goes On 3/3: убийство в голову в режиме добавляет 2 выстрела. Cold Blood 2/3: промах снимает 1 попадание вместо всей серии.</div>
     </article>
+
     <article class="card">
-      <h3>Дробовики — <span class="trait">Slug Knockback</span></h3>
+      <h3>Дробовики — <span class="trait">Sledgehammer in the Barrel</span></h3>
+      <div class="tagline">Фишка класса · дерево дробовиков</div>
       <ul>
-        <li>Пуля (Slug и Breaching Slug) отбрасывает зомби и сбивает его с ног. Дробь делает то же в упор (до 3 м); сила растёт с Boomstick.</li>
+        <li>Пули (Slug и Breaching Slug) отбрасывают зомби и сбивают с ног (сила 1000). Картечь делает это в упор, до 3 м (сила 300).</li>
+        <li>Элиты устоят.</li>
         <li>Breaching Slug бьёт только до 4 м — так задумано в самой игре.</li>
       </ul>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Доп. сила (Brawn) × Сила</td><td>—</td><td>+20</td><td>+35</td><td>+50</td></tr></table></div>
+      <div class="five"><b>Bouncer 2/2:</b> элиты тоже падают. <b>Pump Action:</b> убийство пулей заряжает 1 / 2 патрона.</div>
     </article>
 
     <article class="card">
       <h3>Винтовки — <span class="trait">Ricochet</span></h3>
-      <div class="tagline">Перк: Dead Eye</div>
-      <ul><li>Хедшот ранит всех зомби рядом с местом попадания: число из таблицы или доля урона хедшота (5% → 20% по уровню), если это больше.</li></ul>
-      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Радиус</td><td>5 м</td><td>7</td><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>Урон</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td></tr></table></div>
-      <div class="five"><b>5 уровень:</b> рикошет ещё и оглушает всех, кого задел, на 2 с (раз в 4 с).</div>
+      <div class="tagline">Фишка класса · дерево винтовок</div>
+      <ul>
+        <li>Выстрел в голову ранит зомби рядом с целью, каждого на долю урона выстрела (минимум 20).</li>
+      </ul>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Целей (More Targets)</td><td>3</td><td>5</td><td>7</td><td>10</td></tr><tr><td>Доля выстрела (Ricochet Power)</td><td>5%</td><td>15%</td><td>25%</td><td>45%</td></tr><tr><td>Радиус (Wide Ricochet), за уровень Восприятия</td><td>5 м</td><td>+0.5</td><td>+0.8</td><td>+1</td></tr><tr><td>Оглушение (Stunning Ricochet)</td><td>—</td><td>0.5 с</td><td>1</td><td>2</td></tr></table></div>
+      <div class="five">Stunning Ricochet оглушает одного зомби не чаще раза в 4 с. Wide Ricochet добавляет не больше 10 м.</div>
     </article>
 
     <article class="card">
       <h3>Автоматы и пулемёты — <span class="trait">Suppression</span></h3>
-      <div class="tagline">Перк: Machine Gunner</div>
+      <div class="tagline">Фишка класса · дерево пулемётов</div>
       <ul>
-        <li>Каждое попадание добавляет цели 5% замедления на 8 с — до максимума из таблицы.</li>
-        <li>Каждое 4-е попадание возвращает 1 патрон в магазин (каждое 3-е в полном сете Commando).</li>
+        <li>Каждое попадание замедляет цель на 5% на 8 с, до максимума.</li>
+        <li>Каждое 4-е попадание возвращает патрон в магазин (каждое 3-е с полным сетом Commando).</li>
       </ul>
-      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Макс. замедление</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td><td>60%</td></tr></table></div>
-      <div class="five"><b>5 уровень:</b> +25% урона по полностью замедленным, а каждое убийство приносит 5 патронов того типа, что заряжен.</div>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Макс. замедление (Heavy Fire)</td><td>20%</td><td>30%</td><td>50%</td><td>80%</td></tr><tr><td>Урон по подавленным (Pin Down)</td><td>—</td><td>+15%</td><td>+30%</td><td>+50%</td></tr><tr><td>Патрон назад каждое N-е попадание (Thrifty; с 2 ранга убийство +2)</td><td>4</td><td>3</td><td>3</td><td>2</td></tr></table></div>
+      <div class="five"><b>Belt Feed:</b> на полной раскрутке каждое убийство заряжает 3 патрона, перезарядка не сбрасывает раскрутку.</div>
     </article>
 
     <article class="card">
       <h3>Луки — <span class="trait">Splinter</span></h3>
-      <div class="tagline">Перк: Archery</div>
-      <ul><li>Стрела при попадании разлетается на осколки. Каждый осколок летит в ближайшего другого зомби в радиусе 5 м.</li></ul>
-      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Осколков</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>8</td></tr><tr><td>Урон осколка, минимум</td><td>40</td><td>50</td><td>60</td><td>70</td><td>80</td><td>100</td></tr></table></div>
-      <ul><li>Если стрела попала сильнее, осколок берёт <b>половину её урона</b> (до 300).</li></ul>
-      <div class="five"><b>5 уровень:</b> стрела в голову поджигает цель.</div>
+      <div class="tagline">Фишка класса · дерево луков</div>
+      <ul>
+        <li>При попадании стрела разлетается на осколки, каждый летит в ближайшего другого зомби в 5 м.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Осколков (More Splinters)</td><td>2</td><td>4</td><td>6</td><td>10</td></tr><tr><td>Доля стрелы (Sharp Splinters)</td><td>50%</td><td>60%</td><td>75%</td><td>100%</td></tr><tr><td>Минимум урона (Sharp Splinters)</td><td>40</td><td>60</td><td>80</td><td>100</td></tr></table></div>
       <ul>
         <li><b>Управление:</b> лук сам накладывает следующую стрелу, пока он в руках. <b>R</b> сразу открывает колесо стрел без задержки: зажмите, наведите, отпустите.</li>
       </ul>
@@ -1255,16 +1265,14 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
     </article>
 
     <article class="card">
-      <h3>Арбалеты — <span class="trait">Mark · Pin</span></h3>
-      <div class="tagline">Перк: Archery</div>
+      <h3>Арбалеты — <span class="trait">Mark</span></h3>
+      <div class="tagline">Фишка класса · дерево арбалетов</div>
       <ul>
-        <li><b>Mark:</b> болт помечает зомби на 10 с. Весь ваш урон по нему, любым оружием, растёт. Над помеченным зомби светится красное кольцо-прицел, видно даже сквозь стены.</li>
-        <li><b>Pin</b> (только арбалеты, не луки): если за зомби до 3 м стена, болт прибивает его до самой смерти. Элитного — на 10 с.</li>
+        <li>Болт помечает зомби на 10 с: весь ваш урон по нему, любым оружием, выше. Над ним горит красное кольцо, видно даже сквозь стены.</li>
       </ul>
-      <div class="scale"><table><tr><th>Уровень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Бонус Mark</td><td>+20%</td><td>+40%</td><td>+60%</td><td>+80%</td><td>+100%</td><td>+120%</td></tr></table></div>
-      <div class="five"><b>5 уровень — Hunting Party:</b> болт помечает всех зомби в радиусе 4 м от попадания.</div>
+      <div class="scale"><table><tr><th>Ранг навыка</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Бонус Метки (Deep Mark)</td><td>+20%</td><td>+35%</td><td>+50%</td><td>+80%</td></tr><tr><td>Метит всех вокруг попадания (Spread Mark)</td><td>—</td><td>2 м</td><td>3 м</td><td>5 м</td></tr></table></div>
+      <div class="five"><b>Sticky Charge</b> (ветка B): болт прилипает и через 2 с взрывается, 30% / 50% / 100% урона болта в 2 / 2.5 / 5 м. <b>Капстоун — Hunting Party:</b> бонус Метки вдвое, убийство меченого метит 3 ближайших зомби в 8 м. Минус: болты −40%.</div>
     </article>
-
 
   </div>
 </section>
@@ -1288,7 +1296,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
     <article class="card">
       <h3>Откуда берутся стихии</h3>
       <ul>
-        <li><b>Огонь:</b> мод Incendiary, молотов, огненные стрелы, Splinter на 5 уровне, легендарки Dragon's Breath, Storm Fist, Artemis.</li>
+        <li><b>Огонь:</b> мод Incendiary, молотов, огненные стрелы, легендарки Dragon's Breath, Storm Fist, Artemis.</li>
         <li><b>Ток:</b> мод Tesla, жезлы (Chain Lightning), легендарки Thunderclap, Storm Fist.</li>
         <li><b>Кислота:</b> мод Corrosive, легендарка Hornet.</li><li><b>Кровотечение</b> от ваших ударов (ножи, зубчатое лезвие, колючая проволока, Ripper): каждую секунду 5% урона последнего удара (минимум 5).</li><li>Ванильный мод <b>Burning Shaft</b> (горящее древко) поджигает с шансом 5–30% вместо 10–60%: его огонь теперь тоже зависит от урона удара.</li>
       </ul>
@@ -1336,7 +1344,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
         <li><b>Качество 1:</b> без аффиксов.</li>
         <li><b>Качество 2–3:</b> до 1 (шанс 50%).</li>
         <li><b>Качество 4–5:</b> до 2 (75% / 35%).</li>
-        <li><b>Качество 6:</b> до 3 (100% / 60% / 30%), значения на максимуме.</li>
+        <li><b>Качество 6:</b> до 3 (100% / 60% / 30%); значения выпадают в верхнем диапазоне (например, урон +25…35%).</li>
         <li>Одинаковых аффиксов на одном оружии не бывает. После объединения двух стволов лишние аффиксы исчезают; станок для соединения заранее показывает аффиксы результата и те, что будут убраны.</li>
         <li>Аффиксы видны вверху подсказки предмета, а на иконке есть значок-звёздочка.</li>
       </ul>
@@ -1351,7 +1359,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
         <li><b>Урон</b> +5% → +35%</li>
         <li><b>Скорость перезарядки</b> +10% → +40%</li>
         <li><b>Дробины</b> (дробовики) +10% → +35%</li>
-        <li><b>Вторая пуля</b> (пистолеты, винтовки, автоматы, только качество 6): 2 пули за выстрел, каждая −40% урона</li>
+        <li><b>Вторая пуля</b> (любое огнестрельное оружие, кроме дробовиков, только качество 6): 2 пули за выстрел, каждая −40% урона</li>
         <li><b>Урон в голову</b> +10% → +60%</li>
         <li><b>Размер магазина</b> +10% → +60% (не на луках и арбалетах)</li>
         <li><b>Скорость передвижения</b> с оружием в руках +2% → +10%</li>
@@ -1443,7 +1451,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
         <li><b>Flurry of Perception — Frenzy:</b> убийство копьём даёт +15% скорости атак на 5 с.</li>
         <li><b>Demolitions Expert — Chain Reaction:</b> зомби, убитый вашей взрывчаткой, сам взрывается: 250 урона в 4 м или половина добивающего удара, если это больше.</li>
         <li><b>Penetrator — Shrapnel:</b> бронебойные патроны наносят 40% урона выстрела всем в 3 м от цели.</li>
-        <li><b>Infiltrator — Ghost:</b> в присяде вас вдвое сложнее заметить, удар по зомби, который вас не видит, ×2, а мины и ловушки вам не вредят.</li>
+        <li><b>Infiltrator — Ghost:</b> в присяде вас вдвое сложнее заметить, удар по зомби, который вас не видит, ×2, мины вам не вредят, а ловушки бьют на 25% слабее.</li>
         <li><b>Animal Tracker — Hunter's Mark:</b> попадание по животному ставит на него Mark.</li>
         <li><b>Treasure Hunter — X Marks the Spot:</b> круг поиска клада сжимается почти до точки, а в сундуке лежит оружие качества 5–6 с аффиксами.</li>
         <li><b>Salvage Operations — Junk Genius:</b> инструменты для разборки изнашиваются на 90% медленнее.</li>
@@ -1454,7 +1462,6 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
       <h3>Strength — <span class="trait">уровень 5</span></h3>
       <ul>
         <li><b>Flurry of Strength — Frenzy:</b> убийство дубинкой или кувалдой даёт +15% скорости атак на 5 с.</li>
-        <li><b>Boomstick — Pump Action:</b> убийство из дробовика заряжает 2 патрона в магазин.</li>
         <li><b>Pack Mule — Beast of Burden:</b> перегруз больше не замедляет.</li>
         <li><b>Strength Mastery — Crippling Blows:</b> силовой удар дубинкой или кувалдой ломает зомби ноги, и он ползёт.</li>
         <li><b>Miner 69'er — Tunnel Rat:</b> инструменты для добычи тратят на 50% меньше выносливости.</li>
@@ -1511,11 +1518,8 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
         <li><b>Lucky Looter 5 — Fortune:</b> найденное оружие получает +1 аффикс в пределах лимита качества.</li>
       </ul>
     </article>
-    <article class="card"><h3>Grand Slam → <span class="trait">Rage</span></h3><ul><li>Сбивание с ног на бегу убрано. Описание Rage — в разделе «Ближний бой».</li></ul></article>
+    <article class="card"><h3>Перки, изменённые <span class="trait">Мастерством оружия 2.0</span></h3><ul><li><b>Grand Slam:</b> скрыт, очки возвращены. Rage — навык дерева дубинок.</li><li><b>Pummel Pete:</b> убраны бонус по оглушённым, серия ударов и сбивание силовым (в дереве дубинок есть Kick Them While Down, Concussion и Batting Streak).</li><li><b>Skull Crusher:</b> убраны сбивания силовым ударом (это делает фишка кувалд Earthquake).</li><li><b>The Brawler:</b> убраны оглушение силовым и сбивание ударом в голову (сбивает Counter Punch).</li><li><b>Deep Cuts:</b> обычные удары ножом больше не вызывают кровотечение (это делает навык ножей Deep Cuts); силовые оставляют ванильные раны.</li><li><b>Gunslinger 3–5:</b> убран выстрел +100% после серии попаданий (это делают Headhunter и Firing Squad).</li><li><b>Boomstick:</b> бонуса мода больше нет; Pump Action — навык дерева дробовиков.</li><li>Всё остальное, что эти перки делают в игре, работает.</li></ul></article>
     <article class="card"><h3>Intellect Mastery 4–5</h3><ul><li><b>4 — Field Repair:</b> всё оружие, инструменты и броня изнашиваются на 30% медленнее.</li><li><b>5 — Inventor:</b> скрафченное оружие получает случайные аффиксы, как оружие из лута того же качества. Всё скрафченное выходит на уровень качества выше выбранного в рецепте (выбрали 5 — получили 6); если выбрать 6, оружие, инструменты и броня получаются качества 6 и 7-го уровня кузни.</li><li>Прежние бонусы жезла (заряд за 2 удара, +300% урона током) убраны.</li></ul></article>
-    <article class="card"><h3>Pummel Pete</h3><ul><li>Убрано: силовой удар по оглушённому оглушал его «навсегда».</li><li>Взамен: силовой удар по оглушённому +10…50% урона.</li></ul></article>
-    <article class="card"><h3>Skull Crusher</h3><ul><li>Убрано: шансы сбить с ног силовым ударом.</li><li>Взамен: Earthquake наносит 10…50 урона каждому сбитому.</li></ul></article>
-    <article class="card"><h3>The Brawler</h3><ul><li>Убрано: силовой удар оглушает, а в голову — сбивает с ног.</li><li>Взамен: обычный удар с шансом 10…50% даёт заряд Counter Punch.</li></ul></article>
   </div>
 </section>
 
@@ -1607,6 +1611,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
     <div class="dmg"><span class="num n-yellow">90!</span><span>Хедшот</span></div>
     <div class="dmg"><span class="num n-cyan">120</span><span>Удар, усиленный баффом: Headhunter, Rage, Counter Punch, Mark, Suppression, кислота</span></div>
     <div class="dmg"><span class="num n-red">Труп!</span><span>Смертельный удар (надпись над цифрой)</span></div>
+    <div class="dmg"><span class="num n-orange">Backstab!</span><span>Надпись навыка над числом (нож: Backstab!, SPINE STRIKE!!)</span></div>
     <div class="dmg"><span class="num n-magenta">60</span><span>Реакция стихий</span></div>
     <div class="dmg"><span class="num n-orange">8</span><span>Горение</span></div>
     <div class="dmg"><span class="num n-green">3</span><span>Кислота</span></div>
@@ -1663,20 +1668,19 @@ aposbow off | on  выключить / включить автоналожени
       </ul>
     </article>
     <article class="card">
-      <h3>Индикаторы-баффы</h3>
-      <ul>
-        <li>Bloodsucker — стаки регенерации ножа</li>
-        <li>Counter Punch — заряды кастетов</li>
-        <li>Veteran Junk — бонус самодельного оружия, %</li>
-        <li>Headhunter — остаток усиленных выстрелов</li>
-        <li>Rage — стаки</li>
-        <li>Guardian Protocol, Energy Shield</li>
-        <li>Перезарядка Earthquake, Chain Lightning и оглушения Ricochet</li>
-        <li>Грозовые заряды Thunderclap, бесплатная ракета Big Boom</li>
-        <li>Красное кольцо над зомби — на нём Mark арбалета</li>
-        <li>Frenzy, Adrenaline (стаки), заряды молнии, Jackpot, Evasion</li>
-        <li>Перезарядка Second Wind (5 мин) и Second Lungs (60 с)</li>
-      </ul>
+    <h3>Боевой HUD — <span class="trait">aposhud</span></h3>
+    <ul>
+    <li>Статусов мода нет в ванильной колонке баффов: их показывает боевой HUD у прицела, у пояса и над зомби. Каждый объяснён в разделе <a href="#hud">Статусы HUD</a>.</li>
+    <li>Каждый счётчик — ещё и строка в окне «Эффекты» с описанием.</li>
+    <li><code>aposhud on</code> / <code>off</code>, <code>aposhud size 0.6–1.6</code>, <code>aposhud pos below|right|left</code>.</li>
+    </ul>
+    </article>
+    <article class="card">
+    <h3>Тест мастерства — <span class="trait">aposmastery</span></h3>
+    <ul>
+    <li>Работает с классом оружия в руках: <code>aposmastery level N</code>, <code>aposmastery max</code>, <code>aposmastery branch A|B|H</code> (изучает всю ветку), <code>aposmastery reset</code>.</li>
+    <li><code>aposfx quake|echo|knock|shock|boom|bolt</code> показывает эффект перед вами.</li>
+    </ul>
     </article>
     <article class="card"><h3>Птичьи гнёзда</h3><ul><li>Втрое больше перьев: из содержимого гнезда (3 + 3–15 вместо 1 + 1–5) и при сборе самого гнезда.</li></ul></article>
     <article class="card">
@@ -1704,7 +1708,7 @@ aposbow off | on  выключить / включить автоналожени
     <div class="stripe" aria-hidden="true"></div>
     <div class="meta">7 Days to Die 3.4 · AposMod 2.0.0</div>
     <h1>Довідник AposMod</h1>
-    <p class="sub">Фішки зброї, афікси, перки й атрибути, стихії, моди, легендарна зброя й налаштування в одному місці. Числа «0 → 5» залежать від рівня відповідного перка.</p>
+    <p class="sub">Фішки зброї, афікси, перки й атрибути, стихії, моди, легендарна зброя й налаштування в одному місці. У таблицях зброї колонка 0 — сама фішка, 1–3 — ранги навички майстерності, названої в рядку.</p>
   </div>
 </header>
 
@@ -1754,142 +1758,149 @@ aposbow off | on  выключить / включить автоналожени
 
 <section id="melee" data-sec>
   <h2>Ближній бій <small>ЛКМ — звичайний удар, ПКМ — силовий</small></h2>
-  <p class="lead">Звичайний удар дає невеликий бонус, силовий — головну фішку класу.</p>
+  <p class="lead">У кожного класу своя фішка з 0 рівня майстерності. Навички його дерева майстерності її підсилюють: у таблицях — сама фішка (0) і ранги навички з рядка. Повні дерева — в розділі «Майстерність зброї» вище.</p>
   <div class="grid">
 
     <article class="card">
       <h3>Ножі й мачете — <span class="trait">Bloodsucker</span></h3>
-      <div class="tagline">Перк: Deep Cuts</div>
+      <div class="tagline">Фішка класу · дерево ножів</div>
       <ul>
-        <li>Кожен удар додає стак регенерації (силовий — два): +1 HP/с за стак, кожен удар продовжує дію до 5 с.</li>
-        <li>Силовий удар спричиняє кровотечу.</li>
+        <li>Кожен удар — стак регенерації: +1 HP/с (силовий +2). Стаки тримаються 5 с від останнього удару. Повний сет Assassin дає +2 стаки.</li>
+        <li>Силовий удар спричиняє кровотечу. Звичайні удари — лише з Deep Cuts.</li>
       </ul>
-      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Макс. стаків</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr></table></div>
-      <div class="five"><b>5 рівень — Blood Feast:</b> вбивство ножем на максимумі стаків одразу лікує 25 HP.</div>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Максимум стаків (Thirst)</td><td>2</td><td>4</td><td>5</td><td>8</td></tr><tr><td>Кровотеча від звичайних (Deep Cuts)</td><td>—</td><td>15%</td><td>30%</td><td>60%</td></tr></table></div>
+      <div class="five"><b>Капстоун — Blood Feast:</b> 10% шкоди по зомбі з кровотечею повертається здоров'ям, вбивство на максимумі стаків лікує 25 HP. Мінус: −30% по зомбі без кровотечі.</div>
     </article>
 
     <article class="card">
       <h3>Дубинки й біти — <span class="trait">Home Run</span></h3>
-      <div class="tagline">Перк: Pummel Pete</div>
+      <div class="tagline">Фішка класу · дерево дубинок</div>
       <ul>
-        <li>Звичайний удар може оглушити ціль на 1 с.</li>
-        <li>Силовий удар у голову підкидає зомбі й валить його з ніг.</li>
-        <li>Силовий удар по оглушеному завдає додаткової шкоди.</li>
+        <li>Звичайний удар з шансом 15% оглушує на 1 с. Оглушеного 3 с не можна оглушити знову.</li>
+        <li>Силовий у голову підкидає зомбі й валить з ніг (сила 800, повний сет Bruiser +300).</li>
       </ul>
-      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Оглушення</td><td>15%</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td></tr><tr><td>Сила відкидання</td><td>800</td><td>950</td><td>1100</td><td>1250</td><td>1400</td><td>1550</td></tr><tr><td>Силовий по оглушених</td><td>—</td><td>+10%</td><td>+20%</td><td>+30%</td><td>+40%</td><td>+50%</td></tr></table></div>
-      <div class="cost">Силовий удар забирає на 30% більше витривалості.</div>
-      <div class="five"><b>5 рівень:</b> Home Run спрацьовує від силового удару в будь-яку частину тіла, а <b>кожен 3-й звичайний удар</b> теж підкидає зомбі.</div>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Шанс оглушення (Stunning Blow)</td><td>15%</td><td>20%</td><td>25%</td><td>40%</td></tr><tr><td>Силовий по оглушеному (Kick Them While Down)</td><td>—</td><td>+20%</td><td>+40%</td><td>+80%</td></tr></table></div>
+      <div class="cost">Силовий удар витрачає на 30% більше витривалості.</div>
+      <div class="five"><b>Angry Home Run</b> (гібрид): на максимумі Люті будь-який силовий підкидає, не лише в голову.</div>
+    </article>
+
+    <article class="card">
+      <h3>Дубинки й біти — <span class="trait">Rage</span></h3>
+      <div class="tagline">Дерево дубинок, гілка B · замість перка Grand Slam (схований, очки повернено)</div>
+      <ul>
+        <li>Вбивство дубинкою чи битою дає стак на 8 с: +10% шкоди, +5% швидкості атаки. Вбивства кувалдою не рахуються.</li>
+        <li>Повний сет Bruiser дає +1 стак.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Максимум стаків (Rage)</td><td>—</td><td>2</td><td>4</td><td>8</td></tr></table></div>
+      <div class="five"><b>Rampage:</b> на максимумі Люті удари не витрачають витривалість, вас не можна оглушити чи збити з ніг. <b>Капстоун — Berserk:</b> удвічі більше стаків (16), кожен удар лікує 1 HP за кожні 4 стаки. Мінус: ви отримуєте +25% шкоди.</div>
     </article>
 
     <article class="card">
       <h3>Кувалди — <span class="trait">Earthquake</span></h3>
-      <div class="tagline">Перк: Skull Crusher</div>
+      <div class="tagline">Фішка класу · дерево кувалд</div>
       <ul>
-        <li>Звичайний удар може збити ціль з ніг.</li>
-        <li>Силовий удар валить усіх зомбі навколо й завдає кожному шкоди: число з таблиці або 10% силового удару за рівень, якщо це більше.</li>
+        <li>Звичайний удар з шансом 20% валить ціль з ніг.</li>
+        <li>Силовий валить усіх зомбі довкола (повний сет Bruiser +1 м) і завдає кожному 10% своєї шкоди. Видно з пилу, кілець по землі й трусу камери.</li>
       </ul>
-      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Збити звичайним</td><td>20%</td><td>25%</td><td>30%</td><td>35%</td><td>40%</td><td>45%</td></tr><tr><td>Радіус</td><td>3 м</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Шкода збитим</td><td>—</td><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td></tr></table></div>
-      <div class="cost">Перезарядка 4 с. Силовий удар забирає на 50% більше витривалості.</div>
-      <div class="five"><b>5 рівень — Aftershock:</b> збиті зомбі ще близько 3 с оглушені після того, як підведуться.</div>
-    </article>
-    <article class="card">
-      <h3>Дубинки й кувалди — <span class="trait">Rage</span></h3>
-      <div class="tagline">Перк: Rage (замість Grand Slam)</div>
-      <ul>
-        <li>Вбивство дубинкою, битою чи кувалдою дає стак на 8 с: +10% шкоди, +5% швидкості атаки.</li>
-        <li>Найбільше стаків — стільки, який рівень перка (1–5).</li>
-      </ul>
-      <div class="five"><b>5 рівень — Rampage:</b> на 5 стаках удари не витрачають витривалість, а вас не можна оглушити чи збити з ніг.</div>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Радіус (Wide Quake)</td><td>3 м</td><td>3.5</td><td>4</td><td>6</td></tr><tr><td>Частка удару (Shockforce)</td><td>10%</td><td>20%</td><td>30%</td><td>50%</td></tr><tr><td>Перезарядка (Frequent Quakes)</td><td>10 с</td><td>8</td><td>6</td><td>3</td></tr><tr><td>Збивання звичайним (Stagger)</td><td>20%</td><td>25%</td><td>30%</td><td>45%</td></tr></table></div>
+      <div class="cost">Силовий удар витрачає на 50% більше витривалості.</div>
+      <div class="five"><b>Капстоун — Aftershock:</b> за 1.5 с другий поштовх, а збиті зомбі ще 3 с оглушені після підйому. Мінус: перезарядка +2 с.</div>
     </article>
 
     <article class="card">
       <h3>Жезли — <span class="trait">Chain Lightning</span></h3>
-      <div class="tagline">Перк: Calculated Attack · жезли й дубинка з труби</div>
+      <div class="tagline">Фішка класу · дерево жезлів · жезли й дубинка з труби</div>
       <ul>
-        <li>Звичайний удар коротко шокує ціль.</li>
-        <li>Силовий удар шокує всіх зомбі навколо.</li>
+        <li>Звичайний удар шокує ціль на 0.5 с.</li>
+        <li>Силовий шокує й оглушує всіх зомбі довкола на 2 с.</li>
       </ul>
-      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Шок звичайним</td><td>0.5 с</td><td>0.6</td><td>0.7</td><td>0.8</td><td>0.9</td><td>1.0</td></tr><tr><td>Радіус силового</td><td>3 м</td><td>3.5</td><td>4</td><td>4.5</td><td>5</td><td>5.5</td></tr><tr><td>Шок силовим</td><td>2 с</td><td>2.4</td><td>2.8</td><td>3.2</td><td>3.6</td><td>4.0</td></tr></table></div>
-      <div class="cost">Перезарядка 3 с. Силовий удар забирає на 50% більше витривалості.</div>
-      <div class="five"><b>5 рівень:</b> кожен 4-й звичайний удар теж запускає Chain Lightning.</div>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Радіус (Wide Arc)</td><td>3 м</td><td>3.5</td><td>4</td><td>5</td></tr><tr><td>Оглушення (Sustained Charge)</td><td>2 с</td><td>3</td><td>4</td><td>5</td></tr><tr><td>Шок звичайного (Hold the Current)</td><td>0.5 с</td><td>0.75</td><td>1</td><td>1.5</td></tr></table></div>
+      <div class="cost">Перезарядка 10 с (Capacitor: до −50% від Інтелекту). Силовий удар витрачає на 50% більше витривалості.</div>
+      <div class="five"><b>Tesla Coil</b> (великий гібрид): кожен 4-й удар по одній цілі (Breakdown) запускає блискавку без перезарядки.</div>
     </article>
 
     <article class="card">
       <h3>Списи — <span class="trait">Battering Ram</span></h3>
-      <div class="tagline">Перк: Spear Master</div>
+      <div class="tagline">Фішка класу · дерево списів</div>
       <ul>
         <li>Звичайний удар відштовхує ціль.</li>
-        <li>Силовий удар пробиває зомбі позаду й відкидає кожного.</li>
+        <li>Силовий пробиває зомбі позаду й відкидає кожного.</li>
       </ul>
-      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Пробиття силовим</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr><tr><td>Сила поштовху</td><td>120</td><td>160</td><td>200</td><td>240</td><td>280</td><td>320</td></tr></table></div>
-      <div class="five"><b>5 рівень — Skewer:</b> усі зомбі, яких зачепив силовий удар, падають з ніг.</div>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Сила поштовху (Strong Push)</td><td>120</td><td>160</td><td>200</td><td>320</td></tr><tr><td>Пробиває зомбі (Through Strike)</td><td>1</td><td>2</td><td>3</td><td>6</td></tr></table></div>
+      <div class="five"><b>Капстоун — Breakthrough:</b> силовий на бігу вперед — ривок на 6 м: усіх на шляху пробиває, валить і б'є x2. Мінус: 1.5 с після ривка майже не можна атакувати.</div>
     </article>
 
     <article class="card">
       <h3>Кастети — <span class="trait">Counter Punch</span></h3>
-      <div class="tagline">Перк: The Brawler</div>
+      <div class="tagline">Фішка класу · дерево кастетів</div>
       <ul>
-        <li>Отриманий удар заповнює заряди. Таймера немає.</li>
-        <li>Звичайний удар: +25% шкоди, мінус 1 заряд; може дати новий заряд.</li>
-        <li>Силовий удар: витрачає всі заряди, +50% шкоди за кожен, валить з ніг.</li>
+        <li>Кожен отриманий удар дає заряд. Без таймера.</li>
+        <li>Звичайний удар витрачає 1 заряд і б'є сильніше.</li>
+        <li>Силовий витрачає всі заряди: +50% за кожен, і валить з ніг.</li>
       </ul>
-      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Заряди</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>Шанс +1 заряд</td><td>—</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td></tr></table></div>
-      <div class="five"><b>5 рівень — Knockout:</b> силовий удар на повних зарядах вбиває будь-якого не елітного зомбі.</div>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Заряди (More Charges)</td><td>2</td><td>3</td><td>4</td><td>7</td></tr><tr><td>Звичайний із зарядом (Retort)</td><td>+25%</td><td>+40%</td><td>+60%</td><td>+100%</td></tr></table></div>
+      <div class="five"><b>Капстоун — Knockout:</b> силовий на повних зарядах вбиває будь-якого не-елітного зомбі; еліта отримує x3 і лежить 3 с. Мінус: 15 с після цього ви на 20% повільніші.</div>
     </article>
-
 
   </div>
 </section>
 
 <section id="ranged" data-sec>
   <h2>Дальній бій</h2>
-  <p class="lead">Кожна фішка росте разом із перком своєї зброї.</p>
+  <p class="lead">Як і в ближньому бою: фішка працює з 0 рівня майстерності, навички дерева класу її підсилюють.</p>
   <div class="grid">
 
     <article class="card">
       <h3>Пістолети й ПП — <span class="trait">Headhunter</span></h3>
-      <div class="tagline">Перк: Gunslinger</div>
+      <div class="tagline">Фішка класу · дерево пістолетів (спільне для пістолетів і ПП)</div>
       <ul>
-        <li>5 хедшотів поспіль (4 у повному сеті Gunslinger) вмикають режим посилених пострілів. Промах або влучання в тіло обнуляє серію.</li>
-        <li>Посилені постріли б'ють сильніше й майже без розкиду.</li>
+        <li>5 влучань у голову поспіль (4 з повним сетом Gunslinger) вмикають режим Мисливця: наступні постріли посилені й майже без розкиду.</li>
+        <li>Промах або влучання в тіло обриває серію.</li>
       </ul>
-      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Пострілів</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td></tr><tr><td>Шкода</td><td>+25%</td><td>+35%</td><td>+45%</td><td>+55%</td><td>+65%</td><td>+75%</td></tr></table></div>
-      <div class="five"><b>5 рівень:</b> кожне вбивство <b>в голову</b> в цьому режимі додає ще 2 постріли.</div>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Посилених пострілів (The Hunt Goes On)</td><td>6</td><td>9</td><td>12</td><td>15</td></tr><tr><td>Шкода (Lethal Precision, 2 ранги)</td><td>+20%</td><td>+40%</td><td>+70%</td><td>—</td></tr><tr><td>Потрібно влучань у голову (Cold Blood)</td><td>5</td><td>4</td><td>4</td><td>3</td></tr></table></div>
+      <div class="five">The Hunt Goes On 3/3: вбивство в голову в режимі додає 2 постріли. Cold Blood 2/3: промах знімає 1 влучання замість усієї серії.</div>
     </article>
+
     <article class="card">
-      <h3>Дробовики — <span class="trait">Slug Knockback</span></h3>
+      <h3>Дробовики — <span class="trait">Sledgehammer in the Barrel</span></h3>
+      <div class="tagline">Фішка класу · дерево дробовиків</div>
       <ul>
-        <li>Куля (Slug і Breaching Slug) відкидає зомбі й валить його з ніг. Дріб робить те саме впритул (до 3 м); сила росте з Boomstick.</li>
+        <li>Кулі (Slug і Breaching Slug) відкидають зомбі й валять з ніг (сила 1000). Дріб робить це впритул, до 3 м (сила 300).</li>
+        <li>Еліти встоять.</li>
         <li>Breaching Slug б'є лише до 4 м — так задумано в самій грі.</li>
       </ul>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Дод. сила (Brawn) × Сила</td><td>—</td><td>+20</td><td>+35</td><td>+50</td></tr></table></div>
+      <div class="five"><b>Bouncer 2/2:</b> еліти теж падають. <b>Pump Action:</b> вбивство кулею заряджає 1 / 2 набої.</div>
     </article>
 
     <article class="card">
       <h3>Гвинтівки — <span class="trait">Ricochet</span></h3>
-      <div class="tagline">Перк: Dead Eye</div>
-      <ul><li>Хедшот ранить усіх зомбі поблизу місця влучання: число з таблиці або частка шкоди хедшоту (5% → 20% за рівнем), якщо це більше.</li></ul>
-      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Радіус</td><td>5 м</td><td>7</td><td>9</td><td>11</td><td>13</td><td>15</td></tr><tr><td>Шкода</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td></tr></table></div>
-      <div class="five"><b>5 рівень:</b> рикошет ще й оглушає всіх, кого зачепив, на 2 с (раз на 4 с).</div>
+      <div class="tagline">Фішка класу · дерево гвинтівок</div>
+      <ul>
+        <li>Постріл у голову ранить зомбі поруч із ціллю, кожного на частку шкоди пострілу (мінімум 20).</li>
+      </ul>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Цілей (More Targets)</td><td>3</td><td>5</td><td>7</td><td>10</td></tr><tr><td>Частка пострілу (Ricochet Power)</td><td>5%</td><td>15%</td><td>25%</td><td>45%</td></tr><tr><td>Радіус (Wide Ricochet), за рівень Сприйняття</td><td>5 м</td><td>+0.5</td><td>+0.8</td><td>+1</td></tr><tr><td>Оглушення (Stunning Ricochet)</td><td>—</td><td>0.5 с</td><td>1</td><td>2</td></tr></table></div>
+      <div class="five">Stunning Ricochet оглушує одного зомбі не частіше разу на 4 с. Wide Ricochet додає не більше 10 м.</div>
     </article>
 
     <article class="card">
       <h3>Автомати й кулемети — <span class="trait">Suppression</span></h3>
-      <div class="tagline">Перк: Machine Gunner</div>
+      <div class="tagline">Фішка класу · дерево кулеметів</div>
       <ul>
-        <li>Кожне влучання додає цілі 5% сповільнення на 8 с — до максимуму з таблиці.</li>
-        <li>Кожне 4-те влучання повертає 1 набій у магазин (кожне 3-тє в повному сеті Commando).</li>
+        <li>Кожне влучання сповільнює ціль на 5% на 8 с, до максимуму.</li>
+        <li>Кожне 4-те влучання повертає набій у магазин (кожне 3-тє з повним сетом Commando).</li>
       </ul>
-      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Макс. сповільнення</td><td>10%</td><td>20%</td><td>30%</td><td>40%</td><td>50%</td><td>60%</td></tr></table></div>
-      <div class="five"><b>5 рівень:</b> +25% шкоди по повністю сповільнених, а кожне вбивство приносить 5 набоїв того типу, що заряджений.</div>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Макс. сповільнення (Heavy Fire)</td><td>20%</td><td>30%</td><td>50%</td><td>80%</td></tr><tr><td>Шкода по придушених (Pin Down)</td><td>—</td><td>+15%</td><td>+30%</td><td>+50%</td></tr><tr><td>Набій назад кожне N-те влучання (Thrifty; з 2 рангу вбивство +2)</td><td>4</td><td>3</td><td>3</td><td>2</td></tr></table></div>
+      <div class="five"><b>Belt Feed:</b> на повній розкрутці кожне вбивство заряджає 3 набої, перезарядка не скидає розкрутку.</div>
     </article>
 
     <article class="card">
       <h3>Луки — <span class="trait">Splinter</span></h3>
-      <div class="tagline">Перк: Archery</div>
-      <ul><li>Стріла під час влучання розлітається на уламки. Кожен уламок летить у найближчого іншого зомбі в радіусі 5 м.</li></ul>
-      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Уламків</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>8</td></tr><tr><td>Шкода уламка, мінімум</td><td>40</td><td>50</td><td>60</td><td>70</td><td>80</td><td>100</td></tr></table></div>
-      <ul><li>Якщо стріла влучила сильніше, уламок бере <b>половину її шкоди</b> (до 300).</li></ul>
-      <div class="five"><b>5 рівень:</b> стріла в голову підпалює ціль.</div>
+      <div class="tagline">Фішка класу · дерево луків</div>
+      <ul>
+        <li>При влучанні стріла розлітається на уламки, кожен летить у найближчого іншого зомбі в 5 м.</li>
+      </ul>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Уламків (More Splinters)</td><td>2</td><td>4</td><td>6</td><td>10</td></tr><tr><td>Частка стріли (Sharp Splinters)</td><td>50%</td><td>60%</td><td>75%</td><td>100%</td></tr><tr><td>Мінімум шкоди (Sharp Splinters)</td><td>40</td><td>60</td><td>80</td><td>100</td></tr></table></div>
       <ul>
         <li><b>Керування:</b> лук сам накладає наступну стрілу, поки він у руках. <b>R</b> одразу відкриває колесо стріл без затримки: затисніть, наведіть, відпустіть.</li>
       </ul>
@@ -1907,16 +1918,14 @@ aposbow off | on  выключить / включить автоналожени
     </article>
 
     <article class="card">
-      <h3>Арбалети — <span class="trait">Mark · Pin</span></h3>
-      <div class="tagline">Перк: Archery</div>
+      <h3>Арбалети — <span class="trait">Mark</span></h3>
+      <div class="tagline">Фішка класу · дерево арбалетів</div>
       <ul>
-        <li><b>Mark:</b> болт позначає зомбі на 10 с. Уся ваша шкода по ньому, будь-якою зброєю, зростає. Над позначеним зомбі світиться червоне кільце-приціл, видно навіть крізь стіни.</li>
-        <li><b>Pin</b> (лише арбалети, не луки): якщо за зомбі до 3 м стіна, болт прибиває його до смерті. Елітного — на 10 с.</li>
+        <li>Болт позначає зомбі на 10 с: уся ваша шкода по ньому, будь-якою зброєю, вища. Над ним горить червоне кільце, видно навіть крізь стіни.</li>
       </ul>
-      <div class="scale"><table><tr><th>Рівень</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>Бонус Mark</td><td>+20%</td><td>+40%</td><td>+60%</td><td>+80%</td><td>+100%</td><td>+120%</td></tr></table></div>
-      <div class="five"><b>5 рівень — Hunting Party:</b> болт позначає всіх зомбі в радіусі 4 м від влучання.</div>
+      <div class="scale"><table><tr><th>Ранг навички</th><th>0</th><th>1</th><th>2</th><th>3</th></tr><tr><td>Бонус Мітки (Deep Mark)</td><td>+20%</td><td>+35%</td><td>+50%</td><td>+80%</td></tr><tr><td>Мітить усіх довкола влучання (Spread Mark)</td><td>—</td><td>2 м</td><td>3 м</td><td>5 м</td></tr></table></div>
+      <div class="five"><b>Sticky Charge</b> (гілка B): болт прилипає й за 2 с вибухає, 30% / 50% / 100% шкоди болта в 2 / 2.5 / 5 м. <b>Капстоун — Hunting Party:</b> бонус Мітки вдвічі, вбивство позначеного мітить 3 найближчих зомбі в 8 м. Мінус: болти −40%.</div>
     </article>
-
 
   </div>
 </section>
@@ -1940,7 +1949,7 @@ aposbow off | on  выключить / включить автоналожени
     <article class="card">
       <h3>Звідки беруться стихії</h3>
       <ul>
-        <li><b>Вогонь:</b> мод Incendiary, молотов, вогняні стріли, Splinter на 5 рівні, легендарки Dragon's Breath, Storm Fist, Artemis.</li>
+        <li><b>Вогонь:</b> мод Incendiary, молотов, вогняні стріли, легендарки Dragon's Breath, Storm Fist, Artemis.</li>
         <li><b>Струм:</b> мод Tesla, жезли (Chain Lightning), легендарки Thunderclap, Storm Fist.</li>
         <li><b>Кислота:</b> мод Corrosive, легендарка Hornet.</li><li><b>Кровотеча</b> від ваших ударів (ножі, зубчасте лезо, колючий дріт, Ripper): щосекунди 5% шкоди останнього удару (щонайменше 5).</li><li>Ванільний мод <b>Burning Shaft</b> (палаючий держак) підпалює з шансом 5–30% замість 10–60%: його вогонь тепер теж залежить від шкоди удару.</li>
       </ul>
@@ -1988,7 +1997,7 @@ aposbow off | on  выключить / включить автоналожени
         <li><b>Якість 1:</b> без афіксів.</li>
         <li><b>Якість 2–3:</b> до 1 (шанс 50%).</li>
         <li><b>Якість 4–5:</b> до 2 (75% / 35%).</li>
-        <li><b>Якість 6:</b> до 3 (100% / 60% / 30%), значення на максимумі.</li>
+        <li><b>Якість 6:</b> до 3 (100% / 60% / 30%); значення випадають у верхньому діапазоні (наприклад, шкода +25…35%).</li>
         <li>Однакових афіксів на одній зброї не буває. Після об'єднання двох гармат зайві афікси зникають; станок для з'єднання заздалегідь показує афікси результату і ті, що буде прибрано.</li>
         <li>Афікси видно вгорі підказки предмета, а на іконці є значок-зірочка.</li>
       </ul>
@@ -2003,7 +2012,7 @@ aposbow off | on  выключить / включить автоналожени
         <li><b>Шкода</b> +5% → +35%</li>
         <li><b>Швидкість перезарядки</b> +10% → +40%</li>
         <li><b>Дробини</b> (дробовики) +10% → +35%</li>
-        <li><b>Друга куля</b> (пістолети, гвинтівки, автомати, лише якість 6): 2 кулі за постріл, кожна −40% шкоди</li>
+        <li><b>Друга куля</b> (будь-яка вогнепальна зброя, крім дробовиків, лише якість 6): 2 кулі за постріл, кожна −40% шкоди</li>
         <li><b>Шкода в голову</b> +10% → +60%</li>
         <li><b>Розмір магазину</b> +10% → +60% (не на луках і арбалетах)</li>
         <li><b>Швидкість руху</b> зі зброєю в руках +2% → +10%</li>
@@ -2095,7 +2104,7 @@ aposbow off | on  выключить / включить автоналожени
         <li><b>Flurry of Perception — Frenzy:</b> вбивство списом дає +15% швидкості атак на 5 с.</li>
         <li><b>Demolitions Expert — Chain Reaction:</b> зомбі, вбитий вашою вибухівкою, сам вибухає: 250 шкоди в 4 м або половина добивального удару, якщо це більше.</li>
         <li><b>Penetrator — Shrapnel:</b> бронебійні набої завдають 40% шкоди пострілу всім у 3 м від цілі.</li>
-        <li><b>Infiltrator — Ghost:</b> навпочіпки вас удвічі важче помітити, удар по зомбі, що вас не бачить, ×2, а міни й пастки вам не шкодять.</li>
+        <li><b>Infiltrator — Ghost:</b> навпочіпки вас удвічі важче помітити, удар по зомбі, що вас не бачить, ×2, міни вам не шкодять, а пастки б'ють на 25% слабше.</li>
         <li><b>Animal Tracker — Hunter's Mark:</b> влучання по тварині ставить на неї Mark.</li>
         <li><b>Treasure Hunter — X Marks the Spot:</b> коло пошуку скарбу стискається майже до точки, а в скрині лежить зброя якості 5–6 з афіксами.</li>
         <li><b>Salvage Operations — Junk Genius:</b> інструменти для розбирання зношуються на 90% повільніше.</li>
@@ -2106,7 +2115,6 @@ aposbow off | on  выключить / включить автоналожени
       <h3>Strength — <span class="trait">рівень 5</span></h3>
       <ul>
         <li><b>Flurry of Strength — Frenzy:</b> вбивство дубинкою чи кувалдою дає +15% швидкості атак на 5 с.</li>
-        <li><b>Boomstick — Pump Action:</b> вбивство з дробовика заряджає 2 набої в магазин.</li>
         <li><b>Pack Mule — Beast of Burden:</b> перевантаження більше не сповільнює.</li>
         <li><b>Strength Mastery — Crippling Blows:</b> силовий удар дубинкою чи кувалдою ламає зомбі ноги, і він повзе.</li>
         <li><b>Miner 69'er — Tunnel Rat:</b> інструменти для видобутку витрачають на 50% менше витривалості.</li>
@@ -2163,11 +2171,8 @@ aposbow off | on  выключить / включить автоналожени
         <li><b>Lucky Looter 5 — Fortune:</b> знайдена зброя отримує +1 афікс у межах ліміту якості.</li>
       </ul>
     </article>
-    <article class="card"><h3>Grand Slam → <span class="trait">Rage</span></h3><ul><li>Збиття з ніг на бігу прибрано. Опис Rage — у розділі «Ближній бій».</li></ul></article>
+    <article class="card"><h3>Перки, змінені <span class="trait">Майстерністю зброї 2.0</span></h3><ul><li><b>Grand Slam:</b> схований, очки повернено. Rage — навичка дерева дубинок.</li><li><b>Pummel Pete:</b> прибрано бонус по оглушених, серію ударів і збиття силовим (у дереві дубинок є Kick Them While Down, Concussion і Batting Streak).</li><li><b>Skull Crusher:</b> прибрано збиття силовим ударом (це робить фішка кувалд Earthquake).</li><li><b>The Brawler:</b> прибрано оглушення силовим і збиття ударом у голову (валить Counter Punch).</li><li><b>Deep Cuts:</b> звичайні удари ножем більше не спричиняють кровотечу (це робить навичка ножів Deep Cuts); силові лишають ванільні рани.</li><li><b>Gunslinger 3–5:</b> прибрано постріл +100% після серії влучань (це роблять Headhunter і Firing Squad).</li><li><b>Boomstick:</b> бонусу мода більше немає; Pump Action — навичка дерева дробовиків.</li><li>Усе інше, що ці перки роблять у грі, працює.</li></ul></article>
     <article class="card"><h3>Intellect Mastery 4–5</h3><ul><li><b>4 — Field Repair:</b> уся зброя, інструменти й броня зношуються на 30% повільніше.</li><li><b>5 — Inventor:</b> скрафчена зброя отримує випадкові афікси, як зброя з луту такої ж якості. Усе скрафчене виходить на рівень якості вище за обраний у рецепті (обрали 5 — отримали 6); якщо обрати 6, зброя, інструменти й броня виходять якості 6 і 7-го рівня кузні.</li><li>Колишні бонуси жезла (заряд за 2 удари, +300% шкоди струмом) прибрано.</li></ul></article>
-    <article class="card"><h3>Pummel Pete</h3><ul><li>Прибрано: силовий удар по оглушеному клав його «назавжди».</li><li>Натомість: силовий удар по оглушеному +10…50% шкоди.</li></ul></article>
-    <article class="card"><h3>Skull Crusher</h3><ul><li>Прибрано: шанси збити з ніг силовим ударом.</li><li>Натомість: Earthquake завдає 10…50 шкоди кожному збитому.</li></ul></article>
-    <article class="card"><h3>The Brawler</h3><ul><li>Прибрано: силовий удар оглушує, а в голову — валить з ніг.</li><li>Натомість: звичайний удар з шансом 10…50% дає заряд Counter Punch.</li></ul></article>
   </div>
 </section>
 
@@ -2259,6 +2264,7 @@ aposbow off | on  выключить / включить автоналожени
     <div class="dmg"><span class="num n-yellow">90!</span><span>Хедшот</span></div>
     <div class="dmg"><span class="num n-cyan">120</span><span>Удар, посилений баффом: Headhunter, Rage, Counter Punch, Mark, Suppression, кислота</span></div>
     <div class="dmg"><span class="num n-red">Труп!</span><span>Смертельний удар (напис над цифрою)</span></div>
+    <div class="dmg"><span class="num n-orange">Backstab!</span><span>Напис навички над числом (ніж: Backstab!, SPINE STRIKE!!)</span></div>
     <div class="dmg"><span class="num n-magenta">60</span><span>Реакція стихій</span></div>
     <div class="dmg"><span class="num n-orange">8</span><span>Горіння</span></div>
     <div class="dmg"><span class="num n-green">3</span><span>Кислота</span></div>
@@ -2315,20 +2321,19 @@ aposbow off | on  вимкнути / увімкнути автонабій ст�
       </ul>
     </article>
     <article class="card">
-      <h3>Індикатори-баффи</h3>
-      <ul>
-        <li>Bloodsucker — стаки регенерації ножа</li>
-        <li>Counter Punch — заряди кастетів</li>
-        <li>Veteran Junk — бонус саморобної зброї, %</li>
-        <li>Headhunter — залишок посилених пострілів</li>
-        <li>Rage — стаки</li>
-        <li>Guardian Protocol, Energy Shield</li>
-        <li>Перезарядка Earthquake, Chain Lightning і оглушення Ricochet</li>
-        <li>Грозові заряди Thunderclap, безкоштовна ракета Big Boom</li>
-        <li>Червоне кільце над зомбі — на ньому Mark арбалета</li>
-        <li>Frenzy, Adrenaline (стаки), заряди блискавки, Jackpot, Evasion</li>
-        <li>Перезарядка Second Wind (5 хв) і Second Lungs (60 с)</li>
-      </ul>
+    <h3>Бойовий HUD — <span class="trait">aposhud</span></h3>
+    <ul>
+    <li>Статусів мода немає у ванільній колонці баффів: їх показує бойовий HUD біля прицілу, біля пояса й над зомбі. Кожен пояснено в розділі <a href="#hud">Статуси HUD</a>.</li>
+    <li>Кожен лічильник — ще й рядок у вікні «Ефекти» з описом.</li>
+    <li><code>aposhud on</code> / <code>off</code>, <code>aposhud size 0.6–1.6</code>, <code>aposhud pos below|right|left</code>.</li>
+    </ul>
+    </article>
+    <article class="card">
+    <h3>Тест майстерності — <span class="trait">aposmastery</span></h3>
+    <ul>
+    <li>Працює з класом зброї в руках: <code>aposmastery level N</code>, <code>aposmastery max</code>, <code>aposmastery branch A|B|H</code> (вивчає всю гілку), <code>aposmastery reset</code>.</li>
+    <li><code>aposfx quake|echo|knock|shock|boom|bolt</code> показує ефект перед вами.</li>
+    </ul>
     </article>
     <article class="card"><h3>Пташині гнізда</h3><ul><li>Утричі більше пір'я: з вмісту гнізда (3 + 3–15 замість 1 + 1–5) і при зборі самого гнізда.</li></ul></article>
     <article class="card">

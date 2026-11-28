@@ -145,7 +145,7 @@ public static class AposBaton
     static void MassStun(EntityPlayerLocal player, EntityAlive center, int blow)
     {
         ready = Time.time + Cooldown(player);
-        float radius = StunRadius(), stun = Stun[R("A2")];
+        float radius = StunRadius() + (player.Buffs.HasBuff("buffNerdSetBonus") ? 1f : 0f), stun = Stun[R("A2")];   // full Nerd set: +1 m
         List<EntityAlive> hit = new List<EntityAlive>(AposMelee.Around(center.position, radius));
         if (!hit.Contains(center) && !center.IsDead()) hit.Add(center);
         // Arc Jump: from the shocked ones to zombies beyond the radius (within 4 m of a shocked one)
