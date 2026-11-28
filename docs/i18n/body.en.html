@@ -16,6 +16,7 @@
     <a href="#affixes">Affixes</a>
     <a href="#elites">Elites &amp; Eridium</a>
     <a href="#mastery">Mastery</a>
+    <a href="#hud">HUD</a>
     <a href="#perks">Perks &amp; attributes</a>
     <a href="#sets">Sets &amp; wardrobe</a>
     <a href="#systems">Systems</a>
@@ -349,152 +350,30 @@
 </section>
 
 <section id="mastery" data-sec>
-  <h2>Weapon mastery</h2>
-  <p class="lead">Each weapon (any quality: a quality 2 and quality 6 machete are the same) levels up from kills while it's in your hands. 10 levels = 10 points in a tree of 20 skills, so you can only take half. <b>Alt+K</b> — tree window for the weapon in hand; or in the inventory click a weapon → the third button next to "Stats / Description".</p>
+  <h2>Weapon mastery 2.0</h2>
+  <p class="lead">Kills with a weapon level up its whole class (all pistols and SMGs share one level), up to 25. Every level is a point for that class's skill tree. Pick a class below and click a skill to read it; the planner lets you try a build before you spend points in the game.</p>
   <div class="grid">
     <article class="card legendary">
       <h3>How it works</h3>
       <ul>
-        <li><b>Levels:</b> 4 / 12 / 24 / 40 / 60 / 90 / 120 / 160 / 210 / 260 kills. An elite counts as 5.</li>
-        <li><b>Tree:</b> three branches going up from the root; each skill unlocks only next to a learned one. Mid-branch is a strong node, at the top a keystone (bold). Bridges connect the branches.</li>
-        <li>Reaching one branch's keystone takes 6 points, so you can't finish two branches.</li>
-        <li>The tree layout is shared per weapon class, points are separate for each weapon.</li>
-        <li><b>Reset:</b> 5 Eridium per spent point, only within 5 m of the Eridium Forge.</li>
-        <li>"Crit" — chance to double a hit; "Crit power" makes it even bigger. Elements and crowd control — chance per hit.</li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Blades (knives, machetes)</h3>
-      <div class="tagline">Root: Damage +5%</div>
-      <ul>
-        <li>Speed +5% → Speed +6% → <b>Kill: speed +20% 6 s</b> → Stamina cost −15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
-        <li>Damage +6% → Bleeding 20% → <b>Execute (&lt;35% HP) +30%</b> → Bleeding 20% → <b class="trait">Deep bleed 35%</b></li>
-        <li>Crit 5% (×2) → Leech 3% → <b>First strike (full HP) +60%</b> → Leech 4% → <b class="trait">Crit power +100%</b></li>
-        <li><small>Bridges: Stamina cost −10% · Dismember +10% · Damage +6% · Crit 5% (×2)</small></li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Clubs &amp; bats</h3>
-      <div class="tagline">Root: Damage +5%</div>
-      <ul>
-        <li>Stun 8% → Stun 8% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Every 5th hit +150%</b></li>
-        <li>Damage +6% → Dismember +15% → <b>Knockdown 10%</b> → Damage +8% → <b class="trait">Splash 30% within 3 m</b></li>
-        <li>Speed +5% → Stamina cost −10% → <b>Kill: speed +20% 6 s</b> → Speed +6% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
-        <li><small>Bridges: Damage +5% · Stamina cost −10% · Crit 5% (×2) · Speed +5%</small></li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Sledgehammers</h3>
-      <div class="tagline">Root: Damage +5%</div>
-      <ul>
-        <li>Knockdown 8% → Knockdown 8% → <b>Splash 25% within 3 m</b> → Splash 15% within 3 m → <b class="trait">Every 5th hit +200%</b></li>
-        <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +35%</b> → Damage +10% → <b class="trait">First strike (full HP) +100%</b></li>
-        <li>Speed +5% → Stamina cost −12% → <b>Kill: speed +25% 6 s</b> → Speed +6% → <b class="trait">Combo +10%/hit (up to 5)</b></li>
-        <li><small>Bridges: Stamina cost −10% · Dismember +15% · Damage +6% · Stun 8%</small></li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Spears</h3>
-      <div class="tagline">Root: Damage +5%</div>
-      <ul>
-        <li>Speed +5% → Speed +5% → <b>Kill: speed +20% 6 s</b> → Stamina cost −15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
-        <li>Damage +6% → Bleeding 15% → <b>Splash 20% within 3 m</b> → Damage +8% → <b class="trait">Splash 35% within 3 m</b></li>
-        <li>Crit 5% (×2) → Crit 5% (×2) → <b>Headshot +40%</b> → Crit 6% (×2) → <b class="trait">Crit power +100%</b></li>
-        <li><small>Bridges: Dismember +10% · Stamina cost −10% · Damage +6% · Knockdown 8%</small></li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Knuckles</h3>
-      <div class="tagline">Root: Speed +5%</div>
-      <ul>
-        <li>Speed +5% → Combo +4%/hit (up to 5) → <b>Kill: speed +25% 6 s</b> → Speed +6% → <b class="trait">Combo +10%/hit (up to 5)</b></li>
-        <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Every 5th hit +150%</b></li>
-        <li>Stun 6% → Stun 6% → <b>Knockdown 10%</b> → Stamina cost −15% → <b class="trait">Leech 8%</b></li>
-        <li><small>Bridges: Stamina cost −10% · Leech 3% · Crit 5% (×2) · Leech 3%</small></li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Batons</h3>
-      <div class="tagline">Root: Damage +5%</div>
-      <ul>
-        <li>Shock 10% → Shock 10% → <b>Splash 20% within 3 m</b> → Shock 15% → <b class="trait">Splash 40% within 3 m</b></li>
-        <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Every 5th hit +150%</b></li>
-        <li>Stun 6% → Stun 6% → <b>Knockdown 10%</b> → Stamina cost −15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
-        <li><small>Bridges: Speed +5% · Stamina cost −10% · Crit 5% (×2) · Speed +5%</small></li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Pistols &amp; SMGs</h3>
-      <div class="tagline">Root: Damage +5%</div>
-      <ul>
-        <li>Headshot +15% → Headshot +15% → <b>Crit 8% (×2)</b> → Headshot +20% → <b class="trait">Crit power +100%</b></li>
-        <li>Reload +10% → Reload +10% → <b>Kill: +2 rounds</b> → Magazine +20% → <b class="trait">Combo +6%/hit (up to 5)</b></li>
-        <li>Speed +5% → Speed +6% → <b>Kill: speed +20% 6 s</b> → Damage +8% → <b class="trait">Every 5th hit +150%</b></li>
-        <li><small>Bridges: Spread and recoil −10% · Magazine +15% · Damage +6% · Spread and recoil −10%</small></li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Shotguns</h3>
-      <div class="tagline">Root: Damage +5%</div>
-      <ul>
-        <li>Dismember +15% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">Fire 25%</b></li>
-        <li>Reload +10% → Reload +10% → <b>Kill: +1 round</b> → Magazine +25% → <b class="trait">Every 5th hit +100%</b></li>
-        <li>Knockdown 6% → Knockdown 6% → <b>First strike (full HP) +50%</b> → Splash 15% within 3 m → <b class="trait">Splash 30% within 3 m</b></li>
-        <li><small>Bridges: Spread and recoil −10% · Magazine +20% · Damage +6% · Stun 6%</small></li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Rifles</h3>
-      <div class="tagline">Root: Damage +5%</div>
-      <ul>
-        <li>Headshot +15% → Headshot +15% → <b>Crit 8% (×2)</b> → Headshot +25% → <b class="trait">Crit power +150%</b></li>
-        <li>Reload +10% → Reload +10% → <b>Kill: +1 round</b> → Speed +10% → <b class="trait">Splash 40% within 3 m</b></li>
-        <li>First strike (full HP) +30% → First strike (full HP) +30% → <b>Execute (&lt;35% HP) +30%</b> → Damage +8% → <b class="trait">First strike (full HP) +100%</b></li>
-        <li><small>Bridges: Spread and recoil −15% · Damage +5% · Spread and recoil −10% · Magazine +20%</small></li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Assault rifles &amp; machine guns</h3>
-      <div class="tagline">Root: Damage +5%</div>
-      <ul>
-        <li>Spread and recoil −10% → Spread and recoil −10% → <b>Combo +3%/hit (up to 5)</b> → Spread and recoil −15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
-        <li>Magazine +15% → Magazine +15% → <b>Kill: +3 rounds</b> → Reload +15% → <b class="trait">Magazine +40%</b></li>
-        <li>Damage +5% → Speed +5% → <b>Shock 8%</b> → Speed +6% → <b class="trait">Fire 25%</b></li>
-        <li><small>Bridges: Speed +5% · Reload +10% · Damage +5% · Crit 5% (×2)</small></li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Bows</h3>
-      <div class="tagline">Root: Damage +5%</div>
-      <ul>
-        <li>Headshot +15% → Headshot +15% → <b>Crit 8% (×2)</b> → Headshot +20% → <b class="trait">Crit power +150%</b></li>
-        <li>Damage +6% → Damage +6% → <b>Splash 20% within 3 m</b> → Damage +8% → <b class="trait">Splash 40% within 3 m</b></li>
-        <li>Bleeding 15% → Bleeding 15% → <b>Acid 15%</b> → Fire 15% → <b class="trait">Deep bleed 30%</b></li>
-        <li><small>Bridges: Speed +5% · Spread and recoil −10% · First strike (full HP) +50% · Speed +5%</small></li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Crossbows</h3>
-      <div class="tagline">Root: Damage +5%</div>
-      <ul>
-        <li>Headshot +15% → Headshot +15% → <b>Crit 8% (×2)</b> → Headshot +25% → <b class="trait">Crit power +150%</b></li>
-        <li>Damage +6% → Damage +6% → <b>Knockdown 10%</b> → Damage +10% → <b class="trait">Splash 40% within 3 m</b></li>
-        <li>Reload +10% → Reload +15% → <b>Kill: speed +20% 6 s</b> → Shock 15% → <b class="trait">Combo +8%/hit (up to 5)</b></li>
-        <li><small>Bridges: Reload +10% · Spread and recoil −10% · First strike (full HP) +60% · Stun 8%</small></li>
-      </ul>
-    </article>
-    <article class="card">
-      <h3>Explosives</h3>
-      <div class="tagline">Root: Damage +5%</div>
-      <ul>
-        <li>Damage +6% → Damage +6% → <b>Execute (&lt;35% HP) +30%</b> → Damage +10% → <b class="trait">First strike (full HP) +60%</b></li>
-        <li>Fire 10% → Fire 10% → <b>Shock 15%</b> → Acid 15% → <b class="trait">Splash 20% within 3 m</b></li>
-        <li>Reload +10% → Stun 8% → <b>Kill: +1 round</b> → Reload +20% → <b class="trait">Crit 15% (×2)</b></li>
-        <li><small>Bridges: Reload +10% · Knockdown 8% · Damage +6% · Knockdown 8%</small></li>
+        <li><b>Levels:</b> 1-25 per weapon class, from kills with any weapon of that class. Saved with your game.</li>
+        <li><b>Class trait:</b> every class has its own mechanic from level 0 (Headhunter, Bloodsucker, Earthquake and so on).</li>
+        <li><b>Branches:</b> two branches per class. A tier opens after 0 / 3 / 6 / 9 / 12 points lower in the same branch; the top tier is a capstone with a downside.</li>
+        <li><b>Hybrids:</b> skills between the branches need 5 points in each branch (the big one 8).</li>
+        <li><b>Window:</b> Alt+K, or the mastery button in the item info panel.</li>
+        <li><b>Reset:</b> near the Eridium Forge: one skill for 20 Eridium, the whole tree for 250.</li>
       </ul>
     </article>
   </div>
+  <div id="mastery-app" class="mw"></div>
 </section>
+
+<section id="hud" data-sec>
+  <h2>HUD statuses</h2>
+  <p class="lead">Everything the mod shows on the screen: arcs at the crosshair, rows of icons, statuses over zombies, labels over damage numbers and the reaction feed. Pick a weapon and click any status on the screen or in the list to see what it means and where it comes from.</p>
+  <div id="hud-app" class="hw"></div>
+</section>
+
 <section id="perks" data-sec>
   <h2>Perks &amp; attributes</h2>
   <p class="lead">Every perk has its own trait at max level, and every attribute at level 10. Vanilla effects that duplicated the mod's traits have been replaced. The level description in game has a yellow AposMod line with exact numbers.</p>

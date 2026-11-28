@@ -1,0 +1,1014 @@
+{
+ "idea|pistols|A": {
+  "en": "For pistols: aimed headshots, rare but deadly streaks, execution.",
+  "ru": "Для пистолетов: точные выстрелы в голову, редкие, но смертельные серии, казнь."
+ },
+ "idea|pistols|B": {
+  "en": "For SMGs: flood the enemy with bullets. Fire rate, magazine, slowing, ammo saving.",
+  "ru": "Для ПП: засыпать врага пулями. Темп, магазин, замедление, экономия патронов."
+ },
+ "preset|pistols|0": {
+  "en": "Sniper (A18 + B7)",
+  "ru": "Снайпер (A18 + B7)"
+ },
+ "preset|pistols|1": {
+  "en": "Barrage (B18 + A7)",
+  "ru": "Шквал (B18 + A7)"
+ },
+ "preset|pistols|2": {
+  "en": "Hybrid (11 + 11 + 3)",
+  "ru": "Гибрид (11 + 11 + 3)"
+ },
+ "ext|pistols|X_XBOW": {
+  "en": "Crossbow · Mark",
+  "ru": "Арбалет · Метка"
+ },
+ "ext|pistols|X_KNIFE": {
+  "en": "Knife · The Killer",
+  "ru": "Нож · Убийца"
+ },
+ "ext|pistols|E_SHOCK": {
+  "en": "Shock",
+  "ru": "Ток"
+ },
+ "syn|pistols|A2|0": {
+  "en": "Cancels the Bottomless Mag downside (+30% spread) from branch B.",
+  "ru": "Гасит минус «Бездонной обоймы» (+30% разброса) из ветки B."
+ },
+ "syn|pistols|A2|1": {
+  "en": "Fewer body hits: the Duel mode lasts longer.",
+  "ru": "Меньше попаданий в тело: режим «Дуэли» держится дольше."
+ },
+ "syn|pistols|A3|0": {
+  "en": "3/3: the mode can last forever as long as you keep killing with headshots.",
+  "ru": "3/3: режим может длиться бесконечно, пока вы убиваете в голову."
+ },
+ "syn|pistols|A3|1": {
+  "en": "Blood Fireworks: every head burst also extends the mode.",
+  "ru": "Кровавый фейерверк: каждый взрыв головы ещё и продлевает режим."
+ },
+ "syn|pistols|A4|0": {
+  "en": "2/3: a miss no longer resets the streak.",
+  "ru": "2/3: промах перестаёт обнулять серию."
+ },
+ "syn|pistols|A4|1": {
+  "en": "Does not save from the Duel downside: a body hit in the mode still ends it.",
+  "ru": "Не спасает от минуса «Дуэли»: попадание в тело в режиме всё равно обрывает его."
+ },
+ "syn|pistols|A5|0": {
+  "en": "Crossbow: a zombie marked by the Mark has a red outline, and body hits count as headshots for the streak.",
+  "ru": "Арбалет: у помеченного Меткой зомби контур красный, а попадания в тело считаются хедшотами для серии."
+ },
+ "syn|pistols|A7|0": {
+  "en": "Zombies slowed by Lead Shackles are easier to finish with a headshot.",
+  "ru": "Замедленных Свинцовыми кандалами зомби легче добить в голову."
+ },
+ "syn|pistols|A8|0": {
+  "en": "Steady Hand: fewer stray body hits.",
+  "ru": "Твёрдая рука: меньше случайных попаданий в тело."
+ },
+ "syn|pistols|A8|1": {
+  "en": "Marksman's Eye: you can see where to aim.",
+  "ru": "Глаз стрелка: видно, куда целиться."
+ },
+ "syn|pistols|B2|0": {
+  "en": "Lead Rain: a longer magazine = a longer \"tail\" with the bonus.",
+  "ru": "Свинцовый дождь: чем длиннее магазин, тем дольше «хвост» с бонусом."
+ },
+ "syn|pistols|B4|0": {
+  "en": "Resonance: putting points into the Agility attribute now pays off for this branch too.",
+  "ru": "Резонанс: вкладывать очки в атрибут Ловкость теперь выгодно и для этой ветки."
+ },
+ "syn|pistols|B4|1": {
+  "en": "Verdict: a slowed target is easier to finish with a headshot.",
+  "ru": "Приговор: медленную цель легче добить в голову."
+ },
+ "syn|pistols|B5|0": {
+  "en": "Gunfighter: headshots return ammo, and the rhythm does not break on reload.",
+  "ru": "Ганфайтер: хедшоты возвращают патроны, и ритм не обрывается на перезарядке."
+ },
+ "syn|pistols|B8|0": {
+  "en": "Shock: Tesla mod, baton (Chain Lightning), Storm Fist, electric arrows.",
+  "ru": "Ток: мод тесла, жезл (Цепная молния), Storm Fist, электрические стрелы."
+ },
+ "syn|pistols|B8|1": {
+  "en": "Steady Hand from branch A cancels the +30% spread.",
+  "ru": "Твёрдая рука из ветки A гасит +30% разброса."
+ },
+ "syn|pistols|H1|0": {
+  "en": "Quick Finger: 8 hits are made within seconds.",
+  "ru": "Быстрый палец: 8 попаданий набираются за считаные секунды."
+ },
+ "syn|pistols|H1|1": {
+  "en": "Cold Blood: streak 3 → only 24 SMG hits to the Headhunter mode, even without a single aimed headshot.",
+  "ru": "Хладнокровие: серия 3 → всего 24 попадания ПП до режима Охотника, даже без единого прицельного хедшота."
+ },
+ "syn|pistols|H2|0": {
+  "en": "Hot Barrel: headshots return ammo, and the rhythm does not break on reload.",
+  "ru": "Горячий ствол: хедшоты возвращают патроны, и ритм не обрывается на перезарядке."
+ },
+ "syn|pistols|H3|0": {
+  "en": "The Hunt Goes On 3/3: every such kill also extends the mode by +2 shots.",
+  "ru": "Охота продолжается 3/3: каждое такое убийство ещё и продлевает режим на +2 выстрела."
+ },
+ "syn|pistols|H3|1": {
+  "en": "Verdict: an execution also counts as a headshot kill and bursts the head.",
+  "ru": "Приговор: казнь тоже считается убийством в голову и рвёт голову."
+ },
+ "syn|pistols|H3|2": {
+  "en": "Lead Shackles: a crowd is slow anyway, after the burst it is almost standing still.",
+  "ru": "Свинцовые кандалы: толпа и так медленная, после взрыва — почти стоит."
+ },
+ "idea|shotguns|A": {
+  "en": "Slugs: one heavy target, piercing, knockback, control. A player with slugs in the magazine.",
+  "ru": "Пули (slug): одна тяжёлая цель, пробивание, отбрасывание, контроль. Игрок с пулями в магазине."
+ },
+ "idea|shotguns|B": {
+  "en": "Buckshot: more pellets, a wider spread, bleeding and fire on a crowd at point-blank range.",
+  "ru": "Картечь: больше картечин, шире сноп, кровотечение и огонь по толпе в упор."
+ },
+ "preset|shotguns|0": {
+  "en": "Slugs (A18 + B7)",
+  "ru": "Пули (A18 + B7)"
+ },
+ "preset|shotguns|1": {
+  "en": "Shrapnel (B18 + A7)",
+  "ru": "Шрапнель (B18 + A7)"
+ },
+ "preset|shotguns|2": {
+  "en": "Hybrid (11 + 11 + 3)",
+  "ru": "Гибрид (11 + 11 + 3)"
+ },
+ "ext|shotguns|X_SLEDGE": {
+  "en": "Sledgehammer · Earthquake",
+  "ru": "Кувалда · Землетрясение"
+ },
+ "ext|shotguns|X_BOW": {
+  "en": "Bow · acid arrow",
+  "ru": "Лук · кислотная стрела"
+ },
+ "ext|shotguns|E_FIRE": {
+  "en": "Fire",
+  "ru": "Огонь"
+ },
+ "syn|shotguns|A2|0": {
+  "en": "Resonance: replaces the scaling from the Boomstick perk. Points in Strength matter for the shotgun again.",
+  "ru": "Резонанс: заменяет масштабирование от перка «Бум-палка». Очки в Силу снова важны для дробовика."
+ },
+ "syn|shotguns|A2|1": {
+  "en": "Battering Ram: the farther a zombie flies, the more neighbors it hits.",
+  "ru": "Таран: чем дальше летит зомби, тем больше соседей он заденет."
+ },
+ "syn|shotguns|A3|0": {
+  "en": "3/3: those knocked down by the ram also take damage.",
+  "ru": "3/3: сбитые тараном ещё и получают урон."
+ },
+ "syn|shotguns|A3|1": {
+  "en": "Shattered: everyone knocked down by the ram gets the status and +50% damage from everyone.",
+  "ru": "Разбитый: все сбитые тараном получают статус и +50% урона от всех."
+ },
+ "syn|shotguns|A4|0": {
+  "en": "Battering Ram: every pierced zombie is also thrown back and knocks down its neighbors.",
+  "ru": "Таран: каждый пробитый зомби тоже отброшен и валит соседей."
+ },
+ "syn|shotguns|A5|0": {
+  "en": "A sledgehammer and any other weapon hit a Shattered zombie for +50%: the shotgun prepares the target for the whole team.",
+  "ru": "Кувалда и любое другое оружие бьют «Разбитого» на +50%: дробовик готовит цель для всей команды."
+ },
+ "syn|shotguns|A5|1": {
+  "en": "Battering Ram: everyone knocked down by a thrown target is also Shattered.",
+  "ru": "Таран: все, кого сбила отброшенная цель, тоже «Разбитые»."
+ },
+ "syn|shotguns|A5|2": {
+  "en": "Shockwave: zombies around a killed one fall and become Shattered.",
+  "ru": "Ударная волна: зомби вокруг убитого падают и становятся «Разбитыми»."
+ },
+ "syn|shotguns|A7|0": {
+  "en": "2/2: slugs knock down elites.",
+  "ru": "2/2: пули валят элит."
+ },
+ "syn|shotguns|A8|0": {
+  "en": "Shockwave triggers on a kill with any ammo, so even weaker buckshot knocks down a crowd.",
+  "ru": "Ударная волна срабатывает от убийства любыми патронами, так что даже слабая картечь валит толпу."
+ },
+ "syn|shotguns|B1|0": {
+  "en": "Ragged Wounds: 20 pellets × 20% = bleeding is almost guaranteed.",
+  "ru": "Рваные раны: 20 картечин × 20% = кровотечение почти гарантировано."
+ },
+ "syn|shotguns|B1|1": {
+  "en": "Shred: landing 7 of 20 pellets is much easier.",
+  "ru": "Разрыв: попасть 7 из 20 картечин гораздо легче."
+ },
+ "syn|shotguns|B2|0": {
+  "en": "Lead Wall: a wider spread hits 5 zombies more easily.",
+  "ru": "Свинцовая стена: широкий сноп легче задевает 5 зомби."
+ },
+ "syn|shotguns|B3|0": {
+  "en": "Fire + bleeding = Roasting: stops regeneration, + fire damage.",
+  "ru": "Огонь + кровотечение = «Запекание»: останавливает регенерацию, + урон огня."
+ },
+ "syn|shotguns|B3|1": {
+  "en": "Bow acid arrow + bleeding = Sepsis: -max health.",
+  "ru": "Кислотная стрела лука + кровотечение = «Сепсис»: -макс. здоровья."
+ },
+ "syn|shotguns|B5|0": {
+  "en": "More pellets: landing 7 of 14 is easier than 7 of 10.",
+  "ru": "Больше картечи: попасть 7 из 14 легче, чем 7 из 10."
+ },
+ "syn|shotguns|B8|0": {
+  "en": "Ragged Wounds: fire + bleeding on one target = the Roasting reaction.",
+  "ru": "Рваные раны: огонь + кровотечение на одной цели = реакция «Запекание»."
+ },
+ "syn|shotguns|B8|1": {
+  "en": "Shockwave: a buckshot kill also knocks down a crowd, so slugs are needed less.",
+  "ru": "Ударная волна: убийство картечью тоже валит толпу, так что пули нужны меньше."
+ },
+ "syn|shotguns|H1|0": {
+  "en": "Shattered: those knocked down by the wave become Shattered (+50% damage from everyone).",
+  "ru": "Разбитый: сбитые волной становятся «Разбитыми» (+50% урона от всех)."
+ },
+ "syn|shotguns|H1|1": {
+  "en": "Lead Wall: a knocked-down pile is a perfect target for a shot at 5+ zombies.",
+  "ru": "Свинцовая стена: сбитая куча — идеальная цель для выстрела по 5+ зомби."
+ },
+ "syn|shotguns|H2|0": {
+  "en": "Bleeding chains through the crowd: every death makes new bleeding targets.",
+  "ru": "Кровотечение идёт цепью по толпе: каждая смерть — новые кровоточащие цели."
+ },
+ "syn|shotguns|H2|1": {
+  "en": "Bloodletting: the whole infected crowd gets +60%.",
+  "ru": "Кровопуск: вся зараженная толпа получает +60%."
+ },
+ "syn|shotguns|H2|2": {
+  "en": "Battering Ram: every knocked-down neighbor bleeds too.",
+  "ru": "Таран: каждый сбитый сосед тоже кровоточит."
+ },
+ "syn|shotguns|H3|0": {
+  "en": "Ragged Wounds: fragments carry bleeding to the whole crowd.",
+  "ru": "Рваные раны: осколки несут кровотечение на всю толпу."
+ },
+ "syn|shotguns|H3|1": {
+  "en": "Dragon's Breath: fragments set on fire (though the slug itself is -40%).",
+  "ru": "Дыхание дракона: осколки поджигают (хоть сама пуля -40%)."
+ },
+ "syn|shotguns|H3|2": {
+  "en": "Through and Through: every pierced target also scatters fragments.",
+  "ru": "Навылет: каждая пробитая цель тоже разбрасывает осколки."
+ },
+ "idea|rifles|A": {
+  "en": "One target, one bullet: headshots, distance, the first shot, stealth, elites.",
+  "ru": "Одна цель, одна пуля: хедшоты, дистанция, первый выстрел, скрытность, элиты."
+ },
+ "idea|rifles|B": {
+  "en": "A headshot hits the crowd around: radius, targets, stun, elements, chains.",
+  "ru": "Хедшот бьёт толпу вокруг: радиус, цели, оглушение, стихии, цепи."
+ },
+ "preset|rifles|0": {
+  "en": "Sniper (A18 + B7)",
+  "ru": "Снайпер (A18 + B7)"
+ },
+ "preset|rifles|1": {
+  "en": "Ricochet (B18 + A7)",
+  "ru": "Рикошет (B18 + A7)"
+ },
+ "preset|rifles|2": {
+  "en": "Hybrid (11 + 11 + 3)",
+  "ru": "Гибрид (11 + 11 + 3)"
+ },
+ "ext|rifles|E_ACID": {
+  "en": "Acid",
+  "ru": "Кислота"
+ },
+ "ext|rifles|P_STEALTH": {
+  "en": "Stealth (Infiltrator, From the Shadows)",
+  "ru": "Скрытность (Лазутчик, Бесшумная тень)"
+ },
+ "ext|rifles|X_SHOTGUN": {
+  "en": "Shotgun · Shattered",
+  "ru": "Дробовик · Разбитый"
+ },
+ "syn|rifles|A2|0": {
+  "en": "3/3: a kill → the next reload is 2× faster.",
+  "ru": "3/3: убийство → следующая перезарядка ×2 быстрее."
+ },
+ "syn|rifles|A3|0": {
+  "en": "Trick Shot: ricochets on full-health zombies get this bonus too.",
+  "ru": "Трюковый выстрел: рикошеты по целым зомби тоже получают этот бонус."
+ },
+ "syn|rifles|A4|0": {
+  "en": "Trade-off: at point-blank range the rifle is weaker. A shotgun or melee in a pair covers it.",
+  "ru": "Компромисс: в упор винтовка слабее. Выручает дробовик или ближний бой в паре."
+ },
+ "syn|rifles|A5|0": {
+  "en": "Acid (Corrosive mod, acid arrow, Hornet): a corroded zombie always has a \"weak spot\".",
+  "ru": "Кислота (мод кислотный, кислотная стрела, Hornet): коррозированный зомби всегда имеет «слабое место»."
+ },
+ "syn|rifles|A5|1": {
+  "en": "The mod's stealth (sleepers stay in place) + Infiltrator / From the Shadows: clearing a house with headshots, no alarm.",
+  "ru": "Скрытность мода (спящие на местах) + Лазутчик / Бесшумная тень: зачистка дома выстрелами в голову без тревоги."
+ },
+ "syn|rifles|A6|0": {
+  "en": "3/3: a sniper ambush — 50 s in the scope = a ×11 shot.",
+  "ru": "3/3: снайперская засада — 50 с в прицеле = выстрел ×11."
+ },
+ "syn|rifles|A6|1": {
+  "en": "Big Game: a charged shot at an elite.",
+  "ru": "Крупная дичь: заряженный выстрел по элите."
+ },
+ "syn|rifles|A7|0": {
+  "en": "Spotter: outlines show where the elite is.",
+  "ru": "Наводчик: контуры показывают, где элита."
+ },
+ "syn|rifles|A8|0": {
+  "en": "Ricochet stays but is half as strong: points in branch B are not lost, only \"Body Ricochet\" turns off.",
+  "ru": "Рикошет остаётся, но вдвое слабее: очки в ветке B не пропадают, лишь «Рикошет от тела» отключается."
+ },
+ "break|rifles|A8|0": {
+  "en": "Ricochet is half as strong and only from true headshots.",
+  "ru": "Рикошет вдвое слабее и только от настоящих хедшотов."
+ },
+ "break|rifles|A8|1": {
+  "en": "Body hits no longer give a ricochet.",
+  "ru": "Попадания в тело больше не дают рикошета."
+ },
+ "syn|rifles|B1|0": {
+  "en": "Resonance: replaces the scaling from the Dead Eye perk.",
+  "ru": "Резонанс: заменяет масштабирование от перка «Безжалостный снайпер»."
+ },
+ "syn|rifles|B6|0": {
+  "en": "One elemental bullet starts reactions across the whole crowd: two elements on neighbors = Explosion / Confusion / Miasma.",
+  "ru": "Одна стихийная пуля запускает реакции по всей толпе: две стихии на соседях = Взрыв / Замешательство / Миазмы."
+ },
+ "syn|rifles|B7|0": {
+  "en": "Cold Aim: the stronger the headshot, the bigger the overflow.",
+  "ru": "Хладнокровный прицел: чем сильнее хедшот, тем больше избыток."
+ },
+ "syn|rifles|B7|1": {
+  "en": "Focus: a charged shot at a weak zombie — almost all the damage goes to the crowd.",
+  "ru": "Сосредоточенность: заряженный выстрел по слабому зомби — почти весь урон уходит в толпу."
+ },
+ "syn|rifles|B8|0": {
+  "en": "Cold Aim strengthens the headshot that the ricochets are counted from.",
+  "ru": "Хладнокровный прицел усиливает хедшот, от которого считаются рикошеты."
+ },
+ "syn|rifles|H1|0": {
+  "en": "First shot up to +100% — now for the crowd too.",
+  "ru": "Первый выстрел до +100% — теперь и для толпы."
+ },
+ "syn|rifles|H2|0": {
+  "en": "Big Game: elites are visible through walls.",
+  "ru": "Крупная дичь: элиты видны сквозь стены."
+ },
+ "syn|rifles|H2|1": {
+  "en": "More Targets: you can see where the densest group for a ricochet is.",
+  "ru": "Больше целей: видно, где самая плотная группа для рикошета."
+ },
+ "syn|rifles|H3|0": {
+  "en": "Overflow: every pierced zombie that died with surplus passes the extra damage to its ricochets.",
+  "ru": "Избыток: каждый пробитый зомби, умерший с запасом, отдаёт лишний урон своим рикошетам."
+ },
+ "syn|rifles|H3|1": {
+  "en": "Cold Aim: the whole line takes the full headshot damage.",
+  "ru": "Хладнокровный прицел: вся линия получает полный урон хедшота."
+ },
+ "idea|mgs|A": {
+  "en": "Control: slow the crowd, hold a position, save ammo.",
+  "ru": "Контроль: замедлить толпу, держать позицию, экономить патроны."
+ },
+ "idea|mgs|B": {
+  "en": "The longer you hold the trigger, the higher the fire rate and damage. Risk: reloads and pauses reset the spin-up.",
+  "ru": "Чем дольше жмёшь на спуск, тем выше темп и урон. Риск: перезарядка и паузы сбрасывают раскрутку."
+ },
+ "preset|mgs|0": {
+  "en": "Suppression (A18 + B7)",
+  "ru": "Подавление (A18 + B7)"
+ },
+ "preset|mgs|1": {
+  "en": "Spin-up (B18 + A7)",
+  "ru": "Раскрутка (B18 + A7)"
+ },
+ "preset|mgs|2": {
+  "en": "Hybrid (11 + 11 + 3)",
+  "ru": "Гибрид (11 + 11 + 3)"
+ },
+ "ext|mgs|E_SHOCK": {
+  "en": "Shock (baton, Tesla mod)",
+  "ru": "Ток (жезл, мод тесла)"
+ },
+ "ext|mgs|X_SHOTGUN": {
+  "en": "Shotgun · Shattered",
+  "ru": "Дробовик · Разбитый"
+ },
+ "syn|mgs|A2|0": {
+  "en": "3/3: half of the hits cost no round.",
+  "ru": "3/3: половина попаданий не тратит патрон."
+ },
+ "syn|mgs|A4|0": {
+  "en": "Shock (baton, Tesla mod): suppression ×2 on shocked zombies.",
+  "ru": "Ток (жезл, мод тесла): по шокированным подавление ×2."
+ },
+ "syn|mgs|A5|0": {
+  "en": "Pin Down: the blast on suppressed neighbors also gets +50%.",
+  "ru": "Прижать: взрыв по подавленным соседям тоже получает +50%."
+ },
+ "syn|mgs|A5|1": {
+  "en": "Kill Zone: the blast and the zone together suppress a whole group.",
+  "ru": "Зона поражения: взрыв и зона вместе подавляют целую группу."
+ },
+ "syn|mgs|A8|0": {
+  "en": "Hold the Line: you are standing still anyway — the downside is barely felt.",
+  "ru": "Удержание позиции: вы и так стоите — минус почти не чувствуется."
+ },
+ "syn|mgs|B2|0": {
+  "en": "Resonance: points in Fortitude make the machine gun controllable at full spin-up.",
+  "ru": "Резонанс: очки в Стойкость делают пулемёт управляемым на полной раскрутке."
+ },
+ "syn|mgs|B5|0": {
+  "en": "Thrifty: together the magazine almost never empties.",
+  "ru": "Экономный стрелок: вместе магазин почти не пустеет."
+ },
+ "syn|mgs|B6|0": {
+  "en": "Bleeding + fire (Molotov, incendiary mod) = Roasting, + acid = Sepsis.",
+  "ru": "Кровотечение + огонь (молотов, зажигательный мод) = «Запекание», + кислота = «Сепсис»."
+ },
+ "syn|mgs|B8|0": {
+  "en": "Momentum: after an overheat the spin-up does not vanish, it only melts a little.",
+  "ru": "Без остановки: после перегрева раскрутка не пропадает, а лишь немного тает."
+ },
+ "syn|mgs|H1|0": {
+  "en": "Quick Suppression: full suppression in 2 bullets.",
+  "ru": "Быстрое подавление: полное подавление за 2 пули."
+ },
+ "syn|mgs|H1|1": {
+  "en": "Thrifty 3/3: every hit returns a round.",
+  "ru": "Экономный стрелок 3/3: каждое попадание возвращает патрон."
+ },
+ "syn|mgs|H2|0": {
+  "en": "Pin Down: the whole group gets +30% at once.",
+  "ru": "Прижать: вся группа сразу получает +30%."
+ },
+ "syn|mgs|H3|0": {
+  "en": "Hold the Line: another +20% damage, because you are in place.",
+  "ru": "Удержание позиции: ещё +20% урона, потому что вы на месте."
+ },
+ "syn|mgs|H3|1": {
+  "en": "Wall of Fire: the cone is already slowed — suppression to a stop in a few bullets.",
+  "ru": "Стена огня: конус уже замедлен — подавление до остановки за считаные пули."
+ },
+ "idea|bows|A": {
+  "en": "Crowd: more splinters, a wider scatter, elements and splinter chains.",
+  "ru": "Толпа: больше осколков, шире разлёт, стихии и цепи осколков."
+ },
+ "idea|bows|B": {
+  "en": "The arrow itself: full draw, the arrow pierces zombies through, Hunter's Wound — for elites, big zombies and a crowd in a line.",
+  "ru": "Сама стрела: полное натяжение, стрела прошивает зомби насквозь, Охотничья рана — для элит, больших зомби и толпы в линию."
+ },
+ "preset|bows|0": {
+  "en": "Splinters (A18 + B7)",
+  "ru": "Осколки (A18 + B7)"
+ },
+ "preset|bows|1": {
+  "en": "Hunter (B18 + A7)",
+  "ru": "Охотник (B18 + A7)"
+ },
+ "preset|bows|2": {
+  "en": "Hybrid (11 + 11 + 3)",
+  "ru": "Гибрид (11 + 11 + 3)"
+ },
+ "ext|bows|E_ARROWS": {
+  "en": "Special arrows: acid, electric, barbed, fire",
+  "ru": "Спецстрелы: кислотная, электрическая, зазубренная, огненная"
+ },
+ "ext|bows|X_XBOW": {
+  "en": "Crossbow · Mark",
+  "ru": "Арбалет · Метка"
+ },
+ "ext|bows|X_SHOTGUN": {
+  "en": "Shotgun · bleeding",
+  "ru": "Дробовик · кровотечение"
+ },
+ "syn|bows|A4|0": {
+  "en": "One acid arrow corrodes the whole crowd; two different arrows in a row — reactions in the group.",
+  "ru": "Одна кислотная стрела коррозирует всю толпу; две разные стрелы подряд — реакции в группе."
+ },
+ "syn|bows|A8|0": {
+  "en": "Marksmanship from branch B strengthens headshots, but the arrow is weaker — better to shoot at the center of a group.",
+  "ru": "Меткость из ветки B усиливает хедшоты, но стрела слабее — лучше стрелять в центр группы."
+ },
+ "syn|bows|B1|0": {
+  "en": "Resonance: Agility matters for the bow again (instead of the Archery perk).",
+  "ru": "Резонанс: Ловкость снова важна для лука (вместо перка «Стрельба из лука»)."
+ },
+ "syn|bows|B3|0": {
+  "en": "Together with the crossbow Mark: a marked and wounded zombie melts from any weapon.",
+  "ru": "Вместе с Меткой арбалета: помеченный и раненый зомби тает от любого оружия."
+ },
+ "syn|bows|B5|0": {
+  "en": "Shadow: a chain of silent kills, each with +150%.",
+  "ru": "Тень: цепь тихих убийств, каждое с +150%."
+ },
+ "syn|bows|B8|0": {
+  "en": "Splinters stay for quick shots: a full draw — down the line, a quick one — at the crowd around.",
+  "ru": "Осколки остаются для быстрых выстрелов: полное натяжение — по линии, быстрый — по толпе вокруг."
+ },
+ "syn|bows|B8|1": {
+  "en": "Piercing Arrow is no longer needed for line length — the capstone pierces everyone.",
+  "ru": "Сквозная стрела уже не нужна для длины линии — капстоун прошивает всех."
+ },
+ "break|bows|B8|0": {
+  "en": "Splinters only come from quick (partial) shots; a fully drawn arrow does not scatter.",
+  "ru": "Осколки дают только быстрые (неполные) выстрелы; полностью натянутая стрела не разлетается."
+ },
+ "break|bows|B8|1": {
+  "en": "Thousand Needles only works with splinters of a fully drawn arrow, and it no longer scatters.",
+  "ru": "Тысяча игл работает только с осколками полностью натянутой стрелы, а она больше не разлетается."
+ },
+ "syn|bows|H1|0": {
+  "en": "Hunter's Wound: 10 splinters = 10 wounded and slowed zombies.",
+  "ru": "Охотничья рана: 10 осколков = 10 раненых и замедленных зомби."
+ },
+ "syn|bows|H2|0": {
+  "en": "Shadow: a zombie turned away \"does not see\" you — +150%.",
+  "ru": "Тень: отвернувшийся зомби вас «не видит» — +150%."
+ },
+ "syn|bows|H3|0": {
+  "en": "Full Draw: every splinter up to +100% (Agility 10).",
+  "ru": "Полное натяжение: каждый осколок до +100% (Ловкость 10)."
+ },
+ "syn|bows|H3|1": {
+  "en": "More Splinters: 10 splinters, each pierces one more — up to 20 hits.",
+  "ru": "Больше осколков: 10 осколков, каждый прошивает ещё одного — до 20 попаданий."
+ },
+ "idea|xbows|A": {
+  "en": "Support: marked zombies take more from all your weapons; the mark is wider, longer, jumps, works with elements and with headshots of other classes.",
+  "ru": "Поддержка: помеченные зомби получают больше от всего вашего оружия; метка шире, дольше, перескакивает, работает со стихиями и хедшотами других классов."
+ },
+ "idea|xbows|B": {
+  "en": "The bolt sticks and explodes: radius, fuse, elements, chain detonation, mines. The crossbow as a precise grenade launcher.",
+  "ru": "Болт застревает и взрывается: радиус, запал, стихии, цепная детонация, мины. Арбалет как точный гранатомёт."
+ },
+ "preset|xbows|0": {
+  "en": "Mark (A18 + B7)",
+  "ru": "Метка (A18 + B7)"
+ },
+ "preset|xbows|1": {
+  "en": "Charge (B18 + A7)",
+  "ru": "Заряд (B18 + A7)"
+ },
+ "preset|xbows|2": {
+  "en": "Hybrid (11 + 11 + 3)",
+  "ru": "Гибрид (11 + 11 + 3)"
+ },
+ "ext|xbows|X_PISTOL": {
+  "en": "Pistol · Headhunter",
+  "ru": "Пистолет · Охотник за головами"
+ },
+ "ext|xbows|X_RIFLE": {
+  "en": "Rifle · Ricochet",
+  "ru": "Винтовка · Рикошет"
+ },
+ "ext|xbows|X_BOW": {
+  "en": "Bow · Hunter's Wound",
+  "ru": "Лук · Охотничья рана"
+ },
+ "ext|xbows|X_EXPL": {
+  "en": "Explosives",
+  "ru": "Взрывчатка"
+ },
+ "ext|xbows|E_ELEM": {
+  "en": "Elements: fire, shock, acid, bleeding",
+  "ru": "Стихии: огонь, ток, кислота, кровотечение"
+ },
+ "syn|xbows|A2|0": {
+  "en": "Resonance with a \"foreign\" attribute: Perception, not Agility.",
+  "ru": "Резонанс с «чужим» атрибутом: Восприятие, а не Ловкость."
+ },
+ "syn|xbows|A4|0": {
+  "en": "Pistol: the Headhunter streak builds from body shots on the marked zombie.",
+  "ru": "Пистолет: серия Охотника набирается выстрелами в тело помеченного."
+ },
+ "syn|xbows|A4|1": {
+  "en": "Rifle: a ricochet from a body hit on the marked zombie.",
+  "ru": "Винтовка: рикошет от попадания в тело помеченного."
+ },
+ "syn|xbows|A5|0": {
+  "en": "Any elemental weapon: fire bolt, acid arrow, Tesla mod, bleeding.",
+  "ru": "Любое стихийное оружие: огненный болт, кислотная стрела, мод тесла, кровотечение."
+ },
+ "syn|xbows|A8|0": {
+  "en": "Charges work but are 40% weaker: the blast is counted from the bolt.",
+  "ru": "Заряды работают, но на 40% слабее: взрыв считается от болта."
+ },
+ "break|xbows|A8|0": {
+  "en": "The charge blast is counted from the bolt's damage, and the bolt is -40%.",
+  "ru": "Взрыв заряда считается от урона болта, а болт -40%."
+ },
+ "syn|xbows|B3|0": {
+  "en": "Fire + shock from one blast = the Confusion reaction across the whole group.",
+  "ru": "Огонь + ток от одного взрыва = реакция «Замешательство» по всей группе."
+ },
+ "syn|xbows|B5|0": {
+  "en": "Shockwave: those knocked down are also thrown away from the center.",
+  "ru": "Ударная волна: сбитые с ног ещё и отброшены от центра."
+ },
+ "syn|xbows|B8|0": {
+  "en": "Minefield: a bolt into the ground places three mines at once.",
+  "ru": "Минное поле: болт в землю ставит сразу три мины."
+ },
+ "syn|xbows|B8|1": {
+  "en": "Incendiary Mix: three fire patches instead of one.",
+  "ru": "Зажигательная смесь: три очага огня вместо одного."
+ },
+ "syn|xbows|H1|0": {
+  "en": "Deep Mark: the whole group after the blast takes up to +80% from everything.",
+  "ru": "Глубокая метка: вся группа после взрыва получает до +80% от всего."
+ },
+ "syn|xbows|H2|0": {
+  "en": "Explosives into a gathered crowd — or just wait for the charge.",
+  "ru": "Взрывчатка в собранную толпу — или просто дождаться заряда."
+ },
+ "syn|xbows|H3|0": {
+  "en": "Mark Hop: the chain of marks and charges goes on.",
+  "ru": "Прыжок метки: цепь меток и зарядов идёт дальше."
+ },
+ "idea|knives|A": {
+  "en": "Long fight: more stacks, bleeding from every hit, blood spreads through the crowd, vampirism.",
+  "ru": "Долгий бой: больше стаков, кровотечение от каждого удара, кровь расходится по толпе, вампиризм."
+ },
+ "idea|knives|B": {
+  "en": "Short fight: crits from Agility, backstab, finishing off the weak, a crit chain, a tandem with a pistol.",
+  "ru": "Короткий бой: криты от Ловкости, удар в спину, добивание слабых, цепь критов, тандем с пистолетом."
+ },
+ "preset|knives|0": {
+  "en": "Bloodsucker (A18 + B7)",
+  "ru": "Кровопийца (A18 + B7)"
+ },
+ "preset|knives|1": {
+  "en": "The Killer (B18 + A7)",
+  "ru": "Убийца (B18 + A7)"
+ },
+ "preset|knives|2": {
+  "en": "Hybrid (11 + 11 + 3)",
+  "ru": "Гибрид (11 + 11 + 3)"
+ },
+ "ext|knives|X_PISTOL": {
+  "en": "Pistol · Headhunter",
+  "ru": "Пистолет · Охотник за головами"
+ },
+ "ext|knives|X_CLUB": {
+  "en": "Bats, sledgehammers · knockdown",
+  "ru": "Биты, кувалды · сбивание с ног"
+ },
+ "ext|knives|E_FIRE": {
+  "en": "Fire and acid (reactions with bleeding)",
+  "ru": "Огонь и кислота (реакции с кровотечением)"
+ },
+ "syn|knives|A2|0": {
+  "en": "Bleeding is the 4th element: with fire Roasting, with acid Sepsis.",
+  "ru": "Кровотечение — 4-я стихия: с огнём «Запекание», с кислотой «Сепсис»."
+ },
+ "syn|knives|A8|0": {
+  "en": "Deep Cuts: the more often bleeding applies, the less often the downside works.",
+  "ru": "Глубокие порезы: чем чаще кровотечение, тем реже действует минус."
+ },
+ "break|knives|A8|0": {
+  "en": "The first backstab or finisher on a zombie without bleeding -30%.",
+  "ru": "Первый удар в спину или добивание по зомби без кровотечения -30%."
+ },
+ "syn|knives|B1|0": {
+  "en": "Resonance: Agility matters for the knife again.",
+  "ru": "Резонанс: Ловкость снова важна для ножа."
+ },
+ "syn|knives|B5|0": {
+  "en": "Bats and sledgehammers knock down — the knife finishes.",
+  "ru": "Биты и кувалды валят с ног — нож добивает."
+ },
+ "syn|knives|B6|0": {
+  "en": "Pistol: silently take down the first one with the knife — and straight into the Headhunter mode.",
+  "ru": "Пистолет: тихо снять первого ножом — и сразу в режим Охотника."
+ },
+ "syn|knives|B8|0": {
+  "en": "Backstab: +120% and another ×2 through armor and resists.",
+  "ru": "Удар в спину: +120% и ещё ×2 сквозь броню и резисты."
+ },
+ "syn|knives|B8|1": {
+  "en": "Coup de Grace and knockdown: a downed zombie is the easiest way to get \"behind\" it.",
+  "ru": "Добивание и сбивание с ног: лежачий зомби — самый простой способ зайти «со спины»."
+ },
+ "break|knives|B8|0": {
+  "en": "Hits to the face -25%: the stack bonus and healing remain, but the damage is lower.",
+  "ru": "Удары в лицо -25%: бонус стаков и лечение остаются, но урон ниже."
+ },
+ "syn|knives|H1|0": {
+  "en": "Thirst: crits quickly build 8 stacks.",
+  "ru": "Ненасытность: криты быстро набирают 8 стаков."
+ },
+ "syn|knives|H2|0": {
+  "en": "Backstab up to +120% on every bleeding zombie.",
+  "ru": "Удар в спину до +120% по каждому кровоточащему."
+ },
+ "syn|knives|H3|0": {
+  "en": "Keen Edge: natural crits plus every 3rd.",
+  "ru": "Острое лезвие: природные криты плюс каждый 3-й."
+ },
+ "idea|clubs|A": {
+  "en": "Power hit: stun, long flight, the landing knocks down a crowd, concussion.",
+  "ru": "Силовой удар: оглушение, дальний полёт, приземление валит толпу, сотрясение."
+ },
+ "idea|clubs|B": {
+  "en": "Normal hits: stacks of damage and speed from kills, tirelessness, rampage, a wave of rage.",
+  "ru": "Обычные удары: стаки урона и скорости от убийств, неутомимость, буйство, волна ярости."
+ },
+ "preset|clubs|0": {
+  "en": "Home Run (A18 + B7)",
+  "ru": "Хоумран (A18 + B7)"
+ },
+ "preset|clubs|1": {
+  "en": "Rage (B18 + A7)",
+  "ru": "Ярость (B18 + A7)"
+ },
+ "preset|clubs|2": {
+  "en": "Hybrid (11 + 11 + 3)",
+  "ru": "Гибрид (11 + 11 + 3)"
+ },
+ "ext|clubs|X_KNIFE": {
+  "en": "Knife · Coup de Grace",
+  "ru": "Нож · Добивание"
+ },
+ "ext|clubs|E_ELEM": {
+  "en": "Elements: fire, shock, acid, bleeding",
+  "ru": "Стихии: огонь, ток, кислота, кровотечение"
+ },
+ "syn|clubs|A2|0": {
+  "en": "Resonance: Strength matters for the bat again (instead of Pummel Pete).",
+  "ru": "Резонанс: Сила снова важна для биты (вместо «Громилы Пита»)."
+ },
+ "syn|clubs|A5|0": {
+  "en": "Elements on stunned zombies also +50%.",
+  "ru": "Стихии по оглушённым тоже +50%."
+ },
+ "syn|clubs|A8|0": {
+  "en": "Easy Swing cancels the stamina downside.",
+  "ru": "Лёгкий замах гасит минус выносливости."
+ },
+ "syn|clubs|A8|1": {
+  "en": "Knife: finishes the knocked-down with a guaranteed crit.",
+  "ru": "Нож: добивает сбитых с ног гарантированным критом."
+ },
+ "syn|clubs|B8|0": {
+  "en": "Rampage: at maximum you cannot be knocked down — but you will be hit harder.",
+  "ru": "Буйство: на максимуме вас не сбить — но бить по вам будут сильнее."
+ },
+ "syn|clubs|H1|0": {
+  "en": "Stunning Blow: 40% of hits stun — Rage grows even before kills.",
+  "ru": "Оглушающий удар: 40% ударов оглушают — Ярость растёт ещё до убийств."
+ },
+ "syn|clubs|H2|0": {
+  "en": "Hard Landing: up to 6 m of a knocked-down crowd.",
+  "ru": "Жёсткое приземление: до 6 м сбитой толпы."
+ },
+ "syn|clubs|H3|0": {
+  "en": "Kick Them While Down: every power hit after a normal one — up to +80%.",
+  "ru": "По оглушённому: каждый силовой после обычного — до +80%."
+ },
+ "idea|sledges|A": {
+  "en": "Crowd: a wider and more frequent shove, stronger against the knocked down, spreads elements, rift, aftershock.",
+  "ru": "Толпа: более широкий и частый толчок, сильнее по сбитым, разносит стихии, разлом, афтершок."
+ },
+ "idea|sledges|B": {
+  "en": "One target: a huge power hit, armor breaking, momentum, surplus damage passes on, execution.",
+  "ru": "Одна цель: огромный силовой удар, ломка брони, размах, избыток урона идёт дальше, казнь."
+ },
+ "preset|sledges|0": {
+  "en": "Earthquake (A18 + B7)",
+  "ru": "Землетрясение (A18 + B7)"
+ },
+ "preset|sledges|1": {
+  "en": "Wrecker (B18 + A7)",
+  "ru": "Разрушитель (B18 + A7)"
+ },
+ "preset|sledges|2": {
+  "en": "Hybrid (11 + 11 + 3)",
+  "ru": "Гибрид (11 + 11 + 3)"
+ },
+ "ext|sledges|X_RIFLE": {
+  "en": "Rifle · headshot",
+  "ru": "Винтовка · хедшот"
+ },
+ "ext|sledges|X_KNIFE": {
+  "en": "Knife · Coup de Grace",
+  "ru": "Нож · Добивание"
+ },
+ "ext|sledges|E_ELEM": {
+  "en": "Elements: fire, shock, acid, bleeding",
+  "ru": "Стихии: огонь, ток, кислота, кровотечение"
+ },
+ "syn|sledges|A5|0": {
+  "en": "One burning target — and the whole crowd burns; two elements — reactions across the group.",
+  "ru": "Одна подожжённая цель — и вся толпа горит; две стихии — реакции по группе."
+ },
+ "syn|sledges|A6|0": {
+  "en": "Rifle: a downed zombie is an easy headshot target.",
+  "ru": "Винтовка: лежачий зомби — лёгкая цель для хедшота."
+ },
+ "syn|sledges|A6|1": {
+  "en": "Knife: Coup de Grace on the knocked down — a guaranteed crit.",
+  "ru": "Нож: Добивание по сбитым — гарантированный крит."
+ },
+ "syn|sledges|A8|0": {
+  "en": "Frequent Quakes cancel the +2 s cooldown.",
+  "ru": "Частые толчки гасят +2 с перезарядки."
+ },
+ "syn|sledges|B2|0": {
+  "en": "Resonance with a \"foreign\" attribute: Fortitude, not Strength.",
+  "ru": "Резонанс с «чужим» атрибутом: Стойкость, а не Сила."
+ },
+ "syn|sledges|B8|0": {
+  "en": "Iron Lungs cancel the stamina downside.",
+  "ru": "Железные лёгкие гасят минус выносливости."
+ },
+ "syn|sledges|H1|0": {
+  "en": "Armor Break 3/3: the whole crowd loses 40% armor.",
+  "ru": "Ломка брони 3/3: вся толпа без 40% брони."
+ },
+ "syn|sledges|H2|0": {
+  "en": "Shockforce 50% of the empowered hit.",
+  "ru": "Ударная сила 50% от усиленного удара."
+ },
+ "syn|sledges|H3|0": {
+  "en": "Overkill: the kill flies on — and another shove.",
+  "ru": "Избыток: убийство летит дальше — и ещё толчок."
+ },
+ "idea|spears|A": {
+  "en": "Line and distance: a longer shove, piercing, a spear-tip bonus, the thrown knock others down, the sentry thrust.",
+  "ru": "Линия и дистанция: более длинный толчок, пробивание, бонус кончиком копья, отброшенные валят других, часовой укол."
+ },
+ "idea|spears|B": {
+  "en": "Quick thrusts: streaks on one target, bleeding, head thrust, parrying the swing, fighting on the move.",
+  "ru": "Быстрые уколы: серии по одной цели, кровотечение, укол в голову, парирование замаха, бой в движении."
+ },
+ "preset|spears|0": {
+  "en": "Battering Ram (A18 + B7)",
+  "ru": "Таран (A18 + B7)"
+ },
+ "preset|spears|1": {
+  "en": "Fencer (B18 + A7)",
+  "ru": "Фехтовальщик (B18 + A7)"
+ },
+ "preset|spears|2": {
+  "en": "Hybrid (11 + 11 + 3)",
+  "ru": "Гибрид (11 + 11 + 3)"
+ },
+ "ext|spears|E_FIRE": {
+  "en": "Fire and acid (reactions with bleeding)",
+  "ru": "Огонь и кислота (реакции с кровотечением)"
+ },
+ "syn|spears|A8|0": {
+  "en": "Hit and Back: after the dash, you get out of the crowd faster.",
+  "ru": "Удар и отход: после рывка быстрее выбраться из толпы."
+ },
+ "syn|spears|A8|1": {
+  "en": "Tip in the Wound: the dash leaves the tip in the first target on the path — turn around and finish it.",
+  "ru": "Остриё в ране: рывок оставляет остриё в первом на пути — развернитесь и добейте его."
+ },
+ "syn|spears|B1|0": {
+  "en": "Resonance with a \"foreign\" attribute: Agility, not Perception.",
+  "ru": "Резонанс с «чужим» атрибутом: Ловкость, а не Восприятие."
+ },
+ "syn|spears|B2|0": {
+  "en": "Bleeding is the 4th element: with fire Roasting, with acid Sepsis.",
+  "ru": "Кровотечение — 4-я стихия: с огнём «Запекание», с кислотой «Сепсис»."
+ },
+ "syn|spears|B8|0": {
+  "en": "Thrust Chain: the whirlwind comes only while the chain is alive.",
+  "ru": "Серия уколов: вихрь приходит только пока серия жива."
+ },
+ "syn|spears|H1|0": {
+  "en": "Through Strike: 6 bleeding targets with one hit.",
+  "ru": "Сквозной удар: 6 кровоточащих одним ударом."
+ },
+ "syn|spears|H2|0": {
+  "en": "Head Thrust: up to +120% for retreating.",
+  "ru": "Укол в голову: до +120% за отступление."
+ },
+ "syn|spears|H3|0": {
+  "en": "Tip in the Wound: a parry as a power hit leaves the tip in the target.",
+  "ru": "Остриё в ране: парирование как силовой удар оставляет остриё в цели."
+ },
+ "idea|knuckles|A": {
+  "en": "Tank: more charges, less damage while charged, recoil to the attacker, healing and \"blood for blood\".",
+  "ru": "Танк: больше зарядов, меньше урона, пока заряжены, отдача нападающему, лечение и «кровь за кровь»."
+ },
+ "idea|knuckles|B": {
+  "en": "You are not hit: the streak grows while you let nothing through — speed, evasion, the first hit, a hundred fists.",
+  "ru": "Вас не бьют: серия ударов растёт, пока вы ничего не пропустили — скорость, уклонение, первый удар, сто кулаков."
+ },
+ "preset|knuckles|0": {
+  "en": "Counter Punch (A18 + B7)",
+  "ru": "Контрудар (A18 + B7)"
+ },
+ "preset|knuckles|1": {
+  "en": "Flurry (B18 + A7)",
+  "ru": "Шквал (B18 + A7)"
+ },
+ "preset|knuckles|2": {
+  "en": "Hybrid (11 + 11 + 3)",
+  "ru": "Гибрид (11 + 11 + 3)"
+ },
+ "syn|knuckles|A2|0": {
+  "en": "Resonance: Fortitude matters for knuckles again.",
+  "ru": "Резонанс: Стойкость снова важна для кастетов."
+ },
+ "syn|knuckles|A8|0": {
+  "en": "More Charges: for a full 7 you must take 7 hits — a risk for the sake of Knockout.",
+  "ru": "Больше зарядов: до полных 7 нужно пропустить 7 ударов — риск ради Нокаута."
+ },
+ "break|knuckles|A8|0": {
+  "en": "15 s after Knockout movement -20%: Light Feet is barely noticeable at that time.",
+  "ru": "15 с после Нокаута движение -20%: Лёгкие ноги в это время почти не ощутимы."
+ },
+ "syn|knuckles|B8|0": {
+  "en": "Slip: the less you take, the less the downside weighs.",
+  "ru": "Уклон: чем меньше пропускаете, тем меньше весит минус."
+ },
+ "break|knuckles|B8|0": {
+  "en": "Iron Skin reduces damage, but Hundred Fists adds +30%.",
+  "ru": "Железная кожа снижает урон, но Сто кулаков добавляет +30%."
+ },
+ "syn|knuckles|H1|0": {
+  "en": "More Charges — more \"lives\" of the streak.",
+  "ru": "Больше зарядов — больше «жизней» серии."
+ },
+ "syn|knuckles|H2|0": {
+  "en": "Wall of Fists: at 10+ the target does not hit anyway — Clinch covers from 5 to 10.",
+  "ru": "Стена ударов: на 10+ цель и так не бьёт — Клинч прикрывает от 5 до 10."
+ },
+ "syn|knuckles|H3|0": {
+  "en": "More Charges: a power hit at 7 charges — +350% to everyone.",
+  "ru": "Больше зарядов: силовой на 7 зарядах — +350% по всем."
+ },
+ "idea|batons|A": {
+  "en": "Crowd: a power hit into the thick — radius, duration, jumps, cage, stamina from the crowd, short circuit.",
+  "ru": "Толпа: силовой в гущу — радиус, длительность, перескоки, клетка, выносливость от толпы, короткое замыкание."
+ },
+ "idea|batons|B": {
+  "en": "One target: you shock and finish the same zombie — Breakdown on the 4th hit, paralysis, a power hit detonates the shock.",
+  "ru": "Одна цель: шокируете и добиваете одного зомби — Пробой на 4-й удар, паралич, подрыв шока силовым."
+ },
+ "preset|batons|0": {
+  "en": "Storm (A18 + B7)",
+  "ru": "Буря (A18 + B7)"
+ },
+ "preset|batons|1": {
+  "en": "Overload (B18 + A7)",
+  "ru": "Перегрузка (B18 + A7)"
+ },
+ "preset|batons|2": {
+  "en": "Hybrid (11 + 11 + 3)",
+  "ru": "Гибрид (11 + 11 + 3)"
+ },
+ "ext|batons|E_SHOCK": {
+  "en": "Shock",
+  "ru": "Ток"
+ },
+ "ext|batons|X_TURRET": {
+  "en": "Turrets and drone (Intellect)",
+  "ru": "Турели и дрон (Интеллект)"
+ },
+ "syn|batons|A2|0": {
+  "en": "Shock: the longer it lasts, the more ticks of 15% of the hit.",
+  "ru": "Ток: чем дольше, тем больше тиков по 15% от удара."
+ },
+ "syn|batons|A4|0": {
+  "en": "Resonance: Intellect matters for batons again.",
+  "ru": "Резонанс: Интеллект снова важен для жезлов."
+ },
+ "syn|batons|A8|0": {
+  "en": "Crowd Feed: a reset cooldown = more frequent power hits, stamina returns from the crowd.",
+  "ru": "Питание от толпы: сброшенная перезарядка = более частый силовой, выносливость возвращает толпа."
+ },
+ "break|batons|A8|0": {
+  "en": "Isolation gives a bonus when nobody is near, and Thunderstorm takes away 25% exactly then.",
+  "ru": "Изоляция даёт бонус, когда рядом никого, а Буря именно тогда снимает 25%."
+ },
+ "syn|batons|B1|0": {
+  "en": "Also works on shock from the Tesla mod, Storm Fist, Thunderclap.",
+  "ru": "Действует и на шок от тесла-мода, Storm Fist, Thunderclap."
+ },
+ "syn|batons|B8|0": {
+  "en": "Hold the Current: shock is long anyway — High Voltage keeps it from fading.",
+  "ru": "Держать под током: шок и так долгий — Высокое напряжение не даёт ему угаснуть."
+ },
+ "break|batons|B8|0": {
+  "en": "The radius of the mass state (and the cage field) is half as large.",
+  "ru": "Радиус массового состояния (и поля клетки) вдвое меньше."
+ },
+ "syn|batons|H2|0": {
+  "en": "Turrets (Robotic Turret, Robotic Sledge) and the drone — also Intellect.",
+  "ru": "Турели (Роботизированная пушка, Роботизированный молот) и дрон — тоже Интеллект."
+ },
+ "syn|batons|H3|0": {
+  "en": "Breakdown: the more often the 4th hit, the more often the lightning.",
+  "ru": "Пробой: чем чаще 4-й удар, тем чаще молния."
+ }
+}

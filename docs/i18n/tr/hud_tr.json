@@ -1,0 +1,1168 @@
+{
+ "Pistols|gR|Pistols_Base|3/5": {
+  "en": {
+   "what": "Headshot streak: current / needed to start Headhunter mode.",
+   "when": "Always while the pistol is in hand. A miss or a body hit resets the streak."
+  },
+  "ru": {
+   "what": "Серия попаданий в голову подряд: сколько есть / сколько нужно для режима «Охотник за головами».",
+   "when": "Всегда, пока пистолет в руках. Промах или попадание в тело сбрасывает серию."
+  }
+ },
+ "Pistols|gR|Pistols_Base|режим": {
+  "en": {
+   "what": "Headhunter mode is on: empowered shots left (the arc shrinks with every shot).",
+   "when": "After a headshot streak. The arc is teal and pulses while the mode lasts.",
+   "variant": "mode"
+  },
+  "ru": {
+   "what": "Режим «Охотник за головами» включён: сколько усиленных выстрелов осталось (дуга убывает с каждым выстрелом).",
+   "when": "После серии попаданий в голову. Дуга бирюзовая и пульсирует, пока режим действует.",
+   "variant": "режим"
+  }
+ },
+ "Pistols|spd|Pistols_B5|+60%": {
+  "en": {
+   "what": "Hot Barrel: current fire rate bonus (+5% per hit).",
+   "when": "While you keep hitting; with no hits it melts 5% per second. Maximum +100%."
+  },
+  "ru": {
+   "what": "«Горячий ствол»: текущий бонус к темпу стрельбы (+5% за попадание).",
+   "when": "Пока попадаешь; без попаданий тает на 5% в секунду. Максимум +100%."
+  }
+ },
+ "Pistols|atk|Pistols_H1|5/8": {
+  "en": {
+   "what": "Firing Squad: hits in a row without a miss so far, out of 8.",
+   "when": "Always with hybrid H1. A miss resets the counter."
+  },
+  "ru": {
+   "what": "«Расстрел»: сколько попаданий подряд без промаха уже есть из 8.",
+   "when": "Всегда с гибридом H1. Промах обнуляет счётчик."
+  }
+ },
+ "Pistols|alert|Pistols_H1|готовий": {
+  "en": {
+   "what": "Firing Squad ready: the next hit deals 1000% and counts as a headshot (+1 to the Headhunter streak). The icon changes from a runner to a crosshair with a blast.",
+   "when": "After 7 hits in a row without a miss, until the next hit.",
+   "variant": "ready"
+  },
+  "ru": {
+   "what": "«Расстрел» готов: следующее попадание бьёт на 1000% и считается попаданием в голову (+1 к серии «Охотника за головами»). Значок меняется с бегуна на прицел со взрывом.",
+   "when": "После 7 попаданий подряд без промаха, до следующего попадания.",
+   "variant": "готов"
+  }
+ },
+ "Pistols|spd|Pistols_H2|+15%  2s": {
+  "en": {
+   "what": "Gunfighter: +15% fire rate and seconds left.",
+   "when": "3 seconds after a headshot."
+  },
+  "ru": {
+   "what": "«Ганфайтер»: +15% к темпу стрельбы и сколько секунд осталось.",
+   "when": "3 секунды после попадания в голову."
+  }
+ },
+ "Pistols|z|Pistols_B4|-30%": {
+  "en": {
+   "what": "Over a zombie: how slowed it is (the strongest of Lead Shackles, Hunter's Wound, Suppression).",
+   "when": "While the slow lasts (3 s after a hit)."
+  },
+  "ru": {
+   "what": "Над зомби: насколько он замедлен (сильнейшее из «Свинцовых кандалов», «Охотничьей раны», «Подавления»).",
+   "when": "Пока действует замедление (3 с после попадания)."
+  }
+ },
+ "Pistols|over|Pistols_A5|ring": {
+  "en": {
+   "what": "Teal rings over zombie heads within 40 m; grey when behind cover.",
+   "when": "Only in Headhunter mode."
+  },
+  "ru": {
+   "what": "Бирюзовые кольца над головами зомби в 40 м; за укрытием кольцо серое.",
+   "when": "Только в режиме «Охотника за головами»."
+  }
+ },
+ "Shotguns|alert|Shotguns_B7|x1.5": {
+  "en": {
+   "what": "Lead Wall reward: the next shot +50%.",
+   "when": "After a shot that hit 5+ zombies."
+  },
+  "ru": {
+   "what": "Награда «Свинцовой стены»: следующий выстрел +50%.",
+   "when": "После выстрела, задевшего 5+ зомби."
+  }
+ },
+ "Shotguns|z|Shotguns_A5|+50%": {
+  "en": {
+   "what": "Shattered zombie: takes +50% from everything. A red \"x1.5\" is shown over it too.",
+   "when": "While the zombie lies after a shotgun hit and 3 s more."
+  },
+  "ru": {
+   "what": "Зомби «Разбитый»: получает +50% от всего. Над ним ещё и красное «x1.5».",
+   "when": "Пока зомби лежит после дробовика и ещё 3 с."
+  }
+ },
+ "Rifles|gR|Rifles_A6|+60%": {
+  "en": {
+   "what": "Focus charge: damage bonus of the next shot (the arc fills smoothly).",
+   "when": "While you aim without shooting. Pulses at maximum."
+  },
+  "ru": {
+   "what": "Заряд «Сосредоточенности»: бонус урона следующего выстрела (дуга плавно заполняется).",
+   "when": "Пока целишься без выстрела. Пульсирует на максимуме."
+  }
+ },
+ "Rifles|alert|Rifles_H2|x1.5": {
+  "en": {
+   "what": "Spotter: the next shot +50%.",
+   "when": "After a headshot kill, until the next shot."
+  },
+  "ru": {
+   "what": "«Наводчик»: следующий выстрел +50%.",
+   "when": "После убийства в голову, до следующего выстрела."
+  }
+ },
+ "Rifles|over|Rifles_H2|outline": {
+  "en": {
+   "what": "Outlines of all zombies within 30 m.",
+   "when": "10 seconds after a headshot kill."
+  },
+  "ru": {
+   "what": "Контуры всех зомби в 30 м.",
+   "when": "10 секунд после убийства в голову."
+  }
+ },
+ "MG|gR|MG_B1|3/5  +21%": {
+  "en": {
+   "what": "Spin Up stacks and the fire rate they give (+4 / 7 / 12% per stack by rank).",
+   "when": "During continuous fire. Pulses at 5/5."
+  },
+  "ru": {
+   "what": "Стаки «Раскрутки» и темп стрельбы, который они дают (+4 / 7 / 12% за стак по рангу).",
+   "when": "Во время непрерывного огня. Пульсирует на 5/5."
+  }
+ },
+ "MG|gR|MG_B1|перегрів": {
+  "en": {
+   "what": "Overheat: the stacks burned out, the arc is red and shrinks until the overheat ends.",
+   "when": "8 s in a row at maximum spin-up -> 2 s of overheat.",
+   "variant": "overheat"
+  },
+  "ru": {
+   "what": "Перегрев: стаки сгорели, дуга красная и убывает до конца перегрева.",
+   "when": "8 с подряд на максимуме раскрутки → 2 с перегрева.",
+   "variant": "перегрев"
+  }
+ },
+ "MG|atk|MG_A6|ui_apos_holdline": {
+  "en": {
+   "what": "Hold the Line is active: less recoil and more damage.",
+   "when": "While you sit or stand still."
+  },
+  "ru": {
+   "what": "«Удержание позиции» действует: меньше отдачи и больше урона.",
+   "when": "Пока сидишь или стоишь на месте."
+  }
+ },
+ "MG|z|MG_Base|-20%": {
+  "en": {
+   "what": "Suppression on a zombie: how slowed it is.",
+   "when": "8 s after a hit."
+  },
+  "ru": {
+   "what": "«Подавление» на зомби: насколько он замедлен.",
+   "when": "8 с после попадания."
+  }
+ },
+ "Bows|atk|Bows_B1|+40%": {
+  "en": {
+   "what": "Full Draw damage bonus (strength = rank x Agility).",
+   "when": "Only when the string is fully drawn: appears at the end of the vanilla draw bar."
+  },
+  "ru": {
+   "what": "Бонус урона полного натяжения (сила = ранг × Ловкость).",
+   "when": "Только когда тетива натянута полностью: появляется в конце ванильной полосы натяжения."
+  }
+ },
+ "Bows|alert|Bows_B5|x2": {
+  "en": {
+   "what": "Shadow: you go unnoticed, the next arrow x2.",
+   "when": "5 s after a silent kill."
+  },
+  "ru": {
+   "what": "«Тень»: тебя не замечают, следующая стрела ×2.",
+   "when": "5 с после тихого убийства."
+  }
+ },
+ "Bows|z|Bows_B3|x2": {
+  "en": {
+   "what": "Hunter's Wound: wound stacks (up to 2), the zombie takes more damage and is slowed.",
+   "when": "8 s after a hit with a fully drawn arrow."
+  },
+  "ru": {
+   "what": "«Охотничья рана»: стаки раны (до 2), зомби получает больше урона и замедлен.",
+   "when": "8 с после попадания полностью натянутой стрелой."
+  }
+ },
+ "Bows|mark|Bows_A7|ring": {
+  "en": {
+   "what": "A blue pulsing ring on an arrow in the ground or a wall: the trap is armed.",
+   "when": "While the trap waits (up to 10 s). One trap at a time."
+  },
+  "ru": {
+   "what": "Голубое пульсирующее кольцо на стреле в земле или стене: ловушка заряжена.",
+   "when": "Пока ловушка ждёт (до 10 с). Одна ловушка за раз."
+  }
+ },
+ "Bows|feed|Bows_B2|-45 ×3": {
+  "en": {
+   "what": "Piercing Arrow: damage to each target behind and how many zombies were pierced.",
+   "when": "When a full arrow pierced someone in the line."
+  },
+  "ru": {
+   "what": "«Сквозная стрела»: урон каждой цели позади и сколько зомби пробито.",
+   "when": "Когда полная стрела прошила кого-то в линии."
+  }
+ },
+ "Bows|feed|Bows_A7|-30 ×2": {
+  "en": {
+   "what": "Shock Trap: discharge damage and how many were hit.",
+   "when": "When the trap or an arrow stuck in a zombie shocks."
+  },
+  "ru": {
+   "what": "«Электроловушка»: урон разряда и сколько задело.",
+   "when": "Когда ловушка или стрела в зомби бьёт током."
+  }
+ },
+ "Crossbows|gR|Crossbows_B7|2/5": {
+  "en": {
+   "what": "Minefield mines placed / maximum. Over the limit the oldest one explodes.",
+   "when": "Always with skill B7. Pulses when all mines are placed."
+  },
+  "ru": {
+   "what": "Мин «Минного поля» стоит / максимум. Сверх лимита самая старая взрывается.",
+   "when": "Всегда с навыком B7. Пульсирует, когда все мины расставлены."
+  }
+ },
+ "Crossbows|spd|Crossbows_A7|+30%  4s": {
+  "en": {
+   "what": "Hunter's Rhythm: reload speed bonus and seconds left.",
+   "when": "5 s after killing a marked zombie."
+  },
+  "ru": {
+   "what": "«Охотничий ритм»: бонус к скорости перезарядки и сколько секунд осталось.",
+   "when": "5 с после убийства помеченного зомби."
+  }
+ },
+ "Crossbows|z|Crossbows_Base|+20%": {
+  "en": {
+   "what": "Mark: how much more damage this zombie takes from you (from any weapon).",
+   "when": "10 s after a bolt hit."
+  },
+  "ru": {
+   "what": "«Метка»: на сколько больше урона этот зомби получает от тебя (любым оружием).",
+   "when": "10 с после попадания болтом."
+  }
+ },
+ "Crossbows|mark|Crossbows_B1|ring": {
+  "en": {
+   "what": "An orange pulsing ring on a bolt: a Sticky Charge or a mine waits to explode.",
+   "when": "From the hit until the blast (2 s, a mine up to 60 s)."
+  },
+  "ru": {
+   "what": "Оранжевое пульсирующее кольцо на болте: «Липкий заряд» или мина ждёт взрыва.",
+   "when": "От попадания до взрыва (2 с, мина до 60 с)."
+  }
+ },
+ "Crossbows|feed|Crossbows_B1|-50 ×3": {
+  "en": {
+   "what": "Charge blast: damage to each and how many were hit.",
+   "when": "When a charge or a mine exploded."
+  },
+  "ru": {
+   "what": "Взрыв заряда: урон каждому и сколько задело.",
+   "when": "Когда заряд или мина взорвались."
+  }
+ },
+ "Blades|gR|Blades_Base|3/8": {
+  "en": {
+   "what": "Bloodsucker stacks: current / maximum (up to 8 with Thirst).",
+   "when": "Always with a knife. With no hits the stacks vanish after 5 s. Pulses at maximum."
+  },
+  "ru": {
+   "what": "Стаки «Кровопийцы»: сколько есть / максимум (с «Ненасытностью» до 8).",
+   "when": "Всегда с ножом. Без ударов стаки исчезают через 5 с. Пульсирует на максимуме."
+  }
+ },
+ "Blades|def|Blades_Base|+3/s": {
+  "en": {
+   "what": "Regeneration from the stacks: HP per second.",
+   "when": "Always with a knife; grey when there are no stacks."
+  },
+  "ru": {
+   "what": "Регенерация от стаков: HP в секунду.",
+   "when": "Всегда с ножом; серое, когда стаков нет."
+  }
+ },
+ "Blades|atk|Blades_A3|+15%": {
+  "en": {
+   "what": "Hot Blood: damage bonus from the current stacks.",
+   "when": "When there is at least one stack."
+  },
+  "ru": {
+   "what": "«Горячая кровь»: бонус урона от текущих стаков.",
+   "when": "Когда есть хоть один стак."
+  }
+ },
+ "Blades|atk|Blades_B7|x2": {
+  "en": {
+   "what": "Execution Chain: how many next hits are guaranteed crits.",
+   "when": "After a critical kill; goes down with every hit."
+  },
+  "ru": {
+   "what": "«Цепь казней»: сколько следующих ударов гарантированно будут критами.",
+   "when": "После убийства критом; уменьшается с каждым ударом."
+  }
+ },
+ "Blades|dmg|Blades_B2|Backstab!": {
+  "en": {
+   "what": "A label over this hit's damage number (like \"Corpse!\"), always in English.",
+   "when": "The hit landed on a zombie that had its back to you or did not see you."
+  },
+  "ru": {
+   "what": "Метка над числом урона этого удара (как «Труп!»), всегда на английском.",
+   "when": "Удар попал по зомби спиной к тебе или не видящему тебя."
+  }
+ },
+ "Blades|dmg|Blades_B8|SPINE STRIKE!!": {
+  "en": {
+   "what": "A big red label over the damage number, \"x2 through armor\" under it, and a bone crunch, so it is clear this is not an ordinary backstab.",
+   "when": "A true backstab with capstone B8: x2 and through armor.",
+   "sub": "x2 through armor"
+  },
+  "ru": {
+   "what": "Большая красная метка над числом урона, под ней «x2 сквозь броню», и хруст костей — чтобы было видно, что это не обычный удар в спину.",
+   "when": "Настоящий удар в спину с капстоуном B8: ×2 и сквозь броню.",
+   "sub": "x2 сквозь броню"
+  }
+ },
+ "Blades|feed|Blades_B8|-384": {
+  "en": {
+   "what": "A line in the reaction feed on the right: how much damage the Spine Strike dealt.",
+   "when": "Every Spine Strike (capstone B8)."
+  },
+  "ru": {
+   "what": "Строка в ленте реакций справа: сколько урона нанёс удар в хребет.",
+   "when": "Каждый удар в хребет (капстоун B8)."
+  }
+ },
+ "Blades|z|Blades_Base|-8/s 14s": {
+  "en": {
+   "what": "Bleeding over a zombie: damage per second and seconds left.",
+   "when": "After a power hit (and a normal one with Deep Cuts)."
+  },
+  "ru": {
+   "what": "Кровотечение над зомби: урон в секунду и сколько секунд осталось.",
+   "when": "После силового удара (и обычного с «Глубокими порезами»)."
+  }
+ },
+ "Clubs|gR|Clubs_B1|4/8  +40%": {
+  "en": {
+   "what": "Rage stacks and the damage bonus from them (+10% per stack, up to +30% with Frenzy). Swing speed (+5% per stack) is in the energy block at the bottom right.",
+   "when": "With skill B1. A stack lasts 8 s from a kill. Pulses at maximum."
+  },
+  "ru": {
+   "what": "Стаки «Ярости» и бонус урона от них (+10% за стак, с «Неистовством» до +30%). Скорость ударов (+5% за стак) — в блоке энергии справа внизу.",
+   "when": "С навыком B1. Стак 8 с от убийства. Пульсирует на максимуме."
+  }
+ },
+ "Clubs|gL|Clubs_A7|+30%": {
+  "en": {
+   "what": "Batting Streak: left arc of 3 links - how many power hits in a row so far; the number is the damage bonus of the NEXT power hit (+15 / 40% per link).",
+   "when": "Until 3 s pass after a power hit; then the chain breaks."
+  },
+  "ru": {
+   "what": "«Серия подач»: левая дуга из 3 звеньев — сколько силовых ударов подряд уже есть; число — бонус урона СЛЕДУЮЩЕГО силового удара (+15 / 40% за звено).",
+   "when": "Пока не прошло 3 с после силового удара; потом цепочка обрывается."
+  }
+ },
+ "Clubs|spd|Clubs_B1|+20%": {
+  "en": {
+   "what": "Rage: swing speed (+5% per stack), merged with other attack speed bonuses.",
+   "when": "While there are Rage stacks."
+  },
+  "ru": {
+   "what": "«Ярость»: скорость ударов (+5% за стак), сливается с другими бонусами темпа атаки.",
+   "when": "Пока есть стаки «Ярости»."
+  }
+ },
+ "Clubs|z|Clubs_A5|+50%": {
+  "en": {
+   "what": "Concussed zombie: +50% damage from everything.",
+   "when": "While the stun lasts."
+  },
+  "ru": {
+   "what": "Зомби контужен: +50% урона от всего.",
+   "when": "Пока действует оглушение."
+  }
+ },
+ "Sledges|gL|Sledges_Base|6s": {
+  "en": {
+   "what": "Earthquake cooldown: the arc fills up to \"OK\".",
+   "when": "Always with a sledgehammer. At \"OK\" the arc is orange and pulses: a power hit knocks down everyone within 3 m."
+  },
+  "ru": {
+   "what": "Перезарядка «Землетрясения»: дуга заполняется до «OK».",
+   "when": "Всегда с кувалдой. На «OK» дуга оранжевая и пульсирует: силовой удар сбивает всех в 3 м."
+  }
+ },
+ "Sledges|atk|Sledges_B4|x2": {
+  "en": {
+   "what": "Momentum: which hit in a row on the same zombie (up to 3).",
+   "when": "3 s after a hit. The same number is shown over this zombie."
+  },
+  "ru": {
+   "what": "«Размах»: какой удар подряд по тому же зомби (до 3).",
+   "when": "3 с после удара. То же число над этим зомби."
+  }
+ },
+ "Sledges|z|Sledges_B3|-30%": {
+  "en": {
+   "what": "Armor Break: how much armor was stripped from the zombie.",
+   "when": "10 s after a hit."
+  },
+  "ru": {
+   "what": "«Ломка брони»: сколько брони снято с зомби.",
+   "when": "10 с после удара."
+  }
+ },
+ "Spears|gR|Spears_B4|x3": {
+  "en": {
+   "what": "Thrust Chain: thrusts at one target (up to 5).",
+   "when": "While you hit the same target with pauses of 1 s or less. The same number is shown over the zombie."
+  },
+  "ru": {
+   "what": "«Серия уколов» по одной цели (до 5).",
+   "when": "Пока бьёшь ту же цель с паузой ≤ 1 с. То же число над зомби."
+  }
+ },
+ "Spears|spd|Spears_B7|+50%  x2": {
+  "en": {
+   "what": "Riposte: thrusts are 50% faster; x2 is how many such thrusts are left.",
+   "when": "After a successful parry."
+  },
+  "ru": {
+   "what": "«Контрвыпад»: уколы на 50% быстрее; x2 — сколько таких уколов осталось.",
+   "when": "После удачного парирования."
+  }
+ },
+ "Spears|alert|Spears_H2|x1.8": {
+  "en": {
+   "what": "Parting Shot ready: the next hit x1.5 and counts as a head thrust, so the Head Thrust bonus (B3: +30 / 60 / 120%) is added too. This is an example with B3 at rank 1: x1.8. Merges with other next-hit bonuses.",
+   "when": "After you stepped 2.5 m away following a hit."
+  },
+  "ru": {
+   "what": "«Удар на отходе» готов: следующий удар ×1.5 и считается уколом в голову, так что добавляется ещё бонус «Укола в голову» (B3: +30 / 60 / 120%). Здесь пример с B3 на 1 ранге: ×1.8. Сливается с другими бонусами следующего удара.",
+   "when": "После того как отошёл на 2.5 м после удара."
+  }
+ },
+ "Spears|spd|Spears_A6|+15%  2s": {
+  "en": {
+   "what": "Hit and Back: how much faster you are and seconds left.",
+   "when": "2 s after a spear hit."
+  },
+  "ru": {
+   "what": "«Удар и отход»: насколько ты быстрее и сколько секунд осталось.",
+   "when": "2 с после удара копьём."
+  }
+ },
+ "Spears|def|Spears_A7|OK": {
+  "en": {
+   "what": "Sentry: the auto-thrust is ready (or seconds until it is ready).",
+   "when": "Always with skill A7."
+  },
+  "ru": {
+   "what": "«Часовой»: автоукол готов (или секунды до готовности).",
+   "when": "Всегда с навыком A7."
+  }
+ },
+ "Spears|z|Spears_A5|+50%": {
+  "en": {
+   "what": "Tip in the Wound: bonus of the next thrusts on this zombie (+25% per hit, up to +100%).",
+   "when": "After a power hit on the first target."
+  },
+  "ru": {
+   "what": "«Остриё в ране»: бонус следующих уколов по этому зомби (+25% за удар, до +100%).",
+   "when": "После силового удара по первой цели."
+  }
+ },
+ "Spears|toast|Spears_B5|Парирование!": {
+  "en": {
+   "what": "A text under the crosshair + a metal ring.",
+   "when": "A hit on a zombie at the moment of its swing."
+  },
+  "ru": {
+   "what": "Надпись под прицелом + звон металла.",
+   "when": "Удар по зомби в момент его замаха."
+  }
+ },
+ "Spears|toast|Spears_A8|Прорыв!": {
+  "en": {
+   "what": "A text under the crosshair + a heavy sound, a flash and a line in the feed.",
+   "when": "A power hit right after sprinting."
+  },
+  "ru": {
+   "what": "Надпись под прицелом + тяжёлый звук, вспышка и строка в ленте.",
+   "when": "Силовой удар сразу после бега."
+  }
+ },
+ "Knuckles|def|Knuckles_Base|1/2": {
+  "en": {
+   "what": "Counter Punch charges (from hits you took): current / maximum.",
+   "when": "Always with knuckles; grey with no charges, bright when full."
+  },
+  "ru": {
+   "what": "Заряды «Контрудара» (от пропущенных ударов): сколько есть / максимум.",
+   "when": "Всегда с кастетами; серый без зарядов, яркий, когда полные."
+  }
+ },
+ "Knuckles|spd|Knuckles_B2|+10%": {
+  "en": {
+   "what": "Light Feet: how much faster you are after a hit.",
+   "when": "5 s after a knuckle hit."
+  },
+  "ru": {
+   "what": "«Лёгкие ноги»: насколько ты быстрее после удара.",
+   "when": "5 с после удара кастетами."
+  }
+ },
+ "Knuckles|spd|Knuckles_A8|-20%": {
+  "en": {
+   "what": "Knockout: a minus to your speed (the price of the capstone).",
+   "when": "15 s after a knockout."
+  },
+  "ru": {
+   "what": "«Нокаут»: минус к твоей скорости (цена капстоуна).",
+   "when": "15 с после нокаута."
+  }
+ },
+ "Knuckles|def|Knuckles_A2|-12%": {
+  "en": {
+   "what": "Iron Skin: how much less damage you take.",
+   "when": "While you have at least one charge."
+  },
+  "ru": {
+   "what": "«Железная кожа»: насколько меньше урона ты получаешь.",
+   "when": "Пока есть хоть один заряд."
+  }
+ },
+ "Knuckles|atk|Knuckles_B1|6/10": {
+  "en": {
+   "what": "Combo: which hit in a row without being hit yourself.",
+   "when": "While nobody hits you. The same number is shown over the target."
+  },
+  "ru": {
+   "what": "«Серия»: какой удар подряд без пропущенного удара.",
+   "when": "Пока тебя не ударили. То же число над целью."
+  }
+ },
+ "Knuckles|alert|buffAposShadow|x2": {
+  "en": {
+   "what": "Merge example: the Shadow of the \"From the Shadows\" 5 perk also gives x2 to the next melee hit. Together with Opener they sit in one pill above the crosshair, and the multipliers multiply: x2 · x2 = x4.",
+   "when": "When both bonuses are ready at once.",
+   "src": "Perk \"From the Shadows\" 5"
+  },
+  "ru": {
+   "what": "Пример слияния: «Тень» перка «Бесшумная тень» 5 тоже даёт ×2 следующему удару в ближнем бою. Вместе с «Первым ударом» они в одной плашке над прицелом, а множители перемножаются: ×2 · ×2 = ×4.",
+   "when": "Когда оба бонуса готовы одновременно.",
+   "src": "Перк «Бесшумная тень» 5 (From The Shadows)"
+  }
+ },
+ "Knuckles|alert|Knuckles_B6|x2": {
+  "en": {
+   "what": "Opener: multiplier of the next hit.",
+   "when": "When nobody has hit you for 5 s."
+  },
+  "ru": {
+   "what": "«Первый удар»: множитель следующего удара.",
+   "when": "Когда 5 с тебя никто не задел."
+  }
+ },
+ "Batons|gL|Batons_Base|OK": {
+  "en": {
+   "what": "Chain Lightning cooldown: the arc fills up to \"OK\".",
+   "when": "Always with a baton. At \"OK\" a power hit is a mass stun (blue lightning)."
+  },
+  "ru": {
+   "what": "Перезарядка «Цепной молнии»: дуга заполняется до «OK».",
+   "when": "Всегда с дубинкой. На «OK» силовой удар — массовое оглушение (синие молнии)."
+  }
+ },
+ "Batons|atk|Batons_B3|3/4": {
+  "en": {
+   "what": "Breakdown: which hit in a row on one zombie; the 4th hits harder.",
+   "when": "While you hit the same target. The same number is shown over it."
+  },
+  "ru": {
+   "what": "«Пробой»: какой удар подряд по одному зомби; 4-й бьёт сильнее.",
+   "when": "Пока бьёшь ту же цель. То же число над ней."
+  }
+ },
+ "general|atk|buffAposThunderCharge|2/3": {
+  "en": {
+   "what": "Storm Charges (legendary Thunderclap).",
+   "when": "Bright at 3/3: the next power attack calls lightning.",
+   "src": "Legendary sledgehammer \"Thunderclap\""
+  },
+  "ru": {
+   "what": "Грозовые заряды (легендарка «Раскат грома»).",
+   "when": "Яркий на 3/3: следующая силовая атака вызывает молнию.",
+   "src": "Легендарная кувалда «Раскат грома»"
+  }
+ },
+ "general|spd|buffAposAdrenaline|+20%  2/3": {
+  "en": {
+   "what": "Adrenaline: movement and sprint speed bonus and kill stacks (+10% per stack).",
+   "when": "15 s after the last kill.",
+   "src": "Attribute Agility 10"
+  },
+  "ru": {
+   "what": "Адреналин: бонус скорости движения и бега и стаки за убийства (+10% за стак).",
+   "when": "15 с после последнего убийства.",
+   "src": "Атрибут Ловкость 10"
+  }
+ },
+ "general|def|buffAposEmp|8/10": {
+  "en": {
+   "what": "Lightning Charges (Intellect 10).",
+   "when": "Bright at 10/10: the next hit releases a chain lightning.",
+   "src": "Attribute Intellect 10"
+  },
+  "ru": {
+   "what": "Заряды молнии (Интеллект 10).",
+   "when": "Яркий на 10/10: следующий удар выпускает цепную молнию.",
+   "src": "Атрибут Интеллект 10"
+  }
+ },
+ "general|atk|buffAposPipeVeteran|40%": {
+  "en": {
+   "what": "Damage bonus of home-made weapons.",
+   "when": "With a home-made weapon; grows with every kill.",
+   "src": "Home-made (pipe) weapon - an AposMod trait"
+  },
+  "ru": {
+   "what": "Бонус урона самодельного оружия.",
+   "when": "С самодельным оружием; растёт с каждым убийством.",
+   "src": "Самодельное (pipe) оружие — черта AposMod"
+  }
+ },
+ "general|alert|buffAposShadow|x2": {
+  "en": {
+   "what": "Shadow (From the Shadows 5): the next hit x2.",
+   "when": "While you crouch and have not been noticed.",
+   "src": "Perk \"From the Shadows\" 5"
+  },
+  "ru": {
+   "what": "«Тень» (From the Shadows 5): следующий удар ×2.",
+   "when": "Пока ты в приседе и тебя не заметили.",
+   "src": "Перк «Бесшумная тень» 5 (From The Shadows)"
+  }
+ },
+ "general|spd|buffAposFrenzy|+15%  6s": {
+  "en": {
+   "what": "Attribute Frenzy: +15% attack speed and seconds left.",
+   "when": "After a kill with the weapon of an attribute at 10.",
+   "src": "Attribute attack speed perks at level 5: \"Quick and Perceptive\", \"Big and Fast\", \"Lightning Hands\", \"Whirlwind\""
+  },
+  "ru": {
+   "what": "«Неистовство» атрибута: +15% скорости атаки и сколько секунд осталось.",
+   "when": "После убийства оружием атрибута на 10.",
+   "src": "Перки атрибутов на скорость атаки на уровне 5: «Скорость и проницательность», «Большой и быстрый», «Руки-молнии», «Вихрь»"
+  }
+ },
+ "general|alert|buffAposJackpot|x5  2s": {
+  "en": {
+   "what": "Jackpot: ore and wood yield x5; the timer is seconds left.",
+   "when": "Randomly when you hit ore or a tree (5%); lasts 2 s - hit faster.",
+   "src": "Perk \"Mother Lode\" 5"
+  },
+  "ru": {
+   "what": "«Джекпот»: добыча руды и дерева ×5; таймер — сколько секунд осталось.",
+   "when": "Случайно при ударах по руде или дереву (5%); длится 2 с — бей быстрее.",
+   "src": "Перк «Драгоценная добыча» 5 (Mother Lode)"
+  }
+ },
+ "general|def|buffAposShieldUp|defense": {
+  "en": {
+   "what": "Energy Shield is charged.",
+   "when": "While the shield is charged; a hit discharges it.",
+   "src": "Chest armor mod \"Energy Shield\""
+  },
+  "ru": {
+   "what": "«Энергощит» заряжен.",
+   "when": "Пока щит заряжен; попадание разряжает его.",
+   "src": "Мод нагрудника «Энергощит»"
+  }
+ },
+ "general|def|buffAposGuardian|electric_turret": {
+  "en": {
+   "what": "Guardian Protocol: robots hit harder.",
+   "when": "When your health is low.",
+   "src": "Perk \"Robotics Inventor\" 1+"
+  },
+  "ru": {
+   "what": "«Протокол защиты»: роботы бьют сильнее.",
+   "when": "Когда твоё здоровье низкое.",
+   "src": "Перк «Конструктор роботов» 1+ (Robotics Inventor)"
+  }
+ },
+ "general|spd|buffAposEvasion|+30%  3s": {
+  "en": {
+   "what": "Evasion: +30% movement speed, seconds left.",
+   "when": "After a dodge.",
+   "src": "Perk \"Agility Mastery\" 5"
+  },
+  "ru": {
+   "what": "«Уклонение»: +30% скорости движения, секунды, что остались.",
+   "when": "После уклонения.",
+   "src": "Перк «Мастерство ловкости» 5"
+  }
+ },
+ "general|def|buffAposVampire|150 HP": {
+  "en": {
+   "what": "Vampire: bonus to maximum health.",
+   "when": "After melee kills.",
+   "src": "Perk \"Siphoning Strikes\" 5"
+  },
+  "ru": {
+   "what": "«Вампир»: бонус к максимуму здоровья.",
+   "when": "После убийств в ближнем бою.",
+   "src": "Перк «Ураганные удары» 5 (Siphoning Strikes)"
+  }
+ },
+ "general|def|buffAposSecondWind|45s": {
+  "en": {
+   "what": "Time until the next Second Wind (Fortitude Mastery 5): when HP drops below 20%, 70% of the maximum is restored instantly.",
+   "when": "Right after Second Wind triggered; lasts 5 minutes.",
+   "src": "Perk \"Fortitude Mastery\" 5"
+  },
+  "ru": {
+   "what": "Сколько осталось до следующего «Спасения» (Мастерство стойкости 5): когда ХП падает ниже 20%, мгновенно возвращается 70% максимума.",
+   "when": "Сразу после того как «Спасение» сработало; длится 5 минут.",
+   "src": "Перк «Мастерство стойкости» 5"
+  }
+ },
+ "general|def|buffAposSecondLungs|60s": {
+  "en": {
+   "what": "Time until the next Second Lungs (Cardio 5): when stamina runs out, 50% is restored instantly.",
+   "when": "Right after Second Lungs triggered; lasts 60 s.",
+   "src": "Perk \"Rule 1: Cardio\" 5"
+  },
+  "ru": {
+   "what": "Сколько осталось до следующего «Запаса сил» (Кардио 5): когда выносливость заканчивается, мгновенно возвращается 50%.",
+   "when": "Сразу после того как «Запас сил» сработал; длится 60 с.",
+   "src": "Перк «Правило 1: Кардиотренировка» 5"
+  }
+ },
+ "general|col|buffAposAcidArmor|-20%": {
+  "en": {
+   "what": "Corroded Armor (debuff): -20% physical defense while it lasts.",
+   "when": "A hit by an Acidic elite; lasts 10 s",
+   "src": "A hit by an Acidic elite (debuff)"
+  },
+  "ru": {
+   "what": "«Разъеденная броня» (дебафф): −20% физической защиты, пока действует.",
+   "when": "Удар кислотной элиты; длится 10 с",
+   "src": "Удар кислотной элиты (дебафф)"
+  }
+ },
+ "general|col|buffAposFreeRocket|ui_apos_rocket": {
+  "en": {
+   "what": "Big Boom: the next rocket costs no ammo.",
+   "when": "After a shot from the legendary rocket launcher, while it is in hand. It is not in the HUD, so it stays here.",
+   "src": "Legendary rocket launcher \"Big Boom\""
+  },
+  "ru": {
+   "what": "«Большой бабах»: следующая ракета без расхода боеприпаса.",
+   "when": "После выстрела из легендарного ракетомёта, пока он в руках. В HUD его нет, так что он остаётся здесь.",
+   "src": "Легендарный ракетомёт «Большой бабах»"
+  }
+ },
+ "general|col|buffAposKnifeRegen|2": {
+  "en": {
+   "what": "Knife regeneration stacks (HP per second).",
+   "when": "Here only when the HUD is off (aposhud off). With the HUD on, the arc on the right and the row by the belt show it.",
+   "src": "Weapon Mastery · Blades · class trait"
+  },
+  "ru": {
+   "what": "Стаки регенерации ножа (HP в секунду).",
+   "when": "Здесь только когда HUD выключен (aposhud off). С включённым HUD его показывают дуга справа и ряд у пояса.",
+   "src": "Мастерство оружия · Ножи и мачете · черта класса"
+  }
+ },
+ "general|col|Бонус полного комплекта|armor_iron": {
+  "en": {
+   "what": "Vanilla full armor set buff. AposMod set bonuses are tied to it: while it is on, the mod bonus works too.",
+   "when": "While a full set is worn.",
+   "src": "Vanilla game buff: full armor set; AposMod set bonuses are tied to it"
+  },
+  "ru": {
+   "what": "Ванильный бафф полного комплекта брони. Бонусы сетов AposMod привязаны к нему: пока он есть, действует и бонус мода.",
+   "when": "Пока надет полный комплект.",
+   "src": "Ванильный бафф игры: полный комплект брони; к нему привязаны бонусы сетов AposMod"
+  }
+ },
+ "zombie|z|Crossbows_Base|+20%": {
+  "en": {
+   "what": "Crossbow Mark: +N% of your damage on it.",
+   "when": "10 s after a bolt."
+  },
+  "ru": {
+   "what": "«Метка» арбалета: +N% твоего урона по нему.",
+   "when": "10 с после болта."
+  }
+ },
+ "zombie|z|Замедление|-30%": {
+  "en": {
+   "what": "Slow: the strongest of the pistol Lead Shackles and the bow Hunter's Wound (the machine gun Suppression has its own icon).",
+   "when": "While it lasts.",
+   "src": "Mastery: pistol Lead Shackles (B4), bow Hunter's Wound (B3), bow Shrapnel Wound (A6)"
+  },
+  "ru": {
+   "what": "Замедление: сильнейшее из «Свинцовых кандалов» пистолета и «Охотничьей раны» лука («Подавление» пулемёта имеет свой значок).",
+   "when": "Пока действует.",
+   "src": "Мастерство: «Свинцовые кандалы» пистолета (B4), «Охотничья рана» лука (B3), «Шрапнельная рана» лука (A6)"
+  }
+ },
+ "zombie|z|MG_Base|-20%": {
+  "en": {
+   "what": "Machine gun Suppression: how slowed the zombie is (up to -20%).",
+   "when": "8 s after a machine gun hit."
+  },
+  "ru": {
+   "what": "«Подавление» пулемёта: насколько зомби замедлен (до -20%).",
+   "when": "8 с после попадания из пулемёта."
+  }
+ },
+ "zombie|z|Bows_B3|x2": {
+  "en": {
+   "what": "Hunter's Wound stacks.",
+   "when": "8 s."
+  },
+  "ru": {
+   "what": "Стаки «Охотничьей раны».",
+   "when": "8 с."
+  }
+ },
+ "zombie|z|Shotguns_A5|+50%": {
+  "en": {
+   "what": "Shattered: +50% from everything.",
+   "when": "While it lies and 3 s more."
+  },
+  "ru": {
+   "what": "«Разбитый»: +50% от всего.",
+   "when": "Пока лежит и ещё 3 с."
+  }
+ },
+ "zombie|z|Spears_A5|+50%": {
+  "en": {
+   "what": "Tip in the Wound: thrust bonus.",
+   "when": "After a spear power hit."
+  },
+  "ru": {
+   "what": "«Остриё в ране»: бонус уколов.",
+   "when": "После силового удара копьём."
+  }
+ },
+ "zombie|z|Sledges_B3|-30%": {
+  "en": {
+   "what": "Armor Break: armor stripped.",
+   "when": "10 s."
+  },
+  "ru": {
+   "what": "«Ломка брони»: снятая броня.",
+   "when": "10 с."
+  }
+ },
+ "zombie|z|Clubs_A5|+50%": {
+  "en": {
+   "what": "Concussion: +50% from everything.",
+   "when": "While stunned."
+  },
+  "ru": {
+   "what": "«Сотрясение»: +50% от всего.",
+   "when": "Пока оглушён."
+  }
+ },
+ "zombie|z|Горение|12s": {
+  "en": {
+   "what": "Burning: seconds left (from a Molotov, a fire arrow, an element).",
+   "when": "While it burns.",
+   "src": "Molotov, fire arrows / bolts, the \"Fire\" weapon mod, the Explosion reaction, Burning elite"
+  },
+  "ru": {
+   "what": "Горение: секунды, что остались (от молотова, огненной стрелы, стихии).",
+   "when": "Пока горит.",
+   "src": "Молотов, огненные стрелы / болты, мод оружия «Огонь», реакция «Взрыв», «Пылающая» элита"
+  }
+ },
+ "zombie|z|Кровотечение|-8/s 14s": {
+  "en": {
+   "what": "Bleeding: damage per second and seconds left.",
+   "when": "While it bleeds.",
+   "src": "Knife power hits, Deep Cuts, barbed arrows, shotgun Ragged Wounds, spear, machine gun (Shred), Miasma, vanilla bleeding mods"
+  },
+  "ru": {
+   "what": "Кровотечение: урон в секунду и секунды, что остались.",
+   "when": "Пока кровоточит.",
+   "src": "Силовые удары ножа, «Глубокие порезы», зазубренные стрелы, «Рваные раны» дробовика, копьё, пулемёт («Разрыв»), «Миазмы», ванильные моды на кровотечение"
+  }
+ },
+ "zombie|z|Оглушение|2s": {
+  "en": {
+   "what": "Stunned or knocked down.",
+   "when": "While it lasts.",
+   "src": "Club Home Run, sledgehammer Earthquake, baton Chain Lightning, Confusion, vanilla stuns"
+  },
+  "ru": {
+   "what": "Оглушение или сбит с ног.",
+   "when": "Пока действует.",
+   "src": "«Хоумран» дубинки, «Землетрясение» кувалды, «Цепная молния» дубинки, «Замешательство», ванильные оглушения"
+  }
+ },
+ "zombie|z|Покалечен|8s": {
+  "en": {
+   "what": "Crippled legs.",
+   "when": "While it lasts.",
+   "src": "Vanilla crippled legs (leg hits, the \"Pummel Pete\" perk, etc.)"
+  },
+  "ru": {
+   "what": "Покалеченные ноги.",
+   "when": "Пока действует.",
+   "src": "Ванильные покалеченные ноги (удары по ногам, перк «Громила Пит» и т. п.)"
+  }
+ },
+ "zombie|z|Шок|3s": {
+  "en": {
+   "what": "Shock (from an arrow, a trap, a baton, the \"Shock\" mod).",
+   "when": "While it lasts.",
+   "src": "Electric arrows, bow Shock Trap, batons, the \"Shock\" weapon mod, Electric elite"
+  },
+  "ru": {
+   "what": "Шок (стрелой, ловушкой, дубинкой, модом «Ток»).",
+   "when": "Пока действует.",
+   "src": "Электрические стрелы, «Электроловушка» лука, дубинки, мод оружия «Ток», «Электрическая» элита"
+  }
+ },
+ "zombie|z|Кислота|5s": {
+  "en": {
+   "what": "Acid: -25% physical resistance.",
+   "when": "6 s after an acid hit.",
+   "src": "Acid arrows, the \"Acid\" weapon mod, acid fragments (bow Elemental Splinters)"
+  },
+  "ru": {
+   "what": "Кислота: −25% физического сопротивления.",
+   "when": "6 с после кислотного попадания.",
+   "src": "Кислотные стрелы, мод оружия «Кислота», осколки с кислотой («Стихийные осколки» лука)"
+  }
+ },
+ "zombie|z|Замешательство|4s": {
+  "en": {
+   "what": "Confusion (fire + shock): -60% speed, -30 physical resistance.",
+   "when": "5 s.",
+   "src": "Element reaction: fire + shock on one zombie"
+  },
+  "ru": {
+   "what": "«Замешательство» (огонь + шок): −60% скорости, −30 физического сопротивления.",
+   "when": "5 с.",
+   "src": "Реакция стихий: огонь + шок на одном зомби"
+  }
+ },
+ "zombie|z|Миазмы|5s": {
+  "en": {
+   "what": "Miasma (acid + shock): -20% max health and bleeding.",
+   "when": "6 s.",
+   "src": "Element reaction: acid + shock on one zombie"
+  },
+  "ru": {
+   "what": "«Миазмы» (кислота + шок): −20% макс. здоровья и кровотечение.",
+   "when": "6 с.",
+   "src": "Реакция стихий: кислота + шок на одном зомби"
+  }
+ },
+ "zombie|z|Spears_B4|x3": {
+  "en": {
+   "what": "Counter on the target: spear Thrust Chain.",
+   "when": "While you hit this target."
+  },
+  "ru": {
+   "what": "Счётчик на цели: «Серия уколов» копья.",
+   "when": "Пока бьёшь эту цель."
+  }
+ },
+ "zombie|z|Knuckles_B1|6/10": {
+  "en": {
+   "what": "Counter on the target: knuckle Combo.",
+   "when": "While nobody hits you."
+  },
+  "ru": {
+   "what": "Счётчик на цели: «Серия» кастетов.",
+   "when": "Пока тебя не ударили."
+  }
+ },
+ "zombie|z|Sledges_B4|x2": {
+  "en": {
+   "what": "Counter on the target: sledgehammer Momentum.",
+   "when": "3 s after a hit."
+  },
+  "ru": {
+   "what": "Счётчик на цели: «Размах» кувалды.",
+   "when": "3 с после удара."
+  }
+ },
+ "zombie|z|Batons_B3|3/4": {
+  "en": {
+   "what": "Counter on the target: baton Breakdown.",
+   "when": "While you hit this target."
+  },
+  "ru": {
+   "what": "Счётчик на цели: «Пробой» дубинки.",
+   "when": "Пока бьёшь эту цель."
+  }
+ },
+ "feed|feed|Взрыв|-120 ×3": {
+  "en": {
+   "what": "Explosion reaction (fire + acid): damage to each and how many were hit within 4 m.",
+   "when": "Fire and acid on one zombie.",
+   "src": "Element reaction: fire + acid"
+  },
+  "ru": {
+   "what": "Реакция «Взрыв» (огонь + кислота): урон каждому и сколько задело в 4 м.",
+   "when": "Огонь и кислота на одном зомби.",
+   "src": "Реакция стихий: огонь + кислота"
+  }
+ },
+ "feed|feed|Замешательство|feed_confusion": {
+  "en": {
+   "what": "Confusion reaction (fire + shock).",
+   "when": "Fire and shock on one zombie.",
+   "src": "Element reaction: fire + shock"
+  },
+  "ru": {
+   "what": "Реакция «Замешательство» (огонь + шок).",
+   "when": "Огонь и шок на одном зомби.",
+   "src": "Реакция стихий: огонь + шок"
+  }
+ },
+ "feed|feed|Миазмы|feed_miasma": {
+  "en": {
+   "what": "Miasma reaction (acid + shock).",
+   "when": "Acid and shock on one zombie.",
+   "src": "Element reaction: acid + shock"
+  },
+  "ru": {
+   "what": "Реакция «Миазмы» (кислота + шок).",
+   "when": "Кислота и шок на одном зомби.",
+   "src": "Реакция стихий: кислота + шок"
+  }
+ },
+ "feed|feed|ИНТ 10|-60 ×4": {
+  "en": {
+   "what": "INT 10: chain lightning.",
+   "when": "At 10 Lightning Charges.",
+   "src": "Attribute Intellect 10 (Lightning Charges)"
+  },
+  "ru": {
+   "what": "ИНТ 10: цепная молния.",
+   "when": "На 10 зарядах молнии.",
+   "src": "Атрибут Интеллект 10 (Заряды молнии)"
+  }
+ },
+ "feed|feed|СИЛ 10|-80 ×1": {
+  "en": {
+   "what": "STR 10: excess damage passed to a neighbour.",
+   "when": "A kill with excess damage.",
+   "src": "Attribute Strength 10"
+  },
+  "ru": {
+   "what": "СИЛ 10: избыток урона перешёл на соседа.",
+   "when": "Убийство с избытком урона.",
+   "src": "Атрибут Сила 10"
+  }
+ },
+ "feed|feed|Подрывник 5|-90 ×3": {
+  "en": {
+   "what": "Demolitions Expert 5: chain reaction.",
+   "when": "A kill by explosion.",
+   "src": "Perk \"Demolitions Expert\" 5"
+  },
+  "ru": {
+   "what": "Эксперт-подрывник 5: цепная реакция.",
+   "when": "Убийство взрывом.",
+   "src": "Перк «Эксперт-подрывник» 5"
+  }
+ },
+ "feed|feed|Бронебойщик 5|-25 ×2": {
+  "en": {
+   "what": "The Penetrator 5: shrapnel.",
+   "when": "Piercing a zombie.",
+   "src": "Perk \"The Penetrator\" 5"
+  },
+  "ru": {
+   "what": "Злоумышленник 5: шрапнель.",
+   "when": "Пробитие зомби.",
+   "src": "Перк «Злоумышленник» 5"
+  }
+ },
+ "feed|feed|Bows_B2|-45 ×3": {
+  "en": {
+   "what": "Bow Piercing Arrow.",
+   "when": "A full arrow pierced the line."
+  },
+  "ru": {
+   "what": "«Сквозная стрела» лука.",
+   "when": "Полная стрела прошила линию."
+  }
+ },
+ "feed|feed|Bows_A7|-30 ×2": {
+  "en": {
+   "what": "Bow Shock Trap.",
+   "when": "A trap discharge."
+  },
+  "ru": {
+   "what": "«Электроловушка» лука.",
+   "when": "Разряд ловушки."
+  }
+ },
+ "feed|feed|Crossbows_B1|-50 ×3": {
+  "en": {
+   "what": "Crossbow Sticky Charge / mine.",
+   "when": "A charge blast."
+  },
+  "ru": {
+   "what": "«Липкий заряд» / мина арбалета.",
+   "when": "Взрыв заряда."
+  }
+ },
+ "feed|feed|Spears_A8|-140 ×1": {
+  "en": {
+   "what": "Spear Breakthrough.",
+   "when": "A dash through a crowd."
+  },
+  "ru": {
+   "what": "«Прорыв» копья.",
+   "when": "Рывок сквозь толпу."
+  }
+ },
+ "feed|feed|Blades_B8|-384": {
+  "en": {
+   "what": "Knife SPINE STRIKE!!: how much damage the Spine Strike dealt.",
+   "when": "Every Spine Strike (capstone B8)."
+  },
+  "ru": {
+   "what": "SPINE STRIKE!! ножа: сколько урона нанёс удар в хребет.",
+   "when": "Каждый удар в хребет (капстоун B8)."
+  }
+ }
+}

@@ -3,6 +3,7 @@
 #   body.<lang>.html   - header, nav, sections and footer in English (default), Russian and Ukrainian
 #   datauris.txt       - images embedded in the bodies (DATAURI_<n> placeholders, one data URI per line)
 #   script.js          - language switch, search, icons, tiles and hover hints
+#   widgets.css / .js  - the interactive Weapon Mastery 2.0 and HUD status sections (python docs/i18n/gen_widgets.py first)
 # Edit the parts, then run: & docs/i18n/build_reference.ps1
 $ErrorActionPreference = 'Stop'
 $dir = $PSScriptRoot
@@ -26,8 +27,10 @@ $css = @'
 .langs button:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
 </style>
 '@
-$page = [IO.File]::ReadAllText((Join-Path $dir 'head.html')) + $css + "<div id=`"app`"></div>`n" +
+# widgets.css / widgets.js: the interactive Mastery and HUD sections (widgets.js is made by gen_widgets.py)
+$page = [IO.File]::ReadAllText((Join-Path $dir 'head.html')) + $css + [IO.File]::ReadAllText((Join-Path $dir 'widgets.css')) + "<div id=`"app`"></div>`n" +
   (Body 'en') + (Body 'ru') + (Body 'uk') +
+  "<script>`n" + [IO.File]::ReadAllText((Join-Path $dir 'widgets.js')) + "</script>`n" +
   "<script>`n" + [IO.File]::ReadAllText((Join-Path $dir 'script.js')) + "</script>`n"
 $out = Join-Path $dir '..\Reference.html'
 [IO.File]::WriteAllText($out, $page, $utf8)

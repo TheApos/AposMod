@@ -284,6 +284,7 @@ CLASSNAME = {c: n for c, n, _ in CLASSES}
 
 def source_of(it):
     if it.get('src'):
+        it['src_manual'] = True
         return it['src']
     k = it.get('key') or ''
     m = re.match(r'(\w+?)_(Base|[ABH]\d)$', k)
@@ -309,12 +310,22 @@ for lst in [items for _, _, items in CLASSES] + [GENERAL, ZOMBIE, FEED, COLUMN]:
             it['kind'] = 'reload' if it.get('key') == 'Crossbows_A7' else ('attack' if it['color'] == GOLD else 'move')
             it['pct'] = int(re.match(r'([+-]?\d+)%', it['text']).group(1))
 
+# a stable key per item: the Reference guide keeps the EN / RU translations of its texts under it
+def item_key(tab, it):
+    return '%s|%s|%s|%s' % (tab, it['place'], it.get('key') or it.get('ru', ''), it.get('variant') or it.get('text') or it.get('icon'))
+for tab, lst in [(c, items) for c, _, items in CLASSES] + [('general', GENERAL + COLUMN), ('zombie', ZOMBIE), ('feed', FEED)]:
+    for it in lst:
+        it['k'] = item_key(tab, it)
+
 DATA = {
   'classes': [{'id': c, 'name': n, 'items': items} for c, n, items in CLASSES],
   'general': GENERAL + COLUMN, 'zombie': ZOMBIE, 'feed': FEED,
   'png': PNG,
   'vanilla': {k: VANILLA[k] for k in VANILLA if not k.startswith('apos')},
 }
+
+# the same data for the Reference guide (docs/i18n/gen_widgets.py adds the translations)
+json.dump(DATA, open(os.path.join(SP, '..', 'i18n', 'hud_data.json'), 'w', encoding='utf-8'), ensure_ascii=False)
 
 html = open(os.path.join(SP, 'hud_template.html'), encoding='utf-8').read()
 html = html.replace('/*__DATA__*/null', json.dumps(DATA, ensure_ascii=False))

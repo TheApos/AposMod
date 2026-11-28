@@ -142,6 +142,9 @@
       });
       meta.appendChild(box);
     }
+
+    // the interactive sections (widgets.js): build them for this language
+    if (window.AposWidgets) window.AposWidgets.mount(app, current);
   }
 
   var current = null;
