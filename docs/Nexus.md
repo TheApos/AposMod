@@ -24,6 +24,8 @@ Every weapon class gets its own Borderlands-style trait. Loot rolls random affix
 
 [b][url=https://theapos.github.io/AposMod/Reference.html]Full illustrated reference (English / Русский / Українська)[/url][/b] - every number, every perk, every weapon.
 
+[b][color=#ffa500]Beta: AposMod 2.0 (Weapon Mastery 2.0)[/color][/b] is in [b]Optional files[/b] - per-class skill trees with ranks and capstones, a combat HUD, new effects. The main file stays 1.6.17. Back up your save before you try the beta. The reference page already describes 2.0.
+
 [size=4][b]What it adds[/b][/size]
 [list]
 [*][b]A trait for every weapon class[/b] - knives regenerate you (Bloodsucker), clubs launch zombies (Home Run), sledgehammers cause an Earthquake, batons chain lightning, spears pierce, knuckles counter-punch, pistols go Headhunter, rifles ricochet, machine guns suppress, bows splinter, crossbows mark and pin, shotgun slugs knock back, grenades get a wide blast, early rocket launcher. Every trait scales with its perk.
