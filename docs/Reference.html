@@ -398,7 +398,7 @@ html, body { overflow-x: clip; }
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.17</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 2.0.0</div>
     <h1>AposMod Reference</h1>
     <p class="sub">Weapon traits, affixes, perks and attributes, elements, mods, legendary weapons and settings in one place. Numbers like "0 → 5" depend on the level of the matching perk.</p>
   </div>
@@ -406,14 +406,14 @@ html, body { overflow-x: clip; }
 
 <nav class="bar" aria-label="Sections">
   <div class="wrap">
+    <a href="#mastery">Mastery</a>
+    <a href="#hud">HUD</a>
     <a href="#melee">Melee</a>
     <a href="#ranged">Ranged</a>
     <a href="#elements">Elements</a>
     <a href="#explosives">Explosives &amp; robots</a>
     <a href="#affixes">Affixes</a>
     <a href="#elites">Elites &amp; Eridium</a>
-    <a href="#mastery">Mastery</a>
-    <a href="#hud">HUD</a>
     <a href="#perks">Perks &amp; attributes</a>
     <a href="#sets">Sets &amp; wardrobe</a>
     <a href="#systems">Systems</a>
@@ -422,6 +422,31 @@ html, body { overflow-x: clip; }
 </nav>
 
 <main class="wrap">
+
+<section id="mastery" data-sec>
+  <h2>Weapon mastery 2.0</h2>
+  <p class="lead">Kills with a weapon level up its whole class (all pistols and SMGs share one level), up to 25. Every level is a point for that class's skill tree. Pick a class below and click a skill to read it; the planner lets you try a build before you spend points in the game.</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>How it works</h3>
+      <ul class="plain">
+        <li><b>Levels:</b> 1-25 per weapon class, from kills with any weapon of that class. Saved with your game.</li>
+        <li><b>Class trait:</b> every class has its own mechanic from level 0 (Headhunter, Bloodsucker, Earthquake and so on).</li>
+        <li><b>Branches:</b> two branches per class. A tier opens after 0 / 3 / 6 / 9 / 12 points lower in the same branch; the top tier is a capstone with a downside.</li>
+        <li><b>Hybrids:</b> skills between the branches need 5 points in each branch (the big one 8).</li>
+        <li><b>Window:</b> Alt+K, or the mastery button in the item info panel.</li>
+        <li><b>Reset:</b> near the Eridium Forge: one skill for 20 Eridium, the whole tree for 250.</li>
+      </ul>
+    </article>
+  </div>
+  <div id="mastery-app" class="mw"></div>
+</section>
+
+<section id="hud" data-sec>
+  <h2>HUD statuses</h2>
+  <p class="lead">Everything the mod shows on the screen: arcs at the crosshair, rows of icons, statuses over zombies, labels over damage numbers and the reaction feed. Pick a weapon and click any status on the screen or in the list to see what it means and where it comes from.</p>
+  <div id="hud-app" class="hw"></div>
+</section>
 
 <section id="melee" data-sec>
   <h2>Melee <small>LMB — normal attack, RMB — power attack</small></h2>
@@ -746,31 +771,6 @@ html, body { overflow-x: clip; }
   </div>
 </section>
 
-<section id="mastery" data-sec>
-  <h2>Weapon mastery 2.0</h2>
-  <p class="lead">Kills with a weapon level up its whole class (all pistols and SMGs share one level), up to 25. Every level is a point for that class's skill tree. Pick a class below and click a skill to read it; the planner lets you try a build before you spend points in the game.</p>
-  <div class="grid">
-    <article class="card legendary">
-      <h3>How it works</h3>
-      <ul class="plain">
-        <li><b>Levels:</b> 1-25 per weapon class, from kills with any weapon of that class. Saved with your game.</li>
-        <li><b>Class trait:</b> every class has its own mechanic from level 0 (Headhunter, Bloodsucker, Earthquake and so on).</li>
-        <li><b>Branches:</b> two branches per class. A tier opens after 0 / 3 / 6 / 9 / 12 points lower in the same branch; the top tier is a capstone with a downside.</li>
-        <li><b>Hybrids:</b> skills between the branches need 5 points in each branch (the big one 8).</li>
-        <li><b>Window:</b> Alt+K, or the mastery button in the item info panel.</li>
-        <li><b>Reset:</b> near the Eridium Forge: one skill for 20 Eridium, the whole tree for 250.</li>
-      </ul>
-    </article>
-  </div>
-  <div id="mastery-app" class="mw"></div>
-</section>
-
-<section id="hud" data-sec>
-  <h2>HUD statuses</h2>
-  <p class="lead">Everything the mod shows on the screen: arcs at the crosshair, rows of icons, statuses over zombies, labels over damage numbers and the reaction feed. Pick a weapon and click any status on the screen or in the list to see what it means and where it comes from.</p>
-  <div id="hud-app" class="hw"></div>
-</section>
-
 <section id="perks" data-sec>
   <h2>Perks &amp; attributes</h2>
   <p class="lead">Every perk has its own trait at max level, and every attribute at level 10. Vanilla effects that duplicated the mod's traits have been replaced. The level description in game has a yellow AposMod line with exact numbers.</p>
@@ -1042,7 +1042,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
 </main>
 
 <footer>
-  <div class="wrap">AposMod 1.6.17 for 7 Days to Die 3.4.</div>
+  <div class="wrap">AposMod 2.0.0 for 7 Days to Die 3.4.</div>
 </footer>
 
 </template>
@@ -1050,7 +1050,7 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.17</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 2.0.0</div>
     <h1>Справочник AposMod</h1>
     <p class="sub">Фишки оружия, аффиксы, перки и атрибуты, стихии, моды, легендарное оружие и настройки в одном месте. Числа «0 → 5» зависят от уровня соответствующего перка.</p>
   </div>
@@ -1058,14 +1058,14 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
 
 <nav class="bar" aria-label="Разделы">
   <div class="wrap">
+    <a href="#mastery">Мастерство</a>
+    <a href="#hud">HUD</a>
     <a href="#melee">Ближний бой</a>
     <a href="#ranged">Дальний бой</a>
     <a href="#elements">Стихии</a>
     <a href="#explosives">Взрывчатка и роботы</a>
     <a href="#affixes">Аффиксы</a>
     <a href="#elites">Элиты и Эридий</a>
-    <a href="#mastery">Мастерство</a>
-    <a href="#hud">HUD</a>
     <a href="#perks">Перки и атрибуты</a>
     <a href="#sets">Сеты и гардероб</a>
     <a href="#systems">Системы</a>
@@ -1074,6 +1074,31 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
 </nav>
 
 <main class="wrap">
+
+<section id="mastery" data-sec>
+  <h2>Мастерство оружия 2.0</h2>
+  <p class="lead">Убийства оружием поднимают уровень всего его класса (все пистолеты и ПП — один уровень), до 25. Каждый уровень — очко в дерево навыков этого класса. Выберите класс ниже и нажмите на навык, чтобы прочитать его; планировщик позволяет примерить билд до того, как тратить очки в игре.</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>Как это работает</h3>
+      <ul class="plain">
+        <li><b>Уровни:</b> 1–25 у каждого класса оружия, за убийства любым оружием этого класса. Сохраняются вместе с игрой.</li>
+        <li><b>Черта класса:</b> у каждого класса своя механика с 0 уровня (Охотник за головами, Кровопийца, Землетрясение и т. д.).</li>
+        <li><b>Ветки:</b> две ветки у класса. Ярус открывается после 0 / 3 / 6 / 9 / 12 очков ниже в этой же ветке; верхний ярус — капстоун с минусом.</li>
+        <li><b>Гибриды:</b> навыки между ветками требуют 5 очков в каждой ветке (большой — 8).</li>
+        <li><b>Окно:</b> Alt+K или кнопка мастерства в окне описания предмета.</li>
+        <li><b>Сброс:</b> возле Кузни эридия: один навык за 20 эридия, всё дерево за 250.</li>
+      </ul>
+    </article>
+  </div>
+  <div id="mastery-app" class="mw"></div>
+</section>
+
+<section id="hud" data-sec>
+  <h2>Статусы HUD</h2>
+  <p class="lead">Всё, что мод показывает на экране: дуги у прицела, ряды значков, статусы над зомби, надписи над числами урона и лента реакций. Выберите оружие и нажмите на любой статус на экране или в списке, чтобы узнать, что он значит и откуда берётся.</p>
+  <div id="hud-app" class="hw"></div>
+</section>
 
 <section id="melee" data-sec>
   <h2>Ближний бой <small>ЛКМ — обычный удар, ПКМ — силовой</small></h2>
@@ -1398,31 +1423,6 @@ aposbow off | on  turn off / on arrow auto-nock</pre>
   </div>
 </section>
 
-<section id="mastery" data-sec>
-  <h2>Мастерство оружия 2.0</h2>
-  <p class="lead">Убийства оружием поднимают уровень всего его класса (все пистолеты и ПП — один уровень), до 25. Каждый уровень — очко в дерево навыков этого класса. Выберите класс ниже и нажмите на навык, чтобы прочитать его; планировщик позволяет примерить билд до того, как тратить очки в игре.</p>
-  <div class="grid">
-    <article class="card legendary">
-      <h3>Как это работает</h3>
-      <ul class="plain">
-        <li><b>Уровни:</b> 1–25 у каждого класса оружия, за убийства любым оружием этого класса. Сохраняются вместе с игрой.</li>
-        <li><b>Черта класса:</b> у каждого класса своя механика с 0 уровня (Охотник за головами, Кровопийца, Землетрясение и т. д.).</li>
-        <li><b>Ветки:</b> две ветки у класса. Ярус открывается после 0 / 3 / 6 / 9 / 12 очков ниже в этой же ветке; верхний ярус — капстоун с минусом.</li>
-        <li><b>Гибриды:</b> навыки между ветками требуют 5 очков в каждой ветке (большой — 8).</li>
-        <li><b>Окно:</b> Alt+K или кнопка мастерства в окне описания предмета.</li>
-        <li><b>Сброс:</b> возле Кузни эридия: один навык за 20 эридия, всё дерево за 250.</li>
-      </ul>
-    </article>
-  </div>
-  <div id="mastery-app" class="mw"></div>
-</section>
-
-<section id="hud" data-sec>
-  <h2>Статусы HUD</h2>
-  <p class="lead">Всё, что мод показывает на экране: дуги у прицела, ряды значков, статусы над зомби, надписи над числами урона и лента реакций. Выберите оружие и нажмите на любой статус на экране или в списке, чтобы узнать, что он значит и откуда берётся.</p>
-  <div id="hud-app" class="hw"></div>
-</section>
-
 <section id="perks" data-sec>
   <h2>Перки и атрибуты</h2>
   <p class="lead">Каждый перк на максимальном уровне имеет свою фишку, а каждый атрибут — на 10 уровне. Ванильные эффекты, дублировавшие фишки мода, заменены. В описании уровня в игре есть жёлтая строка AposMod с точными числами.</p>
@@ -1694,7 +1694,7 @@ aposbow off | on  выключить / включить автоналожени
 </main>
 
 <footer>
-  <div class="wrap">AposMod 1.6.17 для 7 Days to Die 3.4.</div>
+  <div class="wrap">AposMod 2.0.0 для 7 Days to Die 3.4.</div>
 </footer>
 
 </template>
@@ -1702,7 +1702,7 @@ aposbow off | on  выключить / включить автоналожени
 <header class="top">
   <div class="wrap">
     <div class="stripe" aria-hidden="true"></div>
-    <div class="meta">7 Days to Die 3.4 · AposMod 1.6.17</div>
+    <div class="meta">7 Days to Die 3.4 · AposMod 2.0.0</div>
     <h1>Довідник AposMod</h1>
     <p class="sub">Фішки зброї, афікси, перки й атрибути, стихії, моди, легендарна зброя й налаштування в одному місці. Числа «0 → 5» залежать від рівня відповідного перка.</p>
   </div>
@@ -1710,14 +1710,14 @@ aposbow off | on  выключить / включить автоналожени
 
 <nav class="bar" aria-label="Розділи">
   <div class="wrap">
+    <a href="#mastery">Майстерність</a>
+    <a href="#hud">HUD</a>
     <a href="#melee">Ближній бій</a>
     <a href="#ranged">Дальній бій</a>
     <a href="#elements">Стихії</a>
     <a href="#explosives">Вибухівка й роботи</a>
     <a href="#affixes">Афікси</a>
     <a href="#elites">Еліти й Ерідій</a>
-    <a href="#mastery">Майстерність</a>
-    <a href="#hud">HUD</a>
     <a href="#perks">Перки й атрибути</a>
     <a href="#sets">Сети й гардероб</a>
     <a href="#systems">Системи</a>
@@ -1726,6 +1726,31 @@ aposbow off | on  выключить / включить автоналожени
 </nav>
 
 <main class="wrap">
+
+<section id="mastery" data-sec>
+  <h2>Майстерність зброї 2.0</h2>
+  <p class="lead">Вбивства зброєю піднімають рівень усього її класу (усі пістолети й ПП — один рівень), до 25. Кожен рівень — очко в дерево навичок цього класу. Оберіть клас нижче й натисніть на навичку, щоб прочитати її; планувальник дає приміряти білд, перш ніж витрачати очки в грі.</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>Як це працює</h3>
+      <ul class="plain">
+        <li><b>Рівні:</b> 1–25 у кожного класу зброї, за вбивства будь-якою зброєю цього класу. Зберігаються разом із грою.</li>
+        <li><b>Риса класу:</b> у кожного класу своя механіка з 0 рівня (Мисливець за головами, Кровопивця, Землетрус тощо).</li>
+        <li><b>Гілки:</b> дві гілки в класу. Ярус відкривається після 0 / 3 / 6 / 9 / 12 очок нижче в цій самій гілці; верхній ярус — капстоун з мінусом.</li>
+        <li><b>Гібриди:</b> навички між гілками потребують 5 очок у кожній гілці (великий — 8).</li>
+        <li><b>Вікно:</b> Alt+K або кнопка майстерності у вікні опису предмета.</li>
+        <li><b>Скидання:</b> біля Кузні ерідію: одна навичка за 20 ерідію, усе дерево за 250.</li>
+      </ul>
+    </article>
+  </div>
+  <div id="mastery-app" class="mw"></div>
+</section>
+
+<section id="hud" data-sec>
+  <h2>Статуси HUD</h2>
+  <p class="lead">Усе, що мод показує на екрані: дуги біля прицілу, ряди значків, статуси над зомбі, написи над числами шкоди і стрічка реакцій. Оберіть зброю й натисніть на будь-який статус на екрані або в списку, щоб дізнатися, що він означає і звідки береться.</p>
+  <div id="hud-app" class="hw"></div>
+</section>
 
 <section id="melee" data-sec>
   <h2>Ближній бій <small>ЛКМ — звичайний удар, ПКМ — силовий</small></h2>
@@ -2050,31 +2075,6 @@ aposbow off | on  выключить / включить автоналожени
   </div>
 </section>
 
-<section id="mastery" data-sec>
-  <h2>Майстерність зброї 2.0</h2>
-  <p class="lead">Вбивства зброєю піднімають рівень усього її класу (усі пістолети й ПП — один рівень), до 25. Кожен рівень — очко в дерево навичок цього класу. Оберіть клас нижче й натисніть на навичку, щоб прочитати її; планувальник дає приміряти білд, перш ніж витрачати очки в грі.</p>
-  <div class="grid">
-    <article class="card legendary">
-      <h3>Як це працює</h3>
-      <ul class="plain">
-        <li><b>Рівні:</b> 1–25 у кожного класу зброї, за вбивства будь-якою зброєю цього класу. Зберігаються разом із грою.</li>
-        <li><b>Риса класу:</b> у кожного класу своя механіка з 0 рівня (Мисливець за головами, Кровопивця, Землетрус тощо).</li>
-        <li><b>Гілки:</b> дві гілки в класу. Ярус відкривається після 0 / 3 / 6 / 9 / 12 очок нижче в цій самій гілці; верхній ярус — капстоун з мінусом.</li>
-        <li><b>Гібриди:</b> навички між гілками потребують 5 очок у кожній гілці (великий — 8).</li>
-        <li><b>Вікно:</b> Alt+K або кнопка майстерності у вікні опису предмета.</li>
-        <li><b>Скидання:</b> біля Кузні ерідію: одна навичка за 20 ерідію, усе дерево за 250.</li>
-      </ul>
-    </article>
-  </div>
-  <div id="mastery-app" class="mw"></div>
-</section>
-
-<section id="hud" data-sec>
-  <h2>Статуси HUD</h2>
-  <p class="lead">Усе, що мод показує на екрані: дуги біля прицілу, ряди значків, статуси над зомбі, написи над числами шкоди і стрічка реакцій. Оберіть зброю й натисніть на будь-який статус на екрані або в списку, щоб дізнатися, що він означає і звідки береться.</p>
-  <div id="hud-app" class="hw"></div>
-</section>
-
 <section id="perks" data-sec>
   <h2>Перки й атрибути</h2>
   <p class="lead">Кожен перк на максимальному рівні має свою фішку, а кожен атрибут — на 10 рівні. Ванільні ефекти, що дублювали фішки мода, замінено. В описі рівня в грі є жовтий рядок AposMod з точними числами.</p>
@@ -2346,7 +2346,7 @@ aposbow off | on  вимкнути / увімкнути автонабій ст�
 </main>
 
 <footer>
-  <div class="wrap">AposMod 1.6.17 для 7 Days to Die 3.4.</div>
+  <div class="wrap">AposMod 2.0.0 для 7 Days to Die 3.4.</div>
 </footer>
 
 </template>

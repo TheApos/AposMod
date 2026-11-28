@@ -9,14 +9,14 @@
 
 <nav class="bar" aria-label="Sections">
   <div class="wrap">
+    <a href="#mastery">Mastery</a>
+    <a href="#hud">HUD</a>
     <a href="#melee">Melee</a>
     <a href="#ranged">Ranged</a>
     <a href="#elements">Elements</a>
     <a href="#explosives">Explosives &amp; robots</a>
     <a href="#affixes">Affixes</a>
     <a href="#elites">Elites &amp; Eridium</a>
-    <a href="#mastery">Mastery</a>
-    <a href="#hud">HUD</a>
     <a href="#perks">Perks &amp; attributes</a>
     <a href="#sets">Sets &amp; wardrobe</a>
     <a href="#systems">Systems</a>
@@ -25,6 +25,31 @@
 </nav>
 
 <main class="wrap">
+
+<section id="mastery" data-sec>
+  <h2>Weapon mastery 2.0</h2>
+  <p class="lead">Kills with a weapon level up its whole class (all pistols and SMGs share one level), up to 25. Every level is a point for that class's skill tree. Pick a class below and click a skill to read it; the planner lets you try a build before you spend points in the game.</p>
+  <div class="grid">
+    <article class="card legendary">
+      <h3>How it works</h3>
+      <ul class="plain">
+        <li><b>Levels:</b> 1-25 per weapon class, from kills with any weapon of that class. Saved with your game.</li>
+        <li><b>Class trait:</b> every class has its own mechanic from level 0 (Headhunter, Bloodsucker, Earthquake and so on).</li>
+        <li><b>Branches:</b> two branches per class. A tier opens after 0 / 3 / 6 / 9 / 12 points lower in the same branch; the top tier is a capstone with a downside.</li>
+        <li><b>Hybrids:</b> skills between the branches need 5 points in each branch (the big one 8).</li>
+        <li><b>Window:</b> Alt+K, or the mastery button in the item info panel.</li>
+        <li><b>Reset:</b> near the Eridium Forge: one skill for 20 Eridium, the whole tree for 250.</li>
+      </ul>
+    </article>
+  </div>
+  <div id="mastery-app" class="mw"></div>
+</section>
+
+<section id="hud" data-sec>
+  <h2>HUD statuses</h2>
+  <p class="lead">Everything the mod shows on the screen: arcs at the crosshair, rows of icons, statuses over zombies, labels over damage numbers and the reaction feed. Pick a weapon and click any status on the screen or in the list to see what it means and where it comes from.</p>
+  <div id="hud-app" class="hw"></div>
+</section>
 
 <section id="melee" data-sec>
   <h2>Melee <small>LMB — normal attack, RMB — power attack</small></h2>
@@ -347,31 +372,6 @@
       </ul>
     </article>
   </div>
-</section>
-
-<section id="mastery" data-sec>
-  <h2>Weapon mastery 2.0</h2>
-  <p class="lead">Kills with a weapon level up its whole class (all pistols and SMGs share one level), up to 25. Every level is a point for that class's skill tree. Pick a class below and click a skill to read it; the planner lets you try a build before you spend points in the game.</p>
-  <div class="grid">
-    <article class="card legendary">
-      <h3>How it works</h3>
-      <ul class="plain">
-        <li><b>Levels:</b> 1-25 per weapon class, from kills with any weapon of that class. Saved with your game.</li>
-        <li><b>Class trait:</b> every class has its own mechanic from level 0 (Headhunter, Bloodsucker, Earthquake and so on).</li>
-        <li><b>Branches:</b> two branches per class. A tier opens after 0 / 3 / 6 / 9 / 12 points lower in the same branch; the top tier is a capstone with a downside.</li>
-        <li><b>Hybrids:</b> skills between the branches need 5 points in each branch (the big one 8).</li>
-        <li><b>Window:</b> Alt+K, or the mastery button in the item info panel.</li>
-        <li><b>Reset:</b> near the Eridium Forge: one skill for 20 Eridium, the whole tree for 250.</li>
-      </ul>
-    </article>
-  </div>
-  <div id="mastery-app" class="mw"></div>
-</section>
-
-<section id="hud" data-sec>
-  <h2>HUD statuses</h2>
-  <p class="lead">Everything the mod shows on the screen: arcs at the crosshair, rows of icons, statuses over zombies, labels over damage numbers and the reaction feed. Pick a weapon and click any status on the screen or in the list to see what it means and where it comes from.</p>
-  <div id="hud-app" class="hw"></div>
 </section>
 
 <section id="perks" data-sec>
